@@ -49,6 +49,7 @@
 		9479E5481A783460003C59BB /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E53A1A783460003C59BB /* IQUIView+IQKeyboardToolbar.m */; };
 		9479E5491A783460003C59BB /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9479E53D1A783460003C59BB /* IQKeyboardManager.bundle */; };
 		9479E54C1A783961003C59BB /* DVBComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E54B1A783961003C59BB /* DVBComment.m */; };
+		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
 		94ADA4111A76C88F005E2956 /* DVBCreatePostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADA4101A76C88F005E2956 /* DVBCreatePostViewController.m */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
 		A1823DC91A761CAD00F01117 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A1823DC81A761CAD00F01117 /* DVBDismissSegue.m */; };
@@ -150,6 +151,8 @@
 		9479E53D1A783460003C59BB /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
 		9479E54A1A783961003C59BB /* DVBComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBComment.h; sourceTree = "<group>"; };
 		9479E54B1A783961003C59BB /* DVBComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBComment.m; sourceTree = "<group>"; };
+		94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMessagePostServerAnswer.h; path = Models/Objects/DVBMessagePostServerAnswer.h; sourceTree = "<group>"; };
+		94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMessagePostServerAnswer.m; path = Models/Objects/DVBMessagePostServerAnswer.m; sourceTree = "<group>"; };
 		94ADA40F1A76C88F005E2956 /* DVBCreatePostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBCreatePostViewController.h; sourceTree = "<group>"; };
 		94ADA4101A76C88F005E2956 /* DVBCreatePostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBCreatePostViewController.m; sourceTree = "<group>"; };
 		A100A4501AAEF56F0027F917 /* DVBBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardModel.h; path = Models/DVBBoardModel.h; sourceTree = "<group>"; };
@@ -211,6 +214,8 @@
 				847CB86D19EC4B490093FDE1 /* DVBPostObj.m */,
 				84CF8C8E1A0E7C7600585D88 /* DVBBadPost.h */,
 				84CF8C8F1A0E7C7600585D88 /* DVBBadPost.m */,
+				94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */,
+				94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */,
 			);
 			name = Objects;
 			sourceTree = "<group>";
@@ -611,6 +616,7 @@
 				94131BD61A8D429C0033657C /* DVBValidation.m in Sources */,
 				84AA9A0E19E5CCE7009C2811 /* NSString+HTML.m in Sources */,
 				847E97CB19E873C400E16756 /* DVBThreadViewController.m in Sources */,
+				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				94131BDD1A8D4D850033657C /* DVBAlertViewGenerator.m in Sources */,
 				9479E5481A783460003C59BB /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				84AA9A1619E5E5E6009C2811 /* Reachability.m in Sources */,

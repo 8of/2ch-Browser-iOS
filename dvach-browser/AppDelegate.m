@@ -35,11 +35,16 @@
      *  Create cookies for later posting
      */
     NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
-    NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode",
-                                               @"value":usercode
-                                               };
-    NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
+    BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
+    
+    if (isUsercodeNotEmpty)
+    {
+        NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode",
+                                                   @"value":usercode
+                                                   };
+        NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
+    }
 }
 /**
  *  Execute all AFNetworking methods that need to be executed one time for entire app.

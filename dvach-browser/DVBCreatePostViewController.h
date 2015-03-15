@@ -2,7 +2,7 @@
 //  DVBCreatePostViewController.h
 //  dvach-browser
 //
-//  Created by Mega on 26/01/15.
+//  Created by Andy on 26/01/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
@@ -28,10 +28,10 @@
 /**
  *  Board's shortcode
  */
-@property (strong, nonatomic) NSString *boardCode;
+@property (nonatomic, strong) NSString *boardCode;
 /**
  *  OP number
  */
-@property (strong, nonatomic) NSString *threadNum;
+@property (nonatomic, strong) NSString *threadNum;
 
 @end

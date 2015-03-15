@@ -45,4 +45,5 @@
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:USER_AGREEMENT_ACCEPTED];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
 @end

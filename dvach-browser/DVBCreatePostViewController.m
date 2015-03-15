@@ -2,7 +2,7 @@
 //  DVBCreatePostViewController.m
 //  dvach-browser
 //
-//  Created by Mega on 26/01/15.
+//  Created by Andy on 26/01/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
@@ -13,79 +13,83 @@
 #import "DVBThreadViewController.h"
 #import "Reachability.h"
 #import "DVBComment.h"
+#import "DVBNetworking.h"
+#import "DVBMessagePostServerAnswer.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate, UIAlertViewDelegate, UITextViewDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate, UITextViewDelegate>
 
-@property (nonatomic, strong) NSString *captchaKey;
+@property (nonatomic, strong) DVBNetworking *networking;
+@property (nonatomic, strong) DVBComment *sharedComment;
+/**
+ *  Captcha
+ */
 @property (nonatomic, strong) NSString *captchaValue;
 /**
  *  Usercode for posting without captcha
  */
 @property (nonatomic, strong) NSString *usercode;
 /**
- *  Image for sending (1).
+ *  Image for sending (1)
  */
-@property (strong, nonatomic) UIImage *imageToLoad;
+@property (nonatomic, strong) UIImage *imageToLoad;
 /**
- *  Checker for including/excluding photo to query.
+ *  Checker for including/excluding photo to query
  */
-@property (assign, nonatomic) BOOL isImagePicked;
-@property (strong, nonatomic) NSString *createdThreadNum;
-@property (strong, nonatomic) NSDictionary *captchaKeyGetDictionary;
-@property (assign, nonatomic) BOOL postSuccessfull;
+@property (nonatomic, assign) BOOL isImagePicked;
+@property (nonatomic, strong) NSString *createdThreadNum;
+@property (nonatomic, assign) BOOL postSuccessfull;
 
 // UI elements
-@property (weak, nonatomic) IBOutlet UIImageView *captchaImage;
-@property (weak, nonatomic) IBOutlet UIButton *captchaUpdateButton;
-@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *subjectTextField;
-@property (weak, nonatomic) IBOutlet UITextField *captchaValueTextField;
-@property (weak, nonatomic) IBOutlet UITextView *commentTextView;
-@property (weak, nonatomic) IBOutlet UIButton *uploadButton;
+@property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
+@property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
+@property (nonatomic, weak) IBOutlet UITextField *nameTextField;
+@property (nonatomic, weak) IBOutlet UITextField *subjectTextField;
+@property (nonatomic, weak) IBOutlet UITextField *captchaValueTextField;
+@property (nonatomic, weak) IBOutlet UITextView *commentTextView;
+@property (nonatomic, weak) IBOutlet UIButton *uploadButton;
 
 // Constraints
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *captchaFieldHeight;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldHeight;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
 
 @end
 
 @implementation DVBCreatePostViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     [self prepareViewController];
-    [self requestCaptchaKeyWithAddress:GET_CAPTCHA_KEY_URL andUsercode:_usercode];
 }
-
 /**
  *  All View Controller tuning
  */
 - (void)prepareViewController
 {
+    _networking = [[DVBNetworking alloc] init];
+    
     /**
-     *  Если threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly
+     *  If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly
      */
-    if ([_threadNum isEqualToString:@"0"])
+    BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
+    if (isThreadNumZero)
     {
         NSString *newThreadTitle = NSLocalizedString(@"Новый тред", @"Title of modal view controller if we creating thread");
         self.title = newThreadTitle;
     }
     /**
-     *  Set comment from sharedComment
+     *  Set comment field text from sharedComment
      */
-    DVBComment *sharedComment = [DVBComment sharedComment];
-    NSString *commentText = sharedComment.comment;
-    
-    if (![commentText isEqualToString:@""]) {
-        _commentTextView.text = commentText;
-    }
+    _sharedComment = [DVBComment sharedComment];
+    NSString *commentText = _sharedComment.comment;
+    _commentTextView.text = commentText;
     
     /**
-     *  commentTextView settings
+     *  CommentTextView settings
      */
     _commentTextView.delegate = self;
     /**
-     *  Setup commentTextView appearance to look like textField.
+     *  Setup commentTextView appearance to look like textField
      */
     [_commentTextView.layer setBackgroundColor: [[UIColor whiteColor] CGColor]];
     [_commentTextView.layer setBorderColor: [[[UIColor grayColor] colorWithAlphaComponent:0.2] CGColor]];
@@ -104,26 +108,38 @@
     _captchaUpdateButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
     /**
-     *  Setup update button because of appearance
+     *  Setup button appearance
      */
     _captchaUpdateButton.adjustsImageWhenDisabled = YES;
     [_captchaUpdateButton sizeToFit];
     
     /**
-     *  Prepare usercode from default
+     *  Prepare usercode (aka passcode) from default
      */
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
+    
+    if ([_usercode isEqualToString:@""])
+    {
+        /**
+         *  Ask server for captcha if user code is not presented
+         */
+        [self requestCaptchaImage];
+    }
     
     [self changeConstraints];
 }
 
 #pragma mark - Change constrints
 
-- (void)changeConstraints {
+- (void)changeConstraints
+{
     /**
-     *  Turn off captcha fields if we have passcode
+     *  Remove captcha fields if we have passcode
      */
-    if (![_usercode isEqualToString:@""]) {
+    BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
+    
+    if (isUsercodeNotEmpty)
+    {
         _captchaFieldHeight.constant = 0;
         _fromThemeToCaptchaField.constant = 0;
         
@@ -132,85 +148,60 @@
         
         [_captchaUpdateButton removeConstraints:_captchaUpdateButton.constraints];
         [_captchaUpdateButton removeFromSuperview];
-        
     }
-    
 }
 
 #pragma mark - Captcha
 
 /**
- *  Request captchaKey.
+ *  Request captcha image (server key stores in networking.m)
  */
-- (void)requestCaptchaKeyWithAddress:(NSString *)address andUsercode:(NSString *)usercode
+- (void)requestCaptchaImage
 {
-    
-    AFHTTPSessionManager *captchaManager = [AFHTTPSessionManager manager];
-     captchaManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-     [captchaManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/plain"]];
-    
-    NSDictionary *params;
-    
-    if (usercode) {
-        params = @{@"usercode":usercode};
-    }
-    
-    [captchaManager GET:address
-              parameters:params
-                 success:^(NSURLSessionDataTask *task, id responseObject)
+    [_networking requestCaptchaKeyWithCompletion:^(NSString *completion)
     {
-         NSString *captchaKeyAnswer = [[NSString alloc] initWithData:responseObject
-                                                            encoding:NSUTF8StringEncoding];
-         if ([captchaKeyAnswer hasPrefix:@"CHECK"])
-         {
-             NSArray *arrayOfCaptchaKeyAnswers = [captchaKeyAnswer componentsSeparatedByString: @"\n"];
-             
-             NSString *captchaKey = [arrayOfCaptchaKeyAnswers lastObject];
-             
-             /**
-              *  Set var for requesting Yandex key image now and posting later.
-              */
-             _captchaKey = captchaKey;
-             
-             NSString *urlOfYandexCaptchaImage = [[NSString alloc] initWithFormat:GET_CAPTCHA_IMAGE_URL, captchaKey];
-
-             /**
-              *  Present yandex captcha image to VC.
-              */
-             [_captchaImage sd_setImageWithURL:[NSURL URLWithString:urlOfYandexCaptchaImage]];
-
-         }
-        else if ([captchaKeyAnswer hasPrefix:@"VIP"])
-        {
-            NSLog(@"VIP passcode confirmed");
-        }
-    }
-                 failure:^(NSURLSessionDataTask *task, NSError *error)
-    {
-        NSLog(@"Error: %@", error);
+        /**
+         *  Present yandex captcha image to VC
+         */
+        [_captchaImage sd_setImageWithURL:[NSURL URLWithString:completion]];
+        _captchaValueTextField.text = @"";
     }];
 }
 
 #pragma  mark - Actions
-
+/**
+ *  Update captcha image
+ */
 - (IBAction)captchaUpdateAction:(id)sender
 {
-    [self requestCaptchaKeyWithAddress:GET_CAPTCHA_KEY_URL andUsercode:_usercode];
-    _captchaValueTextField.text = @"";
+    [self requestCaptchaImage];
+    self.navigationItem.prompt = nil;
 }
-
+/**
+ *  Button action to fire post sending method
+ */
 - (IBAction)makePostAction:(id)sender
 {
     /**
      *  Dismiss keyboard before posting
      */
     [self.view endEditing:YES];
+    /**
+     *  Clear any prompt messages
+     */
+    self.navigationItem.prompt = nil;
     
+    /**
+     *  Get values from fields
+     */
     NSString *name = _nameTextField.text;
     NSString *subject = _subjectTextField.text;
     NSString *comment = _commentTextView.text;
     NSString *captchaValue = _captchaValueTextField.text;
     
+    /**
+     *  Fire actual method
+     */
     [self postMessageWithTask:@"post"
                      andBoard:_boardCode
                  andThreadnum:_threadNum
@@ -218,9 +209,9 @@
                      andEmail:@""
                    andSubject:subject
                    andComment:comment
-                   andCaptcha:_captchaKey
               andcaptchaValue:captchaValue
                   andUsercode:_usercode
+               andImageToLoad:_imageToLoad
      ];
 
 }
@@ -244,21 +235,14 @@
      *  Dismiss keyboard before dismissing View Controller
      */
     [self.view endEditing:YES];
+    /**
+     *  Fire actual dismissing method
+     */
     [self goBackToThread];
 }
 
 /**
- *  Make post to thread.
- *
- *  @param task         <#task description#>
- *  @param board        <#board description#>
- *  @param threadNum    <#threadNum description#>
- *  @param name         <#name description#>
- *  @param email        <#email description#>
- *  @param subject      <#subject description#>
- *  @param comment      <#comment description#>
- *  @param captchaKey   <#captchaKey description#>
- *  @param captchaValue <#captchaValue description#>
+ *  Send post to thread (or create thread)
  */
 - (void)postMessageWithTask:(NSString *)task
                    andBoard:(NSString *)board
@@ -267,9 +251,9 @@
                    andEmail:(NSString *)email
                  andSubject:(NSString *)subject
                  andComment:(NSString *)comment
-                 andCaptcha:(NSString *)captchaKey
             andcaptchaValue:(NSString *)captchaValue
                 andUsercode:(NSString *)usercode
+             andImageToLoad:(UIImage *)imageToLoad
 {
     
     /**
@@ -277,159 +261,56 @@
      */
     self.navigationItem.rightBarButtonItem.enabled = FALSE;
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    NSString *json = @"1";
-    
-    NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/posting.fcgi"];
-    
-    NSDictionary *params = @{
-                             @"task":task,
-                             @"json":json,
-                             @"board":board,
-                             @"thread":threadNum
-                             };
-    
-    NSMutableDictionary *mutableParams = [params mutableCopy];
-    
-    /**
-     *  Check userCode.
-     */
-    if (![_usercode isEqualToString:@""])
+    [_networking postMessageWithTask:task
+                            andBoard:board
+                        andThreadnum:threadNum
+                             andName:name
+                            andEmail:email
+                          andSubject:subject
+                          andComment:comment
+                     andcaptchaValue:captchaValue
+                         andUsercode:usercode
+                      andImageToLoad:imageToLoad
+                       andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
     {
         /**
-         *  If usercode presented then use as part of the message.
+         *  Set Navigation prompt accordingly to server answer
          */
-        NSLog(@"usercode way: %@", _usercode);
-        [mutableParams setValue:_usercode forKey:@"usercode"];
-    }
-    else
-    {
-        /**
-         *  Otherwise captcha.
-         */
-        [mutableParams setValue:captchaKey
-                         forKey:@"captcha"];
-        [mutableParams setValue:captchaValue
-                         forKey:@"captcha_value"];
-    }
-    
-    params = mutableParams;
-    
-    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];
-    
-    [manager POST:address parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
-    {
+        NSString *serverStatusMessage = messagePostServerAnswer.statusMessage;
+        self.navigationItem.prompt = serverStatusMessage;
         
-        /**
-         *  Added comment field this way because makaba don't handle it right otherwise
-         *  and name
-         *  and subject
-         */
-        [formData appendPartWithFormData:[comment dataUsingEncoding:NSUTF8StringEncoding]
-                                    name:@"comment"];
-        [formData appendPartWithFormData:[name dataUsingEncoding:NSUTF8StringEncoding]
-                                    name:@"name"];
-        [formData appendPartWithFormData:[subject dataUsingEncoding:NSUTF8StringEncoding]
-                                    name:@"subject"];
+        BOOL isPostWasSuccessful = messagePostServerAnswer.success;
         
-        /**
-         *  Check if image present.
-         */
-        if (_imageToLoad) {
-            NSData *fileData = UIImageJPEGRepresentation(_imageToLoad, 1.0);
-
-             [formData appendPartWithFileData:fileData
-                                         name:@"image1"
-                                     fileName:@"image.jpg"
-                                     mimeType:@"image/jpeg"];
-        }
-
-    }
-          success:^(NSURLSessionDataTask *task, id responseObject)
-    {
-        
-        NSString *responseString = [[NSString alloc] initWithData:responseObject
-                                                         encoding:NSUTF8StringEncoding];
-        NSLog(@"Success: %@", responseString);
-        
-        NSData *responseData = [responseString dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData
-                                                                           options:0
-                                                                             error:nil];
-        /**
-         *  Status field from response.
-         */
-        NSString *status = [responseDictionary objectForKey:@"Status"];
-        
-        /**
-         *  Reason field from response.
-         */
-        NSString *reason = [responseDictionary objectForKey:@"Reason"];
-        
-        /**
-         *  Compare answer to predefined values;
-         */
-        BOOL isOKanswer = [status isEqualToString:@"OK"];
-        BOOL isRedirectAnswer = [status isEqualToString:@"Redirect"];
-        
-        if (isOKanswer || isRedirectAnswer)
+        if (isPostWasSuccessful)
         {
             /**
-             *  If answer is good - make preparations in current ViewController
-             */
-            NSString *successTitle = NSLocalizedString(@"Успешно", @"Title of the createPostVC when post was successfull");
-            self.title = successTitle;
-            
-            DVBComment *sharedComment = [DVBComment sharedComment];
-            
-            /**
-             *  Clear saved comment if post was successfull.
+             *  Clear comment text and saved comment if post was successfull
              */
             _commentTextView.text = @"";
-            sharedComment.comment = @"";
+            _sharedComment.comment = @"";
             
-            self.navigationItem.rightBarButtonItem.enabled = FALSE;
+            NSString *threadToRedirectTo = messagePostServerAnswer.threadToRedirectTo;
+            BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
             
-            if (isRedirectAnswer)
+            if (isThreadToRedirectToNotEmpty)
             {
-                NSString *threadNumToRedirect = [[responseDictionary objectForKey:@"Target"] stringValue];
-                if (threadNumToRedirect)
-                {
-                    _createdThreadNum = threadNumToRedirect;
-                }
-                
+                _createdThreadNum = threadToRedirectTo;
             }
-            [self performSelector:@selector(goBackToThread) withObject:nil afterDelay:2.0];
+            /**
+             *  Dismiss View Controller if post was successfull
+             */
+            [self performSelector:@selector(goBackToThread)
+                       withObject:nil
+                       afterDelay:2.0];
         }
         else
         {
             /**
-             *  If post wasn't successful. Present alert with error code to user.
+             *  Enable Post button back
              */
-            NSString *alertAboutPostTitle = NSLocalizedString(@"Ошибка", @"Alert Title of the createPostVC when post was NOT successful");
-            
-            UIAlertView *alertAboutPost = [[UIAlertView alloc] initWithTitle:alertAboutPostTitle message:reason delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alertAboutPost setTag:0];
-            [alertAboutPost show];
             self.navigationItem.rightBarButtonItem.enabled = TRUE;
+            [self requestCaptchaImage];
         }
-
-    }
-          failure:^(NSURLSessionDataTask *task, NSError *error)
-    {
-        
-        DVBComment *sharedComment = [DVBComment sharedComment];
-        /**
-         *  Saved comment if post was not successfull.
-         */
-        sharedComment.comment = _commentTextView.text;
-        
-        NSString *cancelTitle = NSLocalizedString(@"Ошибка", @"Title of the createPostVC when post was NOT successful");
-        self.title = cancelTitle;
-        NSLog(@"Error: %@", error);
-        self.navigationItem.rightBarButtonItem.enabled = TRUE;
     }];
 }
 
@@ -446,7 +327,6 @@
          */
         // [self makeMenu];
     }
-    
 }
 
 /**
@@ -456,13 +336,15 @@
 {
     UIMenuController *commentMenu = [UIMenuController sharedMenuController];
     
-    UIMenuItem *boldItem = [[UIMenuItem alloc] initWithTitle:@"Жирный"
+    NSString *boldTitle = NSLocalizedString(@"Жирный", @"Title for Bold markup in custom UIMenu in Posting View Controller");
+    UIMenuItem *boldItem = [[UIMenuItem alloc] initWithTitle:boldTitle
                                                       action:@selector(boldMenuItemACtion)];
     
-    UIMenuItem *itelicItem = [[UIMenuItem alloc] initWithTitle:@"Наклонный"
+    NSString *italicTitle = NSLocalizedString(@"Наклонный", @"Title for Italic markup in custom UIMenu in Posting View Controller");
+    UIMenuItem *italicItem = [[UIMenuItem alloc] initWithTitle:italicTitle
                                                         action:@selector(italicMenuItemACtion)];
     
-    commentMenu.menuItems = [[NSArray alloc] initWithObjects:boldItem, itelicItem, nil];
+    commentMenu.menuItems = [[NSArray alloc] initWithObjects:boldItem, italicItem, nil];
     [commentMenu setTargetRect:_commentTextView.bounds
                         inView:self.view];
     // [commentMenu update];
@@ -495,7 +377,7 @@
 #pragma mark - Image(s) picking
 
 /**
- *  Pick picture from gallery.
+ *  Pick picture from gallery
  */
 - (void)pickPicture
 {
@@ -518,7 +400,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 }
 
 /**
- *  Delete all pointers to photo.
+ *  Delete all pointers to photo
  */
 - (void)deletePicture
 {
@@ -553,31 +435,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     } completion:nil];
 }
 
-#pragma  mark - Alerts
-
-- (void)alertView:(UIAlertView *)alertView
-clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSInteger alertViewTag = alertView.tag;
-    if (alertViewTag == 0) {
-        [self requestCaptchaKeyWithAddress:GET_CAPTCHA_KEY_URL andUsercode:_usercode];
-        _captchaValueTextField.text=@"";
-    }
-}
-
 #pragma  mark - Navigation
 
 - (void)goBackToThread
 {
-    NSString *threadNumberToCheck = _threadNum;
-    if ([threadNumberToCheck isEqualToString:@"0"])
+    self.navigationItem.prompt = nil;
+    BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
+    
+    if (isThreadNumZero)
     {
-        [self performSegueWithIdentifier:@"dismissWithCancelToNewThreadSegue"
+        [self performSegueWithIdentifier:SEGUE_DISMISS_TO_NEW_THREAD
                                   sender:self];
     }
     else
     {
-        [self performSegueWithIdentifier:@"dismissWithCancelToThreadSegue"
+        [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
     }
     
@@ -586,41 +458,37 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
 - (void)prepareForSegue:(UIStoryboardSegue *)segue
                  sender:(id)sender
 {
-    DVBComment *sharedComment = [DVBComment sharedComment];
     /**
-     *  Save comment.
+     *  Save comment
      */
-    sharedComment.comment = _commentTextView.text;
+    _sharedComment.comment = _commentTextView.text;
+    
+    BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
+    BOOL isSegueDismissToNewThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_NEW_THREAD];
     
     /**
-     *  Xcode will complain if we access a weak property more than
-     *  once here, since it could in theory be nilled between accesses
-     *  leading to unpredictable results. So we'll start by taking
-     *  a local, strong reference to the delegate.
+     *  Xcode will complain if we access a weak property more than once here, since it could in theory be nilled between accesses
+     *  leading to unpredictable results. So we'll start by taking a local, strong reference to the delegate.
      */
     id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
     
-    if ([[segue identifier] isEqualToString:@"dismissWithCancelToThreadSegue"]) {
-
+    if (isSegueDismissToThread)
+    {
         /**
          *  Update thread in any case (was post successfull or not)
-         *
-         *  @param updateThreadAfterPosting <#updateThreadAfterPosting description#>
-         *
-         *  @return <#return value description#>
          */
         if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)])
         {
             [strongDelegate updateThreadAfterPosting];
         }
     }
-    else if ([[segue identifier] isEqualToString:@"dismissWithCancelToNewThreadSegue"])
+    else if (isSegueDismissToNewThread)
     {
         if (_createdThreadNum)
         {
             NSLog(@"New thread num: %@. Redirecting.", _createdThreadNum);
             /**
-             *  Our delegate method is not optional, but we should check if delegate implements it anyway.
+             *  Our delegate method is not optional, but we should check if delegate implements it anyway
              */
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)])
             {
