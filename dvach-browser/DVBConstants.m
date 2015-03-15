@@ -34,6 +34,8 @@ NSString *const SEGUE_TO_SETTINGS = @"segueToSettings";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
 NSString *const SEGUE_TO_NEW_THREAD = @"segueToNewThread";
+NSString *const SEGUE_DISMISS_TO_THREAD = @"dismissWithCancelToThreadSegue";
+NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegue";
 
 // cells
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
