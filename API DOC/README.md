@@ -10,7 +10,7 @@ http://2ch.hk/makaba/mobile.fcgi?task=get_boards
 
 ## Получение списка тредов для доски
 
-https://2ch.hk/**board**/**page**.json
+https://2ch.hk/board/page.json
 
 **board** - код доски (b, soc и т.д.)
 
@@ -22,7 +22,7 @@ https://2ch.hk/**board**/**page**.json
 
 ## Получение списка сообщений для треда
 
-https://2ch.hk/**board**/res/**thread_num**.json
+https://2ch.hk/board/res/thread_num.json
 
 **board** - код доски (b, soc и т.д.)
 
@@ -63,18 +63,18 @@ https://2ch.hk/makaba/posting.fcgi
 Адрес запроса: https://2ch.hk/makaba/captcha.fcgi
 Ответ сервера представлен в текстовом формате и состоит из двух строк:
 
-**CHECK
-
-xxxyyyzzzxxxyyyzzz**
-
-,где **xxxyyyzzzxxxyyyzzz** - captcha-key
+```
+CHECK
+xxxyyyzzzxxxyyyzzz
+```
+где **xxxyyyzzzxxxyyyzzz** - нужный нам параметр captcha-key.
 
 Необходимо дополнительно сохранить значение **captcha-key** для дальнейшего использования при отправке сообщения в тред.
 
 + Создание ссылки из captcha-key
 
 Ссылка для запроса капча-изображения имеет вид:
-http://captcha.yandex.net/image?key=**xxxyyyzzzxxxyyyzzz**
+http://captcha.yandex.net/image?key=xxxyyyzzzxxxyyyzzz
 
 + переход по ссылке и получение изображения Яндекс-капчи
 
