@@ -11,52 +11,52 @@
 		840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */; };
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
-		847CB86E19EC4B490093FDE1 /* DVBPostObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 847CB86D19EC4B490093FDE1 /* DVBPostObj.m */; };
-		847CB87119EC4FC10093FDE1 /* DVBPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 847CB87019EC4FC10093FDE1 /* DVBPostTableViewCell.m */; };
-		847E97CB19E873C400E16756 /* DVBThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 847E97CA19E873C400E16756 /* DVBThreadViewController.m */; };
-		84AA9A0E19E5CCE7009C2811 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA9A0D19E5CCE7009C2811 /* NSString+HTML.m */; };
-		84AA9A1119E5CD94009C2811 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA9A1019E5CD94009C2811 /* GTMNSString+HTML.m */; };
 		84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */; };
-		84AA9A1619E5E5E6009C2811 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AA9A1519E5E5E6009C2811 /* Reachability.m */; };
-		84CF8C8D1A0E643F00585D88 /* DVBBadPostStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF8C8C1A0E643F00585D88 /* DVBBadPostStorage.m */; };
-		84CF8C901A0E7C7600585D88 /* DVBBadPost.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF8C8F1A0E7C7600585D88 /* DVBBadPost.m */; };
-		84CF8C931A0FC57F00585D88 /* DVBSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CF8C921A0FC57F00585D88 /* DVBSettingsTableViewController.m */; };
 		84CFC51019E1526E004D0BB8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC50F19E1526E004D0BB8 /* main.m */; };
 		84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC51219E1526E004D0BB8 /* AppDelegate.m */; };
 		84CFC51919E1526E004D0BB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51719E1526E004D0BB8 /* Main.storyboard */; };
 		84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51A19E1526E004D0BB8 /* Images.xcassets */; };
 		84CFC52A19E1526E004D0BB8 /* dvach_browserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC52919E1526E004D0BB8 /* dvach_browserTests.m */; };
-		84CFC53819E15469004D0BB8 /* DVBBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC53719E15469004D0BB8 /* DVBBoardViewController.m */; };
-		84CFC53B19E163E0004D0BB8 /* DVBThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC53A19E163E0004D0BB8 /* DVBThread.m */; };
-		84CFC53E19E187B1004D0BB8 /* DVBThreadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC53D19E187B1004D0BB8 /* DVBThreadTableViewCell.m */; };
-		84D7F5E01A09672000A5C3A7 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D7F5DF1A09672000A5C3A7 /* DVBAgreementViewController.m */; };
-		84D7F5E31A09761A00A5C3A7 /* DVBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D7F5E21A09761A00A5C3A7 /* DVBConstants.m */; };
-		94131BD61A8D429C0033657C /* DVBValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94131BD51A8D429C0033657C /* DVBValidation.m */; };
-		94131BD91A8D444F0033657C /* DVBBoardsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 94131BD81A8D444F0033657C /* DVBBoardsModel.m */; };
-		94131BDD1A8D4D850033657C /* DVBAlertViewGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 94131BDC1A8D4D850033657C /* DVBAlertViewGenerator.m */; };
-		943B7CFD1A8DB32D003CD87A /* DVBBoardTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 943B7CFC1A8DB32D003CD87A /* DVBBoardTableViewCell.m */; };
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
-		9479E53E1A783460003C59BB /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5201A783460003C59BB /* IQNSArray+Sort.m */; };
-		9479E53F1A783460003C59BB /* IQUIView+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5221A783460003C59BB /* IQUIView+Hierarchy.m */; };
-		9479E5401A783460003C59BB /* IQUIWindow+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5241A783460003C59BB /* IQUIWindow+Hierarchy.m */; };
-		9479E5411A783460003C59BB /* IQKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5291A783460003C59BB /* IQKeyboardManager.m */; };
-		9479E5421A783460003C59BB /* IQKeyboardReturnKeyHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E52B1A783460003C59BB /* IQKeyboardReturnKeyHandler.m */; };
-		9479E5431A783460003C59BB /* IQSegmentedNextPrevious.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E52E1A783460003C59BB /* IQSegmentedNextPrevious.m */; };
-		9479E5441A783460003C59BB /* IQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5311A783460003C59BB /* IQTextView.m */; };
-		9479E5451A783460003C59BB /* IQBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5341A783460003C59BB /* IQBarButtonItem.m */; };
-		9479E5461A783460003C59BB /* IQTitleBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5361A783460003C59BB /* IQTitleBarButtonItem.m */; };
-		9479E5471A783460003C59BB /* IQToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E5381A783460003C59BB /* IQToolbar.m */; };
-		9479E5481A783460003C59BB /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E53A1A783460003C59BB /* IQUIView+IQKeyboardToolbar.m */; };
-		9479E5491A783460003C59BB /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9479E53D1A783460003C59BB /* IQKeyboardManager.bundle */; };
-		9479E54C1A783961003C59BB /* DVBComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 9479E54B1A783961003C59BB /* DVBComment.m */; };
 		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
-		94ADA4111A76C88F005E2956 /* DVBCreatePostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94ADA4101A76C88F005E2956 /* DVBCreatePostViewController.m */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
-		A1823DC91A761CAD00F01117 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A1823DC81A761CAD00F01117 /* DVBDismissSegue.m */; };
-		A18632081A89EF21006D4409 /* DVBNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = A18632071A89EF21006D4409 /* DVBNetworking.m */; };
-		A1C97F6B19EFF7CF007567EB /* DVBBoardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1C97F6A19EFF7CF007567EB /* DVBBoardsViewController.m */; };
-		A1CFB7251A9DB92A0093EE42 /* DVBStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = A1CFB7241A9DB92A0093EE42 /* DVBStatus.m */; };
-		A1F1F20219EFC5D2006AD8E5 /* DVBBoardObj.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F1F20119EFC5D2006AD8E5 /* DVBBoardObj.m */; };
+		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
+		A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE61AB7355600BE31F4 /* DVBBoardsViewController.m */; };
+		A155FEF11AB7355600BE31F4 /* DVBBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE81AB7355600BE31F4 /* DVBBoardViewController.m */; };
+		A155FEF21AB7355600BE31F4 /* DVBCreatePostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEEA1AB7355600BE31F4 /* DVBCreatePostViewController.m */; };
+		A155FEF31AB7355600BE31F4 /* DVBSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEEC1AB7355600BE31F4 /* DVBSettingsTableViewController.m */; };
+		A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEEE1AB7355600BE31F4 /* DVBThreadViewController.m */; };
+		A155FF031AB735DD00BE31F4 /* DVBAlertViewGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEF61AB735DD00BE31F4 /* DVBAlertViewGenerator.m */; };
+		A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEF81AB735DD00BE31F4 /* DVBBadPostStorage.m */; };
+		A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEFA1AB735DD00BE31F4 /* DVBBoardsModel.m */; };
+		A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEFC1AB735DD00BE31F4 /* DVBComment.m */; };
+		A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEFE1AB735DD00BE31F4 /* DVBConstants.m */; };
+		A155FF081AB735DD00BE31F4 /* DVBNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF001AB735DD00BE31F4 /* DVBNetworking.m */; };
+		A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF021AB735DD00BE31F4 /* DVBValidation.m */; };
+		A155FF141AB7362A00BE31F4 /* DVBBadPost.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF0B1AB7362A00BE31F4 /* DVBBadPost.m */; };
+		A155FF151AB7362A00BE31F4 /* DVBBoardObj.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF0D1AB7362A00BE31F4 /* DVBBoardObj.m */; };
+		A155FF161AB7362A00BE31F4 /* DVBPostObj.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF0F1AB7362A00BE31F4 /* DVBPostObj.m */; };
+		A155FF171AB7362A00BE31F4 /* DVBStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF111AB7362A00BE31F4 /* DVBStatus.m */; };
+		A155FF181AB7362A00BE31F4 /* DVBThread.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF131AB7362A00BE31F4 /* DVBThread.m */; };
+		A155FF1F1AB7366000BE31F4 /* DVBBoardTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1A1AB7366000BE31F4 /* DVBBoardTableViewCell.m */; };
+		A155FF201AB7366000BE31F4 /* DVBPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1C1AB7366000BE31F4 /* DVBPostTableViewCell.m */; };
+		A155FF211AB7366000BE31F4 /* DVBThreadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1E1AB7366000BE31F4 /* DVBThreadTableViewCell.m */; };
+		A155FF281AB736B800BE31F4 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF231AB736B800BE31F4 /* GTMNSString+HTML.m */; };
+		A155FF291AB736B800BE31F4 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF251AB736B800BE31F4 /* NSString+HTML.m */; };
+		A155FF2A1AB736B800BE31F4 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF271AB736B800BE31F4 /* Reachability.m */; };
+		A155FF4C1AB736C100BE31F4 /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF2E1AB736C100BE31F4 /* IQNSArray+Sort.m */; };
+		A155FF4D1AB736C100BE31F4 /* IQUIView+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF301AB736C100BE31F4 /* IQUIView+Hierarchy.m */; };
+		A155FF4E1AB736C100BE31F4 /* IQUIWindow+Hierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF321AB736C100BE31F4 /* IQUIWindow+Hierarchy.m */; };
+		A155FF4F1AB736C100BE31F4 /* IQKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF371AB736C100BE31F4 /* IQKeyboardManager.m */; };
+		A155FF501AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF391AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m */; };
+		A155FF511AB736C100BE31F4 /* IQSegmentedNextPrevious.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF3C1AB736C100BE31F4 /* IQSegmentedNextPrevious.m */; };
+		A155FF521AB736C100BE31F4 /* IQTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF3F1AB736C100BE31F4 /* IQTextView.m */; };
+		A155FF531AB736C100BE31F4 /* IQBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF421AB736C100BE31F4 /* IQBarButtonItem.m */; };
+		A155FF541AB736C100BE31F4 /* IQTitleBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF441AB736C100BE31F4 /* IQTitleBarButtonItem.m */; };
+		A155FF551AB736C100BE31F4 /* IQToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF461AB736C100BE31F4 /* IQToolbar.m */; };
+		A155FF561AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF481AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m */; };
+		A155FF571AB736C100BE31F4 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A155FF4B1AB736C100BE31F4 /* IQKeyboardManager.bundle */; };
+		A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,25 +74,7 @@
 		840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8428B63919EDAC74007973A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		847CB86C19EC4B490093FDE1 /* DVBPostObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBPostObj.h; sourceTree = "<group>"; };
-		847CB86D19EC4B490093FDE1 /* DVBPostObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBPostObj.m; sourceTree = "<group>"; };
-		847CB86F19EC4FC10093FDE1 /* DVBPostTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBPostTableViewCell.h; sourceTree = "<group>"; };
-		847CB87019EC4FC10093FDE1 /* DVBPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBPostTableViewCell.m; sourceTree = "<group>"; };
-		847E97C919E873C400E16756 /* DVBThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBThreadViewController.h; sourceTree = "<group>"; };
-		847E97CA19E873C400E16756 /* DVBThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBThreadViewController.m; sourceTree = "<group>"; };
-		84AA9A0C19E5CCE7009C2811 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
-		84AA9A0D19E5CCE7009C2811 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
-		84AA9A0F19E5CD94009C2811 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
-		84AA9A1019E5CD94009C2811 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
 		84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		84AA9A1419E5E5E6009C2811 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		84AA9A1519E5E5E6009C2811 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		84CF8C8B1A0E643F00585D88 /* DVBBadPostStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBadPostStorage.h; sourceTree = "<group>"; };
-		84CF8C8C1A0E643F00585D88 /* DVBBadPostStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBadPostStorage.m; sourceTree = "<group>"; };
-		84CF8C8E1A0E7C7600585D88 /* DVBBadPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBadPost.h; sourceTree = "<group>"; };
-		84CF8C8F1A0E7C7600585D88 /* DVBBadPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBadPost.m; sourceTree = "<group>"; };
-		84CF8C911A0FC57F00585D88 /* DVBSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBSettingsTableViewController.h; sourceTree = "<group>"; };
-		84CF8C921A0FC57F00585D88 /* DVBSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBSettingsTableViewController.m; sourceTree = "<group>"; };
 		84CFC50A19E1526E004D0BB8 /* dvach-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dvach-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CFC50E19E1526E004D0BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CFC50F19E1526E004D0BB8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -103,70 +85,88 @@
 		84CFC52319E1526E004D0BB8 /* dvach-browserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "dvach-browserTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CFC52819E1526E004D0BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CFC52919E1526E004D0BB8 /* dvach_browserTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = dvach_browserTests.m; sourceTree = "<group>"; };
-		84CFC53619E15469004D0BB8 /* DVBBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBoardViewController.h; sourceTree = "<group>"; };
-		84CFC53719E15469004D0BB8 /* DVBBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBoardViewController.m; sourceTree = "<group>"; };
-		84CFC53919E163E0004D0BB8 /* DVBThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBThread.h; sourceTree = "<group>"; };
-		84CFC53A19E163E0004D0BB8 /* DVBThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBThread.m; sourceTree = "<group>"; };
-		84CFC53C19E187B1004D0BB8 /* DVBThreadTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBThreadTableViewCell.h; sourceTree = "<group>"; };
-		84CFC53D19E187B1004D0BB8 /* DVBThreadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBThreadTableViewCell.m; sourceTree = "<group>"; };
-		84D7F5DE1A09672000A5C3A7 /* DVBAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBAgreementViewController.h; sourceTree = "<group>"; };
-		84D7F5DF1A09672000A5C3A7 /* DVBAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBAgreementViewController.m; sourceTree = "<group>"; };
-		84D7F5E11A09761A00A5C3A7 /* DVBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBConstants.h; sourceTree = "<group>"; };
-		84D7F5E21A09761A00A5C3A7 /* DVBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBConstants.m; sourceTree = "<group>"; };
 		8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		94131BD41A8D429C0033657C /* DVBValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBValidation.h; sourceTree = "<group>"; };
-		94131BD51A8D429C0033657C /* DVBValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBValidation.m; sourceTree = "<group>"; };
-		94131BD71A8D444F0033657C /* DVBBoardsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBoardsModel.h; sourceTree = "<group>"; };
-		94131BD81A8D444F0033657C /* DVBBoardsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBoardsModel.m; sourceTree = "<group>"; };
-		94131BDB1A8D4D850033657C /* DVBAlertViewGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBAlertViewGenerator.h; sourceTree = "<group>"; };
-		94131BDC1A8D4D850033657C /* DVBAlertViewGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBAlertViewGenerator.m; sourceTree = "<group>"; };
-		943B7CFB1A8DB32D003CD87A /* DVBBoardTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBoardTableViewCell.h; sourceTree = "<group>"; };
-		943B7CFC1A8DB32D003CD87A /* DVBBoardTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBoardTableViewCell.m; sourceTree = "<group>"; };
 		946394151A87A26C004CAB6E /* BadBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BadBoards.plist; sourceTree = "<group>"; };
-		9479E51F1A783460003C59BB /* IQNSArray+Sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQNSArray+Sort.h"; sourceTree = "<group>"; };
-		9479E5201A783460003C59BB /* IQNSArray+Sort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQNSArray+Sort.m"; sourceTree = "<group>"; };
-		9479E5211A783460003C59BB /* IQUIView+Hierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+Hierarchy.h"; sourceTree = "<group>"; };
-		9479E5221A783460003C59BB /* IQUIView+Hierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIView+Hierarchy.m"; sourceTree = "<group>"; };
-		9479E5231A783460003C59BB /* IQUIWindow+Hierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIWindow+Hierarchy.h"; sourceTree = "<group>"; };
-		9479E5241A783460003C59BB /* IQUIWindow+Hierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIWindow+Hierarchy.m"; sourceTree = "<group>"; };
-		9479E5261A783460003C59BB /* IQKeyboardManagerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManagerConstants.h; sourceTree = "<group>"; };
-		9479E5271A783460003C59BB /* IQKeyboardManagerConstantsInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManagerConstantsInternal.h; sourceTree = "<group>"; };
-		9479E5281A783460003C59BB /* IQKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManager.h; sourceTree = "<group>"; };
-		9479E5291A783460003C59BB /* IQKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyboardManager.m; sourceTree = "<group>"; };
-		9479E52A1A783460003C59BB /* IQKeyboardReturnKeyHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardReturnKeyHandler.h; sourceTree = "<group>"; };
-		9479E52B1A783460003C59BB /* IQKeyboardReturnKeyHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyboardReturnKeyHandler.m; sourceTree = "<group>"; };
-		9479E52D1A783460003C59BB /* IQSegmentedNextPrevious.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQSegmentedNextPrevious.h; sourceTree = "<group>"; };
-		9479E52E1A783460003C59BB /* IQSegmentedNextPrevious.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQSegmentedNextPrevious.m; sourceTree = "<group>"; };
-		9479E5301A783460003C59BB /* IQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTextView.h; sourceTree = "<group>"; };
-		9479E5311A783460003C59BB /* IQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTextView.m; sourceTree = "<group>"; };
-		9479E5331A783460003C59BB /* IQBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQBarButtonItem.h; sourceTree = "<group>"; };
-		9479E5341A783460003C59BB /* IQBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQBarButtonItem.m; sourceTree = "<group>"; };
-		9479E5351A783460003C59BB /* IQTitleBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTitleBarButtonItem.h; sourceTree = "<group>"; };
-		9479E5361A783460003C59BB /* IQTitleBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTitleBarButtonItem.m; sourceTree = "<group>"; };
-		9479E5371A783460003C59BB /* IQToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQToolbar.h; sourceTree = "<group>"; };
-		9479E5381A783460003C59BB /* IQToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQToolbar.m; sourceTree = "<group>"; };
-		9479E5391A783460003C59BB /* IQUIView+IQKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+IQKeyboardToolbar.h"; sourceTree = "<group>"; };
-		9479E53A1A783460003C59BB /* IQUIView+IQKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIView+IQKeyboardToolbar.m"; sourceTree = "<group>"; };
-		9479E53B1A783460003C59BB /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
-		9479E53D1A783460003C59BB /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
-		9479E54A1A783961003C59BB /* DVBComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBComment.h; sourceTree = "<group>"; };
-		9479E54B1A783961003C59BB /* DVBComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBComment.m; sourceTree = "<group>"; };
 		94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMessagePostServerAnswer.h; path = Models/Objects/DVBMessagePostServerAnswer.h; sourceTree = "<group>"; };
 		94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMessagePostServerAnswer.m; path = Models/Objects/DVBMessagePostServerAnswer.m; sourceTree = "<group>"; };
-		94ADA40F1A76C88F005E2956 /* DVBCreatePostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBCreatePostViewController.h; sourceTree = "<group>"; };
-		94ADA4101A76C88F005E2956 /* DVBCreatePostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBCreatePostViewController.m; sourceTree = "<group>"; };
 		A100A4501AAEF56F0027F917 /* DVBBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardModel.h; path = Models/DVBBoardModel.h; sourceTree = "<group>"; };
 		A100A4511AAEF56F0027F917 /* DVBBoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardModel.m; path = Models/DVBBoardModel.m; sourceTree = "<group>"; };
-		A1823DC71A761CAD00F01117 /* DVBDismissSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBDismissSegue.h; sourceTree = "<group>"; };
-		A1823DC81A761CAD00F01117 /* DVBDismissSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBDismissSegue.m; sourceTree = "<group>"; };
-		A18632061A89EF21006D4409 /* DVBNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBNetworking.h; sourceTree = "<group>"; };
-		A18632071A89EF21006D4409 /* DVBNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBNetworking.m; sourceTree = "<group>"; };
-		A1C97F6919EFF7CF007567EB /* DVBBoardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBoardsViewController.h; sourceTree = "<group>"; };
-		A1C97F6A19EFF7CF007567EB /* DVBBoardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBoardsViewController.m; sourceTree = "<group>"; };
-		A1CFB7231A9DB92A0093EE42 /* DVBStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBStatus.h; sourceTree = "<group>"; };
-		A1CFB7241A9DB92A0093EE42 /* DVBStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBStatus.m; sourceTree = "<group>"; };
-		A1F1F20019EFC5D2006AD8E5 /* DVBBoardObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVBBoardObj.h; sourceTree = "<group>"; };
-		A1F1F20119EFC5D2006AD8E5 /* DVBBoardObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBBoardObj.m; sourceTree = "<group>"; };
+		A155FEE31AB7355600BE31F4 /* DVBAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAgreementViewController.h; path = Controllers/DVBAgreementViewController.h; sourceTree = "<group>"; };
+		A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAgreementViewController.m; path = Controllers/DVBAgreementViewController.m; sourceTree = "<group>"; };
+		A155FEE51AB7355600BE31F4 /* DVBBoardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardsViewController.h; path = Controllers/DVBBoardsViewController.h; sourceTree = "<group>"; };
+		A155FEE61AB7355600BE31F4 /* DVBBoardsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardsViewController.m; path = Controllers/DVBBoardsViewController.m; sourceTree = "<group>"; };
+		A155FEE71AB7355600BE31F4 /* DVBBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardViewController.h; path = Controllers/DVBBoardViewController.h; sourceTree = "<group>"; };
+		A155FEE81AB7355600BE31F4 /* DVBBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardViewController.m; path = Controllers/DVBBoardViewController.m; sourceTree = "<group>"; };
+		A155FEE91AB7355600BE31F4 /* DVBCreatePostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCreatePostViewController.h; path = Controllers/DVBCreatePostViewController.h; sourceTree = "<group>"; };
+		A155FEEA1AB7355600BE31F4 /* DVBCreatePostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCreatePostViewController.m; path = Controllers/DVBCreatePostViewController.m; sourceTree = "<group>"; };
+		A155FEEB1AB7355600BE31F4 /* DVBSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBSettingsTableViewController.h; path = Controllers/DVBSettingsTableViewController.h; sourceTree = "<group>"; };
+		A155FEEC1AB7355600BE31F4 /* DVBSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBSettingsTableViewController.m; path = Controllers/DVBSettingsTableViewController.m; sourceTree = "<group>"; };
+		A155FEED1AB7355600BE31F4 /* DVBThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadViewController.h; path = Controllers/DVBThreadViewController.h; sourceTree = "<group>"; };
+		A155FEEE1AB7355600BE31F4 /* DVBThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadViewController.m; path = Controllers/DVBThreadViewController.m; sourceTree = "<group>"; };
+		A155FEF51AB735DD00BE31F4 /* DVBAlertViewGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAlertViewGenerator.h; path = Models/DVBAlertViewGenerator.h; sourceTree = "<group>"; };
+		A155FEF61AB735DD00BE31F4 /* DVBAlertViewGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAlertViewGenerator.m; path = Models/DVBAlertViewGenerator.m; sourceTree = "<group>"; };
+		A155FEF71AB735DD00BE31F4 /* DVBBadPostStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBadPostStorage.h; path = Models/DVBBadPostStorage.h; sourceTree = "<group>"; };
+		A155FEF81AB735DD00BE31F4 /* DVBBadPostStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBadPostStorage.m; path = Models/DVBBadPostStorage.m; sourceTree = "<group>"; };
+		A155FEF91AB735DD00BE31F4 /* DVBBoardsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardsModel.h; path = Models/DVBBoardsModel.h; sourceTree = "<group>"; };
+		A155FEFA1AB735DD00BE31F4 /* DVBBoardsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardsModel.m; path = Models/DVBBoardsModel.m; sourceTree = "<group>"; };
+		A155FEFB1AB735DD00BE31F4 /* DVBComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBComment.h; path = Models/DVBComment.h; sourceTree = "<group>"; };
+		A155FEFC1AB735DD00BE31F4 /* DVBComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBComment.m; path = Models/DVBComment.m; sourceTree = "<group>"; };
+		A155FEFD1AB735DD00BE31F4 /* DVBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBConstants.h; path = Models/DVBConstants.h; sourceTree = "<group>"; };
+		A155FEFE1AB735DD00BE31F4 /* DVBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBConstants.m; path = Models/DVBConstants.m; sourceTree = "<group>"; };
+		A155FEFF1AB735DD00BE31F4 /* DVBNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBNetworking.h; path = Models/DVBNetworking.h; sourceTree = "<group>"; };
+		A155FF001AB735DD00BE31F4 /* DVBNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBNetworking.m; path = Models/DVBNetworking.m; sourceTree = "<group>"; };
+		A155FF011AB735DD00BE31F4 /* DVBValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBValidation.h; path = Models/DVBValidation.h; sourceTree = "<group>"; };
+		A155FF021AB735DD00BE31F4 /* DVBValidation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBValidation.m; path = Models/DVBValidation.m; sourceTree = "<group>"; };
+		A155FF0A1AB7362A00BE31F4 /* DVBBadPost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBadPost.h; path = Models/Objects/DVBBadPost.h; sourceTree = "<group>"; };
+		A155FF0B1AB7362A00BE31F4 /* DVBBadPost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBadPost.m; path = Models/Objects/DVBBadPost.m; sourceTree = "<group>"; };
+		A155FF0C1AB7362A00BE31F4 /* DVBBoardObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardObj.h; path = Models/Objects/DVBBoardObj.h; sourceTree = "<group>"; };
+		A155FF0D1AB7362A00BE31F4 /* DVBBoardObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardObj.m; path = Models/Objects/DVBBoardObj.m; sourceTree = "<group>"; };
+		A155FF0E1AB7362A00BE31F4 /* DVBPostObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostObj.h; path = Models/Objects/DVBPostObj.h; sourceTree = "<group>"; };
+		A155FF0F1AB7362A00BE31F4 /* DVBPostObj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostObj.m; path = Models/Objects/DVBPostObj.m; sourceTree = "<group>"; };
+		A155FF101AB7362A00BE31F4 /* DVBStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBStatus.h; path = Models/Objects/DVBStatus.h; sourceTree = "<group>"; };
+		A155FF111AB7362A00BE31F4 /* DVBStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBStatus.m; path = Models/Objects/DVBStatus.m; sourceTree = "<group>"; };
+		A155FF121AB7362A00BE31F4 /* DVBThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThread.h; path = Models/Objects/DVBThread.h; sourceTree = "<group>"; };
+		A155FF131AB7362A00BE31F4 /* DVBThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThread.m; path = Models/Objects/DVBThread.m; sourceTree = "<group>"; };
+		A155FF191AB7366000BE31F4 /* DVBBoardTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardTableViewCell.h; path = Views/DVBBoardTableViewCell.h; sourceTree = "<group>"; };
+		A155FF1A1AB7366000BE31F4 /* DVBBoardTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardTableViewCell.m; path = Views/DVBBoardTableViewCell.m; sourceTree = "<group>"; };
+		A155FF1B1AB7366000BE31F4 /* DVBPostTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostTableViewCell.h; path = Views/DVBPostTableViewCell.h; sourceTree = "<group>"; };
+		A155FF1C1AB7366000BE31F4 /* DVBPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostTableViewCell.m; path = Views/DVBPostTableViewCell.m; sourceTree = "<group>"; };
+		A155FF1D1AB7366000BE31F4 /* DVBThreadTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadTableViewCell.h; path = Views/DVBThreadTableViewCell.h; sourceTree = "<group>"; };
+		A155FF1E1AB7366000BE31F4 /* DVBThreadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadTableViewCell.m; path = Views/DVBThreadTableViewCell.m; sourceTree = "<group>"; };
+		A155FF221AB736B800BE31F4 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Third party/Other/GTMNSString+HTML.h"; sourceTree = SOURCE_ROOT; };
+		A155FF231AB736B800BE31F4 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "Third party/Other/GTMNSString+HTML.m"; sourceTree = SOURCE_ROOT; };
+		A155FF241AB736B800BE31F4 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "Third party/Other/NSString+HTML.h"; sourceTree = SOURCE_ROOT; };
+		A155FF251AB736B800BE31F4 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "Third party/Other/NSString+HTML.m"; sourceTree = SOURCE_ROOT; };
+		A155FF261AB736B800BE31F4 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = "Third party/Other/Reachability.h"; sourceTree = SOURCE_ROOT; };
+		A155FF271AB736B800BE31F4 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = "Third party/Other/Reachability.m"; sourceTree = SOURCE_ROOT; };
+		A155FF2D1AB736C100BE31F4 /* IQNSArray+Sort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQNSArray+Sort.h"; sourceTree = "<group>"; };
+		A155FF2E1AB736C100BE31F4 /* IQNSArray+Sort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQNSArray+Sort.m"; sourceTree = "<group>"; };
+		A155FF2F1AB736C100BE31F4 /* IQUIView+Hierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+Hierarchy.h"; sourceTree = "<group>"; };
+		A155FF301AB736C100BE31F4 /* IQUIView+Hierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIView+Hierarchy.m"; sourceTree = "<group>"; };
+		A155FF311AB736C100BE31F4 /* IQUIWindow+Hierarchy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIWindow+Hierarchy.h"; sourceTree = "<group>"; };
+		A155FF321AB736C100BE31F4 /* IQUIWindow+Hierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIWindow+Hierarchy.m"; sourceTree = "<group>"; };
+		A155FF341AB736C100BE31F4 /* IQKeyboardManagerConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManagerConstants.h; sourceTree = "<group>"; };
+		A155FF351AB736C100BE31F4 /* IQKeyboardManagerConstantsInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManagerConstantsInternal.h; sourceTree = "<group>"; };
+		A155FF361AB736C100BE31F4 /* IQKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManager.h; sourceTree = "<group>"; };
+		A155FF371AB736C100BE31F4 /* IQKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyboardManager.m; sourceTree = "<group>"; };
+		A155FF381AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardReturnKeyHandler.h; sourceTree = "<group>"; };
+		A155FF391AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyboardReturnKeyHandler.m; sourceTree = "<group>"; };
+		A155FF3B1AB736C100BE31F4 /* IQSegmentedNextPrevious.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQSegmentedNextPrevious.h; sourceTree = "<group>"; };
+		A155FF3C1AB736C100BE31F4 /* IQSegmentedNextPrevious.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQSegmentedNextPrevious.m; sourceTree = "<group>"; };
+		A155FF3E1AB736C100BE31F4 /* IQTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTextView.h; sourceTree = "<group>"; };
+		A155FF3F1AB736C100BE31F4 /* IQTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTextView.m; sourceTree = "<group>"; };
+		A155FF411AB736C100BE31F4 /* IQBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQBarButtonItem.h; sourceTree = "<group>"; };
+		A155FF421AB736C100BE31F4 /* IQBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQBarButtonItem.m; sourceTree = "<group>"; };
+		A155FF431AB736C100BE31F4 /* IQTitleBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQTitleBarButtonItem.h; sourceTree = "<group>"; };
+		A155FF441AB736C100BE31F4 /* IQTitleBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQTitleBarButtonItem.m; sourceTree = "<group>"; };
+		A155FF451AB736C100BE31F4 /* IQToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQToolbar.h; sourceTree = "<group>"; };
+		A155FF461AB736C100BE31F4 /* IQToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQToolbar.m; sourceTree = "<group>"; };
+		A155FF471AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IQUIView+IQKeyboardToolbar.h"; sourceTree = "<group>"; };
+		A155FF481AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IQUIView+IQKeyboardToolbar.m"; sourceTree = "<group>"; };
+		A155FF491AB736C100BE31F4 /* KeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeyboardManager.h; sourceTree = "<group>"; };
+		A155FF4B1AB736C100BE31F4 /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
+		A155FF581AB736F100BE31F4 /* DVBDismissSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDismissSegue.h; path = Segues/DVBDismissSegue.h; sourceTree = "<group>"; };
+		A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDismissSegue.m; path = Segues/DVBDismissSegue.m; sourceTree = "<group>"; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -196,7 +196,7 @@
 		847CB87219EC50060093FDE1 /* Third Party */ = {
 			isa = PBXGroup;
 			children = (
-				9479E51D1A783460003C59BB /* IQKeyBoardManager */,
+				A155FF2B1AB736C100BE31F4 /* IQKeyBoardManager */,
 				9479E4EF1A782821003C59BB /* Other */,
 			);
 			name = "Third Party";
@@ -206,14 +206,16 @@
 		84CF8C861A0E556C00585D88 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				A1F1F20019EFC5D2006AD8E5 /* DVBBoardObj.h */,
-				A1F1F20119EFC5D2006AD8E5 /* DVBBoardObj.m */,
-				84CFC53919E163E0004D0BB8 /* DVBThread.h */,
-				84CFC53A19E163E0004D0BB8 /* DVBThread.m */,
-				847CB86C19EC4B490093FDE1 /* DVBPostObj.h */,
-				847CB86D19EC4B490093FDE1 /* DVBPostObj.m */,
-				84CF8C8E1A0E7C7600585D88 /* DVBBadPost.h */,
-				84CF8C8F1A0E7C7600585D88 /* DVBBadPost.m */,
+				A155FF0A1AB7362A00BE31F4 /* DVBBadPost.h */,
+				A155FF0B1AB7362A00BE31F4 /* DVBBadPost.m */,
+				A155FF0C1AB7362A00BE31F4 /* DVBBoardObj.h */,
+				A155FF0D1AB7362A00BE31F4 /* DVBBoardObj.m */,
+				A155FF0E1AB7362A00BE31F4 /* DVBPostObj.h */,
+				A155FF0F1AB7362A00BE31F4 /* DVBPostObj.m */,
+				A155FF101AB7362A00BE31F4 /* DVBStatus.h */,
+				A155FF111AB7362A00BE31F4 /* DVBStatus.m */,
+				A155FF121AB7362A00BE31F4 /* DVBThread.h */,
+				A155FF131AB7362A00BE31F4 /* DVBThread.m */,
 				94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */,
 				94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */,
 			);
@@ -223,18 +225,18 @@
 		84CF8C871A0E558700585D88 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				A1C97F6919EFF7CF007567EB /* DVBBoardsViewController.h */,
-				A1C97F6A19EFF7CF007567EB /* DVBBoardsViewController.m */,
-				84CFC53619E15469004D0BB8 /* DVBBoardViewController.h */,
-				84CFC53719E15469004D0BB8 /* DVBBoardViewController.m */,
-				847E97C919E873C400E16756 /* DVBThreadViewController.h */,
-				847E97CA19E873C400E16756 /* DVBThreadViewController.m */,
-				84D7F5DE1A09672000A5C3A7 /* DVBAgreementViewController.h */,
-				84D7F5DF1A09672000A5C3A7 /* DVBAgreementViewController.m */,
-				84CF8C911A0FC57F00585D88 /* DVBSettingsTableViewController.h */,
-				84CF8C921A0FC57F00585D88 /* DVBSettingsTableViewController.m */,
-				94ADA40F1A76C88F005E2956 /* DVBCreatePostViewController.h */,
-				94ADA4101A76C88F005E2956 /* DVBCreatePostViewController.m */,
+				A155FEE31AB7355600BE31F4 /* DVBAgreementViewController.h */,
+				A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */,
+				A155FEE51AB7355600BE31F4 /* DVBBoardsViewController.h */,
+				A155FEE61AB7355600BE31F4 /* DVBBoardsViewController.m */,
+				A155FEE71AB7355600BE31F4 /* DVBBoardViewController.h */,
+				A155FEE81AB7355600BE31F4 /* DVBBoardViewController.m */,
+				A155FEE91AB7355600BE31F4 /* DVBCreatePostViewController.h */,
+				A155FEEA1AB7355600BE31F4 /* DVBCreatePostViewController.m */,
+				A155FEEB1AB7355600BE31F4 /* DVBSettingsTableViewController.h */,
+				A155FEEC1AB7355600BE31F4 /* DVBSettingsTableViewController.m */,
+				A155FEED1AB7355600BE31F4 /* DVBThreadViewController.h */,
+				A155FEEE1AB7355600BE31F4 /* DVBThreadViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -264,7 +266,7 @@
 			children = (
 				A1823DC61A761C9500F01117 /* Segues */,
 				84CF8C861A0E556C00585D88 /* Objects */,
-				A1155D1C1A26486400810321 /* TableCells */,
+				A1155D1C1A26486400810321 /* Views */,
 				94131BDA1A8D44640033657C /* Models */,
 				84CF8C871A0E558700585D88 /* ViewControllers */,
 				84CFC51119E1526E004D0BB8 /* AppDelegate.h */,
@@ -272,10 +274,6 @@
 				84CFC51719E1526E004D0BB8 /* Main.storyboard */,
 				84CFC51A19E1526E004D0BB8 /* Images.xcassets */,
 				84CFC50D19E1526E004D0BB8 /* Supporting Files */,
-				84D7F5E11A09761A00A5C3A7 /* DVBConstants.h */,
-				84D7F5E21A09761A00A5C3A7 /* DVBConstants.m */,
-				A1CFB7231A9DB92A0093EE42 /* DVBStatus.h */,
-				A1CFB7241A9DB92A0093EE42 /* DVBStatus.m */,
 			);
 			path = "dvach-browser";
 			sourceTree = "<group>";
@@ -310,18 +308,20 @@
 		94131BDA1A8D44640033657C /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				84CF8C8B1A0E643F00585D88 /* DVBBadPostStorage.h */,
-				84CF8C8C1A0E643F00585D88 /* DVBBadPostStorage.m */,
-				9479E54A1A783961003C59BB /* DVBComment.h */,
-				9479E54B1A783961003C59BB /* DVBComment.m */,
-				A18632061A89EF21006D4409 /* DVBNetworking.h */,
-				A18632071A89EF21006D4409 /* DVBNetworking.m */,
-				94131BD41A8D429C0033657C /* DVBValidation.h */,
-				94131BD51A8D429C0033657C /* DVBValidation.m */,
-				94131BD71A8D444F0033657C /* DVBBoardsModel.h */,
-				94131BD81A8D444F0033657C /* DVBBoardsModel.m */,
-				94131BDB1A8D4D850033657C /* DVBAlertViewGenerator.h */,
-				94131BDC1A8D4D850033657C /* DVBAlertViewGenerator.m */,
+				A155FEF51AB735DD00BE31F4 /* DVBAlertViewGenerator.h */,
+				A155FEF61AB735DD00BE31F4 /* DVBAlertViewGenerator.m */,
+				A155FEF71AB735DD00BE31F4 /* DVBBadPostStorage.h */,
+				A155FEF81AB735DD00BE31F4 /* DVBBadPostStorage.m */,
+				A155FEF91AB735DD00BE31F4 /* DVBBoardsModel.h */,
+				A155FEFA1AB735DD00BE31F4 /* DVBBoardsModel.m */,
+				A155FEFB1AB735DD00BE31F4 /* DVBComment.h */,
+				A155FEFC1AB735DD00BE31F4 /* DVBComment.m */,
+				A155FEFD1AB735DD00BE31F4 /* DVBConstants.h */,
+				A155FEFE1AB735DD00BE31F4 /* DVBConstants.m */,
+				A155FEFF1AB735DD00BE31F4 /* DVBNetworking.h */,
+				A155FF001AB735DD00BE31F4 /* DVBNetworking.m */,
+				A155FF011AB735DD00BE31F4 /* DVBValidation.h */,
+				A155FF021AB735DD00BE31F4 /* DVBValidation.m */,
 				A100A4501AAEF56F0027F917 /* DVBBoardModel.h */,
 				A100A4511AAEF56F0027F917 /* DVBBoardModel.m */,
 			);
@@ -331,95 +331,14 @@
 		9479E4EF1A782821003C59BB /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				84AA9A1419E5E5E6009C2811 /* Reachability.h */,
-				84AA9A1519E5E5E6009C2811 /* Reachability.m */,
-				84AA9A0F19E5CD94009C2811 /* GTMNSString+HTML.h */,
-				84AA9A1019E5CD94009C2811 /* GTMNSString+HTML.m */,
-				84AA9A0C19E5CCE7009C2811 /* NSString+HTML.h */,
-				84AA9A0D19E5CCE7009C2811 /* NSString+HTML.m */,
+				A155FF221AB736B800BE31F4 /* GTMNSString+HTML.h */,
+				A155FF231AB736B800BE31F4 /* GTMNSString+HTML.m */,
+				A155FF241AB736B800BE31F4 /* NSString+HTML.h */,
+				A155FF251AB736B800BE31F4 /* NSString+HTML.m */,
+				A155FF261AB736B800BE31F4 /* Reachability.h */,
+				A155FF271AB736B800BE31F4 /* Reachability.m */,
 			);
 			name = Other;
-			sourceTree = "<group>";
-		};
-		9479E51D1A783460003C59BB /* IQKeyBoardManager */ = {
-			isa = PBXGroup;
-			children = (
-				9479E51E1A783460003C59BB /* Categories */,
-				9479E5251A783460003C59BB /* Constants */,
-				9479E5281A783460003C59BB /* IQKeyboardManager.h */,
-				9479E5291A783460003C59BB /* IQKeyboardManager.m */,
-				9479E52A1A783460003C59BB /* IQKeyboardReturnKeyHandler.h */,
-				9479E52B1A783460003C59BB /* IQKeyboardReturnKeyHandler.m */,
-				9479E52C1A783460003C59BB /* IQSegmentedNextPrevious */,
-				9479E52F1A783460003C59BB /* IQTextView */,
-				9479E5321A783460003C59BB /* IQToolbar */,
-				9479E53B1A783460003C59BB /* KeyboardManager.h */,
-				9479E53C1A783460003C59BB /* Resources */,
-			);
-			path = IQKeyBoardManager;
-			sourceTree = "<group>";
-		};
-		9479E51E1A783460003C59BB /* Categories */ = {
-			isa = PBXGroup;
-			children = (
-				9479E51F1A783460003C59BB /* IQNSArray+Sort.h */,
-				9479E5201A783460003C59BB /* IQNSArray+Sort.m */,
-				9479E5211A783460003C59BB /* IQUIView+Hierarchy.h */,
-				9479E5221A783460003C59BB /* IQUIView+Hierarchy.m */,
-				9479E5231A783460003C59BB /* IQUIWindow+Hierarchy.h */,
-				9479E5241A783460003C59BB /* IQUIWindow+Hierarchy.m */,
-			);
-			path = Categories;
-			sourceTree = "<group>";
-		};
-		9479E5251A783460003C59BB /* Constants */ = {
-			isa = PBXGroup;
-			children = (
-				9479E5261A783460003C59BB /* IQKeyboardManagerConstants.h */,
-				9479E5271A783460003C59BB /* IQKeyboardManagerConstantsInternal.h */,
-			);
-			path = Constants;
-			sourceTree = "<group>";
-		};
-		9479E52C1A783460003C59BB /* IQSegmentedNextPrevious */ = {
-			isa = PBXGroup;
-			children = (
-				9479E52D1A783460003C59BB /* IQSegmentedNextPrevious.h */,
-				9479E52E1A783460003C59BB /* IQSegmentedNextPrevious.m */,
-			);
-			path = IQSegmentedNextPrevious;
-			sourceTree = "<group>";
-		};
-		9479E52F1A783460003C59BB /* IQTextView */ = {
-			isa = PBXGroup;
-			children = (
-				9479E5301A783460003C59BB /* IQTextView.h */,
-				9479E5311A783460003C59BB /* IQTextView.m */,
-			);
-			path = IQTextView;
-			sourceTree = "<group>";
-		};
-		9479E5321A783460003C59BB /* IQToolbar */ = {
-			isa = PBXGroup;
-			children = (
-				9479E5331A783460003C59BB /* IQBarButtonItem.h */,
-				9479E5341A783460003C59BB /* IQBarButtonItem.m */,
-				9479E5351A783460003C59BB /* IQTitleBarButtonItem.h */,
-				9479E5361A783460003C59BB /* IQTitleBarButtonItem.m */,
-				9479E5371A783460003C59BB /* IQToolbar.h */,
-				9479E5381A783460003C59BB /* IQToolbar.m */,
-				9479E5391A783460003C59BB /* IQUIView+IQKeyboardToolbar.h */,
-				9479E53A1A783460003C59BB /* IQUIView+IQKeyboardToolbar.m */,
-			);
-			path = IQToolbar;
-			sourceTree = "<group>";
-		};
-		9479E53C1A783460003C59BB /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				9479E53D1A783460003C59BB /* IQKeyboardManager.bundle */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		9DEEB8F279E1E1CC7340EF72 /* Pods */ = {
@@ -431,24 +350,106 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		A1155D1C1A26486400810321 /* TableCells */ = {
+		A1155D1C1A26486400810321 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				84CFC53C19E187B1004D0BB8 /* DVBThreadTableViewCell.h */,
-				84CFC53D19E187B1004D0BB8 /* DVBThreadTableViewCell.m */,
-				847CB86F19EC4FC10093FDE1 /* DVBPostTableViewCell.h */,
-				847CB87019EC4FC10093FDE1 /* DVBPostTableViewCell.m */,
-				943B7CFB1A8DB32D003CD87A /* DVBBoardTableViewCell.h */,
-				943B7CFC1A8DB32D003CD87A /* DVBBoardTableViewCell.m */,
+				A155FF191AB7366000BE31F4 /* DVBBoardTableViewCell.h */,
+				A155FF1A1AB7366000BE31F4 /* DVBBoardTableViewCell.m */,
+				A155FF1B1AB7366000BE31F4 /* DVBPostTableViewCell.h */,
+				A155FF1C1AB7366000BE31F4 /* DVBPostTableViewCell.m */,
+				A155FF1D1AB7366000BE31F4 /* DVBThreadTableViewCell.h */,
+				A155FF1E1AB7366000BE31F4 /* DVBThreadTableViewCell.m */,
 			);
-			name = TableCells;
+			name = Views;
+			sourceTree = "<group>";
+		};
+		A155FF2B1AB736C100BE31F4 /* IQKeyBoardManager */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF2C1AB736C100BE31F4 /* Categories */,
+				A155FF331AB736C100BE31F4 /* Constants */,
+				A155FF361AB736C100BE31F4 /* IQKeyboardManager.h */,
+				A155FF371AB736C100BE31F4 /* IQKeyboardManager.m */,
+				A155FF381AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.h */,
+				A155FF391AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m */,
+				A155FF3A1AB736C100BE31F4 /* IQSegmentedNextPrevious */,
+				A155FF3D1AB736C100BE31F4 /* IQTextView */,
+				A155FF401AB736C100BE31F4 /* IQToolbar */,
+				A155FF491AB736C100BE31F4 /* KeyboardManager.h */,
+				A155FF4A1AB736C100BE31F4 /* Resources */,
+			);
+			name = IQKeyBoardManager;
+			path = "Third party/IQKeyBoardManager";
+			sourceTree = SOURCE_ROOT;
+		};
+		A155FF2C1AB736C100BE31F4 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF2D1AB736C100BE31F4 /* IQNSArray+Sort.h */,
+				A155FF2E1AB736C100BE31F4 /* IQNSArray+Sort.m */,
+				A155FF2F1AB736C100BE31F4 /* IQUIView+Hierarchy.h */,
+				A155FF301AB736C100BE31F4 /* IQUIView+Hierarchy.m */,
+				A155FF311AB736C100BE31F4 /* IQUIWindow+Hierarchy.h */,
+				A155FF321AB736C100BE31F4 /* IQUIWindow+Hierarchy.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		A155FF331AB736C100BE31F4 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF341AB736C100BE31F4 /* IQKeyboardManagerConstants.h */,
+				A155FF351AB736C100BE31F4 /* IQKeyboardManagerConstantsInternal.h */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		A155FF3A1AB736C100BE31F4 /* IQSegmentedNextPrevious */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF3B1AB736C100BE31F4 /* IQSegmentedNextPrevious.h */,
+				A155FF3C1AB736C100BE31F4 /* IQSegmentedNextPrevious.m */,
+			);
+			path = IQSegmentedNextPrevious;
+			sourceTree = "<group>";
+		};
+		A155FF3D1AB736C100BE31F4 /* IQTextView */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF3E1AB736C100BE31F4 /* IQTextView.h */,
+				A155FF3F1AB736C100BE31F4 /* IQTextView.m */,
+			);
+			path = IQTextView;
+			sourceTree = "<group>";
+		};
+		A155FF401AB736C100BE31F4 /* IQToolbar */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF411AB736C100BE31F4 /* IQBarButtonItem.h */,
+				A155FF421AB736C100BE31F4 /* IQBarButtonItem.m */,
+				A155FF431AB736C100BE31F4 /* IQTitleBarButtonItem.h */,
+				A155FF441AB736C100BE31F4 /* IQTitleBarButtonItem.m */,
+				A155FF451AB736C100BE31F4 /* IQToolbar.h */,
+				A155FF461AB736C100BE31F4 /* IQToolbar.m */,
+				A155FF471AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.h */,
+				A155FF481AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m */,
+			);
+			path = IQToolbar;
+			sourceTree = "<group>";
+		};
+		A155FF4A1AB736C100BE31F4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A155FF4B1AB736C100BE31F4 /* IQKeyboardManager.bundle */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		A1823DC61A761C9500F01117 /* Segues */ = {
 			isa = PBXGroup;
 			children = (
-				A1823DC71A761CAD00F01117 /* DVBDismissSegue.h */,
-				A1823DC81A761CAD00F01117 /* DVBDismissSegue.m */,
+				A155FF581AB736F100BE31F4 /* DVBDismissSegue.h */,
+				A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */,
 			);
 			name = Segues;
 			sourceTree = "<group>";
@@ -551,7 +552,7 @@
 			files = (
 				84CFC51919E1526E004D0BB8 /* Main.storyboard in Resources */,
 				84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */,
-				9479E5491A783460003C59BB /* IQKeyboardManager.bundle in Resources */,
+				A155FF571AB736C100BE31F4 /* IQKeyboardManager.bundle in Resources */,
 				946394161A87A26C004CAB6E /* BadBoards.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,46 +604,46 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				94131BD91A8D444F0033657C /* DVBBoardsModel.m in Sources */,
-				84CFC53E19E187B1004D0BB8 /* DVBThreadTableViewCell.m in Sources */,
-				9479E5471A783460003C59BB /* IQToolbar.m in Sources */,
-				84CF8C8D1A0E643F00585D88 /* DVBBadPostStorage.m in Sources */,
-				9479E54C1A783961003C59BB /* DVBComment.m in Sources */,
-				A1823DC91A761CAD00F01117 /* DVBDismissSegue.m in Sources */,
-				9479E5451A783460003C59BB /* IQBarButtonItem.m in Sources */,
-				9479E5421A783460003C59BB /* IQKeyboardReturnKeyHandler.m in Sources */,
-				9479E53E1A783460003C59BB /* IQNSArray+Sort.m in Sources */,
-				A1C97F6B19EFF7CF007567EB /* DVBBoardsViewController.m in Sources */,
-				94131BD61A8D429C0033657C /* DVBValidation.m in Sources */,
-				84AA9A0E19E5CCE7009C2811 /* NSString+HTML.m in Sources */,
-				847E97CB19E873C400E16756 /* DVBThreadViewController.m in Sources */,
+				A155FEF11AB7355600BE31F4 /* DVBBoardViewController.m in Sources */,
+				A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */,
+				A155FF281AB736B800BE31F4 /* GTMNSString+HTML.m in Sources */,
+				A155FF181AB7362A00BE31F4 /* DVBThread.m in Sources */,
+				A155FF201AB7366000BE31F4 /* DVBPostTableViewCell.m in Sources */,
+				A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */,
+				A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */,
+				A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */,
+				A155FF501AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m in Sources */,
+				A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */,
+				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
+				A155FF171AB7362A00BE31F4 /* DVBStatus.m in Sources */,
+				A155FF561AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m in Sources */,
+				A155FF531AB736C100BE31F4 /* IQBarButtonItem.m in Sources */,
+				A155FF291AB736B800BE31F4 /* NSString+HTML.m in Sources */,
+				A155FF4E1AB736C100BE31F4 /* IQUIWindow+Hierarchy.m in Sources */,
+				A155FF211AB7366000BE31F4 /* DVBThreadTableViewCell.m in Sources */,
+				A155FF141AB7362A00BE31F4 /* DVBBadPost.m in Sources */,
+				A155FF4F1AB736C100BE31F4 /* IQKeyboardManager.m in Sources */,
+				A155FEF21AB7355600BE31F4 /* DVBCreatePostViewController.m in Sources */,
+				A155FF511AB736C100BE31F4 /* IQSegmentedNextPrevious.m in Sources */,
+				A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */,
+				A155FF541AB736C100BE31F4 /* IQTitleBarButtonItem.m in Sources */,
+				A155FF4D1AB736C100BE31F4 /* IQUIView+Hierarchy.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
-				94131BDD1A8D4D850033657C /* DVBAlertViewGenerator.m in Sources */,
-				9479E5481A783460003C59BB /* IQUIView+IQKeyboardToolbar.m in Sources */,
-				84AA9A1619E5E5E6009C2811 /* Reachability.m in Sources */,
-				9479E5461A783460003C59BB /* IQTitleBarButtonItem.m in Sources */,
-				9479E5411A783460003C59BB /* IQKeyboardManager.m in Sources */,
+				A155FF161AB7362A00BE31F4 /* DVBPostObj.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
-				84CF8C901A0E7C7600585D88 /* DVBBadPost.m in Sources */,
-				9479E53F1A783460003C59BB /* IQUIView+Hierarchy.m in Sources */,
-				847CB87119EC4FC10093FDE1 /* DVBPostTableViewCell.m in Sources */,
-				847CB86E19EC4B490093FDE1 /* DVBPostObj.m in Sources */,
-				94ADA4111A76C88F005E2956 /* DVBCreatePostViewController.m in Sources */,
-				84D7F5E01A09672000A5C3A7 /* DVBAgreementViewController.m in Sources */,
-				A18632081A89EF21006D4409 /* DVBNetworking.m in Sources */,
-				84CFC53819E15469004D0BB8 /* DVBBoardViewController.m in Sources */,
-				84CFC53B19E163E0004D0BB8 /* DVBThread.m in Sources */,
+				A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */,
+				A155FF521AB736C100BE31F4 /* IQTextView.m in Sources */,
+				A155FF151AB7362A00BE31F4 /* DVBBoardObj.m in Sources */,
+				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
+				A155FF1F1AB7366000BE31F4 /* DVBBoardTableViewCell.m in Sources */,
+				A155FEF31AB7355600BE31F4 /* DVBSettingsTableViewController.m in Sources */,
+				A155FF4C1AB736C100BE31F4 /* IQNSArray+Sort.m in Sources */,
+				A155FF2A1AB736B800BE31F4 /* Reachability.m in Sources */,
 				A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */,
-				A1CFB7251A9DB92A0093EE42 /* DVBStatus.m in Sources */,
-				84AA9A1119E5CD94009C2811 /* GTMNSString+HTML.m in Sources */,
+				A155FF551AB736C100BE31F4 /* IQToolbar.m in Sources */,
+				A155FF081AB735DD00BE31F4 /* DVBNetworking.m in Sources */,
 				84CFC51019E1526E004D0BB8 /* main.m in Sources */,
-				84D7F5E31A09761A00A5C3A7 /* DVBConstants.m in Sources */,
-				84CF8C931A0FC57F00585D88 /* DVBSettingsTableViewController.m in Sources */,
-				943B7CFD1A8DB32D003CD87A /* DVBBoardTableViewCell.m in Sources */,
-				9479E5441A783460003C59BB /* IQTextView.m in Sources */,
-				9479E5431A783460003C59BB /* IQSegmentedNextPrevious.m in Sources */,
-				A1F1F20219EFC5D2006AD8E5 /* DVBBoardObj.m in Sources */,
-				9479E5401A783460003C59BB /* IQUIWindow+Hierarchy.m in Sources */,
+				A155FF031AB735DD00BE31F4 /* DVBAlertViewGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
