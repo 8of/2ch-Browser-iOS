@@ -13,16 +13,8 @@
  */
 @interface DVBPostTableViewCell : UITableViewCell
 
-@property BOOL isPostHaveImage;
-/**
- *  textView for post comment
- */
-@property (nonatomic) IBOutlet UITextView *commentTextView;
-/**
- *  post thumbnail
- */
-@property (nonatomic) IBOutlet UIImageView *postThumb;
-
-- (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent;
+// Pass data to cell
+- (void)prepareCellWithCommentText:(NSString *)commentText
+             andPostThumbUrlString:(NSString *)postThumbUrlString;
 
 @end

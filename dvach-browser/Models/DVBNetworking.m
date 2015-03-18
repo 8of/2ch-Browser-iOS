@@ -185,6 +185,33 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
     }
 }
 
+#pragma mark - Single thread
+
+- (void)getPostsWithBoard:(NSString *)board
+                andThread:(NSString *)threadNum
+            andCompletion:(void (^)(NSDictionary *))completion
+{
+    if ([self getNetworkStatus])
+    {
+        // building URL for getting JSON-thread-answer from mutiple strings
+        
+        NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", DVACH_BASE_URL, board, threadNum];
+        
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];
+        
+        [manager GET:requestAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             completion(responseObject);
+         }
+             failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"error: %@", error);
+             completion(nil);
+         }];
+    }
+}
+
 #pragma mark - Passcode
 
 - (void)getUserCodeWithPasscode:(NSString *)passcode

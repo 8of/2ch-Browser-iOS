@@ -12,13 +12,16 @@
 #import "DVBPostTableViewCell.h"
 #import "NSString+HTML.h"
 #import "Reachability.h"
-#import <SDWebImage/UIImageView+WebCache.h>
 #import "DVBBadPost.h"
 #import "DVBBadPostStorage.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBStatus.h"
+#import "DVBBrowserViewControllerBuilder.h"
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+
 
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
@@ -47,7 +50,7 @@ static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f; // magical numb
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
-static CGFloat const TEXTVIEW_INSET = 8;
+// static CGFloat const TEXTVIEW_INSET = 8;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -55,7 +58,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
 
 @end
 
-@interface DVBThreadViewController () <UIActionSheetDelegate, MWPhotoBrowserDelegate, DVBCreatePostViewControllerDelegate>
+@interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // for recofnizing long press on post row
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureOnPicture;
@@ -118,7 +121,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _badPostsStorage.badPostsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
     if (!_badPostsStorage.badPostsArray)
     {
-        _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects: nil];
+        _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects:nil];
     }
     
     _opAlreadyDeleted = NO;
@@ -132,7 +135,8 @@ static CGFloat const TEXTVIEW_INSET = 8;
     /**
      *  If thread Subject is empty - return OP post number
      */
-    if ([subject isEqualToString:@""])
+    BOOL isSubjectEmpty = [subject isEqualToString:@""];
+    if (isSubjectEmpty)
     {
         return num;
     }
@@ -142,7 +146,6 @@ static CGFloat const TEXTVIEW_INSET = 8;
 
 - (void)addGestureRecognisers
 {
-    
     // setting for long pressure gesture
     _longPressGestureOnPicture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGestures:)];
     _longPressGestureOnPicture.minimumPressDuration = MINIMUM_PRESS_DURATION;
@@ -177,7 +180,8 @@ titleForHeaderInSection:(NSInteger)section
     return sectionTitle;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
 {
     // only one row inside every section for now
     return 1;
@@ -197,11 +201,17 @@ titleForHeaderInSection:(NSInteger)section
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // do not calculate anything if iOS ver > 8.0
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
+    {
+#warning need to uncomment this for smooth iOS 8 experience, but now cells not resizes themself properly so let it be commented for now
+     //   return UITableViewAutomaticDimension;
+    }
     // I am using a helper method here to get the text at a given cell.
     NSString *text = [self getTextAtIndex:indexPath];
     
     // Getting the width/height needed by the dynamic text view.
-    
+
     CGSize viewSize = self.tableView.bounds.size;
     NSInteger viewWidth = viewSize.width;
     
@@ -268,7 +278,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     DVBPostObj *selectedPost = _postsArray[indexPath.section];
     NSString *thumbUrl = selectedPost.thumbPath;
     
-    // check if cell have real image or just placeholder
+    // Check if cell have real image or just placeholder.
+    // We handle tap on cell to fire gallery, not only tap on image itself.
     if (![thumbUrl isEqualToString:@""])
     {
         [self handleTapOnImageViewWithIndexPath:indexPath];
@@ -287,12 +298,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         
         DVBPostObj *postTmpObj = _postsArray[indexPath.section];
         
-        /**
-         *  This is the first part of the fix for fixing broke links in comments.
-         */
-        confCell.commentTextView.text = nil;
-        
-        
         NSString *stringForTextView = [postTmpObj.comment stringByTrimmingCharactersInSet:
                              [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         
@@ -301,29 +306,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
          */
         stringForTextView = [NSString stringWithFormat:@"%@%@", @"\u200B", stringForTextView];
         
-        confCell.commentTextView.text = stringForTextView;
-        confCell.commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+        NSString *thumbUrlString = postTmpObj.thumbPath;
         
-        // make insets
-        [confCell.commentTextView  setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
-        
-        // for more tidy images and keep aspect ratio
-        confCell.postThumb.contentMode = UIViewContentModeScaleAspectFill;
-        confCell.postThumb.clipsToBounds = YES;
-        
-        // load the image and setting image source depending on presented image or set blank image
-        // need to rewrite it to use different table cells if there is no image in post
-        if (![postTmpObj.thumbPath isEqualToString:@""])
-        {
-            [confCell.postThumb sd_setImageWithURL:[NSURL URLWithString:postTmpObj.thumbPath]
-                                  placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
-            [confCell rebuildPostThumbImageWithImagePresence:YES];
-        }
-        else
-        {
-            confCell.postThumb.image = [UIImage imageNamed:@"Noimage.png"];
-            [confCell rebuildPostThumbImageWithImagePresence:NO];
-        }
+        [confCell prepareCellWithCommentText:stringForTextView
+                       andPostThumbUrlString:thumbUrlString];
+
     }
 }
 /**
@@ -352,7 +339,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
  *  Think of this as a source for the text to be rendered in the text view.
  *  I used a dictionary to map indexPath to some dynamically fetched text.
  */
-- (NSString *)getTextAtIndex:(NSIndexPath *)indexPath {
+- (NSString *)getTextAtIndex:(NSIndexPath *)indexPath
+{
     
     NSUInteger tmpIndex = indexPath.section;
     DVBPostObj *tmpObj =  _postsArray[tmpIndex];
@@ -374,148 +362,133 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 andThread:(NSString *)threadNum
             andCompletion:(void (^)(NSArray *))completion
 {
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable)
+    
+    DVBNetworking *networking = [[DVBNetworking alloc] init];
+    
+    [networking getPostsWithBoard:board
+                        andThread:threadNum
+                    andCompletion:^(NSDictionary *completion2)
     {
-        NSLog(@"Cannot find internet.");
-        NSArray *result = [[NSArray alloc] initWithObjects:@"",nil];
-        return completion(result);
-    }
-    else
-    {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        
         NSMutableArray *postsFullMutArray = [NSMutableArray array];
         
-        self.thumbImagesArray = [[NSMutableArray alloc] init];
-        self.fullImagesArray = [[NSMutableArray alloc] init];
+        _thumbImagesArray = [[NSMutableArray alloc] init];
+        _fullImagesArray = [[NSMutableArray alloc] init];
         
         // building URL for getting JSON-thread-answer from mutiple strings
         // there is better one-line solution for this - need to use stringWithFormat
         // rewrite in future!
         
-        NSMutableString *requestAddress = [NSMutableString stringWithString:DVACH_BASE_URL];
-        [requestAddress appendString:board];
-        [requestAddress appendString:@"/res/"];
-        [requestAddress appendString:threadNum];
-        [requestAddress appendString:@".json"];
         
-        NSURLRequest *activeRequest = [NSURLRequest requestWithURL:
-                                       [NSURL URLWithString:requestAddress]];
         
-        [NSURLConnection sendAsynchronousRequest:activeRequest
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response,
-                                                   NSData *data,
-                                                   NSError *connectionError)
-        {
-           NSError *jsonError;
-           
-           NSMutableDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data
-                                                                             options:NSJSONReadingAllowFragments
-                                                                               error:&jsonError];
-           
-           NSArray *threadsDict = [resultDict objectForKey:@"threads"];
-           NSDictionary *postsArray = [threadsDict objectAtIndex:0];
-           NSArray *posts2Array = [postsArray objectForKey:@"posts"];
-           
-           for (id key in posts2Array)
-           {
-               NSString *num = [[key objectForKey:@"num"] stringValue];
-               
-               // server gives me number but I need string
-               NSString *tmpNumForPredicate = [[key objectForKey:@"num"] stringValue];
-               
-               //searching for bad posts
-               NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
-               NSArray *filtered = [self.badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
-               
-               if ([filtered count] > 0)
-               {
-                   continue;
-               }
-               
-               NSString *comment = [key objectForKey:@"comment"];
-               NSString *subject = [key objectForKey:@"subject"];
-               
-               // replacing regular BR with our own strange NEWLINE "tag" - so nxt method wont entirely wipe BreakLine functionality
-               comment = [comment stringByReplacingOccurrencesOfString:@"<br>"
-                                                            withString:@":::newline:::"];
-               
-               // deleteing HTML markup from comment text
-               comment = [comment stringByConvertingHTMLToPlainText];
-               
-               // replacing our weird NEWLINE tag with regular cocoa breakline symbol
-               comment = [comment stringByReplacingOccurrencesOfString:@":::newline:::"
-                                                            withString:@"\n"];
-               
-               NSDictionary *files = [[key objectForKey:@"files"] objectAtIndex:0];
-               
-               NSMutableString *thumbPathMut;
-               NSMutableString *picPathMut;
-               
-               if (files != nil)
-               {
-                   
-                   // check webm or not
-                   NSString *fullFileName = [files objectForKey:@"path"];
-                   if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
-                   {
-                       
-                       // if contains .webm
-                       thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                       picPathMut = [[NSMutableString alloc] initWithString:@""];
-                       
-                   }
-                   else
-                   {
-                       
-                       // if not contains .webm
-                       
-                       // rewrite in future
-                       NSMutableString *fullThumbPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                       [fullThumbPath appendString:self.boardCode];
-                       [fullThumbPath appendString:@"/"];
-                       [fullThumbPath appendString:[files objectForKey:@"thumbnail"]];
-                       thumbPathMut = fullThumbPath;
-                       fullThumbPath = nil;
-                       
-                       // rewrite in future
-                       NSMutableString *fullPicPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                       [fullPicPath appendString:_boardCode];
-                       [fullPicPath appendString:@"/"];
-                       [fullPicPath appendString:[files objectForKey:@"path"]];
-                       picPathMut = fullPicPath;
-                       fullPicPath = nil;
-                       
-                       [_thumbImagesArray addObject:thumbPathMut];
-                       [_fullImagesArray addObject:picPathMut];
-                       
-                   }
-                   
-               }
-               else
-               {
-                   // if there are no files - make blank file paths
-                   thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                   picPathMut = [[NSMutableString alloc] initWithString:@""];
-               }
-               NSString *thumbPath = thumbPathMut;
-               NSString *picPath = picPathMut;
-               
-               DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num subject:subject comment:comment path:picPath thumbPath:thumbPath];
-               [postsFullMutArray addObject:postObj];
-               postObj = nil;
-           }
-           
-           NSArray *resultArr = [[NSArray alloc] initWithArray:postsFullMutArray];
-           
-           [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-           
-           completion(resultArr);
-       }];
-    }
+        
+             NSMutableDictionary *resultDict = [completion2 mutableCopy];
+             
+             NSArray *threadsDict = [resultDict objectForKey:@"threads"];
+             NSDictionary *postsArray = [threadsDict objectAtIndex:0];
+             NSArray *posts2Array = [postsArray objectForKey:@"posts"];
+             
+             for (id key in posts2Array)
+             {
+                 NSString *num = [[key objectForKey:@"num"] stringValue];
+                 
+                 // server gives me number but I need string
+                 NSString *tmpNumForPredicate = [[key objectForKey:@"num"] stringValue];
+                 
+                 //searching for bad posts
+                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
+                 NSArray *filtered = [self.badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
+                 
+                 if ([filtered count] > 0)
+                 {
+                     continue;
+                 }
+                 
+                 NSString *comment = [key objectForKey:@"comment"];
+                 NSString *subject = [key objectForKey:@"subject"];
+                 
+                 // replacing regular BR with our own strange NEWLINE "tag" - so nxt method wont entirely wipe BreakLine functionality
+                 comment = [comment stringByReplacingOccurrencesOfString:@"<br>"
+                                                              withString:@":::newline:::"];
+                 
+                 // deleteing HTML markup from comment text
+                 comment = [comment stringByConvertingHTMLToPlainText];
+                 
+                 // replacing our weird NEWLINE tag with regular cocoa breakline symbol
+                 comment = [comment stringByReplacingOccurrencesOfString:@":::newline:::"
+                                                              withString:@"\n"];
+                 
+                 NSDictionary *files = [[key objectForKey:@"files"] objectAtIndex:0];
+                 
+                 NSMutableString *thumbPathMut;
+                 NSMutableString *picPathMut;
+                 
+                 if (files != nil)
+                 {
+                     
+                     // check webm or not
+                     NSString *fullFileName = [files objectForKey:@"path"];
+                     if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
+                     {
+                         
+                         // if contains .webm
+                         thumbPathMut = [[NSMutableString alloc] initWithString:@""];
+                         picPathMut = [[NSMutableString alloc] initWithString:@""];
+                         
+                     }
+                     else
+                     {
+                         
+                         // if not contains .webm
+                         
+                         // rewrite in future
+                         NSMutableString *fullThumbPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
+                         [fullThumbPath appendString:self.boardCode];
+                         [fullThumbPath appendString:@"/"];
+                         [fullThumbPath appendString:[files objectForKey:@"thumbnail"]];
+                         thumbPathMut = fullThumbPath;
+                         fullThumbPath = nil;
+                         
+                         // rewrite in future
+                         NSMutableString *fullPicPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
+                         [fullPicPath appendString:_boardCode];
+                         [fullPicPath appendString:@"/"];
+                         [fullPicPath appendString:[files objectForKey:@"path"]];
+                         picPathMut = fullPicPath;
+                         fullPicPath = nil;
+                         
+                         [_thumbImagesArray addObject:thumbPathMut];
+                         [_fullImagesArray addObject:picPathMut];
+                         
+                     }
+                     
+                 }
+                 else
+                 {
+                     // if there are no files - make blank file paths
+                     thumbPathMut = [[NSMutableString alloc] initWithString:@""];
+                     picPathMut = [[NSMutableString alloc] initWithString:@""];
+                 }
+                 NSString *thumbPath = thumbPathMut;
+                 NSString *picPath = picPathMut;
+                 
+                 DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num subject:subject comment:comment path:picPath thumbPath:thumbPath];
+                 [postsFullMutArray addObject:postObj];
+                 postObj = nil;
+             }
+             
+             NSArray *resultArr = [[NSArray alloc] initWithArray:postsFullMutArray];
+             
+             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+             
+             completion(resultArr);
+        
+    }];
+    
+    
+
+        
+    
+    
     
 }
 
@@ -795,70 +768,37 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         NSLog(@"Post complaint sent.");
         if (done)
         {
-            [self deletePostWithIndex:_selectedWithLongPressSection fromMutableArray:_postsArray];
+            [self deletePostWithIndex:_selectedWithLongPressSection
+                     fromMutableArray:_postsArray];
         }
     }];
 }
 
 #pragma mark - Photo gallery
 
-// test touch on image method
-- (void)handleTapOnImageViewWithIndexPath: (NSIndexPath *)indexPath
+// Tap on image method
+- (void)handleTapOnImageViewWithIndexPath:(NSIndexPath *)indexPath
 {
     [self createAndPushGalleryWithIndexPath:indexPath];
 }
 
 - (void)createAndPushGalleryWithIndexPath:(NSIndexPath *)indexPath
 {
-    MWPhotoBrowser *browser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    
-    browser.displayActionButton = YES; // Show action button to allow sharing, copying, etc (defaults to YES)
-    browser.displayNavArrows = YES; // Whether to display left and right nav arrows on toolbar (defaults to NO)
-    browser.displaySelectionButtons = NO; // Whether selection buttons are shown on each image (defaults to NO)
-    browser.zoomPhotosToFill = NO; // Images that almost fill the screen will be initially zoomed to fill (defaults to YES)
-    browser.alwaysShowControls = NO; // Allows to control whether the bars and controls are always visible or whether they fade away to show the photo full (defaults to NO)
-    browser.enableGrid = YES; // Whether to allow the viewing of all the photo thumbnails on a grid (defaults to YES)
-    browser.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
-    
-    // Optionally set the current visible photo before displaying
+    DVBBrowserViewControllerBuilder *browser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
+
     NSUInteger indexForImageShowing = indexPath.section;
     DVBPostObj *postObj = [_postsArray objectAtIndex:indexForImageShowing];
     NSString *path = postObj.path;
     NSUInteger index = [_fullImagesArray indexOfObject:path];
-    [browser setCurrentPhotoIndex:index];
+
+    browser.index = index;
     
+    [browser prepareWithIndex:index
+          andThumbImagesArray:_thumbImagesArray
+           andFullImagesArray:_fullImagesArray];
+
     // Present
     [self.navigationController pushViewController:browser animated:YES];
-}
-
-- (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser
-{
-    return [self.fullImagesArray count];
-}
-
-- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser
-                photoAtIndex:(NSUInteger)index
-{
-    
-    if (index < _fullImagesArray.count)
-    {
-        MWPhoto *mwpPhoto = [MWPhoto photoWithURL:[NSURL URLWithString:[_fullImagesArray objectAtIndex:index]]];
-        return mwpPhoto;
-    }
-    
-    return nil;
-}
-
-- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser thumbPhotoAtIndex:(NSUInteger)index
-{
-    
-    if (index < _thumbImagesArray.count)
-    {
-        MWPhoto *mwpPhoto = [MWPhoto photoWithURL:[NSURL URLWithString:[_thumbImagesArray objectAtIndex:index]]];
-        return mwpPhoto;
-    }
-    
-    return nil;
 }
 
 #pragma mark - DVBCreatePostViewControllerDelegate
