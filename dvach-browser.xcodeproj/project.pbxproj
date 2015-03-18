@@ -57,6 +57,7 @@
 		A155FF561AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF481AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m */; };
 		A155FF571AB736C100BE31F4 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A155FF4B1AB736C100BE31F4 /* IQKeyboardManager.bundle */; };
 		A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */; };
+		A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -167,6 +168,8 @@
 		A155FF4B1AB736C100BE31F4 /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
 		A155FF581AB736F100BE31F4 /* DVBDismissSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDismissSegue.h; path = Segues/DVBDismissSegue.h; sourceTree = "<group>"; };
 		A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDismissSegue.m; path = Segues/DVBDismissSegue.m; sourceTree = "<group>"; };
+		A15895FE1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBrowserViewControllerBuilder.h; path = Controllers/DVBBrowserViewControllerBuilder.h; sourceTree = "<group>"; };
+		A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBrowserViewControllerBuilder.m; path = Controllers/DVBBrowserViewControllerBuilder.m; sourceTree = "<group>"; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -237,6 +240,8 @@
 				A155FEEC1AB7355600BE31F4 /* DVBSettingsTableViewController.m */,
 				A155FEED1AB7355600BE31F4 /* DVBThreadViewController.h */,
 				A155FEEE1AB7355600BE31F4 /* DVBThreadViewController.m */,
+				A15895FE1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.h */,
+				A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -627,6 +632,7 @@
 				A155FF511AB736C100BE31F4 /* IQSegmentedNextPrevious.m in Sources */,
 				A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */,
 				A155FF541AB736C100BE31F4 /* IQTitleBarButtonItem.m in Sources */,
+				A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */,
 				A155FF4D1AB736C100BE31F4 /* IQUIView+Hierarchy.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPostObj.m in Sources */,
