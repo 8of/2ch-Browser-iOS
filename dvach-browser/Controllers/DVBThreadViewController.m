@@ -10,7 +10,6 @@
 #import "DVBThreadViewController.h"
 #import "DVBPostObj.h"
 #import "DVBPostTableViewCell.h"
-#import "NSString+HTML.h"
 #import "Reachability.h"
 #import "DVBBadPost.h"
 #import "DVBBadPostStorage.h"
@@ -42,7 +41,7 @@ static CGFloat const MINIMUM_PRESS_DURATION = 1.2F;
 static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
 
 // settings for comment textView
-static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f; // magical number of 30 - to correct width of container while calculating enough size for view to shop comment text
+static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
 /**
  *  Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
  */
@@ -298,13 +297,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         
         DVBPostObj *postTmpObj = _postsArray[indexPath.section];
         
-        // NSString *stringForTextView = [postTmpObj.comment stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
-        /**
-         *  This is the second part of the fix for fixing broke links in comments.
-         */
-        // stringForTextView = [NSString stringWithFormat:@"%@%@", @"\u200B", stringForTextView];
-        
         NSString *thumbUrlString = postTmpObj.thumbPath;
         
         [confCell prepareCellWithCommentText:postTmpObj.comment
@@ -319,14 +311,10 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
          sizeWithFont:(UIFont *)font
     constrainedToSize:(CGSize)size
 {
-    /*
-    NSDictionary *attributesDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                                          font, NSFontAttributeName,
-                                          nil];
-     */
     CGRect frame = [text boundingRectWithSize:size
-                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
-    */
+                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                      context:nil];
+    
     /**
      *  This contains both height and width, but we really care about height.
      */
@@ -371,26 +359,19 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         
         _thumbImagesArray = [[NSMutableArray alloc] init];
         _fullImagesArray = [[NSMutableArray alloc] init];
-        
-        // building URL for getting JSON-thread-answer from mutiple strings
-        // there is better one-line solution for this - need to use stringWithFormat
-        // rewrite in future!
-        
-        
-        
-        
+
              NSMutableDictionary *resultDict = [completion2 mutableCopy];
              
-             NSArray *threadsDict = [resultDict objectForKey:@"threads"];
-             NSDictionary *postsArray = [threadsDict objectAtIndex:0];
-             NSArray *posts2Array = [postsArray objectForKey:@"posts"];
+             NSArray *threadsDict = resultDict[@"threads"];
+             NSDictionary *postsArray = threadsDict[0];
+             NSArray *posts2Array = postsArray[@"posts"];
              
              for (id key in posts2Array)
              {
-                 NSString *num = [[key objectForKey:@"num"] stringValue];
+                 NSString *num = [key[@"num"] stringValue];
                  
                  // server gives me number but I need string
-                 NSString *tmpNumForPredicate = [[key objectForKey:@"num"] stringValue];
+                 NSString *tmpNumForPredicate = [key[@"num"] stringValue];
                  
                  //searching for bad posts
                  NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
@@ -401,26 +382,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                      continue;
                  }
                  
-                 NSString *comment = [key objectForKey:@"comment"];
-                 NSString *subject = [key objectForKey:@"subject"];
+                 NSString *comment = key[@"comment"];
+                 NSString *subject = key[@"subject"];
                  
-                 // comment = [self makeBody:comment];
                  NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
                  
-                 /*
-                 // replacing regular BR with our own strange NEWLINE "tag" - so nxt method wont entirely wipe BreakLine functionality
-                 comment = [comment stringByReplacingOccurrencesOfString:@"<br>"
-                                                              withString:@":::newline:::"];
-                 
-                 // deleteing HTML markup from comment text
-                 comment = [comment stringByConvertingHTMLToPlainText];
-                 
-                 // replacing our weird NEWLINE tag with regular cocoa breakline symbol
-                 comment = [comment stringByReplacingOccurrencesOfString:@":::newline:::"
-                                                              withString:@"\n"];
-                 */
-                 
-                 NSDictionary *files = [[key objectForKey:@"files"] objectAtIndex:0];
+                 NSDictionary *files = [key[@"files"] objectAtIndex:0];
                  
                  NSMutableString *thumbPathMut;
                  NSMutableString *picPathMut;
@@ -429,7 +396,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                  {
                      
                      // check webm or not
-                     NSString *fullFileName = [files objectForKey:@"path"];
+                     NSString *fullFileName = files[@"path"];
                      if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
                      {
                          
@@ -485,8 +452,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
              
              NSArray *resultArr = [[NSArray alloc] initWithArray:postsFullMutArray];
              
-             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-             
              completion(resultArr);
         
     }];
@@ -527,7 +492,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 - (IBAction)scrollToBottom:(id)sender
 {
-    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height-self.tableView.frame.size.height);
+    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
 }
 
@@ -593,7 +558,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                 
                 NSString *oldCommentText = sharedComment.comment;
                 
-                DVBPostObj *post = [_postsArray objectAtIndex:self.selectedWithLongPressSection];
+                DVBPostObj *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
                 
                 NSString *postNum = post.num;
                 
@@ -697,7 +662,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                                                                                options:NSJSONReadingAllowFragments
                                                                                  error:&jsonError];
              
-             NSString *status = [resultDict objectForKey:@"status"];
+             NSString *status = resultDict[@"status"];
              
              BOOL ok = YES;
              
@@ -735,7 +700,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     }
     if (index == 0)
     {
-        [self.delegate sendDataToBoard:self.threadIndex];
+        [self.delegate sendDataToBoard:_threadIndex];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else
@@ -788,7 +753,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     DVBBrowserViewControllerBuilder *browser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
 
     NSUInteger indexForImageShowing = indexPath.section;
-    DVBPostObj *postObj = [_postsArray objectAtIndex:indexForImageShowing];
+    DVBPostObj *postObj = _postsArray[indexForImageShowing];
     NSString *path = postObj.path;
     NSUInteger index = [_fullImagesArray indexOfObject:path];
 
@@ -813,7 +778,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     /**
      *  Scroll thread to bottom. Not working as it should for now.
      */
-    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height-self.tableView.frame.size.height);
+    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
     
     NSLog(@"Table updated after posting.");
