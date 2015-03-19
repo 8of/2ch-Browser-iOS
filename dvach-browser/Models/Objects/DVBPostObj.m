@@ -12,7 +12,7 @@
 
 - (instancetype)initWithNum:(NSString *)postNum
                     subject:(NSString *)postSubject
-                    comment:(NSString *)postComment
+                    comment:(NSAttributedString *)postComment
                        path:(NSString *)postPicPath
                   thumbPath:(NSString *)postThumbPath {
     self = [super init];

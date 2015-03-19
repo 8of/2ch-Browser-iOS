@@ -33,14 +33,15 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _commentTextView.delegate = self;
 }
 
-- (void)prepareCellWithCommentText:(NSString *)commentText
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText
              andPostThumbUrlString:(NSString *)postThumbUrlString
 {
     /**
      *  This is the first part of the fix for fixing broke links in comments.
      */
     _commentTextView.text = nil;
-    _commentTextView.text = commentText;
+    _commentTextView.attributedText = commentText;
+    // _commentTextView.text = commentText;
     _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
     // make insets
