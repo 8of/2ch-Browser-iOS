@@ -19,11 +19,7 @@
 #import "DVBNetworking.h"
 #import "DVBStatus.h"
 #import "DVBBrowserViewControllerBuilder.h"
-#import "UrlNinja.h"
-
-#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
-#define kCommentFontSize        14.0f
-#define kCommentLineSpacing     2.0f
+#import "DVBPostPreparation.h"
 
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
@@ -93,6 +89,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 // flagging
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *flagButton;
 
+@property (nonatomic, strong) DVBPostPreparation *postPreparation;
+
 @end
 
 @implementation DVBThreadViewController
@@ -127,6 +125,9 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }
     
     _opAlreadyDeleted = NO;
+    
+    _postPreparation = [[DVBPostPreparation alloc] init];
+    
 }
 
 #pragma mark - Set titles and gestures
@@ -149,7 +150,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (void)addGestureRecognisers
 {
     // setting for long pressure gesture
-    _longPressGestureOnPicture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGestures:)];
+    _longPressGestureOnPicture = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                               action:@selector(handleLongPressGestures:)];
     _longPressGestureOnPicture.minimumPressDuration = MINIMUM_PRESS_DURATION;
     _longPressGestureOnPicture.allowableMovement = ALLOWABLE_MOVEMENT;
     
@@ -203,12 +205,6 @@ titleForHeaderInSection:(NSInteger)section
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // do not calculate anything if iOS ver > 8.0
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0"))
-    {
-// #warning need to uncomment this for smooth iOS 8 experience, but now cells not resizes themself properly so let it be commented for now
-     //   return UITableViewAutomaticDimension;
-    }
     // I am using a helper method here to get the text at a given cell.
     NSAttributedString *text = [self getTextAtIndex:indexPath];
     
@@ -244,7 +240,9 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
     
     UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
-    CGSize size = [self frameForText:text sizeWithFont:font constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)];
+    CGSize size = [self frameForText:text
+                        sizeWithFont:font
+                   constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)];
     
     // Return the size of the current row.
     // 81 is the minimum height! Update accordingly
@@ -326,12 +324,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                           font, NSFontAttributeName,
                                           nil];
      */
-    CGRect frame = [text boundingRectWithSize:size options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
-    /*
     CGRect frame = [text boundingRectWithSize:size
-                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                   attributes:attributesDictionary
-                                      context:nil];
+                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
     */
     /**
      *  This contains both height and width, but we really care about height.
@@ -411,7 +405,8 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                  NSString *subject = [key objectForKey:@"subject"];
                  
                  // comment = [self makeBody:comment];
-                 NSAttributedString *comment2 = [self makeBody:comment];
+                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+                 
                  /*
                  // replacing regular BR with our own strange NEWLINE "tag" - so nxt method wont entirely wipe BreakLine functionality
                  comment = [comment stringByReplacingOccurrencesOfString:@"<br>"
@@ -479,7 +474,11 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                  NSString *thumbPath = thumbPathMut;
                  NSString *picPath = picPathMut;
                  
-                 DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num subject:subject comment:comment2 path:picPath thumbPath:thumbPath];
+                 DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num
+                                                               subject:subject
+                                                               comment:attributedComment
+                                                                  path:picPath
+                                                             thumbPath:thumbPath];
                  [postsFullMutArray addObject:postObj];
                  postObj = nil;
              }
@@ -492,205 +491,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         
     }];
 
-}
-
-- (NSAttributedString *) makeBody:(NSString *)comment {
-    
-    //чистка исходника и посильная замена хтмл-литералов
-    comment = [comment stringByReplacingOccurrencesOfString:@"\n" withString:@""];
-    //comment = [comment stringByReplacingOccurrencesOfString:@"\r\n" withString:@"\n"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"<br />" withString:@"\n"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"<br/>" withString:@"\n"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"&#39;" withString:@"'"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"&#44;" withString:@","];
-    comment = [comment stringByReplacingOccurrencesOfString:@"&#47;" withString:@"/"];
-    comment = [comment stringByReplacingOccurrencesOfString:@"&#92;" withString:@"\\"];
-    
-    NSRange range = NSMakeRange(0, comment.length);
-    
-    NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:comment];
-    [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:kCommentFontSize] range:range];
-    
-    NSMutableParagraphStyle *commentStyle = [[NSMutableParagraphStyle alloc]init];
-    //    commentStyle.lineSpacing = kCommentLineSpacing;
-    [maComment addAttribute:NSParagraphStyleAttributeName value:commentStyle range:range];
-    
-    //em
-    UIFont *emFont = [UIFont fontWithName:@"HelveticaNeue-Italic" size:kCommentFontSize];
-    NSMutableArray *emRangeArray = [NSMutableArray array];
-    NSRegularExpression *em = [[NSRegularExpression alloc]initWithPattern:@"<em[^>]*>(.*?)</em>" options:0 error:nil];
-    [em enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [maComment addAttribute:NSFontAttributeName value:emFont range:result.range];
-        NSValue *value = [NSValue valueWithRange:result.range];
-        [emRangeArray addObject:value];
-    }];
-    
-    //strong
-    UIFont *strongFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:kCommentFontSize];
-    NSMutableArray *strongRangeArray = [NSMutableArray array];
-    NSRegularExpression *strong = [[NSRegularExpression alloc]initWithPattern:@"<strong[^>]*>(.*?)</strong>" options:0 error:nil];
-    [strong enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [maComment addAttribute:NSFontAttributeName value:strongFont range:result.range];
-        NSValue *value = [NSValue valueWithRange:result.range];
-        [strongRangeArray addObject:value];
-    }];
-    
-    //emstrong
-    UIFont *emStrongFont = [UIFont fontWithName:@"HelveticaNeue-BoldItalic" size:kCommentFontSize];
-    for (NSValue *emRangeValue in emRangeArray) {
-        //value to range
-        NSRange emRange = [emRangeValue rangeValue];
-        for (NSValue *strongRangeValue in strongRangeArray) {
-            NSRange strongRange = [strongRangeValue rangeValue];
-            NSRange emStrongRange = NSIntersectionRange(emRange, strongRange);
-            if (emStrongRange.length != 0) {
-                [maComment addAttribute:NSFontAttributeName value:emStrongFont range:emStrongRange];
-            }
-        }
-    }
-    
-    //strike
-    //не будет работать с tttattributedlabel, нужно переделывать ссылки и все такое
-    NSRegularExpression *strike = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"s\">(.*?)</span>" options:0 error:nil];
-    [strike enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [maComment addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:result.range];
-    }];
-    
-    //spoiler
-    UIColor *spoilerColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
-    NSRegularExpression *spoiler = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"spoiler\">(.*?)</span>" options:0 error:nil];
-    [spoiler enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [maComment addAttribute:NSForegroundColorAttributeName value:spoilerColor range:result.range];
-    }];
-    
-    //quote
-    UIColor *quoteColor = [UIColor colorWithRed:(17/255.0) green:(139/255.0) blue:(116/255.0) alpha:1.0];
-    NSRegularExpression *quote = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"unkfunc\">(.*?)</span>" options:0 error:nil];
-    [quote enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [maComment addAttribute:NSForegroundColorAttributeName value:quoteColor range:result.range];
-    }];
-    
-    //link
-    UIColor *linkColor = [UIColor colorWithRed:(255/255.0) green:(102/255.0) blue:(0/255.0) alpha:1.0];
-    NSRegularExpression *link = [[NSRegularExpression alloc]initWithPattern:@"<a[^>]*>(.*?)</a>" options:0 error:nil];
-    NSRegularExpression *linkLink = [[NSRegularExpression alloc]initWithPattern:@"href=\"(.*?)\"" options:0 error:nil];
-    NSRegularExpression *linkLinkTwo = [[NSRegularExpression alloc]initWithPattern:@"href='(.*?)'" options:0 error:nil];
-    
-    [link enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop) {
-        NSString *fullLink = [comment substringWithRange:result.range];
-        NSTextCheckingResult *linkLinkResult = [linkLink firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
-        NSTextCheckingResult *linkLinkTwoResult = [linkLinkTwo firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
-        
-        NSRange urlRange = NSMakeRange(0, 0);
-        
-        if (linkLinkResult.numberOfRanges != 0) {
-            urlRange = NSMakeRange(linkLinkResult.range.location+6, linkLinkResult.range.length-7);
-        } else if (linkLinkResult.numberOfRanges != 0) {
-            urlRange = NSMakeRange(linkLinkTwoResult.range.location+6, linkLinkTwoResult.range.length-7);
-        }
-        
-        if (urlRange.length != 0) {
-            NSString *urlString = [fullLink substringWithRange:urlRange];
-            urlString = [urlString stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
-            NSURL *url = [[NSURL alloc]initWithString:urlString];
-            if (url) {
-                UrlNinja *un = [UrlNinja unWithUrl:url];
-                /*
-                if ([un.boardId isEqualToString:self.boardId] && [un.threadId isEqualToString:self.threadId] && un.type == boardThreadPostLink) {
-                    if (![self.replyTo containsObject:un.postId]) {
-                        [self.replyTo addObject:un.postId];
-                    }
-                }
-                 */
-                [maComment addAttribute:NSLinkAttributeName value:url range:result.range];
-                [maComment addAttribute:NSForegroundColorAttributeName value:linkColor range:result.range];
-                [maComment addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:result.range];
-            }
-        }
-    }];
-    
-    //находим все теги и сохраняем в массив
-    NSMutableArray *tagArray = [NSMutableArray array];
-    NSRegularExpression *tag = [[NSRegularExpression alloc]initWithPattern:@"<[^>]*>" options:0 error:nil];
-    [tag enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSValue *value = [NSValue valueWithRange:result.range];
-        [tagArray addObject:value];
-    }];
-    
-    //вырезательный цикл
-    int shift = 0;
-    for (NSValue *rangeValue in tagArray) {
-        NSRange cutRange = [rangeValue rangeValue];
-        cutRange.location -= shift;
-        [maComment deleteCharactersInRange:cutRange];
-        shift += cutRange.length;
-    }
-    
-    //чистим переводы строк в начале и конце
-    NSRegularExpression *whitespaceStart = [[NSRegularExpression alloc]initWithPattern:@"^\\s\\s*" options:0 error:nil];
-    NSTextCheckingResult *wsResult = [whitespaceStart firstMatchInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length])];
-    [maComment deleteCharactersInRange:wsResult.range];
-    
-    NSRegularExpression *whitespaceEnd = [[NSRegularExpression alloc]initWithPattern:@"\\s\\s*$" options:0 error:nil];
-    NSTextCheckingResult *weResult = [whitespaceEnd firstMatchInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length])];
-    [maComment deleteCharactersInRange:weResult.range];
-    
-    //и пробелы в начале каждой строки
-    NSMutableArray *whitespaceLineStartArray = [NSMutableArray array];
-    NSRegularExpression *whitespaceLineStart = [[NSRegularExpression alloc]initWithPattern:@"^[\\t\\f\\p{Z}]+" options:NSRegularExpressionAnchorsMatchLines error:nil];
-    [whitespaceLineStart enumerateMatchesInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSValue *value = [NSValue valueWithRange:result.range];
-        [whitespaceLineStartArray addObject:value];
-    }];
-    
-    int whitespaceLineStartShift = 0;
-    for (NSValue *rangeValue in whitespaceLineStartArray) {
-        NSRange cutRange = [rangeValue rangeValue];
-        cutRange.location -= whitespaceLineStartShift;
-        [maComment deleteCharactersInRange:cutRange];
-        whitespaceLineStartShift += cutRange.length;
-    }
-    
-    //и двойные переводы
-    NSMutableArray *whitespaceDoubleArray = [NSMutableArray array];
-    NSRegularExpression *whitespaceDouble = [[NSRegularExpression alloc]initWithPattern:@"[\\n\\r]{3,}" options:0 error:nil];
-    [whitespaceDouble enumerateMatchesInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSValue *value = [NSValue valueWithRange:result.range];
-        [whitespaceDoubleArray addObject:value];
-    }];
-    
-    int whitespaceDoubleShift = 0;
-    for (NSValue *rangeValue in whitespaceDoubleArray) {
-        NSRange cutRange = [rangeValue rangeValue];
-        cutRange.location -= whitespaceDoubleShift;
-        [maComment deleteCharactersInRange:cutRange];
-        [maComment insertAttributedString:[[NSAttributedString alloc]initWithString:@"\n\n" attributes:nil] atIndex:cutRange.location];
-        whitespaceDoubleShift += cutRange.length - 2;
-    }
-    
-    //добавляем заголовок поста, если он есть
-    /*
-    if (self.subject && ![self.subject isEqualToString:@""]) {
-        
-        self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#39;" withString:@"'"];
-        self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#44;" withString:@","];
-        
-        NSMutableAttributedString *maSubject = [[NSMutableAttributedString alloc]initWithString:[self.subject stringByAppendingString:@"\n"]];
-        [maSubject addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0] range:NSMakeRange(0, maSubject.length)];
-        [maSubject addAttribute:NSParagraphStyleAttributeName value:commentStyle range:NSMakeRange(0, maSubject.length)];
-        
-        [maComment insertAttributedString:maSubject atIndex:0];
-    }
-     */
-    
-    //заменить хтмл-литералы на нормальные символы (раньше этого делать нельзя, сломается парсинг)
-    [[maComment mutableString] replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
-    [[maComment mutableString] replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
-    [[maComment mutableString] replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
-    [[maComment mutableString] replaceOccurrencesOfString:@"&amp;" withString:@"&" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
-    
-    return maComment;
 }
 
 // reload thread by current thread num
