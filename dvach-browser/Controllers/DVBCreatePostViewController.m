@@ -133,6 +133,9 @@
      */
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
     
+    // Captcha image will be in front of activity indicator after appearing
+    _captchaImage.layer.zPosition = 2;
+    
     if ([_usercode isEqualToString:@""])
     {
         /**
@@ -173,6 +176,9 @@
  */
 - (void)requestCaptchaImage
 {
+    // Firstly we entirely hide captcha image until we have new image
+    [_captchaImage setImage:nil];
+    
     [_networking requestCaptchaKeyWithCompletion:^(NSString *completion)
     {
         /**
