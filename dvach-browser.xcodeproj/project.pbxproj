@@ -11,6 +11,7 @@
 		840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */; };
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
+		84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */; };
 		84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */; };
 		84CFC51019E1526E004D0BB8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC50F19E1526E004D0BB8 /* main.m */; };
 		84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC51219E1526E004D0BB8 /* AppDelegate.m */; };
@@ -76,6 +77,8 @@
 		840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8428B63919EDAC74007973A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		84653B691ABB61C800F0BD19 /* DVBPostPreparation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostPreparation.h; path = Models/DVBPostPreparation.h; sourceTree = "<group>"; };
+		84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPreparation.m; path = Models/DVBPostPreparation.m; sourceTree = "<group>"; };
 		84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		84CFC50A19E1526E004D0BB8 /* dvach-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dvach-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CFC50E19E1526E004D0BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -332,6 +335,8 @@
 				A155FF021AB735DD00BE31F4 /* DVBValidation.m */,
 				A100A4501AAEF56F0027F917 /* DVBBoardModel.h */,
 				A100A4511AAEF56F0027F917 /* DVBBoardModel.m */,
+				84653B691ABB61C800F0BD19 /* DVBPostPreparation.h */,
+				84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -626,6 +631,7 @@
 				A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */,
 				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
 				A155FF171AB7362A00BE31F4 /* DVBStatus.m in Sources */,
+				84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */,
 				A155FF561AB736C100BE31F4 /* IQUIView+IQKeyboardToolbar.m in Sources */,
 				A155FF531AB736C100BE31F4 /* IQBarButtonItem.m in Sources */,
 				A155FF291AB736B800BE31F4 /* NSString+HTML.m in Sources */,

@@ -41,8 +41,6 @@ static CGFloat const TEXTVIEW_INSET = 8;
      */
     _commentTextView.text = nil;
     _commentTextView.attributedText = commentText;
-    // _commentTextView.text = commentText;
-    _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
     // make insets
     [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
