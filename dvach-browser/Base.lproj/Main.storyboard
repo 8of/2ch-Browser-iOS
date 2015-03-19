@@ -578,12 +578,12 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Создать пост" id="tIb-EB-OqK">
-                        <barButtonItem key="leftBarButtonItem" image="Cancel" id="dUR-YR-YFs">
+                        <barButtonItem key="leftBarButtonItem" title="Закрыть" id="dUR-YR-YFs">
                             <connections>
                                 <action selector="cancelPostAction:" destination="Bhq-1W-f9J" id="t53-34-Hdi"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="Checkmark" id="bGY-MK-GAa">
+                        <barButtonItem key="rightBarButtonItem" title="Отправить" id="bGY-MK-GAa">
                             <connections>
                                 <action selector="makePostAction:" destination="Bhq-1W-f9J" id="WH2-a5-rt4"/>
                             </connections>
@@ -611,8 +611,6 @@
     </scenes>
     <resources>
         <image name="Bottompage" width="22" height="22"/>
-        <image name="Cancel" width="22" height="22"/>
-        <image name="Checkmark" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
         <image name="Reportflag" width="22" height="22"/>
         <image name="Settings" width="22" height="22"/>
