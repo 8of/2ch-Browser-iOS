@@ -108,10 +108,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                 }
                 else
                 {
-                    NSString *boardNotPermittedAlertTitle = NSLocalizedString(@"Не доступно", @"Заголовок alert'a  сообщает о том, что конкретная борда не доступна");
-                    NSString *boardNotPermittedAlertMessage = NSLocalizedString(@"Доска запрещена к просмотру. Приносим свои извинения.", @"Текст alert'a  сообщает о том, что конкретная борда не доступна");
+                    NSString *boardNotPermittedAlertTitle = NSLocalizedString(@"Доска запрещена к просмотру", @"Заголовок alert'a  сообщает о том, что конкретная борда не доступна");
                     UIAlertView *alertView = [self alertViewWithTitle:boardNotPermittedAlertTitle
-                                                                        description:boardNotPermittedAlertMessage
+                                                                        description:nil
                                                                             buttons:nil];
                     [alertView show];
                 }

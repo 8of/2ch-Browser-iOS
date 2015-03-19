@@ -74,6 +74,11 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         [self loadNextBoardPage];
         [self makeRefreshAvailable];
     }
+    if (!_alertViewGenerator)
+    {
+        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
+        _alertViewGenerator.alertViewGeneratorDelegate = nil;
+    }
 }
 
 /**
@@ -95,19 +100,17 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
             {
                 NSString *nonExistingBoardAlertHeader = NSLocalizedString(@"Доска не существует", @"Заголовок alert'a сообщает о том, что доска с таким кодом не существует.");
                 
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nonExistingBoardAlertHeader
-                                                                    message:nil
-                                                                   delegate:self
-                                                          cancelButtonTitle:nil
-                                                          otherButtonTitles:@"OK", nil];
+                UIAlertView *alertView =  [_alertViewGenerator
+                                           alertViewWithTitle:nonExistingBoardAlertHeader
+                                           description:nil
+                                           buttons:nil];
                 [alertView show];
-                
+
                 _wrongBoardAlertAlreadyPresentedOnce = YES;
                 
                 // Go back if board isn't there
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
-            
             else if (!_wrongBoardAlertAlreadyPresentedOnce)
             {
                 // Update only if we have something to show
@@ -241,13 +244,8 @@ titleForHeaderInSection:(NSInteger)section
     [_threadsArray removeObjectAtIndex:deletedObjectIndex];
     [self.tableView reloadData];
     
-    if (!_alertViewGenerator)
-    {
-        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
-        _alertViewGenerator.alertViewGeneratorDelegate = nil;
-    }
     NSString *complaintSentAlertTitle = NSLocalizedString(@"Жалоба отправлена", @"Заголовок alert'a сообщает о том, что жалоба отправлена.");
-    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба поставлена в очередь на проверку модератором. Тред был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
+    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба поставлена в очередь на проверку. Тред был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
     UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:complaintSentAlertTitle
                                                          description:complaintSentAlertMessage
                                                              buttons:nil];
