@@ -15,8 +15,9 @@
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
+#import "IQKeyboardManager.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate, UITextViewDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -61,6 +62,20 @@
     [super viewDidLoad];
     [self prepareViewController];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // If user is on iPad
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        // Turn off viewController scrolling on textEdit focusing
+        // need to rewrite this whole feature in future
+        [[IQKeyboardManager sharedManager] setEnable:NO];
+    }
+}
+
 /**
  *  All View Controller tuning
  */
@@ -338,11 +353,11 @@
     
     NSString *boldTitle = NSLocalizedString(@"Жирный", @"Title for Bold markup in custom UIMenu in Posting View Controller");
     UIMenuItem *boldItem = [[UIMenuItem alloc] initWithTitle:boldTitle
-                                                      action:@selector(boldMenuItemACtion)];
+                                                      action:@selector(boldMenuItemAction)];
     
     NSString *italicTitle = NSLocalizedString(@"Наклонный", @"Title for Italic markup in custom UIMenu in Posting View Controller");
     UIMenuItem *italicItem = [[UIMenuItem alloc] initWithTitle:italicTitle
-                                                        action:@selector(italicMenuItemACtion)];
+                                                        action:@selector(italicMenuItemAction)];
     
     commentMenu.menuItems = [[NSArray alloc] initWithObjects:boldItem, italicItem, nil];
     [commentMenu setTargetRect:_commentTextView.bounds
@@ -354,7 +369,7 @@
 /**
  *  Bold tags wrapping
  */
-- (void)boldMenuItemACtion
+- (void)boldMenuItemAction
 {
     /**
      *  Future improvements for makaba markup will be here
@@ -365,7 +380,7 @@
 /**
  *  Italic tags wrapping
  */
-- (void)italicMenuItemACtion
+- (void)italicMenuItemAction
 {
     /**
      *  Future improvements for makaba markup will be here
