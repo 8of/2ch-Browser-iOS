@@ -27,7 +27,7 @@
 /**
  *  Text of post message.
  */
-@property (strong, nonatomic) NSString *comment;
+@property (strong, nonatomic) NSAttributedString *comment;
 /**
  *  Path for post's full image.
  */
@@ -39,7 +39,7 @@
 
 - (instancetype)initWithNum:(NSString *)postNum
                     subject:(NSString *)postSubject
-                    comment:(NSString *)postComment
+                    comment:(NSAttributedString *)postComment
                        path:(NSString *)postPicPath
                   thumbPath:(NSString *)postThumbPath;
 

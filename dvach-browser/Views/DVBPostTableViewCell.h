@@ -14,7 +14,7 @@
 @interface DVBPostTableViewCell : UITableViewCell
 
 // Pass data to cell
-- (void)prepareCellWithCommentText:(NSString *)commentText
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText
              andPostThumbUrlString:(NSString *)postThumbUrlString;
 
 @end

@@ -15,8 +15,10 @@
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
+#import "IQKeyboardManager.h"
+#import "DVBWrapMenuItem.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate,UIImagePickerControllerDelegate, UITextViewDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -35,6 +37,7 @@
 /**
  *  Checker for including/excluding photo to query
  */
+
 @property (nonatomic, assign) BOOL isImagePicked;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
@@ -61,6 +64,20 @@
     [super viewDidLoad];
     [self prepareViewController];
 }
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // If user is on iPad
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        // Turn off viewController scrolling on textEdit focusing
+        // need to rewrite this whole feature in future
+        [[IQKeyboardManager sharedManager] setEnable:NO];
+    }
+}
+
 /**
  *  All View Controller tuning
  */
@@ -118,6 +135,9 @@
      */
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
     
+    // Captcha image will be in front of activity indicator after appearing
+    _captchaImage.layer.zPosition = 2;
+    
     if ([_usercode isEqualToString:@""])
     {
         /**
@@ -158,6 +178,9 @@
  */
 - (void)requestCaptchaImage
 {
+    // Firstly we entirely hide captcha image until we have new image
+    [_captchaImage setImage:nil];
+    
     [_networking requestCaptchaKeyWithCompletion:^(NSString *completion)
     {
         /**
@@ -319,60 +342,107 @@
 - (void)textViewDidChangeSelection:(UITextView *)textView
 {
     NSRange selectedRange = _commentTextView.selectedRange;
+    NSUInteger selectedLocation = selectedRange.location;
     NSUInteger selectedLength = selectedRange.length;
-    if (selectedLength > 0) {
+    if (selectedLength > 0)
+    {
         NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
-        /**
-         *  turned off for future! do not delete
-         */
-        // [self makeMenu];
+
+        [self makeMenuWithSelectedLocation:selectedLocation
+                          andSelectedRange:selectedLength];
     }
 }
 
 /**
  *  Custom menu generator
  */
-- (void)makeMenu
+- (void)makeMenuWithSelectedLocation:(NSUInteger)selectedLocation
+                    andSelectedRange:(NSUInteger)selectedRange
 {
     UIMenuController *commentMenu = [UIMenuController sharedMenuController];
     
     NSString *boldTitle = NSLocalizedString(@"Жирный", @"Title for Bold markup in custom UIMenu in Posting View Controller");
-    UIMenuItem *boldItem = [[UIMenuItem alloc] initWithTitle:boldTitle
-                                                      action:@selector(boldMenuItemACtion)];
+    DVBWrapMenuItem *boldItem = [[DVBWrapMenuItem alloc] initWithTitle:boldTitle
+                                                      action:@selector(boldMenuItemAction:)];
+    
+    // need to add this only to the first menu because we always will be read this params from it
+    boldItem.selectedLocation = selectedLocation;
+    boldItem.selectedRange = selectedRange;
     
     NSString *italicTitle = NSLocalizedString(@"Наклонный", @"Title for Italic markup in custom UIMenu in Posting View Controller");
-    UIMenuItem *italicItem = [[UIMenuItem alloc] initWithTitle:italicTitle
-                                                        action:@selector(italicMenuItemACtion)];
+    DVBWrapMenuItem *italicItem = [[DVBWrapMenuItem alloc] initWithTitle:italicTitle
+                                                                  action:@selector(italicMenuItemAction:)];
     
-    commentMenu.menuItems = [[NSArray alloc] initWithObjects:boldItem, italicItem, nil];
-    [commentMenu setTargetRect:_commentTextView.bounds
-                        inView:self.view];
-    // [commentMenu update];
+    NSString *spoilerTitle = NSLocalizedString(@"Спойлер", @"Title for Spoiler markup in custom UIMenu in Posting View Controller");
+    DVBWrapMenuItem *spoilerItem = [[DVBWrapMenuItem alloc] initWithTitle:spoilerTitle
+                                                                  action:@selector(spoilerMenuItemAction:)];
+    
+    NSString *undelrineTitle = NSLocalizedString(@"Подчёркнутый", @"Title for Underline markup in custom UIMenu in Posting View Controller");
+    DVBWrapMenuItem *underlineItem = [[DVBWrapMenuItem alloc] initWithTitle:undelrineTitle
+                                                                   action:@selector(underlineMenuItemAction:)];
+    
+    NSString *strikeTitle = NSLocalizedString(@"Зачёркнутый", @"Title for Strike markup in custom UIMenu in Posting View Controller");
+    DVBWrapMenuItem *strikeItem = [[DVBWrapMenuItem alloc] initWithTitle:strikeTitle
+                                                                     action:@selector(strikeMenuItemAction:)];
+    
+    commentMenu.menuItems = [[NSArray alloc] initWithObjects:boldItem, italicItem, spoilerItem, underlineItem, strikeItem, nil];
+    [commentMenu update];
     commentMenu.menuVisible = TRUE;
 }
 
-/**
- *  Bold tags wrapping
- */
-- (void)boldMenuItemACtion
+// Bold menu item action
+- (void)boldMenuItemAction:(id)sender
 {
-    /**
-     *  Future improvements for makaba markup will be here
-     */
-    NSLog(@"Fired bold!");
+    [self wrapMenuItemActionWithSender:sender andTagToInsert:@"b"];
 }
-
-/**
- *  Italic tags wrapping
- */
-- (void)italicMenuItemACtion
+// Italic menu item action
+- (void)italicMenuItemAction:(id)sender
 {
-    /**
-     *  Future improvements for makaba markup will be here
-     */
-    NSLog(@"Fired italic!");
+    [self wrapMenuItemActionWithSender:sender andTagToInsert:@"i"];
 }
-
+// Spoiler menu item action
+- (void)spoilerMenuItemAction:(id)sender
+{
+    [self wrapMenuItemActionWithSender:sender andTagToInsert:@"spoiler"];
+}
+// Undelrine menu item action
+- (void)underlineMenuItemAction:(id)sender
+{
+    [self wrapMenuItemActionWithSender:sender andTagToInsert:@"u"];
+}
+// Strike menu item action
+- (void)strikeMenuItemAction:(id)sender
+{
+    [self wrapMenuItemActionWithSender:sender andTagToInsert:@"s"];
+}
+/**
+ *  Wrap comment in commentTextView
+ */
+- (void)wrapMenuItemActionWithSender:(id)sender
+            andTagToInsert:(NSString *)tagToInsert
+{
+    //receive value of row here. The sender in iOS 7 is an instance of UIMenuController.
+    UIMenuController *targetSender = (UIMenuController *)sender ;
+    DVBWrapMenuItem *menuItem=(DVBWrapMenuItem *)[targetSender.menuItems firstObject];
+    
+    NSUInteger locationForOpenTag = menuItem.selectedLocation;
+    NSUInteger locationForCloseTag = locationForOpenTag + menuItem.selectedRange;
+    
+    NSString *tagToinsertBefore = [NSString stringWithFormat:@"[%@]", tagToInsert];
+    NSString *tagToinsertAfter = [NSString stringWithFormat:@"[/%@]", tagToInsert];
+    
+    NSMutableString *mutableCommentString = [NSMutableString stringWithString:_commentTextView.text];
+    
+    // Insiert close tag first because otherwise its position will change and we'll need to recalculate it
+    [mutableCommentString insertString:tagToinsertAfter
+                               atIndex:locationForCloseTag];
+    [mutableCommentString insertString:tagToinsertBefore
+                               atIndex:locationForOpenTag];
+    
+    NSString *newCommentString = mutableCommentString;
+    
+    _commentTextView.text = newCommentString;
+}
 
 #pragma mark - Image(s) picking
 

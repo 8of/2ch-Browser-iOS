@@ -41,6 +41,11 @@
     /**
      *  check if EULA accepted or not
      */
+    if (!_alertViewGenerator)
+    {
+        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
+        _alertViewGenerator.alertViewGeneratorDelegate = self;
+    }
     if (![self userAgreementAccepted])
     {
         [self showUserAgeementAlert];
@@ -89,17 +94,14 @@
 
 - (void)showUserAgeementAlert
 {
-    if (!_alertViewGenerator)
-    {
-        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
-        _alertViewGenerator.alertViewGeneratorDelegate = self;
-    }
     NSString *userAgreementNotAcceptedAlertTitle = NSLocalizedString(@"Доступ запрещён", @"Заголовок alert'a сообщает о том, что пользователь не принял Соглашение.");
-    NSString *userAgreementNotAcceptedAlertMessage = NSLocalizedString(@"Для использования приложения примите, пожалуйста, пользовательское соглашение в Настройках в левом верхем углу экрана.", @"Текст alert'a сообщает о том, что пользователь не принял Согласшение.");
+    NSString *userAgreementNotAcceptedAlertMessage = NSLocalizedString(@"Для использования приложения, пожалуйста, примите соглашение", @"Текст alert'a сообщает о том, что пользователь не принял Согласшение.");
     UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:userAgreementNotAcceptedAlertTitle
                                                         description:userAgreementNotAcceptedAlertMessage
                                                             buttons:nil];
     [alertView show];
+    // Redirect user to settings if he hasn't accepted EULA
+    [self performSegueWithIdentifier:SEGUE_TO_SETTINGS sender:self];
 }
 
 #pragma mark - Navigation
@@ -118,11 +120,6 @@
          
          :returns: alertView with shortcode prompt
          */
-        if (!_alertViewGenerator)
-        {
-            _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
-            _alertViewGenerator.alertViewGeneratorDelegate = self;
-        }
         UIAlertView *alertView = [_alertViewGenerator alertViewForBoardCode];
         [alertView show];
     }
