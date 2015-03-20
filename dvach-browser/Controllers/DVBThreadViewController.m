@@ -15,7 +15,6 @@
 #import "DVBCreatePostViewController.h"
 #import "DVBComment.h"
 #import "DVBNetworking.h"
-#import "DVBStatus.h"
 #import "DVBBrowserViewControllerBuilder.h"
 #import "DVBThreadModel.h"
 
@@ -647,21 +646,21 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)createAndPushGalleryWithIndexPath:(NSIndexPath *)indexPath
 {
-    DVBBrowserViewControllerBuilder *browser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
+    DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
 
     NSUInteger indexForImageShowing = indexPath.section;
     DVBPostObj *postObj = _postsArray[indexForImageShowing];
     NSString *path = postObj.path;
     NSUInteger index = [_fullImagesArray indexOfObject:path];
 
-    browser.index = index;
+    galleryBrowser.index = index;
     
-    [browser prepareWithIndex:index
+    [galleryBrowser prepareWithIndex:index
           andThumbImagesArray:_thumbImagesArray
            andFullImagesArray:_fullImagesArray];
 
     // Present
-    [self.navigationController pushViewController:browser animated:YES];
+    [self.navigationController pushViewController:galleryBrowser animated:YES];
 }
 
 #pragma mark - DVBCreatePostViewControllerDelegate
