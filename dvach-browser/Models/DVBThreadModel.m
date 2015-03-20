@@ -104,59 +104,37 @@
                 
                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
                 
-                NSDictionary *files = [key[@"files"] objectAtIndex:0];
+                NSDictionary *files = key[@"files"][0];
                 
-                NSMutableString *thumbPathMut;
-                NSMutableString *picPathMut;
+                NSString *thumbPath = [[NSMutableString alloc] init];
+                NSString *picPath = [[NSMutableString alloc] init];
                 
                 if (files != nil)
                 {
                     
                     // check webm or not
                     NSString *fullFileName = files[@"path"];
+                    
+                    thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"thumbnail"]];
+                    
+                    [_thumbImagesArray addObject:thumbPath];
+                    
                     if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
                     {
-                        
                         // if contains .webm
-                        thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                        picPathMut = [[NSMutableString alloc] initWithString:@""];
                         
+                        // make VLC webm link
+                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, files[@"path"]];
                     }
                     else
                     {
-                        
-                        // if not contains .webm
-                        
-                        // rewrite in future
-                        NSMutableString *fullThumbPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                        [fullThumbPath appendString:self.boardCode];
-                        [fullThumbPath appendString:@"/"];
-                        [fullThumbPath appendString:[files objectForKey:@"thumbnail"]];
-                        thumbPathMut = fullThumbPath;
-                        fullThumbPath = nil;
-                        
-                        // rewrite in future
-                        NSMutableString *fullPicPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                        [fullPicPath appendString:_boardCode];
-                        [fullPicPath appendString:@"/"];
-                        [fullPicPath appendString:[files objectForKey:@"path"]];
-                        picPathMut = fullPicPath;
-                        fullPicPath = nil;
-                        
-                        [_thumbImagesArray addObject:thumbPathMut];
-                        [_fullImagesArray addObject:picPathMut];
-                        
+                        // if not contains .webm - regular pic link
+                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"path"]];
                     }
                     
+                    [_fullImagesArray addObject:picPath];
+                    
                 }
-                else
-                {
-                    // if there are no files - make blank file paths
-                    thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                    picPathMut = [[NSMutableString alloc] initWithString:@""];
-                }
-                NSString *thumbPath = thumbPathMut;
-                NSString *picPath = picPathMut;
                 
                 DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num
                                                               subject:subject
