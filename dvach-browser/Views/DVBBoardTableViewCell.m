@@ -16,11 +16,13 @@
 
 @implementation DVBBoardTableViewCell
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
     [super setSelected:selected animated:animated];
 }
 
-- (void)prepareCellWithBoardObject: (DVBBoardObj *)boardObject {
+- (void)prepareCellWithBoardObject: (DVBBoardObj *)boardObject
+{
     NSString *name = boardObject.name;
     NSString *boardId = boardObject.boardId;
     NSString *titleFullString = [NSString stringWithFormat:@"%@ - /%@/",name,boardId];
@@ -28,17 +30,17 @@
     _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     
     [self.contentView layoutIfNeeded];
 
 }
 
-- (void)prepareForReuse {
-    
+- (void)prepareForReuse
+{
     _title.text = @"";
-
 }
 
 @end

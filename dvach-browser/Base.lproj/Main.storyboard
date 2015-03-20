@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1066" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -383,16 +383,15 @@
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BNP-kc-CNb" id="lu6-fg-lI3">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
+                                        <textView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
                                             <rect key="frame" x="73" y="0.0" width="247" height="81"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" id="G05-GT-sq8"/>
                                             </constraints>
-                                            <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <attributedString key="attributedText"/>
                                             <textInputTraits key="textInputTraits" autocorrectionType="no"/>
-                                            <dataDetectorType key="dataDetectorTypes" link="YES" calendarEvent="YES"/>
+                                            <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                         </textView>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jQY-pz-yxx">
                                             <rect key="frame" x="8" y="8" width="65" height="65"/>
@@ -406,6 +405,7 @@
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" id="JlN-1N-MCJ"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="K4S-vg-FxB"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="leading" secondItem="jQY-pz-yxx" secondAttribute="trailing" id="PJv-Nf-thQ"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" constant="8" id="UCH-FN-TD4"/>
                                         <constraint firstAttribute="bottom" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="doP-GT-0Ey"/>
                                         <constraint firstAttribute="trailing" secondItem="M3z-Su-Ix2" secondAttribute="trailing" id="eTP-2U-wQ8"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" constant="8" id="z39-5l-9dG"/>
@@ -538,17 +538,22 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad"/>
                             </textField>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="jV2-RR-JBv">
+                                <rect key="frame" x="105" y="144" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="R8v-6t-d37" firstAttribute="top" secondItem="wjr-Ih-9ju" secondAttribute="bottom" constant="15" id="0gh-Je-iAq"/>
                             <constraint firstAttribute="trailing" secondItem="yu0-D0-p1U" secondAttribute="trailing" constant="15" id="43i-R9-u5e"/>
                             <constraint firstAttribute="trailing" secondItem="1dE-mf-Pvb" secondAttribute="trailing" constant="15" id="7fd-4o-Z5T"/>
+                            <constraint firstItem="R8v-6t-d37" firstAttribute="centerX" secondItem="jV2-RR-JBv" secondAttribute="centerX" id="9Tz-io-gZZ"/>
                             <constraint firstItem="yu0-D0-p1U" firstAttribute="leading" secondItem="Oms-K5-odr" secondAttribute="leading" constant="15" id="D1o-kG-rzC"/>
                             <constraint firstItem="ATw-LV-fb7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="R8v-6t-d37" secondAttribute="trailing" constant="15" id="EF5-lU-yhX"/>
                             <constraint firstAttribute="trailing" secondItem="wjr-Ih-9ju" secondAttribute="trailing" constant="15" id="H0n-Ds-4nV"/>
                             <constraint firstItem="R8v-6t-d37" firstAttribute="leading" secondItem="Oms-K5-odr" secondAttribute="leading" constant="15" id="I5L-ey-kg3"/>
                             <constraint firstItem="ATw-LV-fb7" firstAttribute="top" secondItem="wjr-Ih-9ju" secondAttribute="bottom" constant="15" id="K1G-yf-OV3"/>
+                            <constraint firstItem="R8v-6t-d37" firstAttribute="centerY" secondItem="jV2-RR-JBv" secondAttribute="centerY" id="LRE-9E-zO8"/>
                             <constraint firstItem="1dE-mf-Pvb" firstAttribute="leading" secondItem="R8v-6t-d37" secondAttribute="trailing" constant="15" id="QkS-hO-fww"/>
                             <constraint firstItem="R8v-6t-d37" firstAttribute="bottom" secondItem="1dE-mf-Pvb" secondAttribute="bottom" id="SaH-1z-Bv1"/>
                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="top" secondItem="w1p-Cg-gVE" secondAttribute="bottom" constant="15" id="T1C-Cq-o81"/>
@@ -578,12 +583,12 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Создать пост" id="tIb-EB-OqK">
-                        <barButtonItem key="leftBarButtonItem" image="Cancel" id="dUR-YR-YFs">
+                        <barButtonItem key="leftBarButtonItem" title="Закрыть" id="dUR-YR-YFs">
                             <connections>
                                 <action selector="cancelPostAction:" destination="Bhq-1W-f9J" id="t53-34-Hdi"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" image="Checkmark" id="bGY-MK-GAa">
+                        <barButtonItem key="rightBarButtonItem" title="Отправить" id="bGY-MK-GAa">
                             <connections>
                                 <action selector="makePostAction:" destination="Bhq-1W-f9J" id="WH2-a5-rt4"/>
                             </connections>
@@ -611,8 +616,6 @@
     </scenes>
     <resources>
         <image name="Bottompage" width="22" height="22"/>
-        <image name="Cancel" width="22" height="22"/>
-        <image name="Checkmark" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
         <image name="Reportflag" width="22" height="22"/>
         <image name="Settings" width="22" height="22"/>
