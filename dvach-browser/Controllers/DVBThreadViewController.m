@@ -12,13 +12,12 @@
 #import "DVBPostTableViewCell.h"
 #import "Reachability.h"
 #import "DVBBadPost.h"
-#import "DVBBadPostStorage.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBStatus.h"
 #import "DVBBrowserViewControllerBuilder.h"
-#import "DVBPostPreparation.h"
+#import "DVBThreadModel.h"
 
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
@@ -47,8 +46,6 @@ static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
-// static CGFloat const TEXTVIEW_INSET = 8;
-
 @protocol sendDataProtocol <NSObject>
 
 - (void)sendDataToBoard:(NSUInteger)deletedObjectIndex;
@@ -62,6 +59,9 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 // array of posts inside this thread
 @property (nonatomic, strong) NSMutableArray *postsArray;
+
+// model for posts in the thread
+@property (nonatomic, strong) DVBThreadModel *threadModel;
 
 // array of all post thumb images in thread
 @property (nonatomic, strong) NSMutableArray *thumbImagesArray;
@@ -77,7 +77,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 @property (nonatomic, assign) NSUInteger updatedTimes;
 
 // storage for bad posts, marked on this specific device
-@property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
+// @property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
 
 // for marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
@@ -87,8 +87,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 // flagging
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *flagButton;
-
-@property (nonatomic, strong) DVBPostPreparation *postPreparation;
 
 @end
 
@@ -110,23 +108,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     self.title = [self getSubjectOrNumWithSubject:_threadSubject
                                      andThreadNum:_threadNum];
     [self addGestureRecognisers];
-    
-    /**
-     Handling bad posts on this device
-     */
-    _badPostsStorage = [[DVBBadPostStorage alloc] init];
-    NSString *path = [_badPostsStorage badPostsArchivePath];
-    
-    _badPostsStorage.badPostsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    if (!_badPostsStorage.badPostsArray)
-    {
-        _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects:nil];
-    }
-    
+
     _opAlreadyDeleted = NO;
     
-    _postPreparation = [[DVBPostPreparation alloc] init];
-    
+    _threadModel = [[DVBThreadModel alloc] initWithBoardCode:_boardCode
+                                                andThreadNum:_threadNum];
 }
 
 #pragma mark - Set titles and gestures
@@ -348,114 +334,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 andThread:(NSString *)threadNum
             andCompletion:(void (^)(NSArray *))completion
 {
-    
-    DVBNetworking *networking = [[DVBNetworking alloc] init];
-    
-    [networking getPostsWithBoard:board
-                        andThread:threadNum
-                    andCompletion:^(NSDictionary *completion2)
-    {
-        NSMutableArray *postsFullMutArray = [NSMutableArray array];
-        
-        _thumbImagesArray = [[NSMutableArray alloc] init];
-        _fullImagesArray = [[NSMutableArray alloc] init];
-
-             NSMutableDictionary *resultDict = [completion2 mutableCopy];
-             
-             NSArray *threadsDict = resultDict[@"threads"];
-             NSDictionary *postsArray = threadsDict[0];
-             NSArray *posts2Array = postsArray[@"posts"];
-             
-             for (id key in posts2Array)
-             {
-                 NSString *num = [key[@"num"] stringValue];
-                 
-                 // server gives me number but I need string
-                 NSString *tmpNumForPredicate = [key[@"num"] stringValue];
-                 
-                 //searching for bad posts
-                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
-                 NSArray *filtered = [self.badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
-                 
-                 if ([filtered count] > 0)
-                 {
-                     continue;
-                 }
-                 
-                 NSString *comment = key[@"comment"];
-                 NSString *subject = key[@"subject"];
-                 
-                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
-                 
-                 NSDictionary *files = [key[@"files"] objectAtIndex:0];
-                 
-                 NSMutableString *thumbPathMut;
-                 NSMutableString *picPathMut;
-                 
-                 if (files != nil)
-                 {
-                     
-                     // check webm or not
-                     NSString *fullFileName = files[@"path"];
-                     if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
-                     {
-                         
-                         // if contains .webm
-                         thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                         picPathMut = [[NSMutableString alloc] initWithString:@""];
-                         
-                     }
-                     else
-                     {
-                         
-                         // if not contains .webm
-                         
-                         // rewrite in future
-                         NSMutableString *fullThumbPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                         [fullThumbPath appendString:self.boardCode];
-                         [fullThumbPath appendString:@"/"];
-                         [fullThumbPath appendString:[files objectForKey:@"thumbnail"]];
-                         thumbPathMut = fullThumbPath;
-                         fullThumbPath = nil;
-                         
-                         // rewrite in future
-                         NSMutableString *fullPicPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-                         [fullPicPath appendString:_boardCode];
-                         [fullPicPath appendString:@"/"];
-                         [fullPicPath appendString:[files objectForKey:@"path"]];
-                         picPathMut = fullPicPath;
-                         fullPicPath = nil;
-                         
-                         [_thumbImagesArray addObject:thumbPathMut];
-                         [_fullImagesArray addObject:picPathMut];
-                         
-                     }
-                     
-                 }
-                 else
-                 {
-                     // if there are no files - make blank file paths
-                     thumbPathMut = [[NSMutableString alloc] initWithString:@""];
-                     picPathMut = [[NSMutableString alloc] initWithString:@""];
-                 }
-                 NSString *thumbPath = thumbPathMut;
-                 NSString *picPath = picPathMut;
-                 
-                 DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num
-                                                               subject:subject
-                                                               comment:attributedComment
-                                                                  path:picPath
-                                                             thumbPath:thumbPath];
-                 [postsFullMutArray addObject:postObj];
-                 postObj = nil;
-             }
-             
-             NSArray *resultArr = [[NSArray alloc] initWithArray:postsFullMutArray];
-             
-             completion(resultArr);
-        
+    [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
+        _postsArray = _threadModel.postsArray;
+        _thumbImagesArray = _threadModel.thumbImagesArray;
+        _fullImagesArray = _threadModel.fullImagesArray;
+        completion(completionsPosts);
     }];
-
 }
 
 // reload thread by current thread num
@@ -602,7 +486,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
                     NSLog(@"Post complaint sent.");
                     if (done)
                     {
-                        [self deletePostWithIndex:self.selectedWithLongPressSection fromMutableArray:self.postsArray];
+                        [self deletePostWithIndex:_selectedWithLongPressSection fromMutableArray:_postsArray andFlaggedPostNum:_flaggedPostNum];
                     }
                 }];
                 break;
@@ -678,26 +562,10 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 
 - (void)deletePostWithIndex:(NSUInteger)index
            fromMutableArray:(NSMutableArray *)array
+          andFlaggedPostNum:(NSString *)flaggedPostNum
 {
-    [array removeObjectAtIndex:index];
-    BOOL threadOrNot = NO;
-    if ((index == 0)&&(!_opAlreadyDeleted))
-    {
-        threadOrNot = YES;
-        self.opAlreadyDeleted = YES;
-    }
-    DVBBadPost *tmpBadPost = [[DVBBadPost alloc] initWithNum:_flaggedPostNum
-                                                 threadOrNot:threadOrNot];
-    [_badPostsStorage.badPostsArray addObject:tmpBadPost];
-    BOOL badPostsSavingSuccess = [_badPostsStorage saveChanges];
-    if (badPostsSavingSuccess)
-    {
-        NSLog(@"Bad Posts saved to file");
-    }
-    else
-    {
-        NSLog(@"Couldn't save bad posts to file");
-    }
+    [_threadModel flagPostWithIndex:index andFlaggedPostNum:flaggedPostNum andOpAlreadyDeleted:_opAlreadyDeleted];
+    
     if (index == 0)
     {
         [self.delegate sendDataToBoard:_threadIndex];
@@ -734,8 +602,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
         NSLog(@"Post complaint sent.");
         if (done)
         {
-            [self deletePostWithIndex:_selectedWithLongPressSection
-                     fromMutableArray:_postsArray];
+            [self deletePostWithIndex:_selectedWithLongPressSection fromMutableArray:_postsArray andFlaggedPostNum:_flaggedPostNum];
         }
     }];
 }
