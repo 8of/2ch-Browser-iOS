@@ -8,6 +8,7 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <IQKeyboardManager/IQKeyboardManager.h>
 #import "DVBConstants.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
@@ -15,7 +16,6 @@
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
-#import "IQKeyboardManager.h"
 #import "DVBWrapMenuItem.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
