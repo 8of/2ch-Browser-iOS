@@ -261,15 +261,45 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPostObj *selectedPost = _postsArray[indexPath.section];
-    NSString *thumbUrl = selectedPost.thumbPath;
+    // NSString *thumbUrl = selectedPost.thumbPath;
     
-    // Check if cell have real image or just placeholder.
-    // We handle tap on cell to fire gallery, not only tap on image itself.
-    if (![thumbUrl isEqualToString:@""])
+    NSString *fullUrlString = selectedPost.path;
+    
+    // Check if cell have real image / webm video or just placeholder
+    if (![fullUrlString isEqualToString:@""])
     {
-        [self handleTapOnImageViewWithIndexPath:indexPath];
+        // if contains .webm
+        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
+        {
+            NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
+            BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
+            
+            if (canOpenInVLC)
+            {
+                [[UIApplication sharedApplication] openURL:fullUrl];
+            }
+            else
+            {
+                NSLog(@"Need VLC to open this");
+                NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
+                self.navigationItem.prompt = installVLCPrompt;
+                [self performSelector:@selector(clearPrompt)
+                           withObject:nil
+                           afterDelay:2.0];
+            }
+        }
+        // if not
+        else
+        {
+            [self handleTapOnImageViewWithIndexPath:indexPath];
+        }
     }
     
+}
+// Clear prompt of any status / error messages
+- (void)clearPrompt
+{
+    self.navigationItem.prompt = nil;
 }
 
 #pragma mark - Cell configuration and calculation
