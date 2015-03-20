@@ -21,20 +21,21 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DACircularProgress (2.2.0)
-  - MBProgressHUD (0.9)
+  - IQKeyboardManager (3.2.1.1)
+  - MBProgressHUD (0.9.1)
   - MWPhotoBrowser (1.4.1):
-    - DACircularProgress
     - MBProgressHUD (~> 0.8)
     - PSTCollectionView (~> 1.2)
     - SDWebImage (~> 3.7)
   - PSTCollectionView (1.2.3)
-  - SDWebImage (3.7.1):
-    - SDWebImage/Core (= 3.7.1)
-  - SDWebImage/Core (3.7.1)
+  - SDWebImage (3.7.2):
+    - SDWebImage/Core (= 3.7.2)
+  - SDWebImage/Core (3.7.2)
 
 DEPENDENCIES:
   - AFNetworking (= 2.5.0)
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
+  - IQKeyboardManager
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
 
 EXTERNAL SOURCES:
@@ -48,15 +49,16 @@ CHECKOUT OPTIONS:
     :commit: bb909d054217ba74844478917f4379788f22567a
     :git: https://github.com/8ofproject/DACircularProgress
   MWPhotoBrowser:
-    :commit: 9a865bdf92eedd7e5a16080b5670ac2c1a70e32d
+    :commit: 4c52cb4c570eda7deb95d9df9d04e22656c6219f
     :git: https://github.com/8ofproject/MWPhotoBrowser
 
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
-  DACircularProgress: 271c31cf339f1444d3e7b3dcdcf23f47f467bb8e
-  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
-  MWPhotoBrowser: 776fdc2ea6ed99bd85adc886b57f45e0e9088722
+  DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
+  IQKeyboardManager: 4e83eef847c6f5edbd670284e50c7e3d643ebdb5
+  MBProgressHUD: f3747dcbd45a9e855a6b0674550651e0b7ed250c
+  MWPhotoBrowser: 906376af1d69be9aa23a5461063d89f3dd0c9cba
   PSTCollectionView: d9f466e4554cc83260ca9bde7beb27f308e8fd76
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
+  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.0
