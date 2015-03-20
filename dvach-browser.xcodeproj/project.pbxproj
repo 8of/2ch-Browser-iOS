@@ -23,6 +23,7 @@
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
 		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
+		A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */; };
 		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
 		A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE61AB7355600BE31F4 /* DVBBoardsViewController.m */; };
 		A155FEF11AB7355600BE31F4 /* DVBBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE81AB7355600BE31F4 /* DVBBoardViewController.m */; };
@@ -100,6 +101,8 @@
 		94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMessagePostServerAnswer.m; path = Models/Objects/DVBMessagePostServerAnswer.m; sourceTree = "<group>"; };
 		A100A4501AAEF56F0027F917 /* DVBBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardModel.h; path = Models/DVBBoardModel.h; sourceTree = "<group>"; };
 		A100A4511AAEF56F0027F917 /* DVBBoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardModel.m; path = Models/DVBBoardModel.m; sourceTree = "<group>"; };
+		A15552331ABC06EF00E7DB1D /* DVBThreadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadModel.h; path = Models/DVBThreadModel.h; sourceTree = "<group>"; };
+		A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadModel.m; path = Models/DVBThreadModel.m; sourceTree = "<group>"; };
 		A155FEE31AB7355600BE31F4 /* DVBAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAgreementViewController.h; path = Controllers/DVBAgreementViewController.h; sourceTree = "<group>"; };
 		A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAgreementViewController.m; path = Controllers/DVBAgreementViewController.m; sourceTree = "<group>"; };
 		A155FEE51AB7355600BE31F4 /* DVBBoardsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardsViewController.h; path = Controllers/DVBBoardsViewController.h; sourceTree = "<group>"; };
@@ -337,6 +340,8 @@
 				A100A4511AAEF56F0027F917 /* DVBBoardModel.m */,
 				84653B691ABB61C800F0BD19 /* DVBPostPreparation.h */,
 				84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */,
+				A15552331ABC06EF00E7DB1D /* DVBThreadModel.h */,
+				A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -627,6 +632,7 @@
 				A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */,
 				A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */,
 				A155FF501AB736C100BE31F4 /* IQKeyboardReturnKeyHandler.m in Sources */,
+				A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */,
 				A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */,
 				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
 				A155FF171AB7362A00BE31F4 /* DVBStatus.m in Sources */,
