@@ -147,18 +147,6 @@
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id<DVBBoardsModelDelegate> strongDelegate = _boardsModelDelegate;
-    /**
-     *  Fire method from delegate
-     *
-     *  @param showUserAgeementAlert: method shows alert if user agreement wasn't accepted
-     */
-    if ([strongDelegate respondsToSelector:@selector(userAgreementAccepted)] && [strongDelegate respondsToSelector:@selector(showUserAgeementAlert)]) {
-        BOOL isAgreementAccepted = [strongDelegate userAgreementAccepted];
-        if (!isAgreementAccepted) {
-            [strongDelegate showUserAgeementAlert];
-        }
-    }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 

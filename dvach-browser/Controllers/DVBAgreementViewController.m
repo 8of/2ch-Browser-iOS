@@ -11,32 +11,10 @@
 
 @interface DVBAgreementViewController ()
 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *notAcceptedBtn;
-
 @end
 
 @implementation DVBAgreementViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    BOOL userAgreementAccepted = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
-    
-    if (userAgreementAccepted)
-    {
-        /**
-         *  Do not let user to unaccepted accepted agreement.
-         */
-        self.notAcceptedBtn.enabled = false;
-    }
-}
-/**
- *  Dismiss modal.
- */
-- (IBAction)goBack:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 /**
  *  Set user Defaults - user accepted EULA.
  */
