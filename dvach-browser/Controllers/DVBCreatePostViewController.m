@@ -8,7 +8,6 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <SDWebImage/UIImageView+WebCache.h>
-#import <IQKeyboardManager/IQKeyboardManager.h>
 #import "DVBConstants.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
@@ -63,19 +62,6 @@
 {
     [super viewDidLoad];
     [self prepareViewController];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // If user is on iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        // Turn off viewController scrolling on textEdit focusing
-        // need to rewrite this whole feature in future
-        [[IQKeyboardManager sharedManager] setEnable:NO];
-    }
 }
 
 /**

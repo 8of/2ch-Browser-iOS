@@ -21,7 +21,6 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DACircularProgress (2.2.0)
-  - IQKeyboardManager (3.2.1.1)
   - MBProgressHUD (0.9.1)
   - MWPhotoBrowser (1.4.1):
     - MBProgressHUD (~> 0.8)
@@ -35,7 +34,6 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (= 2.5.0)
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
-  - IQKeyboardManager
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
 
 EXTERNAL SOURCES:
@@ -55,7 +53,6 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
   DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
-  IQKeyboardManager: 4e83eef847c6f5edbd670284e50c7e3d643ebdb5
   MBProgressHUD: f3747dcbd45a9e855a6b0674550651e0b7ed250c
   MWPhotoBrowser: 906376af1d69be9aa23a5461063d89f3dd0c9cba
   PSTCollectionView: d9f466e4554cc83260ca9bde7beb27f308e8fd76
