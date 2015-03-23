@@ -50,10 +50,13 @@
      */
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
-    [_threadThumb sd_setImageWithURL:[NSURL URLWithString:threadObject.thumbnail] placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+    NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
+    UIImage *placeholderImage = [UIImage imageNamed:@"Noimage.png"];
+    [_threadThumb sd_setImageWithURL:thumbUrl placeholderImage:placeholderImage];
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     
     [self.contentView layoutIfNeeded];
