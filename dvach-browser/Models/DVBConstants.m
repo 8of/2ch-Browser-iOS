@@ -32,6 +32,7 @@ NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";
 
 // segues
 NSString *const SEGUE_TO_SETTINGS = @"segueToSettings";
+NSString *const SEGUE_TO_EULA = @"segueToEula";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
 NSString *const SEGUE_TO_NEW_THREAD = @"segueToNewThread";

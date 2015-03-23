@@ -8,20 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol DVBBoardsModelDelegate <NSObject>
-/**
- *  Show alert about EULA.
- */
-- (void)showUserAgeementAlert;
-/**
- *  Check if EULA accepted or not.
- *
- *  @return YES if accepted
- */
-- (BOOL)userAgreementAccepted;
-
-@end
-
 @interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 /**
@@ -40,7 +26,6 @@
  *  all in one - cats and their boards
  */
 @property (nonatomic, readonly) NSDictionary *boardsDictionaryByCategories;
-@property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 
 /**
  *  Get array of boards to show

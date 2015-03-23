@@ -11,7 +11,7 @@
 #import "DVBAlertViewGenerator.h"
 #import "DVBNetworking.h"
 
-static NSString *const HELP_CELL_IDENTIFIER = @"helpCell";
+// static NSString *const HELP_CELL_IDENTIFIER = @"helpCell";
 static NSString *const PASSCODE_CELL_IDENTIFIER = @"passcodeCell";
 
 @interface DVBSettingsTableViewController () <DVBAlertViewGeneratorDelegate>
@@ -57,11 +57,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *clickedCell = [self.tableView cellForRowAtIndexPath:indexPath];
     NSString *cellIdentifier = clickedCell.reuseIdentifier;
-    if ([cellIdentifier isEqualToString:HELP_CELL_IDENTIFIER])
-    {
-        [self openHelpPage];
-    }
-    else if ([cellIdentifier isEqualToString:PASSCODE_CELL_IDENTIFIER])
+    if ([cellIdentifier isEqualToString:PASSCODE_CELL_IDENTIFIER])
     {
         /**
          *  Create passcode alertView for user to enter his passcode
@@ -72,29 +68,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     [tableView deselectRowAtIndexPath:indexPath
                              animated:YES];
-}
-/**
- *  Open Help web page in an external browser.
- */
-- (void)openHelpPage
-{
-    NSString *urlForFaq;
-    /**
-     *  Open the link in web browser.
-     */
-    BOOL isExternalLinksShoulBeOpenedInChrome = [[NSUserDefaults standardUserDefaults] boolForKey:OPEN_EXTERNAL_LINKS_IN_CHROME];
-    BOOL canOpenInChrome = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:DVACH_CHROME_FAQ_URL]];
-    
-    if (isExternalLinksShoulBeOpenedInChrome && canOpenInChrome)
-    {
-        urlForFaq = DVACH_CHROME_FAQ_URL;
-    }
-    else
-    {
-        urlForFaq = DVACH_FAQ_URL;
-    }
-    
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlForFaq]];
 }
 
 /**

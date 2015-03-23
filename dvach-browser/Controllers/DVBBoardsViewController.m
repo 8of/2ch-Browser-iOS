@@ -12,7 +12,7 @@
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
 
-@interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
+@interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate>
 
 /**
  *  dictionary for storing fetched boards
@@ -38,17 +38,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    /**
-     *  check if EULA accepted or not
-     */
+    
     if (!_alertViewGenerator)
     {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = self;
     }
+    /**
+     *  check if EULA accepted or not
+     */
     if (![self userAgreementAccepted])
     {
-        [self showUserAgeementAlert];
+        [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
     }
     _boardToOpen = @"";
     [self loadBoardList];
@@ -57,7 +58,6 @@
 - (void)loadBoardList
 {
     _boardsModel = [[DVBBoardsModel alloc] init];
-    _boardsModel.boardsModelDelegate = self;
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
     // self.tableView.rowHeight = 44.0f;
@@ -92,18 +92,6 @@
     return userAgreementAccepted;
 }
 
-- (void)showUserAgeementAlert
-{
-    NSString *userAgreementNotAcceptedAlertTitle = NSLocalizedString(@"Доступ запрещён", @"Заголовок alert'a сообщает о том, что пользователь не принял Соглашение.");
-    NSString *userAgreementNotAcceptedAlertMessage = NSLocalizedString(@"Для использования приложения, пожалуйста, примите соглашение", @"Текст alert'a сообщает о том, что пользователь не принял Согласшение.");
-    UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:userAgreementNotAcceptedAlertTitle
-                                                        description:userAgreementNotAcceptedAlertMessage
-                                                            buttons:nil];
-    [alertView show];
-    // Redirect user to settings if he hasn't accepted EULA
-    [self performSegueWithIdentifier:SEGUE_TO_SETTINGS sender:self];
-}
-
 #pragma mark - Navigation
 
 - (IBAction)openBoard:(id)sender
@@ -122,10 +110,6 @@
          */
         UIAlertView *alertView = [_alertViewGenerator alertViewForBoardCode];
         [alertView show];
-    }
-    else
-    {
-        [self showUserAgeementAlert];
     }
 }
 
