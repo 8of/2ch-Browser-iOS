@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1066" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -241,7 +241,7 @@
             </objects>
             <point key="canvasLocation" x="860" y="-857"/>
         </scene>
-        <!--EULA-->
+        <!--Соглашение-->
         <scene sceneID="yjW-uR-5EF">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="yFx-TE-724" customClass="DVBAgreementViewController" sceneMemberID="viewController">
@@ -253,44 +253,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a02-0T-2Xt">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a02-0T-2Xt">
                                 <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">Два.ч - это система форумов, где можно общаться быстро и свободно, где любая точка зрения имеет право на жизнь. Здесь нет регистрации и подписываться не нужно, хотя это не избавляет от необходимости соблюдать правила и законы. Все форумы имеют собственную чётко ограниченную тематику. После нескольких нарушений правил раздела автору сообщений будет запрещено размещать новые сообщений на определённый срок, установленный модератором.
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">Два.ч — это система форумов, для свободного общения, где любая точка зрения имеет право на жизнь. Здесь нет регистрации и подписываться не нужно, но это не избавляет от необходимости соблюдать тематику форумов и законы РФ. 
 
-Приложение использует официальное API. На данный момент работает в режиме read-only в силу нестабильности нового api сайта.
+Если вы считаете какие-то сообщения неуместными — отправьте жалобу. В течении суток модераторы их проверят и, при необходимости, сотрут, а автора заблокируют.
 
-Вы можете отправлять жалобу на определённое сообщение т.н. "пост". Для этого нажмите на него и подождите появления соответствующего предложения.
-Если Вы считаете, что вся тема (т.н. "тред") нарушает правила или законы, то пометьте первое сообщение (т.н. "open post").
+Пользовательское соглашение
+1. Использование приложения означает полное и безоговорочное согласие с этим соглашением.
+2. Мы уважаем ваше право на конфиденциальность. Приложение не собирает и не хранит персональные данные пользователей и не ведет анонимной статистики.
+3. Мы не несем ответственности за любой ущерб, нанесенный вам приложением.
+4. Мы имеем право вносить изменения в настоящее соглашение без уведомления пользователя.
+5. Мы действуем под юрисдикцией России.
 
-Все жалобы отправляются на сервер и будут рассмотрены в течение 24 часов.
-Наши модераторы сотрут сообщение или тему, если сочтут их неуместными.
-
-
-Приватность
-
-1. Введение
-1.1. Мы уважаем право каждого пользователя на конфиденциальность. Просим Вас ознакомиться с Соглашением о конфиденциальности в отношении персональных данных пользователей (далее -- Соглашение).
-1.2. Соглашение определяет условия и цели сбора, хранения, защиты, обработки и распространения информации о приложении 2ch browser.
-1.3. Использование приложения означает безоговорочное согласие пользователя с настоящим Соглашением и указанными в нем условиями обработки информации; в случае несогласия с этими условиями пользователь должен воздержаться от использования приложения.
-
-2. Получение и использование личной информации
-2.1. Приложение не собирает и не хранит персональные данные пользователей.
-2.2. Анонимный сбор статистики по использованию приложения также не ведётся.
-
-3. Изменение Соглашения. Применимое законодательство
-3.1. Мы имеем право вносить изменения в настоящее Соглашение. При внесении изменений в актуальной редакции указывается дата последнего обновления. Новая редакция Соглашения вступает в силу с момента ее размещения, если иное не предусмотрено новой редакцией Соглашения. Действующая редакция всегда находится на странице по этому адресу.
-3.2. К настоящему Соглашению подлежит применению право Российской Федерации.
-
-4. Обратная связь
-Все предложения или вопросы по поводу настоящего Соглашения следует направлять по адресу andy@8of.org.
-
-Приложение обладает встроенным контролем ошибок и сообщает пользователю об ошибках посредством уведомлений на экране.
-При возникновении ошибок, не предусмотренных системой контроля ошибок, пожалуйста, свяжитесь с нами по адресу: andy@8of.org.
-Мы будем очень признательны, если Вы сообщите нам модель устройства, на котором обнаружена ошибка, а также последовательность действий, которая привела к ошибке.</string>
-                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+Об ошибках сообщайте на andy@8of.org. Не забудьте указать модель устройства и версию iOS.</string>
+                                        <attributes>
+                                            <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" address="YES"/>
+                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -301,7 +288,7 @@
                             <constraint firstAttribute="bottom" secondItem="a02-0T-2Xt" secondAttribute="bottom" id="ytV-lu-9gF"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="EULA" id="e7e-pO-DdX">
+                    <navigationItem key="navigationItem" title="Соглашение" id="e7e-pO-DdX">
                         <barButtonItem key="rightBarButtonItem" title="Принять" id="ouW-Gj-1Po">
                             <connections>
                                 <action selector="agreeAction:" destination="yFx-TE-724" id="Zjq-s4-pdG"/>
@@ -428,7 +415,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8B3-Lb-LIO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1338" y="-257"/>
+            <point key="canvasLocation" x="1338" y="-188"/>
         </scene>
         <!--Создать пост-->
         <scene sceneID="ukV-ga-D5o">
