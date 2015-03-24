@@ -9,11 +9,23 @@
 #import "DVBAgreementViewController.h"
 #import "DVBConstants.h"
 
+static CGFloat const AGREEMENT_TEXTVIEW_VERTICAL_INSET = 8.0f;
+static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 16.0f;
+
 @interface DVBAgreementViewController ()
+
+@property (weak, nonatomic) IBOutlet UITextView *agreementTextView;
 
 @end
 
 @implementation DVBAgreementViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    _agreementTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    [_agreementTextView setTextContainerInset:UIEdgeInsetsMake(AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET, AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET)];
+}
 
 /**
  *  Set user Defaults - user accepted EULA.

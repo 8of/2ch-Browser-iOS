@@ -295,6 +295,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="agreementTextView" destination="a02-0T-2Xt" id="3A2-Oi-EGp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OoT-dv-3cv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
