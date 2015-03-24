@@ -36,10 +36,8 @@ static CGFloat const TEXTVIEW_INSET = 8;
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText
              andPostThumbUrlString:(NSString *)postThumbUrlString
 {
-    /**
-     *  This is the first part of the fix for fixing broke links in comments.
-     */
-    // _commentTextView.text = nil;
+    // make insets here, because if we make in reuse... it will fire only when cell will be reused, but will not fire the first times
+    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
     _commentTextView.attributedText = commentText;
 
     // load the image and setting image source depending on presented image or set blank image
@@ -82,8 +80,6 @@ static CGFloat const TEXTVIEW_INSET = 8;
     
     _commentTextView.text = nil;
     _commentTextView.attributedText = nil;
-    // make insets
-    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
     
     [_postThumb setImage:nil];
     // for more tidy images and keep aspect ratio
