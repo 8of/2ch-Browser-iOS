@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1066" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -581,6 +581,9 @@
                         <outlet property="captchaUpdateButton" destination="ATw-LV-fb7" id="cnI-P9-JgL"/>
                         <outlet property="captchaValueTextField" destination="1dE-mf-Pvb" id="ior-9i-uy0"/>
                         <outlet property="commentTextView" destination="yu0-D0-p1U" id="ctU-QD-blO"/>
+                        <outlet property="contstraintFromCommentTextToBottomEdge" destination="PDL-6o-h6j" id="hEp-Sj-NrX"/>
+                        <outlet property="createPostScrollView" destination="ekp-o7-QBh" id="NpC-AA-44V"/>
+                        <outlet property="fromThemeToCaptchaField" destination="5W9-1b-OC8" id="PIk-Rx-DDD"/>
                         <outlet property="nameTextField" destination="cMi-uW-0S6" id="bGo-OD-1I4"/>
                         <outlet property="subjectTextField" destination="wjr-Ih-9ju" id="Dui-T0-Gtf"/>
                         <outlet property="uploadButton" destination="Nvk-ge-8dV" id="4HI-BS-pFV"/>
