@@ -36,19 +36,10 @@ static CGFloat const TEXTVIEW_INSET = 8;
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText
              andPostThumbUrlString:(NSString *)postThumbUrlString
 {
-    /**
-     *  This is the first part of the fix for fixing broke links in comments.
-     */
-    _commentTextView.text = nil;
-    _commentTextView.attributedText = commentText;
-    
-    // make insets
+    // make insets here, because if we make in reuse... it will fire only when cell will be reused, but will not fire the first times
     [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
-    
-    // for more tidy images and keep aspect ratio
-    _postThumb.contentMode = UIViewContentModeScaleAspectFill;
-    _postThumb.clipsToBounds = YES;
-    
+    _commentTextView.attributedText = commentText;
+
     // load the image and setting image source depending on presented image or set blank image
     // need to rewrite it to use different table cells if there is no image in post
     if (![postThumbUrlString isEqualToString:@""])
@@ -66,13 +57,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
 
 - (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent
 {
-    if (isImagePresent)
-    {
-        _imageLeftConstraint.constant = 8.0f;
-        _imageWidthConstraint.constant = 65.0f;
-        _isPostHaveImage = YES;
-    }
-    else
+    if (!isImagePresent)
     {
         _imageLeftConstraint.constant = 0;
         _imageWidthConstraint.constant = 0;
@@ -91,6 +76,24 @@ static CGFloat const TEXTVIEW_INSET = 8;
     [self.contentView layoutIfNeeded];
 }
 
+- (void)prepareForReuse {
+    
+    _commentTextView.text = nil;
+    _commentTextView.attributedText = nil;
+    
+    [_postThumb setImage:nil];
+    // for more tidy images and keep aspect ratio
+    _postThumb.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb.clipsToBounds = YES;
+    
+    _imageLeftConstraint.constant = 8.0f;
+    _imageWidthConstraint.constant = 65.0f;
+    _isPostHaveImage = YES;
+    
+    [self setNeedsUpdateConstraints];
+    [self.layer removeAllAnimations];
+}
+
 #pragma  mark - UITextViewDelegate
 
 - (BOOL)textView:(UITextView *)textView
@@ -100,7 +103,7 @@ shouldInteractWithURL:(NSURL *)URL
     BOOL isExternalLinksShoulBeOpenedInChrome = [[NSUserDefaults standardUserDefaults] boolForKey:OPEN_EXTERNAL_LINKS_IN_CHROME];
 
     if (isExternalLinksShoulBeOpenedInChrome)
-    { // && canOpenInChrome) {
+    {
         NSString *chromeUrlString = [URL absoluteString];
         chromeUrlString = [chromeUrlString stringByReplacingOccurrencesOfString:HTTPS_SCHEME
                                                                      withString:GOOGLE_CHROME_HTTPS_SCHEME];

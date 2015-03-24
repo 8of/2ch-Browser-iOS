@@ -21,8 +21,6 @@ NSString *const DVACH_BASE_URL_WITHOUT_SCHEME = @"2ch.hk/";
 NSString *const COMPLAINT_URL = @"http://8of.org/2ch/tickets";
 NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.hk/makaba/captcha.fcgi";
 NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@";
-NSString *const DVACH_FAQ_URL = @"http://8of.org/2ch/faq-ru";
-NSString *const DVACH_CHROME_FAQ_URL = @"googlechrome://8of.org/2ch/faq-ru";
 
 // settings
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
@@ -32,6 +30,7 @@ NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";
 
 // segues
 NSString *const SEGUE_TO_SETTINGS = @"segueToSettings";
+NSString *const SEGUE_TO_EULA = @"segueToEula";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
 NSString *const SEGUE_TO_NEW_THREAD = @"segueToNewThread";

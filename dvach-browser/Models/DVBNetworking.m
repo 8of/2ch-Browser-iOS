@@ -96,7 +96,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
          failure:^(AFHTTPRequestOperation *operation, NSError *error)
     {
         NSLog(@"error: %@", error);
-        completion(0);
+        completion(2);
     }];
 }
 
@@ -131,7 +131,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                  *  there will be the 3rd stance for smart showing/hiding
                  */
                 _filterContent = NO;
-                boardListAddress = MY_ADDRESS_FOR_BOARDS_LIST;
+                boardListAddress = REAL_ADDRESS_FOR_BOARDS_LIST;
                 break;
         }
         

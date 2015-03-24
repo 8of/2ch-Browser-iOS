@@ -15,7 +15,6 @@
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
-#import "IQKeyboardManager.h"
 #import "DVBWrapMenuItem.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
@@ -63,19 +62,6 @@
 {
     [super viewDidLoad];
     [self prepareViewController];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // If user is on iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        // Turn off viewController scrolling on textEdit focusing
-        // need to rewrite this whole feature in future
-        [[IQKeyboardManager sharedManager] setEnable:NO];
-    }
 }
 
 /**
