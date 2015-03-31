@@ -6,20 +6,186 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import <CoreData/CoreData.h>
 #import <UIKit/UIKit.h>
 #import "DVBBoardsModel.h"
+#import "DVBBoardObj.h"
+
 #import "DVBNetworking.h"
 #import "DVBStatus.h"
 #import "DVBValidation.h"
-#import "DVBBoardObj.h"
 #import "DVBBoardTableViewCell.h"
 #import "DVBConstants.h"
 
+static NSString *const BOARD_STORAGE_FILE_PATH = @"store.data";
+static NSString *const DVBBOARD_ENTITY_NAME = @"DVBBoardObj";
+
 @interface DVBBoardsModel ()
+
+@property (strong, nonatomic) NSMutableArray *boardsPrivate;
+/**
+ *  Core data properties.
+ */
+@property (strong, nonatomic) NSManagedObjectContext *context;
+@property (strong, nonatomic) NSManagedObjectModel *model;
 
 @end
 
 @implementation DVBBoardsModel
+
+#pragma mark - Init and Core Data
+
++ (instancetype)sharedBoardsModel {
+    static DVBBoardsModel *sharedBoardsModel = nil;
+    
+    if (!sharedBoardsModel) {
+        sharedBoardsModel = [[self alloc] initPrivate];
+    }
+    
+    return sharedBoardsModel;
+}
+
+/**
+ *  Not permitting to create multiple instances of DVBBoardsModel
+ *
+ *  @return always nil
+ */
+- (instancetype)init {
+    @throw [NSException exceptionWithName:@"Singleton" reason:@"Use +[DVBBoardsModel sharedBoardsModel]" userInfo:nil];
+    
+    return nil;
+}
+
+- (instancetype)initPrivate {
+    self = [super init];
+    if (self) {
+        /**
+         *  Read from datamodel
+         */
+        _model = [NSManagedObjectModel mergedModelFromBundles:nil];
+        
+        NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
+        /**
+         *  Get path for SQL file.
+         */
+        NSString *boardsStorageFilePath = [self boardsArchivePath];
+        NSURL *boardsStorageURL = [NSURL fileURLWithPath:boardsStorageFilePath];
+        NSError *error = nil;
+        
+        if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                      configuration:nil
+                                                                URL:boardsStorageURL
+                                                            options:nil
+                                                              error:&error])
+        {
+            @throw [NSException exceptionWithName:@"OpenFailure" reason:[error localizedDescription] userInfo:nil];
+        }
+        
+        /**
+         *  Create the managed object context
+         */
+        _context = [[NSManagedObjectContext alloc] init];
+        _context.persistentStoreCoordinator = persistentStoreCoordinator;
+        [self loadAllboards];
+    }
+    
+    return self;
+}
+
+/**
+ *  Determining path for loading/saving array of LTWords to disk
+ *
+ *  @return path of file to save to
+ */
+- (NSString *)boardsArchivePath {
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [documentDirectories firstObject];
+    
+    return [documentDirectory stringByAppendingPathComponent:BOARD_STORAGE_FILE_PATH];
+}
+
+- (BOOL)saveChanges {
+    NSError *error;
+    BOOL successful = [_context save:&error];
+    
+    if (!successful) {
+        NSLog(@"Error saving: %@", [error localizedDescription]);
+    }
+    
+    return successful;
+}
+
+/**
+ *  Getter method for boardsArray.
+ *
+ *  @return Array of all boards in model.
+ */
+- (NSArray *)boardsArray {
+    return _boardsPrivate;
+}
+
+- (void)loadAllboards {
+    /**
+     *  To prevent from "rebuilding" it
+     */
+    if (!_boardsPrivate) {
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        NSEntityDescription *wordEntityDescription = [NSEntityDescription entityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+        request.entity = wordEntityDescription;
+        NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        request.sortDescriptors = @[sortDescriptorByOrderKey];
+        NSError *error;
+        NSArray *result = [_context executeFetchRequest:request error:&error];
+        
+        if (!result) {
+            [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
+        }
+        
+        NSUInteger boardsCount = [result count];
+        
+        if (boardsCount) {
+            // load from file
+            _boardsPrivate = [[NSMutableArray alloc] initWithArray:result];
+        }
+        else {
+            // create first time
+            _boardsPrivate = [NSMutableArray array];
+            [self loadBoardsFromPlist];
+        }
+        
+    }
+}
+
+- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name {
+    
+    /**
+     *  Different way of contructing DVBBoardObj
+     *  With Core Data
+     */
+    DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+    board.boardId = boardId;
+    board.name = name;
+    
+    [_boardsPrivate addObject:board];
+}
+
+- (void)loadBoardsFromPlist {
+    
+    // get default boards from plist
+    NSArray *defaultBoardsArray =[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DefaultBoards" ofType:@"plist"]];
+    
+    for (id board in defaultBoardsArray) {
+        NSString *boardId = board[@"boardId"];
+        NSString *boardName = board[@"name"];
+        
+        [self addBoardWithBoardId:boardId andBoardName:boardName];
+    }
+
+    [self saveChanges];
+    [self loadAllboards];
+}
+
+/*
 
 - (void)getBoardsWithCompletion:(void (^)(NSDictionary *))completion
 {
@@ -39,16 +205,12 @@
             [statusModel setFilterContent:NO];
         }
         
-        /**
-         *  Creating empty mutable dictionary for later use.
-         */
+        //Creating empty mutable dictionary for later use.
         NSMutableDictionary *boardsDictionary = [NSMutableDictionary dictionary];
         NSMutableArray *boardsArray = [NSMutableArray array];
         for (id key in boardsDict)
         {
-            /**
-             *  Deleting the only one specific bad category
-             */
+            //Deleting the only one specific bad category
             if ([key isEqualToString:@"Взрослым"])
             {
                 continue;
@@ -68,7 +230,7 @@
                 {
                     continue;
                 }
-                DVBBoardObj *boardObj = [[DVBBoardObj alloc] initWithId:boardId andName:name andPages:pages];
+                DVBBoardObj *boardObj = nil; // [[DVBBoardObj alloc] initWithId:boardId andName:name andPages:pages];
                 [boardsGroupArray addObject:boardObj];
                 [boardsArray addObject:boardObj];
             }
@@ -109,45 +271,49 @@
     }
     return 0;
 }
+ */
+
 #pragma mark - TableView delegate & DataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [_categoryArray count];
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    // return [_categoryArray count];
+    return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    NSString *category = _categoryArray[section];
-    NSArray *arrForRowCount = _boardsDictionaryByCategories[category];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    // NSString *category = _categoryArray[section];
+    // NSArray *arrForRowCount = _boardsDictionaryByCategories[category];
     
-    return [arrForRowCount count];
+    // return [arrForRowCount count];
+    return [_boardsPrivate count];
 }
 
-- (DVBBoardTableViewCell *)tableView:(UITableView *)tableView
-               cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (DVBBoardTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DVBBoardTableViewCell *boardCell = [tableView dequeueReusableCellWithIdentifier:BOARD_CELL_IDENTIFIER];
-    NSString *category = _categoryArray[indexPath.section];
-    NSArray *arrForRowCount = _boardsDictionaryByCategories[category];
-    DVBBoardObj *boardObject = arrForRowCount[indexPath.row];
+    // NSString *category = _categoryArray[indexPath.section];
+    // NSArray *arrForRowCount = _boardsDictionaryByCategories[category];
+    DVBBoardObj *boardObject = _boardsPrivate[indexPath.row]; //arrForRowCount[indexPath.row];
     [boardCell prepareCellWithBoardObject:boardObject];
     
     return boardCell;
 }
 
-
+/*
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *categoryTitle = _categoryArray[section];
     
     return categoryTitle;
 }
-
-- (void)tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+*/
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+- (NSString *)boardIdByIndex:(NSUInteger)index {
+    DVBBoardObj *board = _boardsPrivate[index];
+    NSString *boardId = board.boardId;
+    
+    return boardId;
 }
 
 @end

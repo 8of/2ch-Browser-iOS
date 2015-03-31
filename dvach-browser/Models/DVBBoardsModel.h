@@ -27,16 +27,37 @@
  */
 @property (nonatomic, readonly) NSDictionary *boardsDictionaryByCategories;
 
++ (instancetype)sharedBoardsModel;
+
+- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name;
+/**
+ *  Add new board to user list of boards
+ *
+ *  @param boardId 's shortCode
+ */
+- (void)addBoardWithBoardId:(NSString *)boardId;
+
+- (BOOL)saveChanges;
+
+/**
+ *  Get board id by providing index of board in array of boards
+ *
+ *  @param index - index of specific board in arrya of boards
+ *
+ *  @return boardId shortcode
+ */
+- (NSString *)boardIdByIndex:(NSUInteger)index;
+
 /**
  *  Get array of boards to show
  */
-- (void)getBoardsWithCompletion:(void (^)(NSDictionary *))completion;
+// - (void)getBoardsWithCompletion:(void (^)(NSDictionary *))completion;
 
 /**
  *  Get shortcode UID for board from array
  */
-- (NSString *)getBoardIdWithCategoryName:(NSString *)category
-                                andIndex:(NSUInteger)index;
+// - (NSString *)getBoardIdWithCategoryName:(NSString *)category
+//                                 andIndex:(NSUInteger)index;
 /**
  *  Get board max page
  *
@@ -44,6 +65,6 @@
  *
  *  @return board UI
  */
-- (NSUInteger)getBoardPagesWithBoardId:(NSString *)boardId;
+// - (NSUInteger)getBoardPagesWithBoardId:(NSString *)boardId;
 
 @end

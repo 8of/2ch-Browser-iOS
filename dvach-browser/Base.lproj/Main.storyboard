@@ -129,11 +129,7 @@
                                 <segue destination="XiX-SU-KZ1" kind="show" identifier="segueToSettings" id="q2o-Ry-JHW"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="search" id="Nki-o2-6GL">
-                            <connections>
-                                <action selector="openBoard:" destination="u8c-EJ-BLV" id="8GI-G6-dyf"/>
-                            </connections>
-                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Nki-o2-6GL"/>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -604,6 +600,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="o55-Sb-BOJ"/>
         <segue reference="fFt-k5-qt1"/>
-        <segue reference="Iwy-TH-KYT"/>
+        <segue reference="xwW-TO-L0b"/>
     </inferredMetricsTieBreakers>
 </document>
