@@ -260,7 +260,7 @@
 	</dict>
 	<dict>
 		<key>boardId</key>
-		<string>cut</string>
+		<string>cul</string>
 		<key>name</key>
 		<string>Культура</string>
 		<key>categoryId</key>

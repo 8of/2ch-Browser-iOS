@@ -61,6 +61,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (instancetype)initPrivate {
     self = [super init];
     if (self) {
+        // _boardsPrivate = [NSMutableArray array];
         /**
          *  Read from datamodel
          */
@@ -136,7 +137,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         NSEntityDescription *wordEntityDescription = [NSEntityDescription entityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
         request.entity = wordEntityDescription;
-        NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"boardId" ascending:YES];
         request.sortDescriptors = @[sortDescriptorByOrderKey];
         NSError *error;
         NSArray *result = [_context executeFetchRequest:request error:&error];
@@ -160,7 +161,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     }
 }
 
-- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSInteger)categoryId
+- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSNumber *)categoryId
 {
     /**
      *  Constructing DVBBoardObj with Core Data
@@ -168,7 +169,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
     board.name = name;
-    board.categoryId = (int) categoryId;
+    board.categoryId = categoryId;
     
     [_boardsPrivate addObject:board];
 }
@@ -179,10 +180,14 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
      */
     DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
-    // because 0 - categoryId for favourite category
-    board.categoryId = (int) 0;
+    board.name = @"";
     
+    // because 0 - categoryId for favourite category
+    NSNumber *favouriteCategoryId = [NSNumber numberWithInt:0];
+    board.categoryId = favouriteCategoryId;
     [_boardsPrivate addObject:board];
+    
+    [self saveChanges];
 }
 
 - (void)loadBoardsFromPlist {
@@ -193,7 +198,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     for (id board in defaultBoardsArray) {
         NSString *boardId = board[@"boardId"];
         NSString *boardName = board[@"name"];
-        NSInteger categoryId = [board[@"categoryId"] integerValue];
+        NSNumber *categoryId = board[@"categoryId"];
         
         [self addBoardWithBoardId:boardId
                      andBoardName:boardName
@@ -207,14 +212,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (NSArray *)loadBoardCategoriesFromPlist {
     // get category names from plist
     return [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:BOARD_CATEGORIES_PLIST_FILENAME ofType:@"plist"]];
-}
-
-- (NSUInteger)countOfBoardsInCategoryWithIndex:(NSUInteger)index {
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(categoryId == %ld)", index];
-    NSArray *matchedBoardsResult = [_boardsPrivate filteredArrayUsingPredicate:predicate];
-    
-    return [matchedBoardsResult count];
 }
 
 /*
@@ -323,9 +320,13 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (DVBBoardTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     DVBBoardTableViewCell *boardCell = [tableView dequeueReusableCellWithIdentifier:BOARD_CELL_IDENTIFIER];
-    // NSString *category = _categoryArray[indexPath.section];
-    // NSArray *arrForRowCount = _boardsDictionaryByCategories[category];
-    DVBBoardObj *boardObject = _boardsPrivate[indexPath.row]; //arrForRowCount[indexPath.row];
+    
+    NSUInteger categoryIndex = indexPath.section;
+    
+    NSArray *boardsArrayInCategory = [self arrayForCategoryWithIndex:categoryIndex];
+    
+    DVBBoardObj *boardObject = boardsArrayInCategory[indexPath.row];
+    
     [boardCell prepareCellWithBoardObject:boardObject];
     
     return boardCell;
@@ -335,11 +336,29 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (NSString *)boardIdByIndex:(NSUInteger)index {
-    DVBBoardObj *board = _boardsPrivate[index];
+- (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath {
+    
+    NSArray *boardsInThecategoryArray = [self arrayForCategoryWithIndex:indexPath.section];
+    DVBBoardObj *board = boardsInThecategoryArray[indexPath.row];
     NSString *boardId = board.boardId;
     
     return boardId;
+}
+
+#pragma mark - Table helpers
+
+- (NSArray *)arrayForCategoryWithIndex:(NSUInteger)index {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(categoryId == %ld)", index];
+    NSArray *matchedBoardsResult = [self.boardsArray filteredArrayUsingPredicate:predicate];
+    
+    return matchedBoardsResult;
+}
+
+- (NSUInteger)countOfBoardsInCategoryWithIndex:(NSUInteger)index {
+    
+    NSArray *matchedBoardsResult = [self arrayForCategoryWithIndex:index];
+    
+    return [matchedBoardsResult count];
 }
 
 @end
