@@ -15,23 +15,21 @@
  */
 @property (nonatomic, readonly) BOOL filterContent;
 /**
- *  Array of board categroies
- */
-@property (nonatomic, readonly) NSArray *categoryArray;
-/**
  *  Array of Boards
  */
 @property (nonatomic, readonly) NSArray *boardsArray;
+/**
+ *  Array of board categroies
+ */
+@property (nonatomic, strong, readonly) NSArray *boardCategoriesArray;
 /**
  *  all in one - cats and their boards
  */
 @property (nonatomic, readonly) NSDictionary *boardsDictionaryByCategories;
 
 + (instancetype)sharedBoardsModel;
-
-- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name;
 /**
- *  Add new board to user list of boards
+ *  Add new board to user list of boards, directly to the Favourite section
  *
  *  @param boardId 's shortCode
  */

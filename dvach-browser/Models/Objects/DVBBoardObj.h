@@ -17,15 +17,19 @@
 /**
  *  Id of the board is simple chort code for fast forwarding to board content without scrolling board list.
  */
-@property (strong, nonatomic) NSString *boardId;
+@property (nonatomic, strong) NSString *boardId;
 /**
  *  Name of the board, for board listing and (probably) for boardViewController's title.
  */
-@property (strong, nonatomic) NSString *name;
-
+@property (nonatomic, strong) NSString *name;
+/**
+ *  Category id of the board (boards grouped by this param in board list);
+ *  0 - favourite category
+ */
+@property (nonatomic) NSInteger categoryId;
 /**
  *  Count of total pages in the board.
  */
-@property (assign, nonatomic) NSUInteger pages;
+@property (nonatomic) NSInteger pages;
 
 @end
