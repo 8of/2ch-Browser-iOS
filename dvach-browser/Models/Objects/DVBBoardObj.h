@@ -26,7 +26,7 @@
  *  Category id of the board (boards grouped by this param in board list);
  *  0 - favourite category
  */
-@property (nonatomic) NSInteger categoryId;
+@property (nonatomic) NSNumber *categoryId;
 /**
  *  Count of total pages in the board.
  */

@@ -48,6 +48,8 @@
     }
 }
 
+#pragma mark - Board List
+
 - (void)loadBoardList
 {
     _boardsModel = [DVBBoardsModel sharedBoardsModel];
@@ -71,6 +73,20 @@
     }];
      */
 }
+
+- (void)addBoardWithCode:(NSString *)code {
+    [_boardsModel addBoardWithBoardId:code];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+    UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
+    [boardCodeAlertView show];
+}
+
 
 #pragma mark - user Agreement
 
@@ -102,7 +118,7 @@
     if ([[segue identifier] isEqualToString:SEGUE_TO_BOARD]) {
         
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
-        NSString *boardId = [_boardsModel boardIdByIndex:selectedCellPath.row];
+        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
         NSLog(@": %@", boardId);
         /**
          *  Clear selection after getting all we need from selected cell.

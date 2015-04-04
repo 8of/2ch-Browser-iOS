@@ -40,11 +40,11 @@
 /**
  *  Get board id by providing index of board in array of boards
  *
- *  @param index - index of specific board in arrya of boards
+ *  @param indexPath - indexPath in table to help model give the right board
  *
  *  @return boardId shortcode
  */
-- (NSString *)boardIdByIndex:(NSUInteger)index;
+- (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath;
 
 /**
  *  Get array of boards to show

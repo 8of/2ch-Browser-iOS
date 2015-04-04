@@ -129,7 +129,11 @@
                                 <segue destination="XiX-SU-KZ1" kind="show" identifier="segueToSettings" id="q2o-Ry-JHW"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Nki-o2-6GL"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="Nki-o2-6GL">
+                            <connections>
+                                <action selector="showAlertWithBoardCodePrompt:" destination="u8c-EJ-BLV" id="JGY-AS-ddk"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>

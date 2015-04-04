@@ -32,7 +32,7 @@
 - (UIAlertView *)alertViewForBoardCode
 {
     NSString *enterBoardShortcodeAlertTitle = NSLocalizedString(@"Код доски", @"Заголовок alert'a с полем ввода кодовых букв Борды");
-    NSString *enterBoardShortcodeAlertMessage = NSLocalizedString(@"Введите код доски вручную для быстрого доступа", @"Текст alert'a с полем ввода кодовых букв Борды");
+    NSString *enterBoardShortcodeAlertMessage = NSLocalizedString(@"Введите код доски для перемещения её в Избранное", @"Текст alert'a с полем ввода кодовых букв Борды");
     NSString *enterBoardShortcodeAlertCancelButtonText = NSLocalizedString(@"Отмена", @"Кнопка Отмена alert'a с полем ввода кодовых букв Борды");
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:enterBoardShortcodeAlertTitle
@@ -101,9 +101,9 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                 BOOL isCurrentBoardAmongBadOnes = [validationObject checkBadBoardWithBoard:code];
                 if (!isCurrentBoardAmongBadOnes)
                 {
-                    if ([strongDelegate respondsToSelector:@selector(openBoardWithCode:)])
+                    if ([strongDelegate respondsToSelector:@selector(addBoardWithCode:)])
                     {
-                        [strongDelegate openBoardWithCode:code];
+                        [strongDelegate addBoardWithCode:code];
                     }
                 }
                 else
@@ -116,13 +116,13 @@ clickedButtonAtIndex:(NSInteger)buttonIndex
                 }
             }
             /**
-             *  if in production - just go to board view
+             *  if in production - just add board view
              */
             else
             {
-                if ([strongDelegate respondsToSelector:@selector(openBoardWithCode:)])
+                if ([strongDelegate respondsToSelector:@selector(addBoardWithCode:)])
                 {
-                    [strongDelegate openBoardWithCode:code];
+                    [strongDelegate addBoardWithCode:code];
                 }
             }
         }

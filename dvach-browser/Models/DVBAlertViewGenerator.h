@@ -12,9 +12,8 @@
 @protocol DVBAlertViewGeneratorDelegate <NSObject>
 
 @optional
-- (void)openBoardWithCode:(NSString *)code;
+- (void)addBoardWithCode:(NSString *)code;
 - (void)getUsercodeWithCode:(NSString *)passcode;
-
 @end
 
 @interface DVBAlertViewGenerator : NSObject
