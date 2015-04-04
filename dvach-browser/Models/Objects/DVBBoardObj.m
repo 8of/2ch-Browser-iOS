@@ -12,6 +12,7 @@
 
 @dynamic boardId;
 @dynamic name;
+@dynamic categoryId;
 @dynamic pages;
 
 @end
