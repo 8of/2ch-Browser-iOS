@@ -7,38 +7,29 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
 /**
  *  Object for storing information about specific board.
  */
-@interface DVBBoardObj : NSObject
+@interface DVBBoardObj : NSManagedObject
 
 /**
  *  Id of the board is simple chort code for fast forwarding to board content without scrolling board list.
  */
-@property (strong, nonatomic, readonly) NSString *boardId;
+@property (nonatomic, strong) NSString *boardId;
 /**
  *  Name of the board, for board listing and (probably) for boardViewController's title.
  */
-@property (strong, nonatomic, readonly) NSString *name;
-
+@property (nonatomic, strong) NSString *name;
+/**
+ *  Category id of the board (boards grouped by this param in board list);
+ *  0 - favourite category
+ */
+@property (nonatomic) NSNumber *categoryId;
 /**
  *  Count of total pages in the board.
  */
-@property (assign, nonatomic, readonly) NSUInteger pages;
-
-- (instancetype)initWithId:(NSString *)boardId
-                   andName:(NSString *)name;
-
-/**
- *  Initialization of board object with
- *
- *  @param boardId Shortcode of the board.
- *  @param name    Name of the board in Russian.
- *  @param pages   Count of total pages in the board.
- */
-- (instancetype)initWithId:(NSString *)boardId
-                   andName:(NSString *)name
-                  andPages:(NSUInteger)pages;
+@property (nonatomic) NSNumber *pages;
 
 @end

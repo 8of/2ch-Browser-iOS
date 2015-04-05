@@ -11,6 +11,7 @@
 @interface DVBBoardTableViewCell ()
 
 @property (weak, nonatomic) IBOutlet UILabel *title;
+@property (weak, nonatomic) IBOutlet UILabel *subtitle;
 
 @end
 
@@ -25,22 +26,25 @@
 {
     NSString *name = boardObject.name;
     NSString *boardId = boardObject.boardId;
-    NSString *titleFullString = [NSString stringWithFormat:@"%@ - /%@/",name,boardId];
-    _title.text = titleFullString;
-    _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _title.text = boardId;
+    _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    
+    _subtitle.text = name;
+    _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+    
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
     [self.contentView layoutIfNeeded];
-
 }
 
 - (void)prepareForReuse
 {
+    [super prepareForReuse];
     _title.text = @"";
+    [self setEditing:NO animated:NO];
 }
 
 @end
