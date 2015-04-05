@@ -22,6 +22,7 @@
 		84CFC52A19E1526E004D0BB8 /* dvach_browserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC52919E1526E004D0BB8 /* dvach_browserTests.m */; };
 		9432BEF31AC821650015CA9F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9432BEF21AC821650015CA9F /* CoreData.framework */; };
 		9432BEF61AC821B40015CA9F /* dvach-browser.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9432BEF41AC821B40015CA9F /* dvach-browser.xcdatamodeld */; };
+		9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9436ADD51AD1B83B00785710 /* DateFormatter.m */; };
 		94449B401AD02E9700307AE9 /* BoardCategories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94449B3F1AD02E9700307AE9 /* BoardCategories.plist */; };
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
 		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
@@ -91,6 +92,8 @@
 		8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9432BEF21AC821650015CA9F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		9432BEF51AC821B40015CA9F /* dvach-browser.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "dvach-browser.xcdatamodel"; sourceTree = "<group>"; };
+		9436ADD41AD1B83B00785710 /* DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateFormatter.h; path = Helpers/DateFormatter.h; sourceTree = "<group>"; };
+		9436ADD51AD1B83B00785710 /* DateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DateFormatter.m; path = Helpers/DateFormatter.m; sourceTree = "<group>"; };
 		94449B3F1AD02E9700307AE9 /* BoardCategories.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BoardCategories.plist; sourceTree = "<group>"; };
 		946394151A87A26C004CAB6E /* BadBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BadBoards.plist; sourceTree = "<group>"; };
 		94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMessagePostServerAnswer.h; path = Models/Objects/DVBMessagePostServerAnswer.h; sourceTree = "<group>"; };
@@ -251,6 +254,7 @@
 		84CFC50C19E1526E004D0BB8 /* dvach-browser */ = {
 			isa = PBXGroup;
 			children = (
+				9436ADD31AD1B81500785710 /* Helpers */,
 				A1823DC61A761C9500F01117 /* Segues */,
 				84CF8C861A0E556C00585D88 /* Objects */,
 				A1155D1C1A26486400810321 /* Views */,
@@ -320,6 +324,15 @@
 				A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		9436ADD31AD1B81500785710 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				9436ADD41AD1B83B00785710 /* DateFormatter.h */,
+				9436ADD51AD1B83B00785710 /* DateFormatter.m */,
+			);
+			name = Helpers;
 			sourceTree = "<group>";
 		};
 		9479E4EF1A782821003C59BB /* Other */ = {
@@ -550,6 +563,7 @@
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
 				A155FF1F1AB7366000BE31F4 /* DVBBoardTableViewCell.m in Sources */,
 				A155FEF31AB7355600BE31F4 /* DVBSettingsTableViewController.m in Sources */,
+				9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */,
 				A155FF2A1AB736B800BE31F4 /* Reachability.m in Sources */,
 				A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */,
 				A155FF081AB735DD00BE31F4 /* DVBNetworking.m in Sources */,

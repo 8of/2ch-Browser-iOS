@@ -10,11 +10,7 @@
 
 @implementation DVBPostObj
 
-- (instancetype)initWithNum:(NSString *)postNum
-                    subject:(NSString *)postSubject
-                    comment:(NSAttributedString *)postComment
-                       path:(NSString *)postPicPath
-                  thumbPath:(NSString *)postThumbPath {
+- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo {
     self = [super init];
     if (self) {
         _num = postNum;
@@ -22,6 +18,8 @@
         _comment = postComment;
         _path = postPicPath;
         _thumbPath = postThumbPath;
+        _date = postDate;
+        _dateAgo = postDateAgo;
     }
     return self;
 }
