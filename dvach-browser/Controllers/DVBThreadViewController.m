@@ -156,6 +156,7 @@ titleForHeaderInSection:(NSInteger)section
 {
     DVBPostObj *postTmpObj = _postsArray[section];
     NSString *subject = postTmpObj.subject;
+    NSString *date = postTmpObj.date;
     
     subject = [self getSubjectOrNumWithSubject:subject
                                   andThreadNum:postTmpObj.num];
@@ -163,14 +164,12 @@ titleForHeaderInSection:(NSInteger)section
     // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
     NSInteger postNumToShow = section + 1;
     
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@", (long)postNumToShow, subject];
+    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@ - %@", (long)postNumToShow, subject, date];
     
     return sectionTitle;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // only one row inside every section for now
     return 1;
 }

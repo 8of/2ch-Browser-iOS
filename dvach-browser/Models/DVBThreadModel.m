@@ -13,6 +13,7 @@
 #import "DVBPostPreparation.h"
 #import "DVBBadPostStorage.h"
 #import "DVBBadPost.h"
+#import "DateFormatter.h"
 
 @interface DVBThreadModel ()
 
@@ -101,6 +102,9 @@
                 
                 NSString *comment = key[@"comment"];
                 NSString *subject = key[@"subject"];
+                NSInteger timestamp = [key[@"timestamp"] integerValue];
+                NSString *date = key[@"date"];
+                NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
                 
                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
                 
@@ -108,6 +112,7 @@
                 
                 NSString *thumbPath = [[NSMutableString alloc] init];
                 NSString *picPath = [[NSMutableString alloc] init];
+                
                 
                 if (files != nil)
                 {
@@ -140,7 +145,9 @@
                                                               subject:subject
                                                               comment:attributedComment
                                                                  path:picPath
-                                                            thumbPath:thumbPath];
+                                                            thumbPath:thumbPath
+                                                                 date:date
+                                                              dateAgo:dateAgo];
                 [postsFullMutArray addObject:postObj];
                 postObj = nil;
             }
