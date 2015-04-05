@@ -93,7 +93,7 @@
             </objects>
             <point key="canvasLocation" x="354" y="-857"/>
         </scene>
-        <!--Выберите раздел-->
+        <!--Доски-->
         <scene sceneID="wOP-uy-2fu">
             <objects>
                 <tableViewController id="u8c-EJ-BLV" customClass="DVBBoardsViewController" sceneMemberID="viewController">
@@ -102,7 +102,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="boardEntryCell" textLabel="ufO-dA-3ij" style="IBUITableViewCellStyleDefault" id="HNc-61-slu" customClass="DVBBoardTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="boardEntryCell" textLabel="ufO-dA-3ij" detailTextLabel="rko-Sx-hLa" style="IBUITableViewCellStyleSubtitle" id="HNc-61-slu" customClass="DVBBoardTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HNc-61-slu" id="9Zm-Cq-lXa">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -110,20 +110,26 @@
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ufO-dA-3ij">
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rko-Sx-hLa">
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="subtitle" destination="rko-Sx-hLa" id="fzV-GV-I5A"/>
                                     <outlet property="title" destination="ufO-dA-3ij" id="bLd-lB-SDb"/>
                                     <segue destination="js8-qz-HcM" kind="show" identifier="segueToBoard" id="xwW-TO-L0b"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Выберите раздел" id="tKd-8Q-GaQ">
-                        <barButtonItem key="backBarButtonItem" title="Доски" id="HWY-4M-YPa"/>
+                    <navigationItem key="navigationItem" title="Доски" id="tKd-8Q-GaQ">
                         <barButtonItem key="leftBarButtonItem" image="Settings" id="qsb-Do-nNN">
                             <connections>
                                 <segue destination="XiX-SU-KZ1" kind="show" identifier="segueToSettings" id="q2o-Ry-JHW"/>

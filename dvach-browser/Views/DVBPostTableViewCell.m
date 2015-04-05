@@ -77,6 +77,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
 }
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
     
     _commentTextView.text = nil;
     _commentTextView.attributedText = nil;

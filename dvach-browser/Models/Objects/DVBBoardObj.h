@@ -30,6 +30,6 @@
 /**
  *  Count of total pages in the board.
  */
-@property (nonatomic) NSInteger pages;
+@property (nonatomic) NSNumber *pages;
 
 @end

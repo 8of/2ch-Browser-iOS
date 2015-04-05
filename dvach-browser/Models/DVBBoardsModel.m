@@ -24,12 +24,13 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 @interface DVBBoardsModel ()
 
-@property (strong, nonatomic) NSMutableArray *boardsPrivate;
-/**
- *  Core data properties.
- */
-@property (strong, nonatomic) NSManagedObjectContext *context;
-@property (strong, nonatomic) NSManagedObjectModel *model;
+@property (nonatomic, strong) NSMutableArray *boardsPrivate;
+// Core data properties.
+@property (nonatomic, strong) NSManagedObjectContext *context;
+@property (nonatomic, strong) NSManagedObjectModel *model;
+// to not store boards gotten from network in DB
+@property (nonatomic, strong) NSPersistentStore *memoryStore;
+@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
@@ -61,21 +62,17 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (instancetype)initPrivate {
     self = [super init];
     if (self) {
-        // _boardsPrivate = [NSMutableArray array];
-        /**
-         *  Read from datamodel
-         */
+        // Read from datamodel
         _model = [NSManagedObjectModel mergedModelFromBundles:nil];
         
-        NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
-        /**
-         *  Get path for SQL file.
-         */
+        _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_model];
+        
+        // Get path for SQL file.
         NSString *boardsStorageFilePath = [self boardsArchivePath];
         NSURL *boardsStorageURL = [NSURL fileURLWithPath:boardsStorageFilePath];
         NSError *error = nil;
         
-        if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+        if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
                                                       configuration:nil
                                                                 URL:boardsStorageURL
                                                             options:nil
@@ -84,11 +81,9 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
             @throw [NSException exceptionWithName:@"OpenFailure" reason:[error localizedDescription] userInfo:nil];
         }
         
-        /**
-         *  Create the managed object context
-         */
+        // Create the managed object context
         _context = [[NSManagedObjectContext alloc] init];
-        _context.persistentStoreCoordinator = persistentStoreCoordinator;
+        _context.persistentStoreCoordinator = _persistentStoreCoordinator;
         _boardCategoriesArray = [self loadBoardCategoriesFromPlist];
         [self loadAllboards];
     }
@@ -109,6 +104,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 - (BOOL)saveChanges {
+    
     NSError *error;
     BOOL successful = [_context save:&error];
     
@@ -129,11 +125,10 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 - (void)loadAllboards {
-    /**
-     *  To prevent from "rebuilding" it
-     */
+    // To prevent from "rebuilding" it
+    _memoryStore = [_persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:nil];
     
-    if (!_boardsPrivate) {
+   // if (!_boardsPrivate) {
         NSFetchRequest *request = [[NSFetchRequest alloc] init];
         NSEntityDescription *wordEntityDescription = [NSEntityDescription entityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
         request.entity = wordEntityDescription;
@@ -151,6 +146,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         if (boardsCount) {
             // load from file
             _boardsPrivate = [[NSMutableArray alloc] initWithArray:result];
+            [self checkBoardNames];
         }
         else {
             // create first time
@@ -158,14 +154,11 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
             [self loadBoardsFromPlist];
         }
         
-    }
+   // }
 }
 
-- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSNumber *)categoryId
-{
-    /**
-     *  Constructing DVBBoardObj with Core Data
-     */
+- (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSNumber *)categoryId {
+    // Constructing DVBBoardObj with Core Data
     DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
     board.name = name;
@@ -175,9 +168,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 - (void)addBoardWithBoardId:(NSString *)boardId {
-    /**
-     *  Constructing DVBBoardObj with Core Data
-     */
+    // Constructing DVBBoardObj with Core Data
     DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
     board.name = @"";
@@ -188,11 +179,11 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     [_boardsPrivate addObject:board];
     
     [self saveChanges];
+    [self loadAllboards];
 }
 
 - (void)loadBoardsFromPlist {
-    
-    // get default boards from plist
+    // Get default boards from plist
     NSArray *defaultBoardsArray =[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:DEFAULT_BOARDS_PLIST_FILENAME ofType:@"plist"]];
     
     for (id board in defaultBoardsArray) {
@@ -214,64 +205,73 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:BOARD_CATEGORIES_PLIST_FILENAME ofType:@"plist"]];
 }
 
-/*
-
-- (void)getBoardsWithCompletion:(void (^)(NSDictionary *))completion
-{
+- (void)getBoardsWithCompletion:(void (^)(NSArray *))completion {
     DVBNetworking *networkHandler = [[DVBNetworking alloc] init];
-    DVBStatus *statusModel = [DVBStatus sharedStatus];
-    [statusModel setFilterContent:YES];
-    [networkHandler getBoardsFromNetworkWithCompletion:^(NSDictionary *boardsDict)
-    {
-        if (networkHandler.filterContent)
-        {
-            _filterContent = YES;
-            [statusModel setFilterContent:YES];
-        }
-        else
-        {
-            _filterContent = NO;
-            [statusModel setFilterContent:NO];
-        }
-        
-        //Creating empty mutable dictionary for later use.
-        NSMutableDictionary *boardsDictionary = [NSMutableDictionary dictionary];
-        NSMutableArray *boardsArray = [NSMutableArray array];
-        for (id key in boardsDict)
-        {
-            //Deleting the only one specific bad category
-            if ([key isEqualToString:@"Взрослым"])
-            {
-                continue;
-            }
+    [networkHandler getBoardsFromNetworkWithCompletion:^(NSDictionary *boardsDict) {
+        NSMutableArray *boardsFromNetworkMutableArray = [NSMutableArray array];
+        for (id key in boardsDict) {
             NSArray *boardsInsideCategory = [[NSArray alloc] initWithArray:[boardsDict objectForKey:key]];
-            NSMutableArray *boardsGroupArray = [NSMutableArray array];
-            for (NSDictionary *singleBoardDictionary in boardsInsideCategory)
-            {
-                NSString *name = singleBoardDictionary[@"name"];
+            for (NSDictionary *singleBoardDictionary in boardsInsideCategory) {
                 NSString *boardId = singleBoardDictionary[@"id"];
-                NSInteger pages = [singleBoardDictionary[@"pages"] integerValue];
+                NSString *name = singleBoardDictionary[@"name"];
+                NSNumber *pages = singleBoardDictionary[@"pages"];
                 
-                // I will refactor it later when I'll be rewriting Bad Boards approach.
-                DVBValidation *validationObject = [[DVBValidation alloc] init];
-                BOOL isCurrentBoardAmongDadOnes = [validationObject checkBadBoardWithBoard:boardId];
-                if (isCurrentBoardAmongDadOnes && _filterContent)
-                {
-                    continue;
-                }
-                DVBBoardObj *boardObj = nil; // [[DVBBoardObj alloc] initWithId:boardId andName:name andPages:pages];
-                [boardsGroupArray addObject:boardObj];
-                [boardsArray addObject:boardObj];
+                DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+                [_context assignObject:board toPersistentStore:_memoryStore];
+                board.boardId = boardId;
+                board.name = name;
+                board.pages = pages;
+                
+                [boardsFromNetworkMutableArray addObject:board];
+                
+                // we need to delete this temp created object or it will appear in table after realoading
+                [_context deleteObject:board];
             }
-            boardsDictionary[key] = boardsGroupArray;
         }
-        _boardsDictionaryByCategories = boardsDictionary;
-        _boardsArray = boardsArray;
-        _categoryArray = [boardsDictionary allKeys];
-
-        completion(boardsDictionary);
+        NSArray *boardsFromNetworkArray = boardsFromNetworkMutableArray;
+        completion(boardsFromNetworkArray);
     }];
 };
+
+- (void)checkBoardNames {
+    BOOL isNeedToLoadBoardsFromNetwork = NO;
+    for (DVBBoardObj *board in self.boardsArray) {
+        NSString *name = board.name;
+        BOOL isNameEmpty = [name isEqualToString:@""];
+        if (isNameEmpty) {
+            isNeedToLoadBoardsFromNetwork = YES;
+            break;
+        }
+    }
+    if (isNeedToLoadBoardsFromNetwork) {
+        NSMutableArray *arrayForInterating = [self.boardsArray mutableCopy];
+        [self getBoardsWithCompletion:^(NSArray *completion) {
+            NSUInteger indexOfCurrentBoard = 0;
+            for (DVBBoardObj *board in arrayForInterating) {
+                NSString *name = board.name;
+                NSString *boardId = board.boardId;
+                BOOL isNameEmpty = [name isEqualToString:@""];
+                if (isNameEmpty) {
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(boardId == %@)", boardId];
+                    NSArray *matchedBoardsFromNetwork = [completion filteredArrayUsingPredicate:predicate];
+                    NSUInteger matchedBoardsCount = [matchedBoardsFromNetwork count];
+                    if (matchedBoardsCount > 0) {
+                        DVBBoardObj *boardFromNetwork = matchedBoardsFromNetwork[0];
+                        NSString *nameOfTheMatchedBoard = boardFromNetwork.name;
+                        board.name = nameOfTheMatchedBoard;
+                        [_boardsPrivate setObject:board atIndexedSubscript:indexOfCurrentBoard];
+                    }
+                }
+                indexOfCurrentBoard++;
+            }
+            [self saveChanges];
+            // [self loadAllboards];
+            [_boardsModelDelegate updateTable];
+        }];
+    }
+}
+
+/*
 
 - (NSString *)getBoardIdWithCategoryName:(NSString *)category
                                 andIndex:(NSUInteger)index
@@ -332,9 +332,43 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return boardCell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Permit editing only items of the Favourite section
+    NSUInteger section = indexPath.section;
+    if (section == 0) {
+        return YES;
+    }
+    return NO;
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
+        NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
+        NSUInteger indexOfCurrentBoard = 0;
+        for (DVBBoardObj *board in arrayForInterating) {
+            NSString *boardId = board.boardId;
+            NSNumber *boardCategoryId = board.categoryId;
+            NSNumber *favouritesCategoryid = [NSNumber numberWithInt:0];
+            BOOL isBoardIdEquals = [boardId isEqualToString:boardIdToDeleteFromFavourites];
+            BOOL isInFavourites = ([boardCategoryId intValue] == [favouritesCategoryid intValue]);
+            if (isBoardIdEquals && isInFavourites) {
+                [_boardsPrivate removeObjectAtIndex:indexOfCurrentBoard];
+                [_context deleteObject:board];
+                break;
+            }
+            indexOfCurrentBoard++;
+        }
+        [self saveChanges];
+        
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        // [self loadAllboards];
+        // [_boardsModelDelegate updateTable];
+    }
+}
+
+
 
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath {
     

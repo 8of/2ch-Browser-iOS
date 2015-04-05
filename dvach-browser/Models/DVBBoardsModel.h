@@ -8,7 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol DVBBoardsModelDelegate <NSObject>
+
+- (void)updateTable;
+
+@end
+
 @interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 
 /**
  *  Should we filter content or show it just as is
