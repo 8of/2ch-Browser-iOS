@@ -36,6 +36,10 @@ static CGFloat const TEXTVIEW_INSET = 8;
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText
              andPostThumbUrlString:(NSString *)postThumbUrlString
 {
+    // for more tidy images and keep aspect ratio
+    _postThumb.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb.clipsToBounds = YES;
+    
     // make insets here, because if we make in reuse... it will fire only when cell will be reused, but will not fire the first times
     [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
     _commentTextView.attributedText = commentText;
@@ -83,9 +87,6 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _commentTextView.attributedText = nil;
     
     [_postThumb setImage:nil];
-    // for more tidy images and keep aspect ratio
-    _postThumb.contentMode = UIViewContentModeScaleAspectFill;
-    _postThumb.clipsToBounds = YES;
     
     _imageLeftConstraint.constant = 8.0f;
     _imageWidthConstraint.constant = 65.0f;
