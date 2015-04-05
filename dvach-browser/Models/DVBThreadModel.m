@@ -24,6 +24,7 @@
 @property (nonatomic, strong) DVBPostPreparation *postPreparation;
 // storage for bad posts, marked on this specific device
 @property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
+@property (nonatomic, strong) NSArray *postNumArray;
 
 @end
 
@@ -46,7 +47,7 @@
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
         _privatePostsArray = [NSMutableArray array];
-        _postPreparation = [[DVBPostPreparation alloc] init];
+        _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode andThreadId:threadNum];
         
         /**
          Handling bad posts on this device
@@ -78,6 +79,8 @@
             _thumbImagesArray = [[NSMutableArray alloc] init];
             _fullImagesArray = [[NSMutableArray alloc] init];
             
+            NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
+            
             NSMutableDictionary *resultDict = [postsDictionary mutableCopy];
             
             NSArray *threadsDict = resultDict[@"threads"];
@@ -87,6 +90,8 @@
             for (id key in posts2Array)
             {
                 NSString *num = [key[@"num"] stringValue];
+                
+                [postNumMutableArray addObject:num];
                 
                 // server gives me number but I need string
                 NSString *tmpNumForPredicate = [key[@"num"] stringValue];
@@ -107,6 +112,8 @@
                 NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
                 
                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+                
+                NSMutableArray *repliesToArray = [_postPreparation repliesToArrayForPost];
                 
                 NSDictionary *files = key[@"files"][0];
                 
@@ -147,14 +154,43 @@
                                                                  path:picPath
                                                             thumbPath:thumbPath
                                                                  date:date
-                                                              dateAgo:dateAgo];
+                                                              dateAgo:dateAgo
+                                                            repliesTo:repliesToArray];
                 [postsFullMutArray addObject:postObj];
                 postObj = nil;
             }
             
-            NSArray *resultArr = [[NSArray alloc] initWithArray:postsFullMutArray];
+            _postNumArray = postNumMutableArray;
             
-            completion(resultArr);
+            // array with almost all info - BUT without final ANSWERS array for every post
+            NSArray *semiResultArray = [[NSArray alloc] initWithArray:postsFullMutArray];
+            NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
+            
+            // NSUInteger *current
+            
+            for (DVBPostObj *post in semiResultArray) {
+                NSMutableArray *delete = [NSMutableArray array];
+                // NSMutableArray *repliesToMutableArray = [post.repliesTo mutableCopy];
+                for (NSString *replyTo in post.repliesTo) {
+                    NSInteger index = [_postNumArray indexOfObject:replyTo];
+                    
+                    if (index != NSNotFound) {
+                        DVBPostObj *replyPost = semiResultMutableArray[index];
+                        [replyPost.replies addObject:replyPost];
+                        // NSLog(@"added: %@ to post # %@", replyPost.num, post.num);
+                    }
+                    else {
+                        [delete addObject:replyTo];
+                    }
+                    
+                }
+                for (NSString *replyTo in delete) {
+                    [post.repliesTo removeObject:replyTo];
+                }
+            }
+            NSArray *resultArray = semiResultMutableArray;            
+            
+            completion(resultArray);
         }];
     }
     else

@@ -9,7 +9,42 @@
 #import "DVBPostPreparation.h"
 #import "UrlNinja.h"
 
+@interface DVBPostPreparation ()
+
+@property (nonatomic, strong) NSMutableArray *repliesToPrivate;
+// need to know to generate replies
+@property (nonatomic, strong) NSString *boardId;
+// need to know to generate replies
+@property (nonatomic, strong) NSString *threadId;
+
+@end
+
 @implementation DVBPostPreparation
+
+- (instancetype)init {
+    @throw [NSException exceptionWithName:@"Not enough params" reason:@"Use +[DVBPostPreparation initWithBoardId: andThreadId: instead]" userInfo:nil];
+    
+    return nil;
+}
+
+- (instancetype)initWithBoardId:(NSString *)boardId andThreadId:(NSString *)threadId {
+    self = [super init];
+    
+    if (self) {
+        _boardId = boardId;
+        _threadId = threadId;
+    }
+    
+    return self;
+}
+
+- (NSArray *)repliesToArrayForPost {
+    if (_repliesToPrivate) {
+        return _repliesToPrivate;
+    }
+    
+    return [NSArray array];
+}
 
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment
 {
@@ -97,6 +132,13 @@
     NSRegularExpression *linkLink = [[NSRegularExpression alloc]initWithPattern:@"href=\"(.*?)\"" options:0 error:nil];
     NSRegularExpression *linkLinkTwo = [[NSRegularExpression alloc]initWithPattern:@"href='(.*?)'" options:0 error:nil];
     
+    // prepare repliesTo array
+    _repliesToPrivate = [NSMutableArray array];
+    
+    if ((!_threadId)||(!_boardId)) {
+        @throw [NSException exceptionWithName:@"Not enough params" reason:@"Specify threadId and boardId params please" userInfo:nil];
+    }
+    
     [link enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop) {
         NSString *fullLink = [comment substringWithRange:result.range];
         NSTextCheckingResult *linkLinkResult = [linkLink firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
@@ -116,13 +158,13 @@
             NSURL *url = [[NSURL alloc]initWithString:urlString];
             if (url) {
                 UrlNinja *un = [UrlNinja unWithUrl:url];
-                /*
-                 if ([un.boardId isEqualToString:self.boardId] && [un.threadId isEqualToString:self.threadId] && un.type == boardThreadPostLink) {
-                 if (![self.replyTo containsObject:un.postId]) {
-                 [self.replyTo addObject:un.postId];
+                
+                 if ([un.boardId isEqualToString:_boardId] && [un.threadId isEqualToString:_threadId] && un.type == boardThreadPostLink) {
+                     if (![_repliesToPrivate containsObject:un.postId]) {
+                         [_repliesToPrivate addObject:un.postId];
+                     }
                  }
-                 }
-                 */
+                
                 [maComment addAttribute:NSLinkAttributeName value:url range:result.range];
                 [maComment addAttribute:NSForegroundColorAttributeName value:linkColor range:result.range];
                 [maComment addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:result.range];
