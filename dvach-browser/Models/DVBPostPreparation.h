@@ -9,8 +9,26 @@
 #import <Foundation/Foundation.h>
 
 @interface DVBPostPreparation : NSObject
-
-// Add 2ch markup to the comment (based on HTML markup
+/**
+ *  Array of posts that have been REPLIED BY current post
+ */
+@property (nonatomic, strong) NSMutableArray *repliesToArrayForPost;
+/**
+ *  Init method with board and thread infos
+ *
+ *  @param boardId  short code of the board
+ *  @param threadId number of the op post of the thread
+ *
+ *  @return Preparation object
+ */
+- (instancetype)initWithBoardId:(NSString *)boardId andThreadId:(NSString *)threadId;
+/**
+ *  Add 2ch markup to the comment (based on HTML markup
+ *
+ *  @param comment plain string with comment
+ *
+ *  @return attributed string with 2ch markup
+ */
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment;
 
 @end
