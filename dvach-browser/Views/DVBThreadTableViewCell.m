@@ -69,6 +69,7 @@
 }
 
 - (void)prepareForReuse {
+    [super prepareForReuse];
     
     _detailedLabel.text = @"";
     _utilityLabel.text = @"";
