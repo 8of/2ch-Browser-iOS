@@ -12,7 +12,7 @@
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
 
-@interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate>
+@interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
 
 /**
  *  dictionary for storing fetched boards
@@ -53,13 +53,12 @@
 - (void)loadBoardList
 {
     _boardsModel = [DVBBoardsModel sharedBoardsModel];
+    _boardsModel.boardsModelDelegate = self;
     
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
+    [self updateTable];
     
     // self.tableView.rowHeight = 44.0f;
     /*
@@ -76,15 +75,18 @@
 
 - (void)addBoardWithCode:(NSString *)code {
     [_boardsModel addBoardWithBoardId:code];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
+    [self updateTable];
 }
 
 - (IBAction)showAlertWithBoardCodePrompt:(id)sender {
     UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
     [boardCodeAlertView show];
+}
+
+- (void)updateTable {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 

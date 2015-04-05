@@ -31,8 +31,8 @@
 
 - (UIAlertView *)alertViewForBoardCode
 {
-    NSString *enterBoardShortcodeAlertTitle = NSLocalizedString(@"Код доски", @"Заголовок alert'a с полем ввода кодовых букв Борды");
-    NSString *enterBoardShortcodeAlertMessage = NSLocalizedString(@"Введите код доски для перемещения её в Избранное", @"Текст alert'a с полем ввода кодовых букв Борды");
+    NSString *enterBoardShortcodeAlertTitle = NSLocalizedString(@"Добавить в избранное", @"Заголовок alert'a с полем ввода кодовых букв Борды");
+    NSString *enterBoardShortcodeAlertMessage = NSLocalizedString(@"Введите код доски, чтобы добавить ее в избранное", @"Текст alert'a с полем ввода кодовых букв Борды");
     NSString *enterBoardShortcodeAlertCancelButtonText = NSLocalizedString(@"Отмена", @"Кнопка Отмена alert'a с полем ввода кодовых букв Борды");
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:enterBoardShortcodeAlertTitle
