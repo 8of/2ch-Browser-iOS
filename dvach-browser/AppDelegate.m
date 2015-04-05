@@ -21,8 +21,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self createDefaultSettings];
-    [self manageAFNetworking];
     [self appearanceTudeUp];
+    [self manageAFNetworking];
     return YES;
 }
 
@@ -57,6 +57,8 @@
  *  Tuning appearance for entire app.
  */
 - (void)appearanceTudeUp {
+    UIColor *dvachColor = [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0];
+    [[UIView appearance] setTintColor:dvachColor];
     /**
      *  UILabek for tableviewcell headers
      */
@@ -91,7 +93,6 @@
     }
     
     // Create the coordinator and store
-    
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"dvach-browser.sqlite"];
     NSError *error = nil;
@@ -111,7 +112,6 @@
     
     return _persistentStoreCoordinator;
 }
-
 
 - (NSManagedObjectContext *)managedObjectContext {
     // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
