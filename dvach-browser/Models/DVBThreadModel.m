@@ -29,14 +29,14 @@
 @end
 
 @implementation DVBThreadModel
-
+/*
 - (instancetype)init
 {
     @throw [NSException exceptionWithName:@"Need board code and thread num" reason:@"Use -[[DVBThreadModel alloc] initWithBoardCode:andThreadNum:]" userInfo:nil];
     
     return nil;
 }
-
+*/
 - (instancetype)initWithBoardCode:(NSString *)boardCode
                      andThreadNum:(NSString *)threadNum
 {
@@ -226,6 +226,36 @@
     {
         NSLog(@"Couldn't save bad posts to file");
     }
+}
+
+- (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
+{
+    NSMutableArray *thumbMutableArray = [NSMutableArray array];
+    for (DVBPostObj *post in postsArray) {
+        NSString *thumbPath = post.thumbPath;
+        BOOL isThumbPathNotEmpty = ![thumbPath isEqualToString:@""];
+        if (isThumbPathNotEmpty) {
+            [thumbMutableArray addObject:thumbPath];
+        }
+    }
+    NSArray *returnThumbsArray = thumbMutableArray;
+    
+    return returnThumbsArray;
+}
+
+- (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray
+{
+    NSMutableArray *fullImagesMutableArray = [NSMutableArray array];
+    for (DVBPostObj *post in postsArray) {
+        NSString *fullImagePath = post.path;
+        BOOL isFullImagePathNotEmpty = ![fullImagePath isEqualToString:@""];
+        if (isFullImagePathNotEmpty) {
+            [fullImagesMutableArray addObject:fullImagePath];
+        }
+    }
+    NSArray *returnFullImagesArray = fullImagesMutableArray;
+    
+    return returnFullImagesArray;
 }
 
 @end
