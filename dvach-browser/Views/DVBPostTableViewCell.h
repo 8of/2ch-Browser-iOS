@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "DVBThreadViewController.h"
 /**
  *  cell for showing posts in thread Table View Controller
  */
@@ -15,5 +16,7 @@
 
 // Pass data to cell
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index;
+
+@property (nonatomic, strong) DVBThreadViewController *threadViewController;
 
 @end

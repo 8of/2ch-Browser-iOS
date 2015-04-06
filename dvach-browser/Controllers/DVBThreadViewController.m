@@ -113,7 +113,13 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
         }
         else {
-            NSString *answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+            NSString *answerTitle;
+            if (_isItPostItself) {
+                answerTitle = @"";
+            }
+            else {
+                answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+            }
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
         _threadModel = [[DVBThreadModel alloc] init];
@@ -141,9 +147,6 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 100;
     }
-    
-    // self.tableView.estimatedRowHeight = 100;
-    // self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 #pragma mark - Set titles and gestures
@@ -321,6 +324,79 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
 }
+
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url
+{
+    switch (url.type) {
+        case boardLink: {
+            //открыть борду
+            /*
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            BoardViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
+            controller.boardId = urlNinja.boardId;
+            [self.navigationController pushViewController:controller animated:YES];
+            */
+            
+            return NO;
+            
+            break;
+        }
+        case boardThreadLink: {
+            // [self openThreadWithUrlNinja:urlNinja];
+            
+            return NO;
+            
+            break;
+        }
+        case boardThreadPostLink: {
+            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
+            if ([_threadNum isEqualToString:url.threadId] && [_boardCode isEqualToString:url.boardId]) {
+                [self openPostWithUrlNinja:url];
+                return YES;
+                /*
+                if ([self.thread.linksReference containsObject:urlNinja.postId]) {
+                    [self openPostWithUrlNinja:urlNinja];
+                    return NO;
+                }
+                 */
+            }
+            // [self openThreadWithUrlNinja:urlNinja];
+        }
+            break;
+        default: {
+            // [self makeExternalLinkActionSheetWithUrl:URL];
+            
+            return NO;
+            
+            break;
+        }
+    }
+    return NO;
+}
+
+- (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
+{
+    
+    NSString *postNum = urlNinja.postId;
+    
+    NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
+    
+    NSArray *arrayOfPosts = [_postsArray filteredArrayUsingPredicate:postNumPredicate];
+    
+    DVBPostObj *post;
+    
+    if ([arrayOfPosts count] > 0) {
+        post = arrayOfPosts[0];
+    }
+    
+    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
+    // NSString *postNum = post.num;
+    threadViewController.postNum = postNum;
+    threadViewController.answersToPost = @[post];
+    threadViewController.isItPostItself = YES;
+    [self.navigationController pushViewController:threadViewController animated:YES];
+}
+
 // Clear prompt of any status / error messages
 - (void)clearPrompt
 {
@@ -345,6 +421,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                        andPostThumbUrlString:thumbUrlString
                          andPostRepliesCount:[postTmpObj.replies count]
                                     andIndex:indexForButton];
+        confCell.threadViewController = self;
 
     }
 }
