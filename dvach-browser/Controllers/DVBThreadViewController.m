@@ -133,8 +133,17 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
                                                     andThreadNum:_threadNum];
     }
     
+    /**
+     *  Не очень нравится идея перезаписывать respondsToSelector
+     *  Но есть свои плюсы, например система не тратит ресурсы на вызов и просчёт через heightForRowAtIndexPath
+     */
+    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 100;
+    }
+    
     // self.tableView.estimatedRowHeight = 100;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    // self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 #pragma mark - Set titles and gestures
@@ -208,9 +217,9 @@ titleForHeaderInSection:(NSInteger)section
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView
-heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     // I am using a helper method here to get the text at a given cell.
     NSAttributedString *text = [self getTextAtIndex:indexPath];
     
@@ -266,11 +275,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 /**
  *  For more smooth and fast user expierence (iOS 8).
  */
+/*
 - (CGFloat)tableView:(UITableView *)tableView
 estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return UITableViewAutomaticDimension;
 }
+ */
 
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -489,8 +500,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet
-didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     
     if (actionSheet == _postLongPressSheet)
@@ -567,9 +577,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 /**
  *  Function for flag inappropriate content and send it to moderators DB.
  */
-- (void) sendPost:(NSString *)postNum
-         andBoard:(NSString *)board
-    andCompletion:(void (^)(BOOL ))completion
+- (void) sendPost:(NSString *)postNum andBoard:(NSString *)board andCompletion:(void (^)(BOOL ))completion
 {
     NSString *currentPostNum = postNum;
     NSString *currentBoard = board;
@@ -712,6 +720,24 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
     
     NSLog(@"Table updated after posting.");
+}
+
+#pragma mark - Selector checking
+
+#pragma mark - Respoder rewrite
+
+- (BOOL)respondsToSelector:(SEL)selector {
+    static BOOL useSelector;
+    static dispatch_once_t predicate = 0;
+    dispatch_once(&predicate, ^{
+        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
+    });
+    
+    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
+        return useSelector;
+    }
+    
+    return [super respondsToSelector:selector];
 }
 
 @end

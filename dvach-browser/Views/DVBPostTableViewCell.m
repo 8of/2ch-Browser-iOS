@@ -45,7 +45,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
     NSString *answerButtonTitle;
     
     if (postRepliesCount > 0) {
-        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, postRepliesCount];
+        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, (unsigned long)postRepliesCount];
     }
     else {
         answerButtonTitle = answerButtonPretextNoAnswers;
