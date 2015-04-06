@@ -21,7 +21,7 @@
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
 
-/*
+
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 101.0f;
 
@@ -34,7 +34,7 @@ static CGFloat const THUMBNAIL_CONSTRAINT_RIGHT = 8.0f;
 static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
 // Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
-*/
+
 
 // settings for handling long pressure gesture on table cell
 static CGFloat const MINIMUM_PRESS_DURATION = 1.2F;
@@ -123,8 +123,6 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
         
         NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
         _fullImagesArray = [arrayOfFullImages mutableCopy];
-
-        NSLog(@"count of thumbs: %ld", [_thumbImagesArray count]);
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
@@ -209,7 +207,7 @@ titleForHeaderInSection:(NSInteger)section
     
     return cell;
 }
-/*
+
 - (CGFloat)tableView:(UITableView *)tableView
 heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -264,7 +262,7 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
     
     return heightForReturnWithCorrectionAndCeilf;
 }
-*/
+
 /**
  *  For more smooth and fast user expierence (iOS 8).
  */
@@ -291,8 +289,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
             BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
             
-            if (canOpenInVLC)
-            {
+            if (canOpenInVLC) {
                 [[UIApplication sharedApplication] openURL:fullUrl];
             }
             else

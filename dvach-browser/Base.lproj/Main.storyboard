@@ -373,10 +373,11 @@
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" id="JlN-1N-MCJ"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="K4S-vg-FxB"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="leading" secondItem="jQY-pz-yxx" secondAttribute="trailing" id="PJv-Nf-thQ"/>
-                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" constant="8" id="UCH-FN-TD4"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" priority="999" constant="8" id="UCH-FN-TD4"/>
                                         <constraint firstItem="MIA-Cl-nhd" firstAttribute="top" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="cmI-mS-X68"/>
                                         <constraint firstAttribute="trailing" secondItem="M3z-Su-Ix2" secondAttribute="trailing" id="eTP-2U-wQ8"/>
                                         <constraint firstAttribute="bottom" secondItem="MIA-Cl-nhd" secondAttribute="bottom" id="fJL-bP-hcg"/>
+                                        <constraint firstItem="MIA-Cl-nhd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="100" id="fOI-Fp-MfD"/>
                                         <constraint firstAttribute="trailing" secondItem="MIA-Cl-nhd" secondAttribute="trailing" constant="8" id="li0-4X-Xcv"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" constant="8" id="z39-5l-9dG"/>
                                     </constraints>
