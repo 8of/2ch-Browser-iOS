@@ -231,7 +231,8 @@
         whitespaceDoubleShift += cutRange.length - 2;
     }
     
-    //добавляем заголовок поста, если он есть
+    // добавляем заголовок поста, если он есть
+    // сейчас заголовок выводится отдельно в section header - поэтому закомментировано
     /*
      if (self.subject && ![self.subject isEqualToString:@""]) {
      
