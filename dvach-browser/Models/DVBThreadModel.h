@@ -32,5 +32,21 @@
 - (void)flagPostWithIndex:(NSUInteger)index
         andFlaggedPostNum:(NSString *)flaggedPostNum
       andOpAlreadyDeleted:(BOOL)opAlreadyDeleted;
+/**
+ *  Generate array of thumbnail images from posts
+ *
+ *  @param postsArray array of posts
+ *
+ *  @return array of thumbnail images
+ */
+- (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray;
+/**
+ *  Generate array of full images from posts
+ *
+ *  @param postsArray array of posts
+ *
+ *  @return array of full images
+ */
+- (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray;
 
 @end

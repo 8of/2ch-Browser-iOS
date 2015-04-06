@@ -21,10 +21,7 @@
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
 
-/**
- *  Too much magic numbers for iOS 7. Need to rewrite somehow.
- */
-
+/*
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 101.0f;
 
@@ -33,17 +30,15 @@ static CGFloat const THUMBNAIL_WIDTH = 65.f;
 //thumbnail contstraints for calculating layout dimentions
 static CGFloat const THUMBNAIL_CONSTRAINT_LEFT = 8.0f;
 static CGFloat const THUMBNAIL_CONSTRAINT_RIGHT = 8.0f;
+// settings for comment textView
+static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
+// Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
+*/
 
 // settings for handling long pressure gesture on table cell
 static CGFloat const MINIMUM_PRESS_DURATION = 1.2F;
 static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
-
-// settings for comment textView
-static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
-/**
- *  Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
- */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -121,6 +116,15 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
             NSString *answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
+        _threadModel = [[DVBThreadModel alloc] init];
+        
+        NSArray *arrayOfThumbs = [_threadModel thumbImagesArrayForPostsArray:_answersToPost];
+        _thumbImagesArray = [arrayOfThumbs mutableCopy];
+        
+        NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
+        _fullImagesArray = [arrayOfFullImages mutableCopy];
+
+        NSLog(@"count of thumbs: %ld", [_thumbImagesArray count]);
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
