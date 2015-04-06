@@ -60,7 +60,6 @@
         {
             _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects:nil];
         }
-        
     }
     
     return self;
@@ -100,8 +99,7 @@
                 NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
                 NSArray *filtered = [_badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
                 
-                if ([filtered count] > 0)
-                {
+                if ([filtered count] > 0) {
                     continue;
                 }
                 
@@ -164,31 +162,36 @@
             
             // array with almost all info - BUT without final ANSWERS array for every post
             NSArray *semiResultArray = [[NSArray alloc] initWithArray:postsFullMutArray];
+            
             NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
             
-            // NSUInteger *current
+            NSUInteger currentPostIndex = 0;
             
             for (DVBPostObj *post in semiResultArray) {
                 NSMutableArray *delete = [NSMutableArray array];
-                // NSMutableArray *repliesToMutableArray = [post.repliesTo mutableCopy];
                 for (NSString *replyTo in post.repliesTo) {
                     NSInteger index = [_postNumArray indexOfObject:replyTo];
                     
                     if (index != NSNotFound) {
                         DVBPostObj *replyPost = semiResultMutableArray[index];
-                        [replyPost.replies addObject:replyPost];
+                        [replyPost.replies addObject:post];
                         // NSLog(@"added: %@ to post # %@", replyPost.num, post.num);
                     }
                     else {
                         [delete addObject:replyTo];
                     }
-                    
                 }
+                
+                DVBPostObj *postForChangeReplyTo = semiResultMutableArray[currentPostIndex];
                 for (NSString *replyTo in delete) {
-                    [post.repliesTo removeObject:replyTo];
+                    [postForChangeReplyTo.repliesTo removeObject:replyTo];
                 }
+                [semiResultMutableArray setObject:postForChangeReplyTo
+                               atIndexedSubscript:currentPostIndex];
+                
+                currentPostIndex++;
             }
-            NSArray *resultArray = semiResultMutableArray;            
+            NSArray *resultArray = semiResultMutableArray;
             
             completion(resultArray);
         }];

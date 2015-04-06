@@ -331,19 +331,19 @@
         <scene sceneID="SFb-Mu-qTJ">
             <objects>
                 <tableViewController storyboardIdentifier="DVBThreadViewController" id="3hz-5v-Niv" customClass="DVBThreadViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="81" sectionHeaderHeight="22" sectionFooterHeight="22" id="eQz-tx-oWe">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="130" sectionHeaderHeight="22" sectionFooterHeight="22" id="eQz-tx-oWe">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="postCell" id="BNP-kc-CNb" customClass="DVBPostTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="postCell" rowHeight="130" id="BNP-kc-CNb" customClass="DVBPostTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BNP-kc-CNb" id="lu6-fg-lI3">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <textView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
-                                            <rect key="frame" x="73" y="0.0" width="247" height="81"/>
+                                        <textView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
+                                            <rect key="frame" x="73" y="0.0" width="247" height="100"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" id="G05-GT-sq8"/>
@@ -359,18 +359,30 @@
                                                 <constraint firstAttribute="height" constant="65" id="OGr-6H-kGh"/>
                                             </constraints>
                                         </imageView>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MIA-Cl-nhd">
+                                            <rect key="frame" x="259" y="100" width="53" height="30"/>
+                                            <state key="normal" title="Ответы">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="UfF-ba-8Ct"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" id="JlN-1N-MCJ"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="K4S-vg-FxB"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="leading" secondItem="jQY-pz-yxx" secondAttribute="trailing" id="PJv-Nf-thQ"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" constant="8" id="UCH-FN-TD4"/>
-                                        <constraint firstAttribute="bottom" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="doP-GT-0Ey"/>
+                                        <constraint firstItem="MIA-Cl-nhd" firstAttribute="top" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="cmI-mS-X68"/>
                                         <constraint firstAttribute="trailing" secondItem="M3z-Su-Ix2" secondAttribute="trailing" id="eTP-2U-wQ8"/>
+                                        <constraint firstAttribute="bottom" secondItem="MIA-Cl-nhd" secondAttribute="bottom" id="fJL-bP-hcg"/>
+                                        <constraint firstAttribute="trailing" secondItem="MIA-Cl-nhd" secondAttribute="trailing" constant="8" id="li0-4X-Xcv"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" constant="8" id="z39-5l-9dG"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="answerButton" destination="MIA-Cl-nhd" id="ZKc-Bb-8eM"/>
                                     <outlet property="commentTextView" destination="M3z-Su-Ix2" id="Ure-zX-opp"/>
                                     <outlet property="imageLeftConstraint" destination="K4S-vg-FxB" id="05S-Pw-2tT"/>
                                     <outlet property="imageWidthConstraint" destination="BBN-af-gX6" id="DBX-GP-T2i"/>
@@ -608,8 +620,8 @@
         <image name="Toppage" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="o55-Sb-BOJ"/>
-        <segue reference="fFt-k5-qt1"/>
         <segue reference="xwW-TO-L0b"/>
+        <segue reference="Xk9-pa-bWO"/>
+        <segue reference="fFt-k5-qt1"/>
     </inferredMetricsTieBreakers>
 </document>
