@@ -20,6 +20,8 @@ static CGFloat const TEXTVIEW_INSET = 8;
 // post thumbnail
 @property (nonatomic) IBOutlet UIImageView *postThumb;
 
+@property (weak, nonatomic) IBOutlet UIButton *answerButton;
+
 // Constraints
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageLeftConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
@@ -33,9 +35,27 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _commentTextView.delegate = self;
 }
 
-- (void)prepareCellWithCommentText:(NSAttributedString *)commentText
-             andPostThumbUrlString:(NSString *)postThumbUrlString
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index
 {
+    // prepare Answer button
+    _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    NSString *answerButtonPretext = NSLocalizedString(@"Ответы", "Надпись на кнопке к посту для показа количества ответов и перехода к ним");
+    NSString *answerButtonPretextNoAnswers = NSLocalizedString(@"Нет ответов", "Надпись на кнопке к посту для показа количества ответов и перехода к ним когда ответов нет");
+    
+    NSString *answerButtonTitle;
+    
+    if (postRepliesCount > 0) {
+        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, postRepliesCount];
+    }
+    else {
+        answerButtonTitle = answerButtonPretextNoAnswers;
+        [_answerButton setEnabled:NO];
+    }
+    
+    [_answerButton setTitle:answerButtonTitle forState:UIControlStateNormal];
+    [_answerButton sizeToFit];
+    _answerButton.tag = index;
+
     // for more tidy images and keep aspect ratio
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
@@ -78,6 +98,22 @@ static CGFloat const TEXTVIEW_INSET = 8;
 {
     [super layoutSubviews];
     [self.contentView layoutIfNeeded];
+    
+    [_answerButton sizeToFit];
+    _answerButton.titleLabel.preferredMaxLayoutWidth = CGRectGetWidth(_answerButton.titleLabel.frame);
+    
+    // _commentTextView.preferredMaxLayoutWidth = CGRectGetWidth(_commentTextView.frame);
+}
+
+// fix problems with autolayout
+-(void)didMoveToSuperview
+{
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout
+{
+    return YES;
 }
 
 - (void)prepareForReuse {
@@ -91,6 +127,8 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _imageLeftConstraint.constant = 8.0f;
     _imageWidthConstraint.constant = 65.0f;
     _isPostHaveImage = YES;
+    
+    [_answerButton setEnabled:YES];
     
     [self setNeedsUpdateConstraints];
     [self.layer removeAllAnimations];
