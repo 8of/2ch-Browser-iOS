@@ -18,10 +18,6 @@
  *  dictionary for storing fetched boards
  */
 @property (strong, nonatomic) NSDictionary *boardsDict;
-/**
- *  pass this param when open boardVC with segue
- */
-@property (strong, nonatomic) NSString *boardToOpen;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
 
@@ -32,35 +28,40 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    [self.navigationController setToolbarHidden:YES animated:NO];
+    // [self.navigationController setToolbarHidden:YES animated:NO];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    /**
-     *  check if EULA accepted or not
-     */
-    if (!_alertViewGenerator)
-    {
+    
+    if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = self;
     }
-    if (![self userAgreementAccepted])
-    {
-        [self showUserAgeementAlert];
-    }
-    _boardToOpen = @"";
     [self loadBoardList];
+    /**
+     *  check if EULA accepted or not
+     */
+    if (![self userAgreementAccepted]) {
+        [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
+    }
 }
+
+#pragma mark - Board List
 
 - (void)loadBoardList
 {
-    _boardsModel = [[DVBBoardsModel alloc] init];
+    _boardsModel = [DVBBoardsModel sharedBoardsModel];
     _boardsModel.boardsModelDelegate = self;
+    
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
+
+    [self updateTable];
+    
     // self.tableView.rowHeight = 44.0f;
+    /*
     [_boardsModel getBoardsWithCompletion:^(NSDictionary *boardsDict)
     {
         if ([boardsDict count] > 0)
@@ -69,15 +70,25 @@
             NSLog(@"Boards LOADED");
         }
     }];
+     */
 }
 
-#pragma  mark - Open Board Delegate
-
-- (void)openBoardWithCode:(NSString *)code
-{
-    _boardToOpen = code;
-    [self performSegueWithIdentifier:SEGUE_TO_BOARD sender:self];
+- (void)addBoardWithCode:(NSString *)code {
+    [_boardsModel addBoardWithBoardId:code];
+    [self updateTable];
 }
+
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+    UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
+    [boardCodeAlertView show];
+}
+
+- (void)updateTable {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
+}
+
 
 #pragma mark - user Agreement
 
@@ -92,42 +103,7 @@
     return userAgreementAccepted;
 }
 
-- (void)showUserAgeementAlert
-{
-    NSString *userAgreementNotAcceptedAlertTitle = NSLocalizedString(@"Доступ запрещён", @"Заголовок alert'a сообщает о том, что пользователь не принял Соглашение.");
-    NSString *userAgreementNotAcceptedAlertMessage = NSLocalizedString(@"Для использования приложения, пожалуйста, примите соглашение", @"Текст alert'a сообщает о том, что пользователь не принял Согласшение.");
-    UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:userAgreementNotAcceptedAlertTitle
-                                                        description:userAgreementNotAcceptedAlertMessage
-                                                            buttons:nil];
-    [alertView show];
-    // Redirect user to settings if he hasn't accepted EULA
-    [self performSegueWithIdentifier:SEGUE_TO_SETTINGS sender:self];
-}
-
 #pragma mark - Navigation
-
-- (IBAction)openBoard:(id)sender
-{
-    [self checkUserAgreementAndOpenBoard];
-}
-
-- (void)checkUserAgreementAndOpenBoard
-{
-    if ([self userAgreementAccepted])
-    {
-        /**
-         open board with alert view and shortcode
-         
-         :returns: alertView with shortcode prompt
-         */
-        UIAlertView *alertView = [_alertViewGenerator alertViewForBoardCode];
-        [alertView show];
-    }
-    else
-    {
-        [self showUserAgeementAlert];
-    }
-}
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier
                                   sender:(id)sender
@@ -139,44 +115,26 @@
     return NO;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:SEGUE_TO_BOARD])
-    {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([[segue identifier] isEqualToString:SEGUE_TO_BOARD]) {
         
-        NSString *boardId;
+        NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
+        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
+        NSLog(@": %@", boardId);
+        /**
+         *  Clear selection after getting all we need from selected cell.
+         */
+        [self.tableView deselectRowAtIndexPath:selectedCellPath
+                                      animated:YES];
         
-        if ([_boardToOpen isEqualToString:@""])
-        {
-            NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
-            NSString *category = _boardsModel.categoryArray[selectedCellPath.section];
-            boardId = [_boardsModel getBoardIdWithCategoryName:category
-                                                      andIndex:selectedCellPath.row];
-            /**
-             *  Clear selection after getting all we need from selected cell.
-             */
-            [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                          animated:YES];
-        }
-        else
-        {
-            boardId = _boardToOpen;
-            /**
-             *  Reset variable for future reuse.
-             */
-            _boardToOpen = @"";
-        }
-        
-        NSUInteger pages = [_boardsModel getBoardPagesWithBoardId:boardId];
+        // NSUInteger pages = [_boardsModel getBoardPagesWithBoardId:boardId];
         
         DVBBoardViewController *boardViewController = segue.destinationViewController;        
         
-        /**
-         *  Set board id and pages count for future board/thread requests.
-         */
+        // Set board id and pages count for future board/thread requests.
         boardViewController.boardCode = boardId;
-        boardViewController.pages = pages;
+        // boardViewController.pages = pages;
     }
 }
 

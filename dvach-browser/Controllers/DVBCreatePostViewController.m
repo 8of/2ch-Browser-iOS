@@ -15,7 +15,6 @@
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
-#import "IQKeyboardManager.h"
 #import "DVBWrapMenuItem.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
@@ -37,12 +36,12 @@
 /**
  *  Checker for including/excluding photo to query
  */
-
 @property (nonatomic, assign) BOOL isImagePicked;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
 
 // UI elements
+@property (weak, nonatomic) IBOutlet UIScrollView *createPostScrollView;
 @property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
 @property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
 @property (nonatomic, weak) IBOutlet UITextField *nameTextField;
@@ -54,6 +53,10 @@
 // Constraints
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldHeight;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contstraintFromCommentTextToBottomEdge;
+
+// Constraints original value storages
+@property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
 
 @end
 
@@ -63,19 +66,6 @@
 {
     [super viewDidLoad];
     [self prepareViewController];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    // If user is on iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        // Turn off viewController scrolling on textEdit focusing
-        // need to rewrite this whole feature in future
-        [[IQKeyboardManager sharedManager] setEnable:NO];
-    }
 }
 
 /**
@@ -113,7 +103,9 @@
     [_commentTextView.layer setBorderWidth: 1.0];
     [_commentTextView.layer setCornerRadius:5.0f];
     [_commentTextView.layer setMasksToBounds:YES];
-    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(5, 5, 100, 5)];
+    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(5, 5, 5, 5)];
+    
+    _contstraintFromCommentTextToBottomEdgeOriginalValue = _contstraintFromCommentTextToBottomEdge.constant;
     
     /**
      *  Setup dynamic font sizes
@@ -147,6 +139,14 @@
     }
     
     [self changeConstraints];
+    
+    [self registerForKeyboardNotifications];
+    
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(hideKeyBoard)];
+    
+    [self.view addGestureRecognizer:tapGesture];
 }
 
 #pragma mark - Change constrints
@@ -566,6 +566,45 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             }
         }
     }
+}
+
+#pragma mark - Keyboard
+
+// Call this method somewhere in your view controller setup code.
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification *)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGRect keyPadFrame=[[UIApplication sharedApplication].keyWindow convertRect:[[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:self.view];
+    CGSize kbSize =keyPadFrame.size;
+    
+    CGFloat keyboardHeight = kbSize.height;
+    
+    _contstraintFromCommentTextToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue + keyboardHeight;
+    
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification *)aNotification
+{
+    _contstraintFromCommentTextToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue;
+}
+
+- (void)hideKeyBoard
+{
+    [self.view endEditing:YES];
 }
 
 @end

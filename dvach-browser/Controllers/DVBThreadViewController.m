@@ -21,29 +21,24 @@
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
 
-/**
- *  Too much magic numbers for iOS 7. Need to rewrite somehow.
- */
 
 // default row height
-static CGFloat const ROW_DEFAULT_HEIGHT = 81.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 101.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
 //thumbnail contstraints for calculating layout dimentions
 static CGFloat const THUMBNAIL_CONSTRAINT_LEFT = 8.0f;
 static CGFloat const THUMBNAIL_CONSTRAINT_RIGHT = 8.0f;
+// settings for comment textView
+static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
+// Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
+
 
 // settings for handling long pressure gesture on table cell
 static CGFloat const MINIMUM_PRESS_DURATION = 1.2F;
 static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
-
-// settings for comment textView
-static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
-/**
- *  Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
- */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -91,6 +86,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 @implementation DVBThreadViewController
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // fix wrong cell sizes
+    [self.tableView reloadData];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -100,18 +103,38 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (void)prepareViewController
 {
-    [self.navigationController setToolbarHidden:NO animated:NO];
-    /**
-     *  Set view controller title depending on...
-     */
-    self.title = [self getSubjectOrNumWithSubject:_threadSubject
-                                     andThreadNum:_threadNum];
-    [self addGestureRecognisers];
-
     _opAlreadyDeleted = NO;
+    [self addGestureRecognisers];
     
-    _threadModel = [[DVBThreadModel alloc] initWithBoardCode:_boardCode
-                                                andThreadNum:_threadNum];
+    if (_answersToPost) {
+        [self.navigationController setToolbarHidden:YES animated:NO];
+        self.navigationItem.rightBarButtonItem = nil;
+        if (!_postNum) {
+            @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
+        }
+        else {
+            NSString *answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+            self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
+        }
+        _threadModel = [[DVBThreadModel alloc] init];
+        
+        NSArray *arrayOfThumbs = [_threadModel thumbImagesArrayForPostsArray:_answersToPost];
+        _thumbImagesArray = [arrayOfThumbs mutableCopy];
+        
+        NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
+        _fullImagesArray = [arrayOfFullImages mutableCopy];
+    }
+    else {
+        [self.navigationController setToolbarHidden:NO animated:NO];
+        // Set view controller title depending on...
+        self.title = [self getSubjectOrNumWithSubject:_threadSubject
+                                         andThreadNum:_threadNum];
+        _threadModel = [[DVBThreadModel alloc] initWithBoardCode:_boardCode
+                                                    andThreadNum:_threadNum];
+    }
+    
+    // self.tableView.estimatedRowHeight = 100;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
 }
 
 #pragma mark - Set titles and gestures
@@ -156,6 +179,7 @@ titleForHeaderInSection:(NSInteger)section
 {
     DVBPostObj *postTmpObj = _postsArray[section];
     NSString *subject = postTmpObj.subject;
+    NSString *date = postTmpObj.date;
     
     subject = [self getSubjectOrNumWithSubject:subject
                                   andThreadNum:postTmpObj.num];
@@ -163,14 +187,12 @@ titleForHeaderInSection:(NSInteger)section
     // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
     NSInteger postNumToShow = section + 1;
     
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@", (long)postNumToShow, subject];
+    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@ - %@", (long)postNumToShow, subject, date];
     
     return sectionTitle;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // only one row inside every section for now
     return 1;
 }
@@ -197,20 +219,14 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
     CGSize viewSize = self.tableView.bounds.size;
     NSInteger viewWidth = viewSize.width;
     
-    /**
-     *  Set default difference (if we hve image in the cell).
-     */
+    // Set default difference (if we hve image in the cell).
     CGFloat widthDifferenceBecauseOfImage = THUMBNAIL_WIDTH + THUMBNAIL_CONSTRAINT_LEFT + THUMBNAIL_CONSTRAINT_RIGHT;
     
-    /**
-     *  Determine if we really have image in the cell.
-     */
+    // Determine if we really have image in the cell.
     DVBPostObj *postObj = _postsArray[indexPath.section];
     NSString *thumbPath = postObj.thumbPath;
     
-    /**
-     *  If not - then set the difference to 0.
-     */
+    // If not - then set the difference to 0.
     if ([thumbPath isEqualToString:@""])
     {
         widthDifferenceBecauseOfImage = 0;
@@ -273,8 +289,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
             NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
             BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
             
-            if (canOpenInVLC)
-            {
+            if (canOpenInVLC) {
                 [[UIApplication sharedApplication] openURL:fullUrl];
             }
             else
@@ -313,9 +328,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         DVBPostObj *postTmpObj = _postsArray[indexPath.section];
         
         NSString *thumbUrlString = postTmpObj.thumbPath;
+        NSUInteger indexForButton = indexPath.section;
         
         [confCell prepareCellWithCommentText:postTmpObj.comment
-                       andPostThumbUrlString:thumbUrlString];
+                       andPostThumbUrlString:thumbUrlString
+                         andPostRepliesCount:[postTmpObj.replies count]
+                                    andIndex:indexForButton];
 
     }
 }
@@ -373,16 +391,20 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
 // reload thread by current thread num
 - (void)reloadThread {
-    [self getPostsWithBoard:_boardCode
-                  andThread:_threadNum
-              andCompletion:^(NSArray *postsArrayBlock)
-    {
-        _postsArray = [postsArrayBlock mutableCopy];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
+    if (_answersToPost) {
+        _postsArray = [_answersToPost mutableCopy];
+    }
+    else {
+        [self getPostsWithBoard:_boardCode
+                      andThread:_threadNum
+                  andCompletion:^(NSArray *postsArrayBlock)
+        {
+            _postsArray = [postsArrayBlock mutableCopy];
+        }];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 - (void)reloadThreadFromOutside
@@ -407,6 +429,18 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
+}
+
+- (IBAction)showAnswers:(id)sender
+{
+    UIButton *answerButton = sender;
+    NSUInteger buttonClickedIndex = answerButton.tag;
+    DVBPostObj *post = _postsArray[buttonClickedIndex];
+    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
+    NSString *postNum = post.num;
+    threadViewController.postNum = postNum;
+    threadViewController.answersToPost = post.replies;
+    [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
 #pragma mark - Navigation

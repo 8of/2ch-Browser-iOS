@@ -36,11 +36,23 @@
  *  Path for post's thumnail image.
  */
 @property (strong, nonatomic) NSString *thumbPath;
+/**
+ *  Absolute date
+ */
+@property (nonatomic, strong) NSString *date;
+/**
+ *  Relative date to NOW date
+ */
+@property (nonatomic, strong) NSString *dateAgo;
+/**
+ *  Replies to this post from other posts in the thread
+ */
+@property (nonatomic, strong) NSMutableArray *replies;
+/**
+ *  Replies to other posts in this post, children of the same thread
+ */
+@property (nonatomic, strong) NSMutableArray *repliesTo;
 
-- (instancetype)initWithNum:(NSString *)postNum
-                    subject:(NSString *)postSubject
-                    comment:(NSAttributedString *)postComment
-                       path:(NSString *)postPicPath
-                  thumbPath:(NSString *)postThumbPath;
+- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSArray *)postRepliesTo;
 
 @end

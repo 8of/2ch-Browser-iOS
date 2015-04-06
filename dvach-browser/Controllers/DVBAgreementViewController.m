@@ -9,9 +9,12 @@
 #import "DVBAgreementViewController.h"
 #import "DVBConstants.h"
 
+static CGFloat const AGREEMENT_TEXTVIEW_VERTICAL_INSET = 8.0f;
+static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 16.0f;
+
 @interface DVBAgreementViewController ()
 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *notAcceptedBtn;
+@property (weak, nonatomic) IBOutlet UITextView *agreementTextView;
 
 @end
 
@@ -20,23 +23,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    BOOL userAgreementAccepted = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
-    
-    if (userAgreementAccepted)
-    {
-        /**
-         *  Do not let user to unaccepted accepted agreement.
-         */
-        self.notAcceptedBtn.enabled = false;
-    }
+    _agreementTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    [_agreementTextView setTextContainerInset:UIEdgeInsetsMake(AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET, AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET)];
 }
-/**
- *  Dismiss modal.
- */
-- (IBAction)goBack:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+
 /**
  *  Set user Defaults - user accepted EULA.
  */
