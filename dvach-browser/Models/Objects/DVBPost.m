@@ -1,14 +1,14 @@
 //
-//  DVBPostObj.m
+//  DVBPost.m
 //  dvach-browser
 //
 //  Created by Andy on 13/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import "DVBPostObj.h"
+#import "DVBPost.h"
 
-@implementation DVBPostObj
+@implementation DVBPost
 
 - (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSMutableArray *)postRepliesTo {
     self = [super init];

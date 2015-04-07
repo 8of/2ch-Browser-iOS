@@ -25,12 +25,6 @@
 
 @implementation DVBBoardsViewController
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-    // [self.navigationController setToolbarHidden:YES animated:NO];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -59,18 +53,6 @@
     self.tableView.delegate = _boardsModel;
 
     [self updateTable];
-    
-    // self.tableView.rowHeight = 44.0f;
-    /*
-    [_boardsModel getBoardsWithCompletion:^(NSDictionary *boardsDict)
-    {
-        if ([boardsDict count] > 0)
-        {
-            [self.tableView reloadData];
-            NSLog(@"Boards LOADED");
-        }
-    }];
-     */
 }
 
 - (void)addBoardWithCode:(NSString *)code {
@@ -121,10 +103,8 @@
         
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
-        NSLog(@": %@", boardId);
-        /**
-         *  Clear selection after getting all we need from selected cell.
-         */
+        
+        // Clear selection after getting all we need from selected cell.
         [self.tableView deselectRowAtIndexPath:selectedCellPath
                                       animated:YES];
         
