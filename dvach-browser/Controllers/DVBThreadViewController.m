@@ -8,7 +8,7 @@
 
 #import "DVBConstants.h"
 #import "DVBThreadViewController.h"
-#import "DVBPostObj.h"
+#import "DVBPost.h"
 #import "DVBPostTableViewCell.h"
 #import "Reachability.h"
 #import "DVBBadPost.h"
@@ -189,7 +189,7 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
 - (NSString *)tableView:(UITableView *)tableView
 titleForHeaderInSection:(NSInteger)section
 {
-    DVBPostObj *postTmpObj = _postsArray[section];
+    DVBPost *postTmpObj = _postsArray[section];
     NSString *subject = postTmpObj.subject;
     NSString *date = postTmpObj.date;
     
@@ -235,7 +235,7 @@ titleForHeaderInSection:(NSInteger)section
     CGFloat widthDifferenceBecauseOfImage = THUMBNAIL_WIDTH + THUMBNAIL_CONSTRAINT_LEFT + THUMBNAIL_CONSTRAINT_RIGHT;
     
     // Determine if we really have image in the cell.
-    DVBPostObj *postObj = _postsArray[indexPath.section];
+    DVBPost *postObj = _postsArray[indexPath.section];
     NSString *thumbPath = postObj.thumbPath;
     
     // If not - then set the difference to 0.
@@ -289,7 +289,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DVBPostObj *selectedPost = _postsArray[indexPath.section];
+    DVBPost *selectedPost = _postsArray[indexPath.section];
     // NSString *thumbUrl = selectedPost.thumbPath;
     
     NSString *fullUrlString = selectedPost.path;
@@ -383,7 +383,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     NSArray *arrayOfPosts = [_postsArray filteredArrayUsingPredicate:postNumPredicate];
     
-    DVBPostObj *post;
+    DVBPost *post;
     
     if ([arrayOfPosts count] > 0) {
         post = arrayOfPosts[0];
@@ -412,7 +412,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     {
         DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
         
-        DVBPostObj *postTmpObj = _postsArray[indexPath.section];
+        DVBPost *postTmpObj = _postsArray[indexPath.section];
         
         NSString *thumbUrlString = postTmpObj.thumbPath;
         NSUInteger indexForButton = indexPath.section;
@@ -450,7 +450,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
     NSUInteger tmpIndex = indexPath.section;
-    DVBPostObj *tmpObj =  _postsArray[tmpIndex];
+    DVBPost *tmpObj =  _postsArray[tmpIndex];
     NSAttributedString *tmpComment = tmpObj.comment;
     
     return tmpComment;
@@ -523,7 +523,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UIButton *answerButton = sender;
     NSUInteger buttonClickedIndex = answerButton.tag;
-    DVBPostObj *post = _postsArray[buttonClickedIndex];
+    DVBPost *post = _postsArray[buttonClickedIndex];
     DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
     NSString *postNum = post.num;
     threadViewController.postNum = postNum;
@@ -561,7 +561,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
     {
         
-        DVBPostObj *postObj = [_postsArray objectAtIndex:indexPath.section];
+        DVBPost *postObj = [_postsArray objectAtIndex:indexPath.section];
         
         // setting variable to bad post number (we'll use it soon)
         _flaggedPostNum = postObj.num;
@@ -592,7 +592,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 
                 NSString *oldCommentText = sharedComment.comment;
                 
-                DVBPostObj *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
+                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
                 
                 NSString *postNum = post.num;
                 
@@ -614,7 +614,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                 
                 sharedComment.comment = commentToSingleton;
                 
-                NSLog(@"%@", sharedComment.comment);
                 [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                           sender:self];
                 break;
@@ -768,7 +767,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
 
     NSUInteger indexForImageShowing = indexPath.section;
-    DVBPostObj *postObj = _postsArray[indexForImageShowing];
+    DVBPost *postObj = _postsArray[indexForImageShowing];
     NSString *path = postObj.path;
     NSUInteger index = [_fullImagesArray indexOfObject:path];
 

@@ -1,5 +1,5 @@
 //
-//  DVBPostObj.h
+//  DVBPost.h
 //  dvach-browser
 //
 //  Created by Andy on 13/10/14.
@@ -14,7 +14,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DVBPostObj : NSObject
+@interface DVBPost : NSObject
 
 /**
  *  Number of the post.
