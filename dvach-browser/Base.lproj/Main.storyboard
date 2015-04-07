@@ -383,7 +383,7 @@
                                         <constraint firstItem="E2c-nb-XR8" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="Hwg-C7-Kbl"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" id="JlN-1N-MCJ"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="K4S-vg-FxB"/>
-                                        <constraint firstItem="E2c-nb-XR8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" id="NQE-s1-bmc"/>
+                                        <constraint firstItem="E2c-nb-XR8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" priority="999" id="NQE-s1-bmc"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="leading" secondItem="jQY-pz-yxx" secondAttribute="trailing" id="PJv-Nf-thQ"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" priority="999" constant="8" id="UCH-FN-TD4"/>
                                         <constraint firstItem="MIA-Cl-nhd" firstAttribute="top" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="cmI-mS-X68"/>
@@ -397,9 +397,9 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="actionButton" destination="E2c-nb-XR8" id="OL1-Tt-qc2"/>
-                                    <outlet property="actionsButtonTopConstraint" destination="NQE-s1-bmc" id="RlA-MN-H9s"/>
                                     <outlet property="answerButton" destination="MIA-Cl-nhd" id="ZKc-Bb-8eM"/>
                                     <outlet property="commentTextView" destination="M3z-Su-Ix2" id="Ure-zX-opp"/>
+                                    <outlet property="imageHeightConstraint" destination="OGr-6H-kGh" id="uwZ-CL-OoB"/>
                                     <outlet property="imageLeftConstraint" destination="K4S-vg-FxB" id="05S-Pw-2tT"/>
                                     <outlet property="imageWidthConstraint" destination="BBN-af-gX6" id="DBX-GP-T2i"/>
                                     <outlet property="postThumb" destination="jQY-pz-yxx" id="4OM-rw-ETE"/>
