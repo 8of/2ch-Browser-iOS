@@ -9,7 +9,7 @@
 #import <CoreData/CoreData.h>
 #import <UIKit/UIKit.h>
 #import "DVBBoardsModel.h"
-#import "DVBBoardObj.h"
+#import "DVBBoard.h"
 
 #import "DVBNetworking.h"
 #import "DVBStatus.h"
@@ -18,7 +18,7 @@
 #import "DVBConstants.h"
 
 static NSString *const BOARD_STORAGE_FILE_PATH = @"store.data";
-static NSString *const DVBBOARD_ENTITY_NAME = @"DVBBoardObj";
+static NSString *const DVBBOARD_ENTITY_NAME = @"DVBBoard";
 static NSString *const DEFAULT_BOARDS_PLIST_FILENAME = @"DefaultBoards";
 static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
@@ -158,8 +158,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 - (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSNumber *)categoryId {
-    // Constructing DVBBoardObj with Core Data
-    DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+    // Constructing DVBBoard with Core Data
+    DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
     board.name = name;
     board.categoryId = categoryId;
@@ -168,8 +168,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 - (void)addBoardWithBoardId:(NSString *)boardId {
-    // Constructing DVBBoardObj with Core Data
-    DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+    // Constructing DVBBoard with Core Data
+    DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
     board.boardId = boardId;
     board.name = @"";
     
@@ -216,7 +216,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 NSString *name = singleBoardDictionary[@"name"];
                 NSNumber *pages = singleBoardDictionary[@"pages"];
                 
-                DVBBoardObj *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+                DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
                 [_context assignObject:board toPersistentStore:_memoryStore];
                 board.boardId = boardId;
                 board.name = name;
@@ -235,7 +235,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (void)checkBoardNames {
     BOOL isNeedToLoadBoardsFromNetwork = NO;
-    for (DVBBoardObj *board in self.boardsArray) {
+    for (DVBBoard *board in self.boardsArray) {
         NSString *name = board.name;
         BOOL isNameEmpty = [name isEqualToString:@""];
         if (isNameEmpty) {
@@ -247,7 +247,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         NSMutableArray *arrayForInterating = [self.boardsArray mutableCopy];
         [self getBoardsWithCompletion:^(NSArray *completion) {
             NSUInteger indexOfCurrentBoard = 0;
-            for (DVBBoardObj *board in arrayForInterating) {
+            for (DVBBoard *board in arrayForInterating) {
                 NSString *name = board.name;
                 NSString *boardId = board.boardId;
                 BOOL isNameEmpty = [name isEqualToString:@""];
@@ -256,7 +256,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                     NSArray *matchedBoardsFromNetwork = [completion filteredArrayUsingPredicate:predicate];
                     NSUInteger matchedBoardsCount = [matchedBoardsFromNetwork count];
                     if (matchedBoardsCount > 0) {
-                        DVBBoardObj *boardFromNetwork = matchedBoardsFromNetwork[0];
+                        DVBBoard *boardFromNetwork = matchedBoardsFromNetwork[0];
                         NSString *nameOfTheMatchedBoard = boardFromNetwork.name;
                         board.name = nameOfTheMatchedBoard;
                         [_boardsPrivate setObject:board atIndexedSubscript:indexOfCurrentBoard];
@@ -278,7 +278,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 {
     if (_boardsDictionaryByCategories)
     {
-        DVBBoardObj *boardObject = _boardsDictionaryByCategories[category][index];
+        DVBBoard *boardObject = _boardsDictionaryByCategories[category][index];
         NSString *boardId = boardObject.boardId;
         
         return boardId;
@@ -293,7 +293,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     
     if ([filteredArrayOfBoardsForBoardId count] > 0)
     {
-        DVBBoardObj *boardObj = [filteredArrayOfBoardsForBoardId firstObject];
+        DVBBoard *boardObj = [filteredArrayOfBoardsForBoardId firstObject];
         NSUInteger pages = boardObj.pages;
         
         return pages;
@@ -325,7 +325,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     
     NSArray *boardsArrayInCategory = [self arrayForCategoryWithIndex:categoryIndex];
     
-    DVBBoardObj *boardObject = boardsArrayInCategory[indexPath.row];
+    DVBBoard *boardObject = boardsArrayInCategory[indexPath.row];
     
     [boardCell prepareCellWithBoardObject:boardObject];
     
@@ -347,7 +347,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
         NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
         NSUInteger indexOfCurrentBoard = 0;
-        for (DVBBoardObj *board in arrayForInterating) {
+        for (DVBBoard *board in arrayForInterating) {
             NSString *boardId = board.boardId;
             NSNumber *boardCategoryId = board.categoryId;
             NSNumber *favouritesCategoryid = [NSNumber numberWithInt:0];
@@ -373,7 +373,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath {
     
     NSArray *boardsInThecategoryArray = [self arrayForCategoryWithIndex:indexPath.section];
-    DVBBoardObj *board = boardsInThecategoryArray[indexPath.row];
+    DVBBoard *board = boardsInThecategoryArray[indexPath.row];
     NSString *boardId = board.boardId;
     
     return boardId;

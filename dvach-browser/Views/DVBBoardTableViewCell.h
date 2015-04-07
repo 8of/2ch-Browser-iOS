@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DVBBoardObj.h"
+#import "DVBBoard.h"
 
 @interface DVBBoardTableViewCell : UITableViewCell
 
-- (void)prepareCellWithBoardObject: (DVBBoardObj *)boardObject;
+- (void)prepareCellWithBoardObject: (DVBBoard *)boardObject;
 
 @end

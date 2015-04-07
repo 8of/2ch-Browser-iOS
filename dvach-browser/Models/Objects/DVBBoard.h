@@ -1,5 +1,5 @@
 //
-//  DVBBoardObj.h
+//  DVBBoard.h
 //  dvach-browser
 //
 //  Created by Andy on 16/10/14.
@@ -12,7 +12,7 @@
 /**
  *  Object for storing information about specific board.
  */
-@interface DVBBoardObj : NSManagedObject
+@interface DVBBoard : NSManagedObject
 
 /**
  *  Id of the board is simple chort code for fast forwarding to board content without scrolling board list.

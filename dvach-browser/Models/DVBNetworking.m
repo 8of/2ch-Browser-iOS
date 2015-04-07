@@ -8,7 +8,7 @@
 #import <AFNetworking/AFNetworking.h>
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
-#import "DVBBoardObj.h"
+#import "DVBBoard.h"
 #import "DVBValidation.h"
 #import "DVBStatus.h"
 #import "Reachability.h"
