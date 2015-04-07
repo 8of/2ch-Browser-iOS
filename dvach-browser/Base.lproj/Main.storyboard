@@ -368,21 +368,36 @@
                                                 <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="UfF-ba-8Ct"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E2c-nb-XR8">
+                                            <rect key="frame" x="8" y="100" width="69" height="30"/>
+                                            <state key="normal" title="Действия">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="showPostActions:" destination="3hz-5v-Niv" eventType="touchUpInside" id="9S4-Xe-Sam"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="E2c-nb-XR8" firstAttribute="top" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="1tY-1b-awh"/>
+                                        <constraint firstItem="E2c-nb-XR8" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="Hwg-C7-Kbl"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" id="JlN-1N-MCJ"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="8" id="K4S-vg-FxB"/>
+                                        <constraint firstItem="E2c-nb-XR8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" id="NQE-s1-bmc"/>
                                         <constraint firstItem="M3z-Su-Ix2" firstAttribute="leading" secondItem="jQY-pz-yxx" secondAttribute="trailing" id="PJv-Nf-thQ"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" priority="999" constant="8" id="UCH-FN-TD4"/>
                                         <constraint firstItem="MIA-Cl-nhd" firstAttribute="top" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="cmI-mS-X68"/>
                                         <constraint firstAttribute="trailing" secondItem="M3z-Su-Ix2" secondAttribute="trailing" id="eTP-2U-wQ8"/>
                                         <constraint firstAttribute="bottom" secondItem="MIA-Cl-nhd" secondAttribute="bottom" id="fJL-bP-hcg"/>
                                         <constraint firstItem="MIA-Cl-nhd" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="100" id="fOI-Fp-MfD"/>
+                                        <constraint firstItem="MIA-Cl-nhd" firstAttribute="centerY" secondItem="E2c-nb-XR8" secondAttribute="centerY" id="gMP-yb-XH5"/>
                                         <constraint firstAttribute="trailing" secondItem="MIA-Cl-nhd" secondAttribute="trailing" constant="8" id="li0-4X-Xcv"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="top" secondItem="lu6-fg-lI3" secondAttribute="top" constant="8" id="z39-5l-9dG"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
+                                    <outlet property="actionButton" destination="E2c-nb-XR8" id="OL1-Tt-qc2"/>
+                                    <outlet property="actionsButtonTopConstraint" destination="NQE-s1-bmc" id="RlA-MN-H9s"/>
                                     <outlet property="answerButton" destination="MIA-Cl-nhd" id="ZKc-Bb-8eM"/>
                                     <outlet property="commentTextView" destination="M3z-Su-Ix2" id="Ure-zX-opp"/>
                                     <outlet property="imageLeftConstraint" destination="K4S-vg-FxB" id="05S-Pw-2tT"/>
@@ -408,12 +423,6 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="EJM-0B-k22"/>
-                        <barButtonItem image="Reportflag" id="UrN-EA-uNb">
-                            <connections>
-                                <action selector="reportButtonAction:" destination="3hz-5v-Niv" id="v9u-Oz-SCX"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="qeV-YE-lDo"/>
                         <barButtonItem systemItem="refresh" id="OC5-6d-88W">
                             <connections>
                                 <action selector="reloadThreadAction:" destination="3hz-5v-Niv" id="pPz-GS-an6"/>
@@ -431,9 +440,6 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
-                    <connections>
-                        <outlet property="flagButton" destination="UrN-EA-uNb" id="cII-wF-rdN"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8B3-Lb-LIO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -618,7 +624,6 @@
     <resources>
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
-        <image name="Reportflag" width="22" height="22"/>
         <image name="Settings" width="22" height="22"/>
         <image name="Toppage" width="22" height="22"/>
     </resources>

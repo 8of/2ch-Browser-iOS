@@ -34,9 +34,8 @@
         _alertViewGenerator.alertViewGeneratorDelegate = self;
     }
     [self loadBoardList];
-    /**
-     *  check if EULA accepted or not
-     */
+    
+    // check if EULA accepted or not
     if (![self userAgreementAccepted]) {
         [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
     }

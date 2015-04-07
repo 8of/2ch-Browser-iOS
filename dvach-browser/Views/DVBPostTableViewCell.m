@@ -19,12 +19,16 @@ static CGFloat const TEXTVIEW_INSET = 8;
 @property (nonatomic) IBOutlet UITextView *commentTextView;
 // post thumbnail
 @property (nonatomic) IBOutlet UIImageView *postThumb;
-
+// show answer to post button
 @property (weak, nonatomic) IBOutlet UIButton *answerButton;
+// show action sheet for the post
+@property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
 // Constraints
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageLeftConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *actionsButtonTopConstraint;
+
 
 @end
 
@@ -55,7 +59,11 @@ static CGFloat const TEXTVIEW_INSET = 8;
     [_answerButton setTitle:answerButtonTitle forState:UIControlStateNormal];
     [_answerButton sizeToFit];
     _answerButton.tag = index;
-
+    
+    // prepare action button
+    _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _actionButton.tag = index;
+    
     // for more tidy images and keep aspect ratio
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
@@ -86,6 +94,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
         _imageLeftConstraint.constant = 0;
         _imageWidthConstraint.constant = 0;
         _isPostHaveImage = NO;
+        [self removeConstraint:_actionsButtonTopConstraint];
     }
 }
 
@@ -101,8 +110,6 @@ static CGFloat const TEXTVIEW_INSET = 8;
     
     [_answerButton sizeToFit];
     _answerButton.titleLabel.preferredMaxLayoutWidth = CGRectGetWidth(_answerButton.titleLabel.frame);
-    
-    // _commentTextView.preferredMaxLayoutWidth = CGRectGetWidth(_commentTextView.frame);
 }
 
 // fix problems with autolayout

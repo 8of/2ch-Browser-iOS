@@ -92,7 +92,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 }
 
 /**
- *  Determining path for loading/saving array of LTWords to disk
+ *  Determining path for loading/saving array of DVBBoards to disk
  *
  *  @return path of file to save to
  */
