@@ -346,7 +346,7 @@
     NSUInteger selectedLength = selectedRange.length;
     if (selectedLength > 0)
     {
-        NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
+        // NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
 
         [self makeMenuWithSelectedLocation:selectedLocation
                           andSelectedRange:selectedLength];
