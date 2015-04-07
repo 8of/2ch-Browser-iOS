@@ -518,7 +518,10 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
                                             </textView>
                                             <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1dE-mf-Pvb">
-                                                <rect key="frame" x="230" y="90" width="75" height="30"/>
+                                                <rect key="frame" x="225" y="90" width="80" height="30"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="7Zr-eb-DB1"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad"/>
                                             </textField>
@@ -528,7 +531,6 @@
                                             <constraint firstItem="R8v-6t-d37" firstAttribute="top" secondItem="cMi-uW-0S6" secondAttribute="bottom" constant="15" id="5W9-1b-OC8"/>
                                             <constraint firstAttribute="trailing" secondItem="ATw-LV-fb7" secondAttribute="trailing" constant="15" id="EIp-pv-Upg"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="top" secondItem="RLY-YJ-MBR" secondAttribute="top" constant="15" id="EUM-M3-sc8"/>
-                                            <constraint firstItem="1dE-mf-Pvb" firstAttribute="leading" secondItem="R8v-6t-d37" secondAttribute="trailing" constant="15" id="F8q-fg-9ay"/>
                                             <constraint firstItem="jV2-RR-JBv" firstAttribute="centerX" secondItem="R8v-6t-d37" secondAttribute="centerX" id="JGI-1J-7ia"/>
                                             <constraint firstItem="ATw-LV-fb7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="R8v-6t-d37" secondAttribute="trailing" constant="15" id="Mhh-Xj-R4m"/>
                                             <constraint firstAttribute="trailing" secondItem="yu0-D0-p1U" secondAttribute="trailing" constant="15" id="Nhn-vt-Q1G"/>
@@ -621,8 +623,8 @@
         <image name="Toppage" width="22" height="22"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="xwW-TO-L0b"/>
-        <segue reference="Xk9-pa-bWO"/>
+        <segue reference="o55-Sb-BOJ"/>
         <segue reference="fFt-k5-qt1"/>
+        <segue reference="Iwy-TH-KYT"/>
     </inferredMetricsTieBreakers>
 </document>
