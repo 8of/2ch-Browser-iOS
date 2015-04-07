@@ -27,6 +27,9 @@
 - (id)init
 {
     if (self = [super init]) {
+        if (!self.comment) {
+            self.comment = @"";
+        }
         /**
          *  Additional preparations here.
          */

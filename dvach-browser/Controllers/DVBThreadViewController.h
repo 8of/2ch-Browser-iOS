@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UrlNinja.h"
 
 @interface DVBThreadViewController : UITableViewController
 /**
@@ -33,6 +34,7 @@
  *  Array of answers for specific post (set it if we need to show answers for post and no entire thread)
  */
 @property (nonatomic, strong) NSArray *answersToPost;
+@property (nonatomic, assign) BOOL isItPostItself;
 /**
  *  Post number - use if we show answers for specific post
  */
@@ -41,5 +43,7 @@
  *  Reload thread by calling this method outside (like from posting View Controller after Posting new message).
  */
 - (void)reloadThreadFromOutside;
+
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
 
 @end

@@ -45,7 +45,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
     NSString *answerButtonTitle;
     
     if (postRepliesCount > 0) {
-        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, postRepliesCount];
+        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, (unsigned long)postRepliesCount];
     }
     else {
         answerButtonTitle = answerButtonPretextNoAnswers;
@@ -140,6 +140,15 @@ static CGFloat const TEXTVIEW_INSET = 8;
 shouldInteractWithURL:(NSURL *)URL
          inRange:(NSRange)characterRange
 {
+    if (_threadViewController) {
+        UrlNinja *urlNinja = [UrlNinja unWithUrl:URL];
+        BOOL isLocalPostLink = [_threadViewController isLinkInternalWithLink:urlNinja];
+        if (isLocalPostLink) {
+            return NO;
+        }
+        return NO;
+    }
+    
     BOOL isExternalLinksShoulBeOpenedInChrome = [[NSUserDefaults standardUserDefaults] boolForKey:OPEN_EXTERNAL_LINKS_IN_CHROME];
 
     if (isExternalLinksShoulBeOpenedInChrome)

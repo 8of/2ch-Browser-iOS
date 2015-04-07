@@ -113,7 +113,13 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
         }
         else {
-            NSString *answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+            NSString *answerTitle;
+            if (_isItPostItself) {
+                answerTitle = @"";
+            }
+            else {
+                answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+            }
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
         _threadModel = [[DVBThreadModel alloc] init];
@@ -133,8 +139,14 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
                                                     andThreadNum:_threadNum];
     }
     
-    // self.tableView.estimatedRowHeight = 100;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    /**
+     *  Не очень нравится идея перезаписывать respondsToSelector
+     *  Но есть свои плюсы, например система не тратит ресурсы на вызов и просчёт через heightForRowAtIndexPath
+     */
+    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 100;
+    }
 }
 
 #pragma mark - Set titles and gestures
@@ -208,9 +220,9 @@ titleForHeaderInSection:(NSInteger)section
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView
-heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+
     // I am using a helper method here to get the text at a given cell.
     NSAttributedString *text = [self getTextAtIndex:indexPath];
     
@@ -266,11 +278,13 @@ heightForRowAtIndexPath:(NSIndexPath *)indexPath
 /**
  *  For more smooth and fast user expierence (iOS 8).
  */
+/*
 - (CGFloat)tableView:(UITableView *)tableView
 estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return UITableViewAutomaticDimension;
 }
+ */
 
 - (void)tableView:(UITableView *)tableView
 didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -310,6 +324,79 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
 }
+
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url
+{
+    switch (url.type) {
+        case boardLink: {
+            //открыть борду
+            /*
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+            BoardViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
+            controller.boardId = urlNinja.boardId;
+            [self.navigationController pushViewController:controller animated:YES];
+            */
+            
+            return NO;
+            
+            break;
+        }
+        case boardThreadLink: {
+            // [self openThreadWithUrlNinja:urlNinja];
+            
+            return NO;
+            
+            break;
+        }
+        case boardThreadPostLink: {
+            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
+            if ([_threadNum isEqualToString:url.threadId] && [_boardCode isEqualToString:url.boardId]) {
+                [self openPostWithUrlNinja:url];
+                return YES;
+                /*
+                if ([self.thread.linksReference containsObject:urlNinja.postId]) {
+                    [self openPostWithUrlNinja:urlNinja];
+                    return NO;
+                }
+                 */
+            }
+            // [self openThreadWithUrlNinja:urlNinja];
+        }
+            break;
+        default: {
+            // [self makeExternalLinkActionSheetWithUrl:URL];
+            
+            return NO;
+            
+            break;
+        }
+    }
+    return NO;
+}
+
+- (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
+{
+    
+    NSString *postNum = urlNinja.postId;
+    
+    NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
+    
+    NSArray *arrayOfPosts = [_postsArray filteredArrayUsingPredicate:postNumPredicate];
+    
+    DVBPostObj *post;
+    
+    if ([arrayOfPosts count] > 0) {
+        post = arrayOfPosts[0];
+    }
+    
+    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
+    // NSString *postNum = post.num;
+    threadViewController.postNum = postNum;
+    threadViewController.answersToPost = @[post];
+    threadViewController.isItPostItself = YES;
+    [self.navigationController pushViewController:threadViewController animated:YES];
+}
+
 // Clear prompt of any status / error messages
 - (void)clearPrompt
 {
@@ -334,6 +421,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                        andPostThumbUrlString:thumbUrlString
                          andPostRepliesCount:[postTmpObj.replies count]
                                     andIndex:indexForButton];
+        confCell.threadViewController = self;
 
     }
 }
@@ -489,8 +577,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet
-didDismissWithButtonIndex:(NSInteger)buttonIndex
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     
     if (actionSheet == _postLongPressSheet)
@@ -567,9 +654,7 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
 /**
  *  Function for flag inappropriate content and send it to moderators DB.
  */
-- (void) sendPost:(NSString *)postNum
-         andBoard:(NSString *)board
-    andCompletion:(void (^)(BOOL ))completion
+- (void) sendPost:(NSString *)postNum andBoard:(NSString *)board andCompletion:(void (^)(BOOL ))completion
 {
     NSString *currentPostNum = postNum;
     NSString *currentBoard = board;
@@ -712,6 +797,24 @@ didDismissWithButtonIndex:(NSInteger)buttonIndex
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
     
     NSLog(@"Table updated after posting.");
+}
+
+#pragma mark - Selector checking
+
+#pragma mark - Respoder rewrite
+
+- (BOOL)respondsToSelector:(SEL)selector {
+    static BOOL useSelector;
+    static dispatch_once_t predicate = 0;
+    dispatch_once(&predicate, ^{
+        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
+    });
+    
+    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
+        return useSelector;
+    }
+    
+    return [super respondsToSelector:selector];
 }
 
 @end
