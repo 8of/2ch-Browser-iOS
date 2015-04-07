@@ -35,11 +35,6 @@ static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
 // Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 
-
-// settings for handling long pressure gesture on table cell
-static CGFloat const MINIMUM_PRESS_DURATION = 1.2F;
-static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
-
 @protocol sendDataProtocol <NSObject>
 
 - (void)sendDataToBoard:(NSUInteger)deletedObjectIndex;
@@ -47,9 +42,6 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
 @end
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
-
-// for recofnizing long press on post row
-@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureOnPicture;
 
 // array of posts inside this thread
 @property (nonatomic, strong) NSMutableArray *postsArray;
@@ -70,17 +62,11 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
 
 @property (nonatomic, assign) NSUInteger updatedTimes;
 
-// storage for bad posts, marked on this specific device
-// @property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
-
 // for marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
 
 // test array for new photo browser
 @property (nonatomic, strong) NSMutableArray *photos;
-
-// flagging
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *flagButton;
 
 @end
 
@@ -89,7 +75,7 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    [self toolbarHandler];
     // fix wrong cell sizes
     [self.tableView reloadData];
 }
@@ -101,14 +87,24 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
     [self reloadThread];
 }
 
+- (void)toolbarHandler
+{
+    if (_answersToPost) {
+        [self.navigationController setToolbarHidden:YES animated:NO];
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    }
+    else {
+        [self.navigationController setToolbarHidden:NO animated:NO];
+        [self.navigationItem.rightBarButtonItem setEnabled:YES];
+    }
+}
+
 - (void)prepareViewController
 {
     _opAlreadyDeleted = NO;
-    [self addGestureRecognisers];
+    // [self addGestureRecognisers];
     
     if (_answersToPost) {
-        [self.navigationController setToolbarHidden:YES animated:NO];
-        self.navigationItem.rightBarButtonItem = nil;
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
         }
@@ -165,7 +161,7 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
     
     return subject;
 }
-
+/*
 - (void)addGestureRecognisers
 {
     // setting for long pressure gesture
@@ -176,7 +172,7 @@ static CGFloat const ALLOWABLE_MOVEMENT = 100.0f;
     
     [self.tableView addGestureRecognizer:_longPressGestureOnPicture];
 }
-
+*/
 #pragma mark - Table view
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -531,6 +527,23 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
+- (IBAction)showPostActions:(id)sender
+{
+    UIButton *answerButton = sender;
+    NSUInteger buttonClickedIndex = answerButton.tag;
+    DVBPost *post = _postsArray[buttonClickedIndex];
+    // setting variable to bad post number (we'll use it soon)
+    _flaggedPostNum = post.num;
+    _selectedWithLongPressSection = buttonClickedIndex;
+    _postLongPressSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                      delegate:self
+                                             cancelButtonTitle:@"Отмена"
+                                        destructiveButtonTitle:nil
+                                             otherButtonTitles:@"Ответить", @"Открыть в браузере", @"Пожаловаться", nil];
+    
+    [_postLongPressSheet showInView:self.tableView];
+}
+
 #pragma mark - Navigation
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier
@@ -549,31 +562,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
         createPostViewController.threadNum = _threadNum;
         createPostViewController.boardCode = _boardCode;
         createPostViewController.createPostViewControllerDelegate = self;
-    }
-}
-
-- (void)handleLongPressGestures:(UILongPressGestureRecognizer *)gestureRecognizer
-{
-    // try to understand on which cell we performed long press gesture
-    CGPoint p = [gestureRecognizer locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
-    
-    if (gestureRecognizer.state == UIGestureRecognizerStateBegan)
-    {
-        
-        DVBPost *postObj = [_postsArray objectAtIndex:indexPath.section];
-        
-        // setting variable to bad post number (we'll use it soon)
-        _flaggedPostNum = postObj.num;
-        
-        _selectedWithLongPressSection = (NSUInteger)indexPath.section;
-        _postLongPressSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                          delegate:self
-                                                 cancelButtonTitle:@"Отмена"
-                                            destructiveButtonTitle:nil
-                                                 otherButtonTitles:@"Ответить", @"Открыть в браузере", @"Пожаловаться", nil];
-        
-        [_postLongPressSheet showInView:self.tableView];
     }
 }
 
@@ -737,21 +725,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                               otherButtonTitles:@"OK", nil];
     [alertView setTag:1];
     [alertView show];
-}
-
-- (IBAction)reportButtonAction:(id)sender
-{
-    /**
-     *  Report entire thread (all for mods).
-     */
-    [self sendPost:_threadNum andBoard:_boardCode andCompletion:^(BOOL done)
-    {
-        NSLog(@"Post complaint sent.");
-        if (done)
-        {
-            [self deletePostWithIndex:_selectedWithLongPressSection fromMutableArray:_postsArray andFlaggedPostNum:_flaggedPostNum];
-        }
-    }];
 }
 
 #pragma mark - Photo gallery
