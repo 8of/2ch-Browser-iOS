@@ -9,7 +9,7 @@
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
-#import "DVBPostObj.h"
+#import "DVBPost.h"
 #import "DVBPostPreparation.h"
 #import "DVBBadPostStorage.h"
 #import "DVBBadPost.h"
@@ -146,7 +146,7 @@
                     
                 }
                 
-                DVBPostObj *postObj = [[DVBPostObj alloc] initWithNum:num
+                DVBPost *postObj = [[DVBPost alloc] initWithNum:num
                                                               subject:subject
                                                               comment:attributedComment
                                                                  path:picPath
@@ -167,13 +167,13 @@
             
             NSUInteger currentPostIndex = 0;
             
-            for (DVBPostObj *post in semiResultArray) {
+            for (DVBPost *post in semiResultArray) {
                 NSMutableArray *delete = [NSMutableArray array];
                 for (NSString *replyTo in post.repliesTo) {
                     NSInteger index = [_postNumArray indexOfObject:replyTo];
                     
                     if (index != NSNotFound) {
-                        DVBPostObj *replyPost = semiResultMutableArray[index];
+                        DVBPost *replyPost = semiResultMutableArray[index];
                         [replyPost.replies addObject:post];
                         // NSLog(@"added: %@ to post # %@", replyPost.num, post.num);
                     }
@@ -182,7 +182,7 @@
                     }
                 }
                 
-                DVBPostObj *postForChangeReplyTo = semiResultMutableArray[currentPostIndex];
+                DVBPost *postForChangeReplyTo = semiResultMutableArray[currentPostIndex];
                 for (NSString *replyTo in delete) {
                     [postForChangeReplyTo.repliesTo removeObject:replyTo];
                 }
@@ -231,7 +231,7 @@
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
 {
     NSMutableArray *thumbMutableArray = [NSMutableArray array];
-    for (DVBPostObj *post in postsArray) {
+    for (DVBPost *post in postsArray) {
         NSString *thumbPath = post.thumbPath;
         BOOL isThumbPathNotEmpty = ![thumbPath isEqualToString:@""];
         if (isThumbPathNotEmpty) {
@@ -246,7 +246,7 @@
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray
 {
     NSMutableArray *fullImagesMutableArray = [NSMutableArray array];
-    for (DVBPostObj *post in postsArray) {
+    for (DVBPost *post in postsArray) {
         NSString *fullImagePath = post.path;
         BOOL isFullImagePathNotEmpty = ![fullImagePath isEqualToString:@""];
         if (isFullImagePathNotEmpty) {

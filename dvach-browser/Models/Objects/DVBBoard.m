@@ -1,14 +1,14 @@
 //
-//  DVBBoardObj.m
+//  DVBBoard.m
 //  dvach-browser
 //
 //  Created by Andy on 16/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import "DVBBoardObj.h"
+#import "DVBBoard.h"
 
-@implementation DVBBoardObj
+@implementation DVBBoard
 
 @dynamic boardId;
 @dynamic name;

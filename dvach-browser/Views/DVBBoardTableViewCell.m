@@ -22,7 +22,7 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)prepareCellWithBoardObject: (DVBBoardObj *)boardObject
+- (void)prepareCellWithBoardObject: (DVBBoard *)boardObject
 {
     NSString *name = boardObject.name;
     NSString *boardId = boardObject.boardId;

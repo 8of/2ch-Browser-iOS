@@ -19,12 +19,15 @@ static CGFloat const TEXTVIEW_INSET = 8;
 @property (nonatomic) IBOutlet UITextView *commentTextView;
 // post thumbnail
 @property (nonatomic) IBOutlet UIImageView *postThumb;
-
+// show answer to post button
 @property (weak, nonatomic) IBOutlet UIButton *answerButton;
+// show action sheet for the post
+@property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
 // Constraints
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageLeftConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageHeightConstraint;
 
 @end
 
@@ -41,8 +44,11 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     NSString *answerButtonPretext = NSLocalizedString(@"Ответы", "Надпись на кнопке к посту для показа количества ответов и перехода к ним");
     NSString *answerButtonPretextNoAnswers = NSLocalizedString(@"Нет ответов", "Надпись на кнопке к посту для показа количества ответов и перехода к ним когда ответов нет");
+    NSString *actionButtonPretext = NSLocalizedString(@"Действия", "Надпись на кнопке Действия если действия доступны");
+    NSString *actionButtonPretextNoAnswers = NSLocalizedString(@"", "Надпись на кнопке Действия если действия не доступны");
     
     NSString *answerButtonTitle;
+    NSString *actionButtonTitle;
     
     if (postRepliesCount > 0) {
         answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, (unsigned long)postRepliesCount];
@@ -52,10 +58,24 @@ static CGFloat const TEXTVIEW_INSET = 8;
         [_answerButton setEnabled:NO];
     }
     
+    if (_disableActionButton) {
+        actionButtonTitle = actionButtonPretextNoAnswers;
+        [_actionButton setEnabled:NO];
+    }
+    else {
+        actionButtonTitle = actionButtonPretext;
+    }
+    
     [_answerButton setTitle:answerButtonTitle forState:UIControlStateNormal];
     [_answerButton sizeToFit];
     _answerButton.tag = index;
-
+    
+    // prepare action button
+    _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    [_actionButton setTitle:actionButtonTitle forState:UIControlStateNormal];
+    [_actionButton sizeToFit];
+    _actionButton.tag = index;
+    
     // for more tidy images and keep aspect ratio
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
@@ -85,7 +105,9 @@ static CGFloat const TEXTVIEW_INSET = 8;
     {
         _imageLeftConstraint.constant = 0;
         _imageWidthConstraint.constant = 0;
+        _imageHeightConstraint.constant = 0;
         _isPostHaveImage = NO;
+        // [self removeConstraint:_actionsButtonTopConstraint];
     }
 }
 
@@ -102,7 +124,8 @@ static CGFloat const TEXTVIEW_INSET = 8;
     [_answerButton sizeToFit];
     _answerButton.titleLabel.preferredMaxLayoutWidth = CGRectGetWidth(_answerButton.titleLabel.frame);
     
-    // _commentTextView.preferredMaxLayoutWidth = CGRectGetWidth(_commentTextView.frame);
+    [_actionButton sizeToFit];
+    _actionButton.titleLabel.preferredMaxLayoutWidth = CGRectGetWidth(_actionButton.titleLabel.frame);
 }
 
 // fix problems with autolayout
@@ -126,9 +149,12 @@ static CGFloat const TEXTVIEW_INSET = 8;
     
     _imageLeftConstraint.constant = 8.0f;
     _imageWidthConstraint.constant = 65.0f;
+    _imageHeightConstraint.constant = 65.0f;
     _isPostHaveImage = YES;
     
     [_answerButton setEnabled:YES];
+    
+    [_actionButton setEnabled:YES];
     
     [self setNeedsUpdateConstraints];
     [self.layer removeAllAnimations];
