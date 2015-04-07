@@ -418,6 +418,9 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                          andPostRepliesCount:[postTmpObj.replies count]
                                     andIndex:indexForButton];
         confCell.threadViewController = self;
+        if (_answersToPost) {
+            confCell.disableActionButton = YES;
+        }
 
     }
 }
