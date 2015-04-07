@@ -12,8 +12,10 @@
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
 		84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */; };
-		84653B701ABB660400F0BD19 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 84653B6D1ABB660400F0BD19 /* GTMNSString+HTML.m */; };
-		84653B711ABB660400F0BD19 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 84653B6F1ABB660400F0BD19 /* NSString+HTML.m */; };
+		8497BF2C1AD3F978001616C2 /* UrlNinja.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF2B1AD3F978001616C2 /* UrlNinja.m */; };
+		8497BF341AD3F98F001616C2 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */; };
+		8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF311AD3F98F001616C2 /* NSString+HTML.m */; };
+		8497BF361AD3F98F001616C2 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF331AD3F98F001616C2 /* Reachability.m */; };
 		84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */; };
 		84CFC51019E1526E004D0BB8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC50F19E1526E004D0BB8 /* main.m */; };
 		84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC51219E1526E004D0BB8 /* AppDelegate.m */; };
@@ -51,9 +53,7 @@
 		A155FF1F1AB7366000BE31F4 /* DVBBoardTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1A1AB7366000BE31F4 /* DVBBoardTableViewCell.m */; };
 		A155FF201AB7366000BE31F4 /* DVBPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1C1AB7366000BE31F4 /* DVBPostTableViewCell.m */; };
 		A155FF211AB7366000BE31F4 /* DVBThreadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF1E1AB7366000BE31F4 /* DVBThreadTableViewCell.m */; };
-		A155FF2A1AB736B800BE31F4 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF271AB736B800BE31F4 /* Reachability.m */; };
 		A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */; };
-		A15664F51ABB22DF00280558 /* UrlNinja.m in Sources */ = {isa = PBXBuildFile; fileRef = A15664F41ABB22DF00280558 /* UrlNinja.m */; };
 		A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */; };
 /* End PBXBuildFile section */
 
@@ -74,10 +74,14 @@
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		84653B691ABB61C800F0BD19 /* DVBPostPreparation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostPreparation.h; path = Models/DVBPostPreparation.h; sourceTree = "<group>"; };
 		84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPreparation.m; path = Models/DVBPostPreparation.m; sourceTree = "<group>"; };
-		84653B6C1ABB660400F0BD19 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Third party/Other/GTMNSString+HTML.h"; sourceTree = SOURCE_ROOT; };
-		84653B6D1ABB660400F0BD19 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "Third party/Other/GTMNSString+HTML.m"; sourceTree = SOURCE_ROOT; };
-		84653B6E1ABB660400F0BD19 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "Third party/Other/NSString+HTML.h"; sourceTree = SOURCE_ROOT; };
-		84653B6F1ABB660400F0BD19 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "Third party/Other/NSString+HTML.m"; sourceTree = SOURCE_ROOT; };
+		8497BF2A1AD3F978001616C2 /* UrlNinja.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UrlNinja.h; path = Helpers/UrlNinja.h; sourceTree = "<group>"; };
+		8497BF2B1AD3F978001616C2 /* UrlNinja.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UrlNinja.m; path = Helpers/UrlNinja.m; sourceTree = "<group>"; };
+		8497BF2E1AD3F98F001616C2 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Helpers/Third party/GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "GTMNSString+HTML.m"; path = "Helpers/Third party/GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		8497BF301AD3F98F001616C2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "Helpers/Third party/NSString+HTML.h"; sourceTree = "<group>"; };
+		8497BF311AD3F98F001616C2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "Helpers/Third party/NSString+HTML.m"; sourceTree = "<group>"; };
+		8497BF321AD3F98F001616C2 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = "Helpers/Third party/Reachability.h"; sourceTree = "<group>"; };
+		8497BF331AD3F98F001616C2 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = "Helpers/Third party/Reachability.m"; sourceTree = "<group>"; };
 		84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		84CFC50A19E1526E004D0BB8 /* dvach-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dvach-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CFC50E19E1526E004D0BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -147,12 +151,8 @@
 		A155FF1C1AB7366000BE31F4 /* DVBPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostTableViewCell.m; path = Views/DVBPostTableViewCell.m; sourceTree = "<group>"; };
 		A155FF1D1AB7366000BE31F4 /* DVBThreadTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadTableViewCell.h; path = Views/DVBThreadTableViewCell.h; sourceTree = "<group>"; };
 		A155FF1E1AB7366000BE31F4 /* DVBThreadTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadTableViewCell.m; path = Views/DVBThreadTableViewCell.m; sourceTree = "<group>"; };
-		A155FF261AB736B800BE31F4 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = "Third party/Other/Reachability.h"; sourceTree = SOURCE_ROOT; };
-		A155FF271AB736B800BE31F4 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = "Third party/Other/Reachability.m"; sourceTree = SOURCE_ROOT; };
 		A155FF581AB736F100BE31F4 /* DVBDismissSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDismissSegue.h; path = Segues/DVBDismissSegue.h; sourceTree = "<group>"; };
 		A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDismissSegue.m; path = Segues/DVBDismissSegue.m; sourceTree = "<group>"; };
-		A15664F31ABB22DF00280558 /* UrlNinja.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UrlNinja.h; path = "Third party/Other/UrlNinja.h"; sourceTree = SOURCE_ROOT; };
-		A15664F41ABB22DF00280558 /* UrlNinja.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UrlNinja.m; path = "Third party/Other/UrlNinja.m"; sourceTree = SOURCE_ROOT; };
 		A15895FE1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBrowserViewControllerBuilder.h; path = Controllers/DVBBrowserViewControllerBuilder.h; sourceTree = "<group>"; };
 		A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBrowserViewControllerBuilder.m; path = Controllers/DVBBrowserViewControllerBuilder.m; sourceTree = "<group>"; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,13 +182,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		847CB87219EC50060093FDE1 /* Third Party */ = {
+		8497BF2D1AD3F97D001616C2 /* Third party */ = {
 			isa = PBXGroup;
 			children = (
-				9479E4EF1A782821003C59BB /* Other */,
+				8497BF2E1AD3F98F001616C2 /* GTMNSString+HTML.h */,
+				8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */,
+				8497BF301AD3F98F001616C2 /* NSString+HTML.h */,
+				8497BF311AD3F98F001616C2 /* NSString+HTML.m */,
+				8497BF321AD3F98F001616C2 /* Reachability.h */,
+				8497BF331AD3F98F001616C2 /* Reachability.m */,
 			);
-			name = "Third Party";
-			path = "dvach-browser";
+			name = "Third party";
 			sourceTree = "<group>";
 		};
 		84CF8C861A0E556C00585D88 /* Objects */ = {
@@ -234,7 +238,6 @@
 		84CFC50119E1526E004D0BB8 = {
 			isa = PBXGroup;
 			children = (
-				847CB87219EC50060093FDE1 /* Third Party */,
 				84CFC50C19E1526E004D0BB8 /* dvach-browser */,
 				84CFC52619E1526E004D0BB8 /* dvach-browserTests */,
 				A1ADDCC419E7B7C2009E47EA /* Frameworks */,
@@ -329,25 +332,13 @@
 		9436ADD31AD1B81500785710 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8497BF2D1AD3F97D001616C2 /* Third party */,
+				8497BF2A1AD3F978001616C2 /* UrlNinja.h */,
+				8497BF2B1AD3F978001616C2 /* UrlNinja.m */,
 				9436ADD41AD1B83B00785710 /* DateFormatter.h */,
 				9436ADD51AD1B83B00785710 /* DateFormatter.m */,
 			);
 			name = Helpers;
-			sourceTree = "<group>";
-		};
-		9479E4EF1A782821003C59BB /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				84653B6C1ABB660400F0BD19 /* GTMNSString+HTML.h */,
-				84653B6D1ABB660400F0BD19 /* GTMNSString+HTML.m */,
-				84653B6E1ABB660400F0BD19 /* NSString+HTML.h */,
-				84653B6F1ABB660400F0BD19 /* NSString+HTML.m */,
-				A15664F31ABB22DF00280558 /* UrlNinja.h */,
-				A15664F41ABB22DF00280558 /* UrlNinja.m */,
-				A155FF261AB736B800BE31F4 /* Reachability.h */,
-				A155FF271AB736B800BE31F4 /* Reachability.m */,
-			);
-			name = Other;
 			sourceTree = "<group>";
 		};
 		9DEEB8F279E1E1CC7340EF72 /* Pods */ = {
@@ -542,6 +533,7 @@
 				A155FF201AB7366000BE31F4 /* DVBPostTableViewCell.m in Sources */,
 				A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */,
 				A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */,
+				8497BF341AD3F98F001616C2 /* GTMNSString+HTML.m in Sources */,
 				A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */,
 				A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */,
 				A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */,
@@ -551,26 +543,25 @@
 				A155FF211AB7366000BE31F4 /* DVBThreadTableViewCell.m in Sources */,
 				A155FF141AB7362A00BE31F4 /* DVBBadPost.m in Sources */,
 				A155FEF21AB7355600BE31F4 /* DVBCreatePostViewController.m in Sources */,
+				8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */,
+				8497BF2C1AD3F978001616C2 /* UrlNinja.m in Sources */,
 				A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */,
 				A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
-				A15664F51ABB22DF00280558 /* UrlNinja.m in Sources */,
 				A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */,
-				84653B711ABB660400F0BD19 /* NSString+HTML.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
 				A155FF1F1AB7366000BE31F4 /* DVBBoardTableViewCell.m in Sources */,
 				A155FEF31AB7355600BE31F4 /* DVBSettingsTableViewController.m in Sources */,
 				9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */,
-				A155FF2A1AB736B800BE31F4 /* Reachability.m in Sources */,
 				A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */,
 				A155FF081AB735DD00BE31F4 /* DVBNetworking.m in Sources */,
 				84CFC51019E1526E004D0BB8 /* main.m in Sources */,
 				A155FF031AB735DD00BE31F4 /* DVBAlertViewGenerator.m in Sources */,
+				8497BF361AD3F98F001616C2 /* Reachability.m in Sources */,
 				A15552381ABC3CD500E7DB1D /* DVBWrapMenuItem.m in Sources */,
-				84653B701ABB660400F0BD19 /* GTMNSString+HTML.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
