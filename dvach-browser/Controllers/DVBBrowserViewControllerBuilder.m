@@ -21,8 +21,6 @@
 
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray {
     
-    NSLog(@"Current photo: %ld", (unsigned long)index);
-    
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;
     

@@ -159,18 +159,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
     
     return subject;
 }
-/*
-- (void)addGestureRecognisers
-{
-    // setting for long pressure gesture
-    _longPressGestureOnPicture = [[UILongPressGestureRecognizer alloc] initWithTarget:self
-                                                                               action:@selector(handleLongPressGestures:)];
-    _longPressGestureOnPicture.minimumPressDuration = MINIMUM_PRESS_DURATION;
-    _longPressGestureOnPicture.allowableMovement = ALLOWABLE_MOVEMENT;
-    
-    [self.tableView addGestureRecognizer:_longPressGestureOnPicture];
-}
-*/
+
 #pragma mark - Table view
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -477,6 +466,9 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)reloadThread {
     if (_answersToPost) {
         _postsArray = [_answersToPost mutableCopy];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }
     else {
         [self getPostsWithBoard:_boardCode
@@ -484,11 +476,11 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                   andCompletion:^(NSArray *postsArrayBlock)
         {
             _postsArray = [postsArrayBlock mutableCopy];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
         }];
     }
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
 }
 
 - (void)reloadThreadFromOutside
