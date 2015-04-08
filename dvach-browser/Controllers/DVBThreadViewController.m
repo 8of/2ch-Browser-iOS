@@ -44,15 +44,15 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // array of posts inside this thread
-@property (nonatomic, strong) NSMutableArray *postsArray;
+@property (nonatomic, strong) NSArray *postsArray;
 
 // model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
 
 // array of all post thumb images in thread
-@property (nonatomic, strong) NSMutableArray *thumbImagesArray;
+@property (nonatomic, strong) NSArray *thumbImagesArray;
 // array of all post full images in thread
-@property (nonatomic, strong) NSMutableArray *fullImagesArray;
+@property (nonatomic, strong) NSArray *fullImagesArray;
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
 
 // action sheet for displaying bad posts flaggind (and maybe somethig more later)
@@ -76,8 +76,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 {
     [super viewDidAppear:animated];
     [self toolbarHandler];
-    // fix wrong cell sizes
-    [self.tableView reloadData];
 }
 
 - (void)viewDidLoad
@@ -282,8 +280,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 }
  */
 
-- (void)tableView:(UITableView *)tableView
-didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPost *selectedPost = _postsArray[indexPath.section];
     // NSString *thumbUrl = selectedPost.thumbPath;
@@ -626,7 +623,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                     NSLog(@"Post complaint sent.");
                     if (done)
                     {
-                        [self deletePostWithIndex:_selectedWithLongPressSection fromMutableArray:_postsArray andFlaggedPostNum:_flaggedPostNum];
+                        [self deletePostWithIndex:_selectedWithLongPressSection andFlaggedPostNum:_flaggedPostNum];
                     }
                 }];
                 break;
@@ -698,9 +695,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-- (void)deletePostWithIndex:(NSUInteger)index
-           fromMutableArray:(NSMutableArray *)array
-          andFlaggedPostNum:(NSString *)flaggedPostNum
+- (void)deletePostWithIndex:(NSUInteger)index andFlaggedPostNum:(NSString *)flaggedPostNum
 {
     [_threadModel flagPostWithIndex:index andFlaggedPostNum:flaggedPostNum andOpAlreadyDeleted:_opAlreadyDeleted];
     
