@@ -19,37 +19,37 @@
 /**
  *  Number of the post.
  */
-@property (strong, nonatomic) NSString *num;
+@property (nonatomic, strong, readonly) NSString *num;
 /**
  *  Subject of the post (for section title in thread View Controller and thread View Controller title).
  */
-@property (strong, nonatomic) NSString *subject;
+@property (nonatomic, strong, readonly) NSString *subject;
 /**
  *  Text of post message.
  */
-@property (strong, nonatomic) NSAttributedString *comment;
+@property (nonatomic, strong, readonly) NSAttributedString *comment;
 /**
  *  Path for post's full image.
  */
-@property (strong, nonatomic) NSString *path;
+@property (nonatomic, strong, readonly) NSString *path;
 /**
  *  Path for post's thumnail image.
  */
-@property (strong, nonatomic) NSString *thumbPath;
+@property (nonatomic, strong, readonly) NSString *thumbPath;
 /**
  *  Absolute date
  */
-@property (nonatomic, strong) NSString *date;
+@property (nonatomic, strong, readonly) NSString *date;
 /**
  *  Relative date to NOW date
  */
-@property (nonatomic, strong) NSString *dateAgo;
+@property (nonatomic, strong, readonly) NSString *dateAgo;
 /**
- *  Replies to this post from other posts in the thread
+ *  Replies to this post from other posts in the thread / need to be mutable, as we change it afer creating
  */
 @property (nonatomic, strong) NSMutableArray *replies;
 /**
- *  Replies to other posts in this post, children of the same thread
+ *  Replies to other posts in this post, children of the same thread / need to be mutable, as we change it afer creating
  */
 @property (nonatomic, strong) NSMutableArray *repliesTo;
 

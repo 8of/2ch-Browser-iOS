@@ -20,6 +20,8 @@
 @property (nonatomic, strong) NSString *boardCode;
 @property (nonatomic, strong) NSString *threadNum;
 @property (nonatomic, strong) NSMutableArray *privatePostsArray;
+@property (nonatomic, strong) NSMutableArray *privateThumbImagesArray;
+@property (nonatomic, strong) NSMutableArray *privateFullImagesArray;
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBPostPreparation *postPreparation;
 // storage for bad posts, marked on this specific device
@@ -46,7 +48,6 @@
         _boardCode = boardCode;
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
-        _privatePostsArray = [NSMutableArray array];
         _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode andThreadId:threadNum];
         
         /**
@@ -73,10 +74,10 @@
                              andThread:_threadNum
                          andCompletion:^(NSDictionary *postsDictionary)
         {
-            NSMutableArray *postsFullMutArray = [NSMutableArray array];
+            _privatePostsArray = [NSMutableArray array];
+            _privateThumbImagesArray = [NSMutableArray array];
+            _privateFullImagesArray = [NSMutableArray array];
             
-            _thumbImagesArray = [[NSMutableArray alloc] init];
-            _fullImagesArray = [[NSMutableArray alloc] init];
             
             NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
             
@@ -127,7 +128,7 @@
                     
                     thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"thumbnail"]];
                     
-                    [_thumbImagesArray addObject:thumbPath];
+                    [_privateThumbImagesArray addObject:thumbPath];
                     
                     if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
                     {
@@ -142,7 +143,7 @@
                         picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"path"]];
                     }
                     
-                    [_fullImagesArray addObject:picPath];
+                    [_privateFullImagesArray addObject:picPath];
                     
                 }
                 
@@ -154,14 +155,17 @@
                                                                  date:date
                                                               dateAgo:dateAgo
                                                             repliesTo:repliesToArray];
-                [postsFullMutArray addObject:postObj];
+                [_privatePostsArray addObject:postObj];
                 postObj = nil;
             }
+            
+            _thumbImagesArray = _privateThumbImagesArray;
+            _fullImagesArray = _privateFullImagesArray;
             
             _postNumArray = postNumMutableArray;
             
             // array with almost all info - BUT without final ANSWERS array for every post
-            NSArray *semiResultArray = [[NSArray alloc] initWithArray:postsFullMutArray];
+            NSArray *semiResultArray = [[NSArray alloc] initWithArray:_privatePostsArray];
             
             NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
             
@@ -175,7 +179,6 @@
                     if (index != NSNotFound) {
                         DVBPost *replyPost = semiResultMutableArray[index];
                         [replyPost.replies addObject:post];
-                        // NSLog(@"added: %@ to post # %@", replyPost.num, post.num);
                     }
                     else {
                         [delete addObject:replyTo];
@@ -193,6 +196,8 @@
             }
             NSArray *resultArray = semiResultMutableArray;
             
+            _postsArray = resultArray;
+            
             completion(resultArray);
         }];
     }
@@ -207,7 +212,8 @@
         andFlaggedPostNum:(NSString *)flaggedPostNum
       andOpAlreadyDeleted:(BOOL)opAlreadyDeleted
 {
-    [_postsArray removeObjectAtIndex:index];
+    [_privatePostsArray removeObjectAtIndex:index];
+    _postsArray = _privatePostsArray;
     BOOL threadOrNot = NO;
     if ((index == 0)&&(!opAlreadyDeleted))
     {
@@ -230,32 +236,32 @@
 
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    NSMutableArray *thumbMutableArray = [NSMutableArray array];
+    _privateThumbImagesArray = [NSMutableArray array];
     for (DVBPost *post in postsArray) {
         NSString *thumbPath = post.thumbPath;
         BOOL isThumbPathNotEmpty = ![thumbPath isEqualToString:@""];
         if (isThumbPathNotEmpty) {
-            [thumbMutableArray addObject:thumbPath];
+            [_privateThumbImagesArray addObject:thumbPath];
         }
     }
-    NSArray *returnThumbsArray = thumbMutableArray;
+    _thumbImagesArray = _privateThumbImagesArray;
     
-    return returnThumbsArray;
+    return _thumbImagesArray;
 }
 
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    NSMutableArray *fullImagesMutableArray = [NSMutableArray array];
+    _privateFullImagesArray = [NSMutableArray array];
     for (DVBPost *post in postsArray) {
         NSString *fullImagePath = post.path;
         BOOL isFullImagePathNotEmpty = ![fullImagePath isEqualToString:@""];
         if (isFullImagePathNotEmpty) {
-            [fullImagesMutableArray addObject:fullImagePath];
+            [_privateFullImagesArray addObject:fullImagePath];
         }
     }
-    NSArray *returnFullImagesArray = fullImagesMutableArray;
+   _fullImagesArray = _privateFullImagesArray;
     
-    return returnFullImagesArray;
+    return _fullImagesArray;
 }
 
 @end

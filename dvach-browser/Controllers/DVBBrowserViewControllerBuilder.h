@@ -13,7 +13,7 @@
 @property (nonatomic, assign) NSUInteger index;
 
 - (void)prepareWithIndex:(NSUInteger)index
-     andThumbImagesArray:(NSMutableArray *)thumbImagesArray
-      andFullImagesArray:(NSMutableArray *)fullImagesArray;
+     andThumbImagesArray:(NSArray *)thumbImagesArray
+      andFullImagesArray:(NSArray *)fullImagesArray;
 
 @end

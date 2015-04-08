@@ -14,11 +14,11 @@
 /**
  *  Array contains all posts in the thread
  */
-@property (nonatomic, strong, readonly) NSMutableArray *postsArray;
+@property (nonatomic, strong, readonly) NSArray *postsArray;
 // array of all post thumb images in thread
-@property (nonatomic, strong) NSMutableArray *thumbImagesArray;
+@property (nonatomic, strong) NSArray *thumbImagesArray;
 // array of all post full images in thread
-@property (nonatomic, strong) NSMutableArray *fullImagesArray;
+@property (nonatomic, strong) NSArray *fullImagesArray;
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode
                      andThreadNum:(NSString *)threadNum;
