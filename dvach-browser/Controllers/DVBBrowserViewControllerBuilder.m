@@ -11,17 +11,15 @@
 @interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate>
 
 // array of all post thumb images in thread
-@property (nonatomic, strong) NSMutableArray *thumbImagesArray;
+@property (nonatomic, strong) NSArray *thumbImagesArray;
 // array of all post full images in thread
-@property (nonatomic, strong) NSMutableArray *fullImagesArray;
+@property (nonatomic, strong) NSArray *fullImagesArray;
 
 @end
 
 @implementation DVBBrowserViewControllerBuilder
 
-- (void)prepareWithIndex:(NSUInteger)index
-     andThumbImagesArray:(NSMutableArray *)thumbImagesArray
-      andFullImagesArray:(NSMutableArray *)fullImagesArray {
+- (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray {
     
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;
@@ -45,8 +43,7 @@
     return [_fullImagesArray count];
 }
 
-- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser
-                photoAtIndex:(NSUInteger)index
+- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index
 {
     
     if (index < _fullImagesArray.count)
