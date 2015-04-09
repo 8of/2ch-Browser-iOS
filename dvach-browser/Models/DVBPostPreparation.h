@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DVBPost.h"
 
 @interface DVBPostPreparation : NSObject
 /**
@@ -30,5 +31,32 @@
  *  @return attributed string with 2ch markup
  */
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment;
+
+/**
+ *  Strips off tags from poster's name
+ *
+ *  @param name name in HTML format with tags
+ *
+ *  @return plain name without HTML tags
+ */
+- (NSString *)cleanPosterNameWithHtmlPosterName:(NSString *)name;
+
+/**
+ *  Check email field for 'sage' keyword
+ *
+ *  @param email email-field directly from server
+ *
+ *  @return sage flag
+ */
+- (BOOL)isPostContaintSageWithEmail:(NSString *)email;
+
+/**
+ *  Check what type of media presented in post
+ *
+ *  @param picPath path of 'full' media file
+ *
+ *  @return type of the media attached to the post
+ */
+- (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath;
 
 @end
