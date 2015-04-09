@@ -16,6 +16,12 @@
 
 @interface DVBPost : NSObject
 
+typedef NS_ENUM(NSUInteger, DVBPostMediaType) {
+    noMedia,
+    image,
+    webm
+};
+
 /**
  *  Number of the post.
  */
@@ -28,6 +34,10 @@
  *  Text of post message.
  */
 @property (nonatomic, strong, readonly) NSAttributedString *comment;
+/**
+ *  Type of the media in the post
+ */
+@property (nonatomic, assign, readonly) DVBPostMediaType mediaType;
 /**
  *  Path for post's full image.
  */
@@ -45,6 +55,11 @@
  */
 @property (nonatomic, strong, readonly) NSString *dateAgo;
 /**
+ *  Name of the author of the post
+ */
+@property (nonatomic, strong, readonly) NSString *name;
+@property (nonatomic, assign, readonly) BOOL sage;
+/**
  *  Replies to this post from other posts in the thread / need to be mutable, as we change it afer creating
  */
 @property (nonatomic, strong) NSMutableArray *replies;
@@ -53,6 +68,6 @@
  */
 @property (nonatomic, strong) NSMutableArray *repliesTo;
 
-- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSArray *)postRepliesTo;
+- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSArray *)postRepliesTo mediaType:(DVBPostMediaType)mediaType name:(NSString *)name sage:(BOOL)sage;
 
 @end
