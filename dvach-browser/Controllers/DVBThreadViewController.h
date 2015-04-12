@@ -35,6 +35,7 @@
  */
 @property (nonatomic, strong) NSArray *answersToPost;
 @property (nonatomic, assign) BOOL isItPostItself;
+@property (nonatomic, strong) NSArray *allThreadPosts;
 /**
  *  Post number - use if we show answers for specific post
  */

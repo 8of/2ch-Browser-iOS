@@ -325,15 +325,25 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         }
         case boardThreadLink: {
             // [self openThreadWithUrlNinja:urlNinja];
-            
+
             return NO;
             
             break;
         }
         case boardThreadPostLink: {
+
+            // if we do not have boardId of threadNum assidned - we take them from passed url
+            if (!_threadNum) {
+                _threadNum = url.threadId;
+            }
+            if (!_boardCode) {
+                _boardCode = url.boardId;
+            }
+
             //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
             if ([_threadNum isEqualToString:url.threadId] && [_boardCode isEqualToString:url.boardId]) {
                 [self openPostWithUrlNinja:url];
+
                 return YES;
                 /*
                 if ([self.thread.linksReference containsObject:urlNinja.postId]) {
@@ -347,13 +357,15 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             break;
         default: {
             // [self makeExternalLinkActionSheetWithUrl:URL];
-            
+
             return NO;
             
             break;
         }
     }
-    return NO;
+    NSLog(@"url type: %lu", (unsigned long)url.type);
+
+    return YES;
 }
 
 - (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
@@ -364,18 +376,41 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
     
     NSArray *arrayOfPosts = [_postsArray filteredArrayUsingPredicate:postNumPredicate];
-    
+
     DVBPost *post;
     
-    if ([arrayOfPosts count] > 0) {
+    if ([arrayOfPosts count] > 0) { // check our regular array first
         post = arrayOfPosts[0];
+    }
+    else if (_allThreadPosts) { // if it didn't work - check our full array
+        arrayOfPosts = [_allThreadPosts filteredArrayUsingPredicate:postNumPredicate];
+
+        if ([arrayOfPosts count] > 0) {
+            post = arrayOfPosts[0];
+        }
+        else { // end method if we can't find posts
+            return;
+        }
+    }
+    else { // if we do not have allThreadsArray AND can't find post in regular array (impossible but just in case...)
+        return;
     }
     
     DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
-    // NSString *postNum = post.num;
-    threadViewController.postNum = postNum;
+
+    // because we need title to show us real current postNum - so if we open link from post - id from link need to be our new View Controller title
+    threadViewController.postNum = post.num;
     threadViewController.answersToPost = @[post];
     threadViewController.isItPostItself = YES;
+
+    // check if we have full array of posts
+    if (_allThreadPosts) { // if we have - then just pass it further
+        threadViewController.allThreadPosts = _allThreadPosts;
+    }
+    else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
+        threadViewController.allThreadPosts = _postsArray;
+    }
+
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
@@ -516,6 +551,15 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     NSString *postNum = post.num;
     threadViewController.postNum = postNum;
     threadViewController.answersToPost = post.replies;
+
+    // check if we have full array of posts
+    if (_allThreadPosts) { // if we have - then just pass it further
+        threadViewController.allThreadPosts = _allThreadPosts;
+    }
+    else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
+        threadViewController.allThreadPosts = _postsArray;
+    }
+
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
