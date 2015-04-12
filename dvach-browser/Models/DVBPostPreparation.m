@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "DVBPostPreparation.h"
 #import "UrlNinja.h"
+#import "NSString+HTML.h"
 
 @interface DVBPostPreparation ()
 
@@ -254,6 +255,31 @@
     [[maComment mutableString] replaceOccurrencesOfString:@"&amp;" withString:@"&" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     
     return maComment;
+}
+
+- (NSString *)cleanPosterNameWithHtmlPosterName:(NSString *)name {
+    NSString *plainTextName = [name stringByConvertingHTMLToPlainText];
+    
+    return plainTextName;
+}
+
+- (BOOL)isPostContaintSageWithEmail:(NSString *)email {
+    NSString *sageStringToLookFor = @"sage";
+    if ([email rangeOfString:sageStringToLookFor options:NSCaseInsensitiveSearch].location != NSNotFound) {
+        return YES;
+    }
+    return NO;
+}
+
+- (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath {
+    
+    // We already know that there is media in the post - we need to know which type of media we have here
+    BOOL isContainWebm = ([picPath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
+    if (isContainWebm) {
+        return webm;
+    }
+    
+    return image;
 }
 
 @end

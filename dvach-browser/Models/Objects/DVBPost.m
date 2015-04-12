@@ -10,7 +10,7 @@
 
 @implementation DVBPost
 
-- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSMutableArray *)postRepliesTo {
+- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment path:(NSString *)postPicPath thumbPath:(NSString *)postThumbPath date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSMutableArray *)postRepliesTo mediaType:(DVBPostMediaType)mediaType name:(NSString *)name sage:(BOOL)sage {
     self = [super init];
     if (self) {
         _num = postNum;
@@ -22,6 +22,9 @@
         _dateAgo = postDateAgo;
         _repliesTo = postRepliesTo;
         _replies = [NSMutableArray array];
+        _mediaType = mediaType;
+        _name = name;
+        _sage = sage;
     }
     return self;
 }

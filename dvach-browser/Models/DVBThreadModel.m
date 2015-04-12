@@ -106,9 +106,16 @@
                 
                 NSString *comment = key[@"comment"];
                 NSString *subject = key[@"subject"];
+                
                 NSInteger timestamp = [key[@"timestamp"] integerValue];
                 NSString *date = key[@"date"];
                 NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
+                
+                NSString *name = key[@"name"];
+                NSString *nameForPost = [_postPreparation cleanPosterNameWithHtmlPosterName:name];
+                
+                NSString *email = key[@"email"];
+                BOOL isSage = [_postPreparation isPostContaintSageWithEmail:email];
                 
                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
                 
@@ -119,44 +126,44 @@
                 NSString *thumbPath = [[NSMutableString alloc] init];
                 NSString *picPath = [[NSMutableString alloc] init];
                 
+                DVBPostMediaType mediaType = noMedia;
                 
                 if (files != nil)
                 {
-                    
-                    // check webm or not
                     NSString *fullFileName = files[@"path"];
+                    
+                    mediaType = [_postPreparation mediaTypeInsidePostWithPicPath:fullFileName];
                     
                     thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"thumbnail"]];
                     
                     [_privateThumbImagesArray addObject:thumbPath];
                     
-                    if ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
+                    // check webm or not
+                    if (mediaType == webm) // if contains .webm
                     {
-                        // if contains .webm
-                        
                         // make VLC webm link
-                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, files[@"path"]];
+                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
                     }
-                    else
+                    else                    // if regular image
                     {
-                        // if not contains .webm - regular pic link
-                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"path"]];
+                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
                     }
                     
                     [_privateFullImagesArray addObject:picPath];
-                    
                 }
                 
-                DVBPost *postObj = [[DVBPost alloc] initWithNum:num
-                                                              subject:subject
-                                                              comment:attributedComment
-                                                                 path:picPath
-                                                            thumbPath:thumbPath
-                                                                 date:date
-                                                              dateAgo:dateAgo
-                                                            repliesTo:repliesToArray];
-                [_privatePostsArray addObject:postObj];
-                postObj = nil;
+                DVBPost *post = [[DVBPost alloc] initWithNum:num
+                                                        subject:subject
+                                                        comment:attributedComment
+                                                           path:picPath
+                                                      thumbPath:thumbPath
+                                                           date:date
+                                                        dateAgo:dateAgo
+                                                      repliesTo:repliesToArray
+                                                      mediaType:mediaType
+                                                           name:nameForPost
+                                                           sage:isSage];
+                [_privatePostsArray addObject:post];
             }
             
             _thumbImagesArray = _privateThumbImagesArray;
