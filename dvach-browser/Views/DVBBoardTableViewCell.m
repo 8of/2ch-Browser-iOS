@@ -26,12 +26,22 @@
 {
     NSString *name = boardObject.name;
     NSString *boardId = boardObject.boardId;
-    _title.text = boardId;
+
+    // need additional checkup - or title won't update itself on change
+    _title.text = @" ";
+    BOOL isBoardIdNotEmpty = ![boardId isEqualToString:@""];
+    if (boardId && isBoardIdNotEmpty) {
+        _title.text = boardId;
+    }
     _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-    
-    _subtitle.text = name;
+
+    // need additional checkup - or subtitle won't update itself on change
+    _subtitle.text = @" ";
+    BOOL isNameNotEmpty = ![name isEqualToString:@""];
+    if (name && isNameNotEmpty) {
+        _subtitle.text = name;
+    }
     _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
-    
 }
 
 - (void)layoutSubviews
@@ -43,7 +53,6 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    _title.text = @"";
     [self setEditing:NO animated:NO];
 }
 
