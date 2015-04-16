@@ -6,10 +6,6 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-/**
- *  View controller for displaying one board threads
- */
-
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "DVBBoardViewController.h"
 #import "DVBConstants.h"
@@ -45,9 +41,8 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    /**
-     *  Because we need to turn off toolbar every time view appears, not only when it loads first time
-     */
+
+    // Because we need to turn off toolbar every time view appears, not only when it loads first time
     [self.navigationController setToolbarHidden:YES animated:NO];
 }
 
@@ -56,12 +51,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     [super viewDidLoad];
     
     _currentPage = 0;
-    
-    /**
-     *  If no pages setted (or pages is 0 - then set 10 pages).
-     */
-    if (!_pages)
-    {
+
+    // set loading flag here because othervise
+    // scrollViewDidScroll methods will start loading 'next' page (actually the same page) again
+    _alreadyLoadingNextPage = YES;
+
+    // If no pages setted (or pages is 0 - then set 10 pages).
+    if (!_pages) {
         _pages = 10;
     }
     
@@ -69,13 +65,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    if (!_wrongBoardAlertAlreadyPresentedOnce)
-    {
+    if (!_wrongBoardAlertAlreadyPresentedOnce) {
         [self loadNextBoardPage];
         [self makeRefreshAvailable];
     }
-    if (!_alertViewGenerator)
-    {
+
+    if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = nil;
     }
@@ -84,11 +79,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 /**
  *  First time loading thread list
  */
-
 - (void)loadNextBoardPage
 {
-    if (_pages > _currentPage)
-    {
+    if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray)
         {
             _threadsArray = [completionThreadsArray mutableCopy];
@@ -96,8 +89,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
             _alreadyLoadingNextPage = NO;
             
             // Show alert if board is not exist and we do not already show user alert
-            if (([_threadsArray count] == 0) && (!_wrongBoardAlertAlreadyPresentedOnce))
-            {
+            if (([_threadsArray count] == 0) && (!_wrongBoardAlertAlreadyPresentedOnce)) {
                 NSString *nonExistingBoardAlertHeader = NSLocalizedString(@"Доска не существует", @"Заголовок alert'a сообщает о том, что доска с таким кодом не существует.");
                 
                 UIAlertView *alertView =  [_alertViewGenerator
@@ -111,8 +103,8 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
                 // Go back if board isn't there
                 [self.navigationController popToRootViewControllerAnimated:YES];
             }
-            else if (!_wrongBoardAlertAlreadyPresentedOnce)
-            {
+            else if (!_wrongBoardAlertAlreadyPresentedOnce) {
+
                 // Update only if we have something to show
                 [self.tableView reloadData];
             }
@@ -143,14 +135,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     return [_threadsArray count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 1;
 }
 
-- (NSString *)tableView:(UITableView *)tableView
-titleForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBThread *threadTmpObj = [_threadsArray objectAtIndex:section];
     
@@ -201,8 +191,7 @@ titleForHeaderInSection:(NSInteger)section
         threadViewController.delegate = self;
         threadViewController.boardCode = _boardCode;
         
-        if (_createdThreadNum)
-        {
+        if (_createdThreadNum) {
             /**
              *  Set thread num the other way (not from threadObjects Array.
              */
@@ -213,8 +202,7 @@ titleForHeaderInSection:(NSInteger)section
              */
             _createdThreadNum = nil;
         }
-        else
-        {
+        else {
             NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
             
             DVBThread *tempThreadObj;
@@ -229,8 +217,7 @@ titleForHeaderInSection:(NSInteger)section
             threadViewController.threadSubject = threadSubject;
         }
     }
-    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD])
-    {
+    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
@@ -261,16 +248,14 @@ titleForHeaderInSection:(NSInteger)section
 }
 
 #pragma mark - Scroll Delegate
-/**
- *  Проверка положиения прокрутки
- */
+
+// Check scroll position - we need it to load additional pages
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat actualPosition = self.tableView.contentOffset.y;
     CGFloat contentHeight = self.tableView.contentSize.height - DIFFERENCE_BEFORE_ENDLESS_FIRE;
     
-    if ((actualPosition >= contentHeight) && (!_alreadyLoadingNextPage))
-    {
+    if ((actualPosition >= contentHeight) && (!_alreadyLoadingNextPage)) {
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
