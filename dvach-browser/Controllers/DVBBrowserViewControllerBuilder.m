@@ -20,9 +20,11 @@
 @implementation DVBBrowserViewControllerBuilder
 
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray {
-    
+
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;
+
+    [self removeAllWebmLinksFromThumbImagesArray:_thumbImagesArray andFullImagesArray:_fullImagesArray];
     
     self.delegate = self;
     
@@ -45,9 +47,7 @@
 
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index
 {
-    
-    if (index < _fullImagesArray.count)
-    {
+    if (index < _fullImagesArray.count) {
         NSURL *fullImageUrl = [NSURL URLWithString:_fullImagesArray[index]];
         MWPhoto *mwpPhoto = [MWPhoto photoWithURL:fullImageUrl];
         return mwpPhoto;
@@ -58,15 +58,37 @@
 
 - (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser thumbPhotoAtIndex:(NSUInteger)index
 {
-    
-    if (index < _thumbImagesArray.count)
-    {
+    if (index < _thumbImagesArray.count) {
         NSURL *thumbImageUrl = [NSURL URLWithString:_thumbImagesArray[index]];
         MWPhoto *mwpPhoto = [MWPhoto photoWithURL:thumbImageUrl];
         return mwpPhoto;
     }
     
     return nil;
+}
+/**
+ *  Не очень нравится идея перезаписывать respondsToSelector
+ *  Но есть свои плюсы, например система не тратит ресурсы на вызов и просчёт через heightForRowAtIndexPath
+ */
+- (void)removeAllWebmLinksFromThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
+{
+    NSMutableArray *thumbImagesMutableArray = [thumbImagesArray mutableCopy];
+    NSMutableArray *fullImagesMutableArray = [fullImagesArray mutableCopy];
+
+    NSUInteger currentItemWhenCheckForWebm = 0;
+
+    for (NSString *photoPath in fullImagesArray) {
+        BOOL isWebmLink = [photoPath rangeOfString:@"webm"].location!=NSNotFound;
+
+        if (isWebmLink) {
+            [thumbImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
+            [fullImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
+        }
+        currentItemWhenCheckForWebm++;
+    }
+
+    _thumbImagesArray = thumbImagesMutableArray;
+    _fullImagesArray = fullImagesMutableArray;
 }
 
 @end
