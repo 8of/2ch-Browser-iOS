@@ -2,13 +2,11 @@
 //  DVBBoardViewController.h
 //  dvach-browser
 //
+//  View controller for displaying one board threads
+//
 //  Created by Andy on 05/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
-
-/**
- *  Display threads for one board
- */
 
 #import <UIKit/UIKit.h>
 #import "DVBCreatePostViewController.h"
