@@ -40,8 +40,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 {
     self = [super init];
     
-    if (self)
-    {
+    if (self) {
         _networkReachability = [Reachability reachabilityForInternetConnection];
     }
     
@@ -69,8 +68,8 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 - (void)getServiceStatus:(void (^)(NSUInteger))completion
 {
     
-    if ([self getNetworkStatus])
-    {
+    if ([self getNetworkStatus]) {
+
         [self getServiceStatusLater:^(NSUInteger status)
         {
             completion(status);
@@ -151,20 +150,15 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Single Board
 
-- (void)getThreadsWithBoard:(NSString *)board
-                    andPage:(NSUInteger)page
-              andCompletion:(void (^)(NSDictionary *))completion
+- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion
 {
-    if ([self getNetworkStatus])
-    {
+    if ([self getNetworkStatus]) {
         NSString *pageStringValue;
         
-        if (page == 0)
-        {
+        if (page == 0) {
             pageStringValue = @"index";
         }
-        else
-        {
+        else {
             pageStringValue = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)page];
         }
         
@@ -187,12 +181,9 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Single thread
 
-- (void)getPostsWithBoard:(NSString *)board
-                andThread:(NSString *)threadNum
-            andCompletion:(void (^)(NSDictionary *))completion
+- (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSDictionary *))completion
 {
-    if ([self getNetworkStatus])
-    {
+    if ([self getNetworkStatus]) {
         // building URL for getting JSON-thread-answer from mutiple strings
         
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", DVACH_BASE_URL, board, threadNum];
@@ -214,11 +205,9 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Passcode
 
-- (void)getUserCodeWithPasscode:(NSString *)passcode
-                  andCompletion:(void (^)(NSString *))completion
+- (void)getUserCodeWithPasscode:(NSString *)passcode andCompletion:(void (^)(NSString *))completion
 {
-    if ([self getNetworkStatus])
-    {
+    if ([self getNetworkStatus]) {
         NSString *requestAddress = URL_TO_GET_USERCODE;
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -383,8 +372,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
          BOOL isOKanswer = [status isEqualToString:@"OK"];
          BOOL isRedirectAnswer = [status isEqualToString:@"Redirect"];
          
-         if (isOKanswer || isRedirectAnswer)
-         {
+         if (isOKanswer || isRedirectAnswer) {
              /**
               *  If answer is good - make preparations in current ViewController
               */
@@ -394,11 +382,10 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                                                                                                       andStatusMessage:successTitle
                                                                                                  andThreadToRedirectTo:nil];
              
-             if (isRedirectAnswer)
-             {
+             if (isRedirectAnswer) {
                  NSString *threadNumToRedirect = [responseDictionary[@"Target"] stringValue];
-                 if (threadNumToRedirect)
-                 {
+
+                 if (threadNumToRedirect) {
                      messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:YES
                                                                                   andStatusMessage:successTitle
                                                                              andThreadToRedirectTo:threadNumToRedirect];
@@ -407,11 +394,9 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
              }
              completion(messagePostServerAnswer);
          }
-         else
-         {
-             /**
-              *  If post wasn't successful. Change prompt to error reason.
-              */
+         else {
+
+             // If post wasn't successful. Change prompt to error reason.
              DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:NO
                                                                                                       andStatusMessage:reason
                                                                                                  andThreadToRedirectTo:nil];
@@ -438,8 +423,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
  */
 - (void)requestCaptchaKeyWithCompletion:(void (^)(NSString *))completion
 {
-    if ([self getNetworkStatus])
-    {
+    if ([self getNetworkStatus]) {
         AFHTTPSessionManager *captchaManager = [AFHTTPSessionManager manager];
         captchaManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         [captchaManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/plain"]];
