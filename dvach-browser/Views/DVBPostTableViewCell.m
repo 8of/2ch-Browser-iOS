@@ -162,23 +162,23 @@ static CGFloat const TEXTVIEW_INSET = 8;
 
 #pragma  mark - UITextViewDelegate
 
-- (BOOL)textView:(UITextView *)textView
-shouldInteractWithURL:(NSURL *)URL
-         inRange:(NSRange)characterRange
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange
 {
     if (_threadViewController) {
         UrlNinja *urlNinja = [UrlNinja unWithUrl:URL];
         BOOL isLocalPostLink = [_threadViewController isLinkInternalWithLink:urlNinja];
+
         if (isLocalPostLink) {
+
             return NO;
         }
-        return NO;
+        // there is no need to return something here - because othervise
+        // we couldn't open link in external browser at all
     }
     
     BOOL isExternalLinksShoulBeOpenedInChrome = [[NSUserDefaults standardUserDefaults] boolForKey:OPEN_EXTERNAL_LINKS_IN_CHROME];
 
-    if (isExternalLinksShoulBeOpenedInChrome)
-    {
+    if (isExternalLinksShoulBeOpenedInChrome) {
         NSString *chromeUrlString = [URL absoluteString];
         chromeUrlString = [chromeUrlString stringByReplacingOccurrencesOfString:HTTPS_SCHEME
                                                                      withString:GOOGLE_CHROME_HTTPS_SCHEME];
@@ -187,9 +187,9 @@ shouldInteractWithURL:(NSURL *)URL
         NSURL *chromeUrl = [NSURL URLWithString:chromeUrlString];
         BOOL canOpenInChrome = [[UIApplication sharedApplication] canOpenURL:chromeUrl];
         
-        if (canOpenInChrome)
-        {
+        if (canOpenInChrome) {
             [[UIApplication sharedApplication] openURL:chromeUrl];
+
             return NO;
         }
         
