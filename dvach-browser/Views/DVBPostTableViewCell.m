@@ -80,7 +80,9 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
     
-    // make insets here, because if we make in reuse... it will fire only when cell will be reused, but will not fire the first times
+    // set minimum delay before textView recognize tap on link
+    _commentTextView.delaysContentTouches = NO;
+
     [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
     _commentTextView.attributedText = commentText;
 
