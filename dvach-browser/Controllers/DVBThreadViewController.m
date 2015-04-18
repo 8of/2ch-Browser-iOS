@@ -2,7 +2,7 @@
 //  DVBThreadViewController.m
 //  dvach-browser
 //
-//  Created by Andy on 11/10/14.
+//  Created by Andrey Konstantinov on 11/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
@@ -575,7 +575,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                                                       delegate:self
                                              cancelButtonTitle:@"Отмена"
                                         destructiveButtonTitle:nil
-                                             otherButtonTitles:@"Ответить", @"Открыть в браузере", @"Пожаловаться", nil];
+                                             otherButtonTitles:@"Ответить", @"Ответить с цитатой", @"Открыть в браузере", @"Пожаловаться", nil];
     
     [_postLongPressSheet showInView:self.tableView];
 }
@@ -609,50 +609,45 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         switch (buttonIndex)
         {
                 
-            case 0:
+            case 0: // add post answer to comment and make segue
             {
-                // add post answer to comment and make segue
                 DVBComment *sharedComment = [DVBComment sharedComment];
-                
-                NSString *oldCommentText = sharedComment.comment;
-                
-                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
-                
-                NSString *postNum = post.num;
-                
-                NSString *newStringOfComment = @"";
-                
-                // first one is for creating blank comment
-                if ([oldCommentText isEqualToString:@""])
-                {
-                    newStringOfComment = [[NSString alloc] initWithFormat:@">>%@\n", postNum];
-                }
-                
-                // second one works when there is some text in comment already
-                else
-                {
-                    newStringOfComment = [[NSString alloc] initWithFormat:@"\n>>%@\n", postNum];
-                }
 
-                NSString *commentToSingleton = [[NSString alloc] initWithFormat:@"%@%@", oldCommentText, newStringOfComment];
-                
-                sharedComment.comment = commentToSingleton;
-                
+                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
+                NSString *postNum = post.num;
+
+                [sharedComment topUpCommentWithPostNum:postNum];
+
                 [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                           sender:self];
                 break;
             }
-                
-            case 1:
+
+            case 1: // answer with quote
             {
-                // open in browser button
+                DVBComment *sharedComment = [DVBComment sharedComment];
+                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
+                NSString *postNum = post.num;
+                NSAttributedString *postComment = post.comment;
+
+                [sharedComment topUpCommentWithPostNum:postNum
+                                   andOriginalPostText:postComment];
+
+                [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                                          sender:self];
+
+                break;
+            }
+                
+            case 2: // open in browser button
+            {
                 NSString *urlToOpen = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
                 NSLog(@"URL: %@", urlToOpen);
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlToOpen]];
                 break;
             }
                 
-            case 2:
+            case 3:
             {
                 // Flag button
                 [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
@@ -683,14 +678,12 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     NSString *currentBoard = board;
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable)
-    {
+    if (networkStatus == NotReachable) {
         NSLog(@"Cannot find internet.");
         BOOL result = NO;
         return completion(result);
     }
-    else
-    {
+    else {
         
         // building URL for sendin JSON to my server (for tickets)
         // there is better one-line solution for this - need to use stringWithFormat
@@ -809,7 +802,8 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Respoder rewrite
 
-- (BOOL)respondsToSelector:(SEL)selector {
+- (BOOL)respondsToSelector:(SEL)selector
+{
     static BOOL useSelector;
     static dispatch_once_t predicate = 0;
     dispatch_once(&predicate, ^{

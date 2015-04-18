@@ -20,5 +20,18 @@
 @property (nonatomic, retain) NSString *comment;
 
 + (id)sharedComment;
+/**
+ *  Add post number to answer text as an address
+ *
+ *  @param postNum post number we want to answer in our comment
+ */
+- (void)topUpCommentWithPostNum:(NSString *)postNum;
+/**
+ *  Add post number to answer text as an address and original post text as a quote
+ *
+ *  @param postNum          post number we want to answer in our comment
+ *  @param originalPostText post text as a quote
+ */
+- (void)topUpCommentWithPostNum:(NSString *)postNum andOriginalPostText:(NSAttributedString *)originalPostText;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "DVBComment.h"
+#import "DVBPostPreparation.h"
 
 @implementation DVBComment
 
@@ -30,11 +31,47 @@
         if (!self.comment) {
             self.comment = @"";
         }
-        /**
-         *  Additional preparations here.
-         */
     }
     return self;
+}
+
+- (void)topUpCommentWithPostNum:(NSString *)postNum
+{
+    NSString *oldCommentText = comment;
+
+    NSString *newStringOfComment;
+
+    if ([oldCommentText isEqualToString:@""]) { // creating from empty comment
+        newStringOfComment = [[NSString alloc] initWithFormat:@">>%@\n", postNum];
+    }
+    else { // if there is some text in comment already
+        newStringOfComment = [[NSString alloc] initWithFormat:@"\n>>%@\n", postNum];
+    }
+
+    NSString *commentToSingleton = [[NSString alloc] initWithFormat:@"%@%@", oldCommentText, newStringOfComment];
+
+    comment = commentToSingleton;
+}
+
+- (void)topUpCommentWithPostNum:(NSString *)postNum andOriginalPostText:(NSAttributedString *)originalPostText
+{
+    [self topUpCommentWithPostNum:postNum];
+
+    NSString *additionalCommentString = [NSString stringWithFormat:@"%@", originalPostText.string];
+
+    // delete old quote symbols - so we'll not quote the quotes
+    additionalCommentString = [additionalCommentString stringByReplacingOccurrencesOfString:@">" withString:@""];
+
+    // insert quotes symbol after all new line symbols
+    additionalCommentString = [additionalCommentString stringByReplacingOccurrencesOfString:@"\n" withString:@"\n>"];
+
+    // delete all new empty lines with quotes
+    additionalCommentString = [additionalCommentString stringByReplacingOccurrencesOfString:@"\n>\n" withString:@"\n"];
+
+    // merge old comment text + ">" symbol + new comment with ">" symbols inside
+    NSString *commentToSingleton = [[NSString alloc] initWithFormat:@"%@>%@", comment, additionalCommentString];
+
+    comment = commentToSingleton;
 }
 
 @end
