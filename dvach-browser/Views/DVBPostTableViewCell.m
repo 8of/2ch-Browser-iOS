@@ -24,10 +24,14 @@ static CGFloat const TEXTVIEW_INSET = 8;
 // show action sheet for the post
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
-// Constraints
+// Constraints - image
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageLeftConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageHeightConstraint;
+
+// Constraints - video-icon
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
 
 @end
 
@@ -38,7 +42,7 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _commentTextView.delegate = self;
 }
 
-- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andShowVideoIcon:(BOOL)showVideoIcon
 {
     // prepare Answer button
     _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
@@ -92,24 +96,31 @@ static CGFloat const TEXTVIEW_INSET = 8;
     {
         [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
                               placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
-        [self rebuildPostThumbImageWithImagePresence:YES];
+
+        [self rebuildPostThumbImageWithImagePresence:YES
+                            andWithVideoIconPresence:showVideoIcon];
     }
     else
     {
         _postThumb.image = [UIImage imageNamed:@"Noimage.png"];
-        [self rebuildPostThumbImageWithImagePresence:NO];
+        [self rebuildPostThumbImageWithImagePresence:NO
+                            andWithVideoIconPresence:NO];
     }
 }
 
-- (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent
+- (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent andWithVideoIconPresence:(BOOL)videoIconPresentce
 {
-    if (!isImagePresent)
-    {
+    if (!isImagePresent) {
         _imageLeftConstraint.constant = 0;
         _imageWidthConstraint.constant = 0;
         _imageHeightConstraint.constant = 0;
         _isPostHaveImage = NO;
         // [self removeConstraint:_actionsButtonTopConstraint];
+    }
+
+    if (!videoIconPresentce) {
+        _videoiconWidthContstraint.constant = 0;
+        _videoiconHeightContstraint.constant = 0;
     }
 }
 
@@ -152,10 +163,11 @@ static CGFloat const TEXTVIEW_INSET = 8;
     _imageLeftConstraint.constant = 8.0f;
     _imageWidthConstraint.constant = 65.0f;
     _imageHeightConstraint.constant = 65.0f;
+    _videoiconWidthContstraint.constant = 30.0f;
+    _videoiconHeightContstraint.constant = 30.0f;
     _isPostHaveImage = YES;
     
     [_answerButton setEnabled:YES];
-    
     [_actionButton setEnabled:YES];
     
     [self setNeedsUpdateConstraints];
