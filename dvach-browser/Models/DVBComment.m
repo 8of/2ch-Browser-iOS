@@ -53,11 +53,17 @@
     comment = commentToSingleton;
 }
 
-- (void)topUpCommentWithPostNum:(NSString *)postNum andOriginalPostText:(NSAttributedString *)originalPostText
+- (void)topUpCommentWithPostNum:(NSString *)postNum andOriginalPostText:(NSAttributedString *)originalPostText andQuoteString:(NSString *)quoteString
 {
     [self topUpCommentWithPostNum:postNum];
 
-    NSString *additionalCommentString = [NSString stringWithFormat:@"%@", originalPostText.string];
+    NSString *additionalCommentString;
+    if (quoteString && (quoteString.length > 0)) {
+        additionalCommentString = [NSString stringWithFormat:@"%@", quoteString];
+    }
+    else {
+        additionalCommentString = [NSString stringWithFormat:@"%@", originalPostText.string];
+    }
 
     // delete old quote symbols - so we'll not quote the quotes
     additionalCommentString = [additionalCommentString stringByReplacingOccurrencesOfString:@">" withString:@""];
