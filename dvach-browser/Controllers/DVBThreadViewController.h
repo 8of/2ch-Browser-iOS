@@ -46,5 +46,9 @@
 - (void)reloadThreadFromOutside;
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
+/**
+ *  String to quote in answer to the post
+ */
+@property (nonatomic, strong) NSString *quoteString;
 
 @end

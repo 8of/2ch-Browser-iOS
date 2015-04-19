@@ -626,12 +626,15 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             case 1: // answer with quote
             {
                 DVBComment *sharedComment = [DVBComment sharedComment];
+
                 DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
                 NSString *postNum = post.num;
                 NSAttributedString *postComment = post.comment;
 
                 [sharedComment topUpCommentWithPostNum:postNum
-                                   andOriginalPostText:postComment];
+                                   andOriginalPostText:postComment
+                                        andQuoteString:_quoteString];
+                _quoteString = @"";
 
                 [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                           sender:self];
@@ -652,8 +655,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                 // Flag button
                 [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
                     NSLog(@"Post complaint sent.");
-                    if (done)
-                    {
+                    if (done) {
                         [self deletePostWithIndex:_selectedWithLongPressSection andFlaggedPostNum:_flaggedPostNum];
                     }
                 }];

@@ -201,4 +201,29 @@ static CGFloat const TEXTVIEW_INSET = 8;
     return YES;
 }
 
+- (void)textViewDidChangeSelection:(UITextView *)textView
+{
+    NSRange selectedRange = _commentTextView.selectedRange;
+    NSUInteger selectedLength = selectedRange.length;
+    if (selectedLength > 1)
+    {
+        // NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
+
+        _threadViewController.quoteString = [self createQuoteStringWithSelectedRange:selectedRange];
+    }
+}
+/**
+ *  Extract selected string from full comment
+ *
+ *  @param selectedRange range to determine what part of
+ *
+ *  @return extracted string
+ */
+- (NSString *)createQuoteStringWithSelectedRange:(NSRange)selectedRange
+{
+    NSString *commentString = _commentTextView.text;
+
+    return [commentString substringWithRange:selectedRange];
+}
+
 @end
