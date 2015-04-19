@@ -422,27 +422,29 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Cell configuration and calculation
 
-- (void)configureCell:(UITableViewCell *)cell
-    forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([cell isKindOfClass:[DVBPostTableViewCell class]])
-    {
+    if ([cell isKindOfClass:[DVBPostTableViewCell class]]) {
         DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
         
-        DVBPost *postTmpObj = _postsArray[indexPath.section];
+        DVBPost *post = _postsArray[indexPath.section];
         
-        NSString *thumbUrlString = postTmpObj.thumbPath;
+        NSString *thumbUrlString = post.thumbPath;
         NSUInteger indexForButton = indexPath.section;
+
+        BOOL showVideoIcon = (post.mediaType == webm);
         
-        [confCell prepareCellWithCommentText:postTmpObj.comment
+        [confCell prepareCellWithCommentText:post.comment
                        andPostThumbUrlString:thumbUrlString
-                         andPostRepliesCount:[postTmpObj.replies count]
-                                    andIndex:indexForButton];
+                         andPostRepliesCount:[post.replies count]
+                                    andIndex:indexForButton
+                            andShowVideoIcon:showVideoIcon];
+        
         confCell.threadViewController = self;
+
         if (_answersToPost) {
             confCell.disableActionButton = YES;
         }
-
     }
 }
 /**

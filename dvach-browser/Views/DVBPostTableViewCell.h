@@ -15,7 +15,7 @@
 @interface DVBPostTableViewCell : UITableViewCell
 
 // Pass data to cell
-- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index;
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andShowVideoIcon:(BOOL)showVideoIcon;
 
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
 @property (nonatomic, assign) BOOL disableActionButton;
