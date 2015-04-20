@@ -74,7 +74,7 @@
 #pragma mark - user Agreement
 
 /**
- *  apple force me to show users an EULA before they can start using my app - so alert just showing users that agreement need to be accepted on settings screen
+ *  Check EULA ccepted or not
  *
  *  @return YES if user accepted EULA
  */
@@ -86,13 +86,12 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier
-                                  sender:(id)sender
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    if ([self userAgreementAccepted] || [identifier isEqualToString:SEGUE_TO_SETTINGS])
-    {
+    if ([self userAgreementAccepted]) {
         return YES;
     }
+
     return NO;
 }
 
