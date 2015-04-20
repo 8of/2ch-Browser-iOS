@@ -24,7 +24,8 @@
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;
 
-    [self removeAllWebmLinksFromThumbImagesArray:_thumbImagesArray andFullImagesArray:_fullImagesArray];
+    [self removeAllWebmLinksFromThumbImagesArray:_thumbImagesArray
+                              andFullImagesArray:_fullImagesArray];
     
     self.delegate = self;
     
@@ -37,6 +38,7 @@
     self.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
     
     // Set the current visible photo before displaying
+    NSLog(@"INDEX: %ld", _index);
     [self setCurrentPhotoIndex:_index];
 }
 
@@ -75,16 +77,22 @@
     NSMutableArray *thumbImagesMutableArray = [thumbImagesArray mutableCopy];
     NSMutableArray *fullImagesMutableArray = [fullImagesArray mutableCopy];
 
-    NSUInteger currentItemWhenCheckForWebm = 0;
+    // start reverse loop because we need to delete objects more simplessly withour 'wrong indexes' erros
+    NSUInteger currentItemWhenCheckForWebm = [fullImagesArray count] - 1;
 
-    for (NSString *photoPath in fullImagesArray) {
-        BOOL isWebmLink = [photoPath rangeOfString:@"webm"].location!=NSNotFound;
+    for (NSString *photoPath in [fullImagesArray reverseObjectEnumerator]) {
+        BOOL isWebmLink = ([photoPath rangeOfString:@"webm"].location != NSNotFound);
 
         if (isWebmLink) {
             [thumbImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
             [fullImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
+
+            // decrease index of current photo to show first - because othervise we can show user the wrong one (if we delete photos with index between 0 and current index
+            if (currentItemWhenCheckForWebm < _index) {
+                _index--;
+            }
         }
-        currentItemWhenCheckForWebm++;
+        currentItemWhenCheckForWebm--;
     }
 
     _thumbImagesArray = thumbImagesMutableArray;
