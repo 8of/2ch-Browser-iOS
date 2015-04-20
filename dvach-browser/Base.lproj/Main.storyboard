@@ -23,76 +23,6 @@
             </objects>
             <point key="canvasLocation" x="-329" y="-257"/>
         </scene>
-        <!--Настройки-->
-        <scene sceneID="016-l7-Adn">
-            <objects>
-                <tableViewController id="XiX-SU-KZ1" customClass="DVBSettingsTableViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="44" sectionFooterHeight="22" id="7eK-D1-cnf">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <sections>
-                            <tableViewSection id="v1o-9t-zdY">
-                                <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="44" id="ssQ-bG-zkZ">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ssQ-bG-zkZ" id="sy1-R1-NFD">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Открыть ссылки в Chrome" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tri-AY-jTx">
-                                                    <rect key="frame" x="15" y="12" width="226" height="20"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="GM1-vx-jKl">
-                                                    <rect key="frame" x="256" y="6" width="51" height="31"/>
-                                                    <connections>
-                                                        <action selector="openInChromeSwtichChangeState:" destination="XiX-SU-KZ1" eventType="valueChanged" id="eug-Ur-NEs"/>
-                                                    </connections>
-                                                </switch>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="GM1-vx-jKl" secondAttribute="trailing" constant="15" id="A4h-06-RY4"/>
-                                                <constraint firstAttribute="centerY" secondItem="Tri-AY-jTx" secondAttribute="centerY" id="LJj-gq-l6G"/>
-                                                <constraint firstAttribute="centerY" secondItem="GM1-vx-jKl" secondAttribute="centerY" id="d0e-Fd-HVd"/>
-                                                <constraint firstItem="GM1-vx-jKl" firstAttribute="leading" secondItem="Tri-AY-jTx" secondAttribute="trailing" constant="15" id="fjn-6N-UK6"/>
-                                                <constraint firstItem="Tri-AY-jTx" firstAttribute="leading" secondItem="sy1-R1-NFD" secondAttribute="leading" constant="15" id="sjt-VO-2zy"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="passcodeCell" textLabel="Cep-NP-ooT" rowHeight="44" style="IBUITableViewCellStyleDefault" id="0Wf-1t-ZS0">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0Wf-1t-ZS0" id="4TQ-0F-pjP">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Пасскод" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cep-NP-ooT">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
-                        <connections>
-                            <outlet property="dataSource" destination="XiX-SU-KZ1" id="Ou7-Rc-vRU"/>
-                            <outlet property="delegate" destination="XiX-SU-KZ1" id="khc-No-v98"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Настройки" id="umP-5J-VBq"/>
-                    <connections>
-                        <outlet property="chromeSwitch" destination="GM1-vx-jKl" id="Pc2-Ti-47A"/>
-                        <outlet property="passCodeCell" destination="0Wf-1t-ZS0" id="Pgt-z5-C3w"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6XN-Lh-Xm4" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="354" y="-857"/>
-        </scene>
         <!--Доски-->
         <scene sceneID="wOP-uy-2fu">
             <objects>
@@ -130,11 +60,6 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Доски" id="tKd-8Q-GaQ">
-                        <barButtonItem key="leftBarButtonItem" image="Settings" id="qsb-Do-nNN">
-                            <connections>
-                                <segue destination="XiX-SU-KZ1" kind="show" identifier="segueToSettings" id="q2o-Ry-JHW"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Nki-o2-6GL">
                             <connections>
                                 <action selector="showAlertWithBoardCodePrompt:" destination="u8c-EJ-BLV" id="JGY-AS-ddk"/>
@@ -557,7 +482,6 @@
                                             <constraint firstItem="jV2-RR-JBv" firstAttribute="centerY" secondItem="R8v-6t-d37" secondAttribute="centerY" id="bIc-QQ-kcy"/>
                                             <constraint firstItem="yu0-D0-p1U" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="c85-hy-rhJ"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="leading" secondItem="sby-Ye-Jpl" secondAttribute="trailing" constant="15" id="cEE-vG-EyO"/>
-                                            <constraint firstItem="yu0-D0-p1U" firstAttribute="top" secondItem="1dE-mf-Pvb" secondAttribute="bottom" constant="15" id="exw-3A-ZZC"/>
                                             <constraint firstItem="1dE-mf-Pvb" firstAttribute="height" secondItem="wjr-Ih-9ju" secondAttribute="height" id="fGW-aw-5no"/>
                                             <constraint firstItem="R8v-6t-d37" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="h2b-6e-j5A"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="ofa-ja-p0C"/>
@@ -565,6 +489,7 @@
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="width" secondItem="cMi-uW-0S6" secondAttribute="width" id="ozY-UH-TwY"/>
                                             <constraint firstItem="1dE-mf-Pvb" firstAttribute="height" secondItem="cMi-uW-0S6" secondAttribute="height" id="pYI-gc-u8h"/>
                                             <constraint firstItem="ATw-LV-fb7" firstAttribute="top" secondItem="R8v-6t-d37" secondAttribute="top" id="qr2-0s-QAf"/>
+                                            <constraint firstItem="yu0-D0-p1U" firstAttribute="top" secondItem="R8v-6t-d37" secondAttribute="bottom" constant="15" id="sw6-YF-f5e"/>
                                             <constraint firstAttribute="trailing" secondItem="1dE-mf-Pvb" secondAttribute="trailing" constant="15" id="vME-SI-Coy"/>
                                         </constraints>
                                     </view>
@@ -612,6 +537,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="jV2-RR-JBv" id="lDi-oB-oC2"/>
                         <outlet property="captchaFieldHeight" destination="e9K-Tz-CJt" id="Fwm-vj-uvP"/>
                         <outlet property="captchaImage" destination="R8v-6t-d37" id="jIe-EV-f9b"/>
                         <outlet property="captchaUpdateButton" destination="ATw-LV-fb7" id="cnI-P9-JgL"/>
@@ -633,13 +559,12 @@
     <resources>
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
-        <image name="Settings" width="22" height="22"/>
         <image name="Toppage" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Iwy-TH-KYT"/>
+        <segue reference="o55-Sb-BOJ"/>
         <segue reference="fFt-k5-qt1"/>
-        <segue reference="Xk9-pa-bWO"/>
+        <segue reference="xwW-TO-L0b"/>
     </inferredMetricsTieBreakers>
 </document>

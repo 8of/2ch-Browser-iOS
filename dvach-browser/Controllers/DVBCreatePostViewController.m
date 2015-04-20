@@ -41,7 +41,7 @@
 @property (nonatomic, assign) BOOL postSuccessfull;
 
 // UI elements
-@property (weak, nonatomic) IBOutlet UIScrollView *createPostScrollView;
+@property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
 @property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
 @property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
 @property (nonatomic, weak) IBOutlet UITextField *nameTextField;
@@ -49,11 +49,12 @@
 @property (nonatomic, weak) IBOutlet UITextField *captchaValueTextField;
 @property (nonatomic, weak) IBOutlet UITextView *commentTextView;
 @property (nonatomic, weak) IBOutlet UIButton *uploadButton;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 // Constraints
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldHeight;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *contstraintFromCommentTextToBottomEdge;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromCommentTextToBottomEdge;
 
 // Constraints original value storages
 @property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
@@ -158,8 +159,7 @@
      */
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
     
-    if (isUsercodeNotEmpty)
-    {
+    if (isUsercodeNotEmpty) {
         _captchaFieldHeight.constant = 0;
         _fromThemeToCaptchaField.constant = 0;
         
@@ -168,6 +168,8 @@
         
         [_captchaUpdateButton removeConstraints:_captchaUpdateButton.constraints];
         [_captchaUpdateButton removeFromSuperview];
+
+        [_activityIndicator removeFromSuperview];
     }
 }
 

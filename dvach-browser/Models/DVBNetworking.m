@@ -226,6 +226,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              // NSLog(@"error: %@", error);
+             // error here is OK we just need to extract usercode from cookies
              NSString *usercode = [self getUsercodeFromCookies];
              completion(usercode);
          }];
@@ -238,7 +239,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 {
     NSArray *cookiesArray = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     for (NSHTTPCookie *cookie in cookiesArray) {
-        BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"usercode"];
+        BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"usercode_nocaptcha"];
         if (isThisUsercodeCookie) {
             NSString *usercode = cookie.value;
             NSLog(@"usercode success");
