@@ -310,7 +310,14 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *categoryTitle = _boardCategoriesArray[section];
-    
+
+    // Do not show category at all if category does not contain boards
+    BOOL isCategoryEmpty = ([self countOfBoardsInCategoryWithIndex:section] == 0);
+
+    if (isCategoryEmpty) {
+        return nil;
+    }
+
     return categoryTitle;
 }
 
