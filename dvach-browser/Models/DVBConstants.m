@@ -25,11 +25,11 @@ NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@
 // settings
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
+NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
 NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";
 
 // segues
-NSString *const SEGUE_TO_SETTINGS = @"segueToSettings";
 NSString *const SEGUE_TO_EULA = @"segueToEula";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
