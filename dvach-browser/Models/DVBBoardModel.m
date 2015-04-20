@@ -36,13 +36,10 @@
     return nil;
 }
 
-- (instancetype)initWithBoardCode:(NSString *)boardCode
-                       andMaxPage:(NSUInteger)maxPage
+- (instancetype)initWithBoardCode:(NSString *)boardCode andMaxPage:(NSUInteger)maxPage
 {
-    
     self = [super init];
-    if (self)
-    {
+    if (self) {
         _boardCode = boardCode;
         _maxPage = maxPage;
         _networking = [[DVBNetworking alloc] init];
@@ -64,6 +61,10 @@
         
         for (id key in threadsDict)
         {
+            // Count number of last posts because posts_count isn't accurate - it's not count last posts
+            NSArray *lastPosts = [key objectForKey:@"posts"];
+            NSInteger lastpostsCount = [lastPosts count];
+
             NSDictionary *opPost = [[key objectForKey:@"posts"] objectAtIndex:0];
             
             // very important note: unlikely in other NUM keys in other JSON answers - here server answers STRING SOMETIMES and NOT ONLY NUMBER
@@ -84,6 +85,11 @@
             comment = [comment stringByConvertingHTMLToPlainText];
             NSNumber *filesCount = [opPost objectForKey:@"files_count"];
             NSNumber *postsCount = [opPost objectForKey:@"posts_count"];
+
+            NSInteger totalPostsCount = [postsCount integerValue] + lastpostsCount;
+
+            // 'real' all posts count
+            postsCount = [[NSNumber alloc] initWithInteger:totalPostsCount];
             
             NSDictionary *files = [[opPost objectForKey:@"files"] objectAtIndex:0];
             
@@ -95,9 +101,11 @@
             [fullThumbPath appendString:_boardCode];
             [fullThumbPath appendString:@"/"];
             NSString *tmpThumbnail = [files objectForKey:@"thumbnail"];
+
             if (!tmpThumbnail) {
                 continue;
             }
+
             [fullThumbPath appendString:tmpThumbnail];
             NSString *thumbPath = fullThumbPath;
             fullThumbPath = nil;
