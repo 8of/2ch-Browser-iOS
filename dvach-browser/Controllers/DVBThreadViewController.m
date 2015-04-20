@@ -10,7 +10,7 @@
 #import "DVBThreadViewController.h"
 #import "DVBPost.h"
 #import "DVBPostTableViewCell.h"
-#import "Reachability.h"
+#import "Reachlibility.h"
 #import "DVBBadPost.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBComment.h"

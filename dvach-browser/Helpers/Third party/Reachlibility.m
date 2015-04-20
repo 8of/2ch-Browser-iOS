@@ -25,7 +25,7 @@
  POSSIBILITY OF SUCH DAMAGE. 
  */
 
-#import "Reachability.h"
+#import "Reachlibility.h"
 
 
 NSString *const kReachabilityChangedNotification = @"kReachabilityChangedNotification";
