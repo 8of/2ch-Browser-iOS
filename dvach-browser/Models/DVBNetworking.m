@@ -11,7 +11,7 @@
 #import "DVBBoard.h"
 #import "DVBValidation.h"
 #import "DVBStatus.h"
-#import "Reachability.h"
+#import "Reachlibility.h"
 
 typedef NS_ENUM(NSUInteger, Status)
 {

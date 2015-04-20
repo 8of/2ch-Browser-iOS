@@ -11,7 +11,7 @@
 #import "DVBConstants.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
-#import "Reachability.h"
+#import "Reachlibility.h"
 #import "DVBComment.h"
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
