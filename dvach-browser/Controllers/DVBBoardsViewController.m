@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSDictionary *boardsDict;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -50,6 +51,7 @@
     
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
+    _searchBar.delegate = _boardsModel;
 
     [self updateTable];
 }

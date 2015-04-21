@@ -14,7 +14,7 @@
 
 @end
 
-@interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate>
+@interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 
