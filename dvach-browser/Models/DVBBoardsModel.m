@@ -25,6 +25,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 @interface DVBBoardsModel ()
 
 @property (nonatomic, strong) NSMutableArray *boardsPrivate;
+@property (nonatomic, strong) NSMutableArray *allBoardsPrivate;
 // Core data properties.
 @property (nonatomic, strong) NSManagedObjectContext *context;
 @property (nonatomic, strong) NSManagedObjectModel *model;
@@ -86,6 +87,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         _context.persistentStoreCoordinator = _persistentStoreCoordinator;
         _boardCategoriesArray = [self loadBoardCategoriesFromPlist];
         [self loadAllboards];
+
+        _allBoardsPrivate = _boardsPrivate;
     }
     
     return self;
@@ -400,6 +403,56 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     NSArray *matchedBoardsResult = [self arrayForCategoryWithIndex:index];
     
     return [matchedBoardsResult count];
+}
+
+- (void)updateTableWithSearchText:(NSString *)searchText {
+
+    if (!searchText) {
+        _boardsPrivate = _allBoardsPrivate;
+    }
+    else {
+        _boardsPrivate = [[self getArrayOfBoardsWithSearchText:searchText] mutableCopy];
+    }
+    [_boardsModelDelegate updateTable];
+}
+
+- (NSArray *)getArrayOfBoardsWithSearchText:(NSString *)searchText {
+    NSArray *fullBoarsArray = [_allBoardsPrivate copy];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(name contains[cd] %@) || (boardId contains[cd] %@)", searchText, searchText];
+    NSArray *filteredArray = [fullBoarsArray filteredArrayUsingPredicate:predicate];
+
+    return filteredArray;
+}
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [searchBar endEditing:YES];
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:YES
+                           animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [searchBar setText:@""];
+    [searchBar setShowsCancelButton:NO
+                           animated:YES];
+    [self updateTableWithSearchText:nil];
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    NSUInteger countOfLetters = searchText.length;
+    NSUInteger minimalCountOfCharactersToStartSearch = 1;
+
+    if (countOfLetters >= minimalCountOfCharactersToStartSearch) {
+        [self updateTableWithSearchText:searchText];
+    }
+    else {
+        [self updateTableWithSearchText:nil];
+    }
+
 }
 
 @end
