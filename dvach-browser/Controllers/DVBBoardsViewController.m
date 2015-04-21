@@ -20,6 +20,7 @@
 @property (strong, nonatomic) NSDictionary *boardsDict;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 
 @end
 
@@ -41,6 +42,17 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    // hide search bar - we can reach it by pull gesture
+    NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:firstRow
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:NO];
+}
+
 #pragma mark - Board List
 
 - (void)loadBoardList
@@ -50,6 +62,7 @@
     
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
+    _searchBar.delegate = _boardsModel;
 
     [self updateTable];
 }
