@@ -42,6 +42,17 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    // hide search bar - we can reach it by pull gesture
+    NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:firstRow
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:NO];
+}
+
 #pragma mark - Board List
 
 - (void)loadBoardList
