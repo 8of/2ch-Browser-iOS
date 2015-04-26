@@ -26,10 +26,11 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 @property (nonatomic, strong) NSMutableArray *boardsPrivate;
 @property (nonatomic, strong) NSMutableArray *allBoardsPrivate;
+
 // Core data properties.
 @property (nonatomic, strong) NSManagedObjectContext *context;
 @property (nonatomic, strong) NSManagedObjectModel *model;
-// to not store boards gotten from network in DB
+// Wee need different store (memory) to not store boards gotten from network in DB
 @property (nonatomic, strong) NSPersistentStore *memoryStore;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
@@ -130,34 +131,31 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (void)loadAllboards {
     // To prevent from "rebuilding" it
     _memoryStore = [_persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:nil];
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *wordEntityDescription = [NSEntityDescription entityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+    request.entity = wordEntityDescription;
+    NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"boardId" ascending:YES];
+    request.sortDescriptors = @[sortDescriptorByOrderKey];
+    NSError *error;
+    NSArray *result = [_context executeFetchRequest:request error:&error];
     
-   // if (!_boardsPrivate) {
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        NSEntityDescription *wordEntityDescription = [NSEntityDescription entityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
-        request.entity = wordEntityDescription;
-        NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"boardId" ascending:YES];
-        request.sortDescriptors = @[sortDescriptorByOrderKey];
-        NSError *error;
-        NSArray *result = [_context executeFetchRequest:request error:&error];
-        
-        if (!result) {
-            [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
-        }
-        
-        NSUInteger boardsCount = [result count];
-        
-        if (boardsCount) {
-            // load from file
-            _boardsPrivate = [[NSMutableArray alloc] initWithArray:result];
-            [self checkBoardNames];
-        }
-        else {
-            // create first time
-            _boardsPrivate = [NSMutableArray array];
-            [self loadBoardsFromPlist];
-        }
-        
-   // }
+    if (!result) {
+        [NSException raise:@"Fetch failed" format:@"Reason: %@", [error localizedDescription]];
+    }
+    
+    NSUInteger boardsCount = [result count];
+    
+    if (boardsCount) {
+        // load from file
+        _boardsPrivate = [[NSMutableArray alloc] initWithArray:result];
+        [self checkBoardNames];
+    }
+    else {
+        // create first time
+        _boardsPrivate = [NSMutableArray array];
+        [self loadBoardsFromPlist];
+    }
 }
 
 - (void)addBoardWithBoardId:(NSString *)boardId andBoardName:(NSString *)name andCategoryId:(NSNumber *)categoryId {
@@ -238,6 +236,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (void)checkBoardNames {
     BOOL isNeedToLoadBoardsFromNetwork = NO;
+
     for (DVBBoard *board in self.boardsArray) {
         NSString *name = board.name;
         BOOL isNameEmpty = [name isEqualToString:@""];
@@ -246,6 +245,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
             break;
         }
     }
+
     if (isNeedToLoadBoardsFromNetwork) {
         NSMutableArray *arrayForInterating = [self.boardsArray mutableCopy];
         [self getBoardsWithCompletion:^(NSArray *completion) {
@@ -268,7 +268,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 indexOfCurrentBoard++;
             }
             [self saveChanges];
-            // [self loadAllboards];
             [_boardsModelDelegate updateTable];
         }];
     }
@@ -351,12 +350,18 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return NO;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NSLocalizedString(@"Удалить", @"Кнопка удаления доски из списка избранных досок");
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
         NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
         NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
         NSUInteger indexOfCurrentBoard = 0;
+
         for (DVBBoard *board in arrayForInterating) {
             NSString *boardId = board.boardId;
             NSNumber *boardCategoryId = board.categoryId;
@@ -373,11 +378,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         [self saveChanges];
         
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
-        // [self loadAllboards];
-        // [_boardsModelDelegate updateTable];
     }
 }
-
 
 
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath {
