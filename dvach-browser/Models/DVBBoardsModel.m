@@ -7,7 +7,7 @@
 //
 
 #import <CoreData/CoreData.h>
-#import <UIKit/UIKit.h>
+
 #import "DVBBoardsModel.h"
 #import "DVBBoard.h"
 

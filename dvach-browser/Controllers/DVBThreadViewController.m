@@ -6,17 +6,21 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import <UINavigationItem+Loading.h>
+
 #import "DVBConstants.h"
-#import "DVBThreadViewController.h"
-#import "DVBPost.h"
-#import "DVBPostTableViewCell.h"
 #import "Reachlibility.h"
-#import "DVBBadPost.h"
-#import "DVBCreatePostViewController.h"
-#import "DVBComment.h"
-#import "DVBNetworking.h"
-#import "DVBBrowserViewControllerBuilder.h"
 #import "DVBThreadModel.h"
+#import "DVBNetworking.h"
+#import "DVBPost.h"
+#import "DVBBadPost.h"
+#import "DVBComment.h"
+
+#import "DVBThreadViewController.h"
+#import "DVBCreatePostViewController.h"
+#import "DVBBrowserViewControllerBuilder.h"
+
+#import "DVBPostTableViewCell.h"
 
 static NSString *const POST_CELL_IDENTIFIER = @"postCell";
 static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
@@ -100,9 +104,9 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 - (void)prepareViewController
 {
     _opAlreadyDeleted = NO;
-    // [self addGestureRecognisers];
     
     if (_answersToPost) {
+
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
         }
@@ -116,6 +120,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
             }
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
+
         _threadModel = [[DVBThreadModel alloc] init];
         
         NSArray *arrayOfThumbs = [_threadModel thumbImagesArrayForPostsArray:_answersToPost];
@@ -126,6 +131,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
+        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
                                          andThreadNum:_threadNum];
@@ -133,10 +139,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
                                                     andThreadNum:_threadNum];
     }
     
-    /**
-     *  Не очень нравится идея перезаписывать respondsToSelector
-     *  Но есть свои плюсы, например система не тратит ресурсы на вызов и просчёт через heightForRowAtIndexPath
-     */
+    // System do not spend resurces on calculatingrow heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
         self.tableView.rowHeight = UITableViewAutomaticDimension;
         self.tableView.estimatedRowHeight = 100;
@@ -145,15 +148,13 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 
 #pragma mark - Set titles and gestures
 
-- (NSString *)getSubjectOrNumWithSubject:(NSString *)subject
-                            andThreadNum:(NSString *)num
+- (NSString *)getSubjectOrNumWithSubject:(NSString *)subject andThreadNum:(NSString *)num
 {
     /**
      *  If thread Subject is empty - return OP post number
      */
     BOOL isSubjectEmpty = [subject isEqualToString:@""];
-    if (isSubjectEmpty)
-    {
+    if (isSubjectEmpty) {
         return num;
     }
     
@@ -169,8 +170,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 /**
  *  Set every section title depending on post SUBJECT or NUMBER
  */
-- (NSString *)tableView:(UITableView *)tableView
-titleForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
     NSString *subject = postTmpObj.subject;
@@ -192,8 +192,7 @@ titleForHeaderInSection:(NSInteger)section
     return 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPostTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
                                                                  forIndexPath:indexPath];
@@ -205,7 +204,6 @@ titleForHeaderInSection:(NSInteger)section
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
     // I am using a helper method here to get the text at a given cell.
     NSAttributedString *text = [self getTextAtIndex:indexPath];
     
@@ -245,10 +243,9 @@ titleForHeaderInSection:(NSInteger)section
     
     CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
     
-    if (heightToReturn < ROW_DEFAULT_HEIGHT)
-    {
-        if ([thumbPath isEqualToString:@""])
-        {
+    if (heightToReturn < ROW_DEFAULT_HEIGHT) {
+
+        if ([thumbPath isEqualToString:@""]) {
             return heightForReturnWithCorrectionAndCeilf;
         }
         
@@ -258,9 +255,7 @@ titleForHeaderInSection:(NSInteger)section
     return heightForReturnWithCorrectionAndCeilf;
 }
 
-/**
- *  For more smooth and fast user expierence (iOS 8).
- */
+// We do not need this because we set it in another place.
 /*
 - (CGFloat)tableView:(UITableView *)tableView
 estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -277,19 +272,16 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     NSString *fullUrlString = selectedPost.path;
     
     // Check if cell have real image / webm video or just placeholder
-    if (![fullUrlString isEqualToString:@""])
-    {
+    if (![fullUrlString isEqualToString:@""]) {
         // if contains .webm
-        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound)
-        {
+        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound) {
             NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
             BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
             
             if (canOpenInVLC) {
                 [[UIApplication sharedApplication] openURL:fullUrl];
             }
-            else
-            {
+            else {
                 NSLog(@"Need VLC to open this");
                 NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
                 self.navigationItem.prompt = installVLCPrompt;
@@ -299,8 +291,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             }
         }
         // if not
-        else
-        {
+        else {
             [self handleTapOnImageViewWithIndexPath:indexPath];
         }
     }
@@ -450,9 +441,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 /**
  *  Think of this as some utility function that given text, calculates how much space we need to fit that text. Calculation for texView height.
  */
--(CGSize)frameForText:(NSAttributedString *)text
-         sizeWithFont:(UIFont *)font
-    constrainedToSize:(CGSize)size
+-(CGSize)frameForText:(NSAttributedString *)text sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
 {
     CGRect frame = [text boundingRectWithSize:size
                                       options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
@@ -487,9 +476,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
  *  @param threadNum  <#threadNum description#>
  *  @param completion <#completion description#>
  */
-- (void)getPostsWithBoard:(NSString *)board
-                andThread:(NSString *)threadNum
-            andCompletion:(void (^)(NSArray *))completion
+- (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
         _postsArray = _threadModel.postsArray;
@@ -501,6 +488,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 // reload thread by current thread num
 - (void)reloadThread {
+
     if (_answersToPost) {
         _postsArray = [_answersToPost mutableCopy];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -516,6 +504,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
             });
+            [self.navigationItem stopAnimating];
         }];
     }
 }
@@ -606,10 +595,9 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     
-    if (actionSheet == _postLongPressSheet)
-    {
-        switch (buttonIndex)
-        {
+    if (actionSheet == _postLongPressSheet) {
+
+        switch (buttonIndex) {
                 
             case 0: // add post answer to comment and make segue
             {
@@ -732,13 +720,11 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [_threadModel flagPostWithIndex:index andFlaggedPostNum:flaggedPostNum andOpAlreadyDeleted:_opAlreadyDeleted];
     
-    if (index == 0)
-    {
+    if (index == 0) {
         [self.delegate sendDataToBoard:_threadIndex];
         [self.navigationController popViewControllerAnimated:YES];
     }
-    else
-    {
+    else {
         [self.tableView reloadData];
         [self showAlertAboutReportedPost];
     }
@@ -789,13 +775,10 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 -(void)updateThreadAfterPosting
 {
-    /**
-     *  Update thread from network.
-     */
+    // Update Thread from network.
     [self reloadThread];
-    /**
-     *  Scroll thread to bottom. Not working as it should for now.
-     */
+    
+    // Scroll thread to bottom. Not working as it should for now.
     CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
     [self.tableView setContentOffset:pointToScrollTo animated:YES];
     
