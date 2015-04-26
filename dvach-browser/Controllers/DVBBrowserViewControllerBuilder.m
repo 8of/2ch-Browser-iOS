@@ -38,7 +38,6 @@
     self.startOnGrid = NO; // Whether to start on the grid of thumbnails instead of the first photo (defaults to NO)
     
     // Set the current visible photo before displaying
-    NSLog(@"INDEX: %ld", _index);
     [self setCurrentPhotoIndex:_index];
 }
 

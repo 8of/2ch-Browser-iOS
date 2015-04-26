@@ -21,7 +21,7 @@
 #import "DVBWrapMenuItem.h"
 #import "DVBContainerForPostElements.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -47,12 +47,6 @@
 // UI elements
 @property (weak, nonatomic) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
-
-// Constraints
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromCommentTextToBottomEdge;
-
-// Constraints original value storages
-@property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
 
 @end
 
@@ -80,12 +74,10 @@
     // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
     NSString *commentText = _sharedComment.comment;
-    _containerForPostElementsView.commentTextView.text = commentText;
-    
-    // CommentTextView settings.
-    _containerForPostElementsView.commentTextView.delegate = self;
-    
-    _contstraintFromCommentTextToBottomEdgeOriginalValue = _contstraintFromCommentTextToBottomEdge.constant;
+
+    if ([commentText length] > 0) {
+        _containerForPostElementsView.commentTextView.text = commentText;
+    }
     
     // Prepare usercode (aka passcode) from default.
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
@@ -96,14 +88,6 @@
     }
     
     [self changeConstraints];
-    
-    [self registerForKeyboardNotifications];
-    
-    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
-                                           initWithTarget:self
-                                           action:@selector(hideKeyBoard)];
-    
-    [self.view addGestureRecognizer:tapGesture];
 }
 
 #pragma mark - Change constrints
@@ -338,11 +322,11 @@
 {
     [self wrapMenuItemActionWithSender:sender andTagToInsert:@"s"];
 }
+
 /**
  *  Wrap comment in commentTextView
  */
-- (void)wrapMenuItemActionWithSender:(id)sender
-            andTagToInsert:(NSString *)tagToInsert
+- (void)wrapMenuItemActionWithSender:(id)sender andTagToInsert:(NSString *)tagToInsert
 {
     //receive value of row here. The sender in iOS 7 is an instance of UIMenuController.
     UIMenuController *targetSender = (UIMenuController *)sender ;
@@ -377,7 +361,9 @@
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
     imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     imagePicker.delegate = self;
-    [self presentViewController:imagePicker animated:YES completion:nil];
+    [self presentViewController:imagePicker
+                       animated:YES
+                     completion:nil];
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -400,8 +386,6 @@
     _isImagePicked = FALSE;
     [_containerForPostElementsView changeUploadButtonToUpload];
 }
-
-
 
 #pragma  mark - Navigation
 
@@ -452,45 +436,6 @@
             }
         }
     }
-}
-
-#pragma mark - Keyboard
-
-// Call this method somewhere in your view controller setup code.
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-    
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification *)aNotification
-{
-    NSDictionary* info = [aNotification userInfo];
-    CGRect keyPadFrame=[[UIApplication sharedApplication].keyWindow convertRect:[[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:self.view];
-    CGSize kbSize =keyPadFrame.size;
-    
-    CGFloat keyboardHeight = kbSize.height;
-    
-    _contstraintFromCommentTextToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue + keyboardHeight;
-    
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification
-{
-    _contstraintFromCommentTextToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue;
-}
-
-- (void)hideKeyBoard
-{
-    [self.view endEditing:YES];
 }
 
 @end
