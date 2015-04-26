@@ -84,3 +84,9 @@
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
 #define COCOAPODS_VERSION_PATCH_SDWebImage_Core 2
 
+// UINavigationItem+Loading
+#define COCOAPODS_POD_AVAILABLE_UINavigationItem_Loading
+#define COCOAPODS_VERSION_MAJOR_UINavigationItem_Loading 1
+#define COCOAPODS_VERSION_MINOR_UINavigationItem_Loading 1
+#define COCOAPODS_VERSION_PATCH_UINavigationItem_Loading 0
+
