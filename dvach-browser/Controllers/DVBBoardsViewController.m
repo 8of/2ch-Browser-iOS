@@ -5,12 +5,13 @@
 //  Created by Andy on 16/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
-#import "DVBBoardsViewController.h"
-#import "DVBBoardViewController.h"
 
 #import "DVBConstants.h"
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
+
+#import "DVBBoardsViewController.h"
+#import "DVBBoardViewController.h"
 
 @interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
 
