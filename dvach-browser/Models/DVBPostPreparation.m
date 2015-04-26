@@ -248,7 +248,7 @@
      }
      */
     
-    //заменить хтмл-литералы на нормальные символы (раньше этого делать нельзя, сломается парсинг)
+    // Заменить хтмл-литералы на нормальные символы (раньше этого делать нельзя, сломается парсинг).
     [[maComment mutableString] replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     [[maComment mutableString] replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     [[maComment mutableString] replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
@@ -273,7 +273,7 @@
 
 - (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath {
     
-    // We already know that there is media in the post - we need to know which type of media we have here
+    // We already know that there is media in the post - we need to know which type of media we have here.
     BOOL isContainWebm = ([picPath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
     if (isContainWebm) {
         return webm;

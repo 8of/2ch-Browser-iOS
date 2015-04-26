@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+// Colors
+#define DVACH_COLOR [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0];
+#define DVACH_COLOR_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0] CGColor];
+
 // URL schemes
 FOUNDATION_EXPORT NSString *const HTTPS_SCHEME;
 FOUNDATION_EXPORT NSString *const HTTP_SCHEME;
