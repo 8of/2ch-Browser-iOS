@@ -7,13 +7,17 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import <UINavigationItem+Loading.h>
+
 #import "DVBConstants.h"
+#import "Reachlibility.h"
+#import "DVBNetworking.h"
+#import "DVBComment.h"
+#import "DVBMessagePostServerAnswer.h"
+
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
-#import "Reachlibility.h"
-#import "DVBComment.h"
-#import "DVBNetworking.h"
-#import "DVBMessagePostServerAnswer.h"
+
 #import "DVBWrapMenuItem.h"
 #import "DVBContainerForPostElements.h"
 
@@ -215,7 +219,7 @@
 {
     
     // Turn off POST button - so we can't tap it the second time before post action completed.
-    self.navigationItem.rightBarButtonItem.enabled = FALSE;
+    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
     
     [_networking postMessageWithTask:task
                             andBoard:board
@@ -253,7 +257,7 @@
         }
         else {
             // Enable Post button back.
-            self.navigationItem.rightBarButtonItem.enabled = TRUE;
+            [self.navigationItem stopAnimating];
             [self requestCaptchaImage];
         }
     }];

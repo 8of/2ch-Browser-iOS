@@ -30,11 +30,13 @@ PODS:
   - SDWebImage (3.7.2):
     - SDWebImage/Core (= 3.7.2)
   - SDWebImage/Core (3.7.2)
+  - UINavigationItem+Loading (1.1)
 
 DEPENDENCIES:
   - AFNetworking (= 2.5.0)
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
+  - UINavigationItem+Loading (~> 1.1)
 
 EXTERNAL SOURCES:
   DACircularProgress:
@@ -51,11 +53,12 @@ CHECKOUT OPTIONS:
     :git: https://github.com/8ofproject/MWPhotoBrowser
 
 SPEC CHECKSUMS:
-  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
+  AFNetworking: 96ac9bf3eda33582701cb1fcc5b896aa1e20311e
   DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
-  MBProgressHUD: f3747dcbd45a9e855a6b0674550651e0b7ed250c
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWPhotoBrowser: 906376af1d69be9aa23a5461063d89f3dd0c9cba
-  PSTCollectionView: d9f466e4554cc83260ca9bde7beb27f308e8fd76
+  PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  UINavigationItem+Loading: e61d7963495d8a19b6d3825d867ed60db9b218b6
 
-COCOAPODS: 0.36.0
+COCOAPODS: 0.36.4
