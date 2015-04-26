@@ -46,11 +46,20 @@
 {
     [super viewWillAppear:animated];
 
-    // hide search bar - we can reach it by pull gesture
-    NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:firstRow
-                          atScrollPosition:UITableViewScrollPositionTop
-                                  animated:NO];
+    // Check if table have section 0.
+    // Table View always have this 0 section - but it's hidden if user not added favourites.
+    if ([self.tableView numberOfRowsInSection:0]) {
+        // hide search bar - we can reach it by pull gesture
+        NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
+
+        // Check if first row is existing - or otherwise app will crash.
+        if (firstRow) {
+            [self.tableView scrollToRowAtIndexPath:firstRow
+                                  atScrollPosition:UITableViewScrollPositionTop
+                                          animated:NO];
+        }
+    }
+
 }
 
 #pragma mark - Board List
