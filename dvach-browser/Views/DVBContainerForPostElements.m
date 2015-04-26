@@ -9,7 +9,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "DVBContainerForPostElements.h"
 
-@interface DVBContainerForPostElements ()
+@interface DVBContainerForPostElements () <UITextViewDelegate>
 
 // UI elements
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -18,8 +18,12 @@
 @property (nonatomic, weak) IBOutlet UIButton *uploadButton;
 
 // Constraints
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldHeight;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldContainerHeight;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaFieldContainer;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromPhotoToBottomEdge;
+
+// Constraints original value storages
+@property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
 
 @end
 
@@ -36,12 +40,16 @@
     _captchaImage.layer.zPosition = 2;
 
     // Setup commentTextView appearance to look like textField.
-    [_commentTextView.layer setBackgroundColor: [[UIColor whiteColor] CGColor]];
-    [_commentTextView.layer setBorderColor: [[[UIColor grayColor] colorWithAlphaComponent:0.2] CGColor]];
-    [_commentTextView.layer setBorderWidth: 1.0];
-    [_commentTextView.layer setCornerRadius:5.0f];
-    [_commentTextView.layer setMasksToBounds:YES];
-    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(5, 5, 5, 5)];
+    _commentTextView.delegate = self;
+
+    if ([_commentTextView.text isEqualToString:@""]) {
+        _commentTextView.text = @"Сообщение";
+        _commentTextView.textColor = [UIColor lightGrayColor];
+    }
+
+    // Delete textView insets.
+    _commentTextView.textContainer.lineFragmentPadding = 0;
+    _commentTextView.textContainerInset = UIEdgeInsetsZero;
 
     // Setup dynamic font sizes.
     _nameTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
@@ -53,12 +61,23 @@
     // Setup button appearance.
     _captchaUpdateButton.adjustsImageWhenDisabled = YES;
     [_captchaUpdateButton sizeToFit];
+
+    [self registerForKeyboardNotifications];
+
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
+                                           initWithTarget:self
+                                           action:@selector(hideKeyBoard)];
+
+    [self addGestureRecognizer:tapGesture];
+
+    // Get default value for bottom constraint.
+    _contstraintFromCommentTextToBottomEdgeOriginalValue = _contstraintFromPhotoToBottomEdge.constant;
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
 {
-    _captchaFieldHeight.constant = 0;
-    _fromThemeToCaptchaField.constant = 0;
+    _captchaFieldContainerHeight.constant = 0;
+    _fromThemeToCaptchaFieldContainer.constant = 0;
 
     [_captchaValueTextField removeConstraints:_captchaValueTextField.constraints];
     [_captchaValueTextField removeFromSuperview];
@@ -69,12 +88,32 @@
     [_activityIndicator removeFromSuperview];
 }
 
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@"Сообщение"]) {
+        textView.text = @"";
+        textView.textColor = [UIColor blackColor];
+    }
+    [textView becomeFirstResponder];
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    if ([textView.text isEqualToString:@""]) {
+        textView.text = @"Сообщение";
+        textView.textColor = [UIColor lightGrayColor];
+    }
+    [textView resignFirstResponder];
+}
+
+#pragma mark - Captcha
+
 - (void)clearCaptchaValueField
 {
     _captchaValueTextField.text = @"";
 }
-
-#pragma mark - Captcha
 
 - (void)clearCaptchaImage
 {
@@ -86,10 +125,56 @@
     [_captchaImage sd_setImageWithURL:[NSURL URLWithString:urlString]];
 }
 
+#pragma mark - Keyboard
+
+// Call this method somewhere in your view controller setup code.
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification *)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGRect keyPadFrame=[[UIApplication sharedApplication].keyWindow convertRect:[[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:self];
+    CGSize kbSize =keyPadFrame.size;
+
+    CGFloat keyboardHeight = kbSize.height;
+
+    _contstraintFromPhotoToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue + keyboardHeight;
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification *)aNotification
+{
+    [self layoutIfNeeded];
+
+    _contstraintFromPhotoToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue;
+    [UIView animateWithDuration:1
+                     animations:^
+    {
+         // Called on parent view
+         [self.superview layoutIfNeeded];
+     }];
+}
+
+- (void)hideKeyBoard
+{
+    [self endEditing:YES];
+}
+
 #pragma mark - Upload/Delete button Animation
 
 - (void)changeUploadButtonToDelete
 {
+    [self layoutIfNeeded];
     [UIView animateWithDuration:0.5f
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
@@ -102,6 +187,7 @@
 
 - (void)changeUploadButtonToUpload
 {
+    [self layoutIfNeeded];
     [UIView animateWithDuration:0.5f
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
