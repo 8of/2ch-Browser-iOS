@@ -87,9 +87,8 @@
  *  Tuning appearance for entire app.
  */
 - (void)appearanceTudeUp {
-    UIColor *dvachColor = [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0];
-    [[UIView appearance] setTintColor:dvachColor];
-    [[UIActivityIndicatorView appearance] setColor:dvachColor];
+    [UIView appearance].tintColor = DVACH_COLOR;
+    [UIActivityIndicatorView appearance].color = DVACH_COLOR;
 }
 
 #pragma mark - Core Data stack

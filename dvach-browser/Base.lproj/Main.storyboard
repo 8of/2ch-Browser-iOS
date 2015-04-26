@@ -424,21 +424,73 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="377"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfq-Cv-IWZ" userLabel="Markup Container">
-                                                <rect key="frame" x="15" y="15" width="290" height="30"/>
-                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <rect key="frame" x="15" y="130" width="290" height="30"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaU-q9-XAI" customClass="DVBMarkupButton">
+                                                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="Ж">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="insertBoldTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="EeS-d0-UoY"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gzk-zM-TG7" customClass="DVBMarkupButton">
+                                                        <rect key="frame" x="45" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="Н">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="insertItalicTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="Nkq-CB-EBX"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMe-06-gOU" customClass="DVBMarkupButton">
+                                                        <rect key="frame" x="90" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="C">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="insertSpoilerTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="OQA-UE-b1b"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oDM-4F-ZPO" customClass="DVBMarkupButton">
+                                                        <rect key="frame" x="135" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="З">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="insertStrikeTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="Kcq-dD-Oo0"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iVb-yP-efC" customClass="DVBMarkupButton">
+                                                        <rect key="frame" x="180" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="П">
+                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </state>
+                                                        <connections>
+                                                            <action selector="insertUnderlineTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="5Zu-E4-ROK"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="eMe-06-gOU" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="1jd-dD-Fo2"/>
                                                     <constraint firstAttribute="height" constant="30" id="Dac-yM-3Bn"/>
+                                                    <constraint firstAttribute="bottom" secondItem="oDM-4F-ZPO" secondAttribute="bottom" id="Dzq-Cg-fE0"/>
+                                                    <constraint firstItem="oaU-q9-XAI" firstAttribute="leading" secondItem="mfq-Cv-IWZ" secondAttribute="leading" id="JWY-Ob-wnH"/>
+                                                    <constraint firstAttribute="bottom" secondItem="oaU-q9-XAI" secondAttribute="bottom" id="LWc-3k-lK3"/>
+                                                    <constraint firstItem="gzk-zM-TG7" firstAttribute="leading" secondItem="oaU-q9-XAI" secondAttribute="trailing" constant="15" id="MVj-nL-aod"/>
+                                                    <constraint firstAttribute="bottom" secondItem="eMe-06-gOU" secondAttribute="bottom" id="Qba-uY-cv8"/>
+                                                    <constraint firstItem="oaU-q9-XAI" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="Um4-49-hjj"/>
+                                                    <constraint firstItem="oDM-4F-ZPO" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="UzC-Gt-JOa"/>
+                                                    <constraint firstAttribute="bottom" secondItem="gzk-zM-TG7" secondAttribute="bottom" id="YpY-IB-86S"/>
+                                                    <constraint firstAttribute="bottom" secondItem="iVb-yP-efC" secondAttribute="bottom" id="aGz-PQ-HPS"/>
+                                                    <constraint firstItem="iVb-yP-efC" firstAttribute="leading" secondItem="oDM-4F-ZPO" secondAttribute="trailing" constant="15" id="gkS-ES-DyN"/>
+                                                    <constraint firstItem="gzk-zM-TG7" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="mYb-hL-HPm"/>
+                                                    <constraint firstItem="oDM-4F-ZPO" firstAttribute="leading" secondItem="eMe-06-gOU" secondAttribute="trailing" constant="15" id="mjh-SB-Icl"/>
+                                                    <constraint firstItem="iVb-yP-efC" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="qWl-uL-Kzt"/>
+                                                    <constraint firstItem="eMe-06-gOU" firstAttribute="leading" secondItem="gzk-zM-TG7" secondAttribute="trailing" constant="15" id="zDg-0C-k1o"/>
                                                 </constraints>
                                             </view>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" directionalLockEnabled="YES" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yu0-D0-p1U">
-                                                <rect key="frame" x="15" y="60" width="290" height="100"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="100" id="6Hd-jK-8SU"/>
-                                                </constraints>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
-                                            </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QiY-eA-Udo" userLabel="Captcha container view">
                                                 <rect key="frame" x="15" y="175" width="290" height="60"/>
                                                 <subviews>
@@ -519,11 +571,21 @@
                                                     <constraint firstAttribute="width" constant="22" id="m54-Xy-Xlt"/>
                                                 </constraints>
                                             </view>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" directionalLockEnabled="YES" bounces="NO" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yu0-D0-p1U">
+                                                <rect key="frame" x="15" y="15" width="290" height="100"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="100" id="6Hd-jK-8SU"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
+                                            </textView>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="sby-Ye-Jpl" secondAttribute="bottom" constant="15" id="67F-fm-4pS"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="height" secondItem="wjr-Ih-9ju" secondAttribute="height" id="8uQ-eA-oLj"/>
+                                            <constraint firstItem="mfq-Cv-IWZ" firstAttribute="top" secondItem="yu0-D0-p1U" secondAttribute="bottom" constant="15" id="9Mp-zV-3Wd"/>
                                             <constraint firstAttribute="trailing" secondItem="cMi-uW-0S6" secondAttribute="trailing" constant="15" id="Dt8-aL-gre"/>
                                             <constraint firstItem="sby-Ye-Jpl" firstAttribute="top" secondItem="cMi-uW-0S6" secondAttribute="bottom" constant="15" id="LSz-w0-bca"/>
                                             <constraint firstAttribute="trailing" secondItem="yu0-D0-p1U" secondAttribute="trailing" constant="15" id="Nhn-vt-Q1G"/>
@@ -534,13 +596,12 @@
                                             <constraint firstAttribute="trailing" secondItem="QiY-eA-Udo" secondAttribute="trailing" constant="15" id="YXB-hy-w9k"/>
                                             <constraint firstItem="yu0-D0-p1U" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="c85-hy-rhJ"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="top" secondItem="wjr-Ih-9ju" secondAttribute="bottom" constant="15" id="gNl-5L-uA9"/>
-                                            <constraint firstItem="mfq-Cv-IWZ" firstAttribute="top" secondItem="RLY-YJ-MBR" secondAttribute="top" constant="15" id="hCF-a4-SeX"/>
+                                            <constraint firstItem="QiY-eA-Udo" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="bottom" constant="15" id="hXU-tE-Wbd"/>
                                             <constraint firstAttribute="trailing" secondItem="mfq-Cv-IWZ" secondAttribute="trailing" constant="15" id="hZa-Hq-OY5"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="iAa-8K-uac"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="q9C-Yl-ltH"/>
-                                            <constraint firstItem="QiY-eA-Udo" firstAttribute="top" secondItem="yu0-D0-p1U" secondAttribute="bottom" constant="15" id="tG4-7C-wBg"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="top" secondItem="QiY-eA-Udo" secondAttribute="bottom" constant="15" id="tjr-HV-C99"/>
-                                            <constraint firstItem="yu0-D0-p1U" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="bottom" constant="15" id="vOe-eI-rdE"/>
+                                            <constraint firstItem="yu0-D0-p1U" firstAttribute="top" secondItem="RLY-YJ-MBR" secondAttribute="top" constant="15" id="vDr-68-HCD"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="activityIndicator" destination="jV2-RR-JBv" id="SlQ-1E-tfc"/>

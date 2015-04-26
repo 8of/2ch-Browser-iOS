@@ -25,6 +25,10 @@
 // Constraints original value storages
 @property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
 
+// Values for  markup
+@property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
+@property (nonatomic, assign) NSUInteger commentViewSelectedLength;
+
 @end
 
 @implementation DVBContainerForPostElements
@@ -32,6 +36,9 @@
 - (void)awakeFromNib
 {
     [self setupAppearance];
+
+    _commentViewSelectedStartLocation = 0;
+    _commentViewSelectedLength = 0;
 }
 
 - (void)setupAppearance
@@ -43,7 +50,7 @@
     _commentTextView.delegate = self;
 
     if ([_commentTextView.text isEqualToString:@""]) {
-        _commentTextView.text = @"Сообщение";
+        _commentTextView.text = @"Комментарий";
         _commentTextView.textColor = [UIColor lightGrayColor];
     }
 
@@ -90,9 +97,20 @@
 
 #pragma mark - UITextViewDelegate
 
+- (BOOL)isCommentPlaceholderNow
+{
+    NSString *placeholder = NSLocalizedString(@"Комментарий", @"Placeholder для поля комментария при отправке ответа на пост");
+
+    if ([_commentTextView.text isEqualToString:placeholder]) {
+        return YES;
+    }
+
+    return NO;
+}
+
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    if ([textView.text isEqualToString:@"Сообщение"]) {
+    if ([self isCommentPlaceholderNow]) {
         textView.text = @"";
         textView.textColor = [UIColor blackColor];
     }
@@ -102,7 +120,7 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if ([textView.text isEqualToString:@""]) {
-        textView.text = @"Сообщение";
+        textView.text = @"Комментарий";
         textView.textColor = [UIColor lightGrayColor];
     }
     [textView resignFirstResponder];
@@ -168,6 +186,66 @@
 - (void)hideKeyBoard
 {
     [self endEditing:YES];
+}
+
+#pragma mark - 2ch markup
+
+- (void)textViewDidChangeSelection:(UITextView *)textView
+{
+    NSRange selectedRange = _commentTextView.selectedRange;
+    _commentViewSelectedStartLocation = selectedRange.location;
+    _commentViewSelectedLength = selectedRange.length;
+}
+
+/**
+ *  Wrap comment in commentTextView
+ */
+- (void)wrapTextWithSender:(id)sender andTagToInsert:(NSString *)tagToInsert
+{
+    if (![self isCommentPlaceholderNow]) {
+        NSUInteger locationForOpenTag = _commentViewSelectedStartLocation;
+        NSUInteger locationForCloseTag = locationForOpenTag + _commentViewSelectedLength;
+
+        NSString *tagToinsertBefore = [NSString stringWithFormat:@"[%@]", tagToInsert];
+        NSString *tagToinsertAfter = [NSString stringWithFormat:@"[/%@]", tagToInsert];
+
+        NSMutableString *mutableCommentString = [NSMutableString stringWithString:_commentTextView.text];
+
+        // Insiert close tag first because otherwise its position will change and we'll need to recalculate it
+        [mutableCommentString insertString:tagToinsertAfter
+                                   atIndex:locationForCloseTag];
+        [mutableCommentString insertString:tagToinsertBefore
+                                   atIndex:locationForOpenTag];
+
+        NSString *newCommentString = mutableCommentString;
+        
+        _commentTextView.text = newCommentString;
+    }
+}
+
+- (IBAction)insertBoldTagAction:(id)sender
+{
+    [self wrapTextWithSender:sender andTagToInsert:@"b"];
+}
+
+- (IBAction)insertItalicTagAction:(id)sender
+{
+    [self wrapTextWithSender:sender andTagToInsert:@"i"];
+}
+
+- (IBAction)insertSpoilerTagAction:(id)sender
+{
+    [self wrapTextWithSender:sender andTagToInsert:@"spoiler"];
+}
+
+- (IBAction)insertUnderlineTagAction:(id)sender
+{
+    [self wrapTextWithSender:sender andTagToInsert:@"u"];
+}
+
+- (IBAction)insertStrikeTagAction:(id)sender
+{
+    [self wrapTextWithSender:sender andTagToInsert:@"s"];
 }
 
 #pragma mark - Upload/Delete button Animation
