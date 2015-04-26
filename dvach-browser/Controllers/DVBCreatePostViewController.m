@@ -7,7 +7,6 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 #import "DVBConstants.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
@@ -16,6 +15,7 @@
 #import "DVBNetworking.h"
 #import "DVBMessagePostServerAnswer.h"
 #import "DVBWrapMenuItem.h"
+#import "DVBContainerForPostElements.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate>
 
@@ -41,19 +41,10 @@
 @property (nonatomic, assign) BOOL postSuccessfull;
 
 // UI elements
+@property (weak, nonatomic) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
-@property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
-@property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
-@property (nonatomic, weak) IBOutlet UITextField *nameTextField;
-@property (nonatomic, weak) IBOutlet UITextField *subjectTextField;
-@property (nonatomic, weak) IBOutlet UITextField *captchaValueTextField;
-@property (nonatomic, weak) IBOutlet UITextView *commentTextView;
-@property (nonatomic, weak) IBOutlet UIButton *uploadButton;
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 // Constraints
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldHeight;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaField;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromCommentTextToBottomEdge;
 
 // Constraints original value storages
@@ -76,66 +67,27 @@
 {
     _networking = [[DVBNetworking alloc] init];
     
-    /**
-     *  If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly
-     */
+    // If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly.
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
-    if (isThreadNumZero)
-    {
+    if (isThreadNumZero) {
         NSString *newThreadTitle = NSLocalizedString(@"Новый тред", @"Title of modal view controller if we creating thread");
         self.title = newThreadTitle;
     }
-    /**
-     *  Set comment field text from sharedComment
-     */
+    // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
     NSString *commentText = _sharedComment.comment;
-    _commentTextView.text = commentText;
+    _containerForPostElementsView.commentTextView.text = commentText;
     
-    /**
-     *  CommentTextView settings
-     */
-    _commentTextView.delegate = self;
-    /**
-     *  Setup commentTextView appearance to look like textField
-     */
-    [_commentTextView.layer setBackgroundColor: [[UIColor whiteColor] CGColor]];
-    [_commentTextView.layer setBorderColor: [[[UIColor grayColor] colorWithAlphaComponent:0.2] CGColor]];
-    [_commentTextView.layer setBorderWidth: 1.0];
-    [_commentTextView.layer setCornerRadius:5.0f];
-    [_commentTextView.layer setMasksToBounds:YES];
-    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(5, 5, 5, 5)];
+    // CommentTextView settings.
+    _containerForPostElementsView.commentTextView.delegate = self;
     
     _contstraintFromCommentTextToBottomEdgeOriginalValue = _contstraintFromCommentTextToBottomEdge.constant;
     
-    /**
-     *  Setup dynamic font sizes
-     */
-    _nameTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _subjectTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _captchaValueTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _captchaUpdateButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    
-    /**
-     *  Setup button appearance
-     */
-    _captchaUpdateButton.adjustsImageWhenDisabled = YES;
-    [_captchaUpdateButton sizeToFit];
-    
-    /**
-     *  Prepare usercode (aka passcode) from default
-     */
+    // Prepare usercode (aka passcode) from default.
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
     
-    // Captcha image will be in front of activity indicator after appearing
-    _captchaImage.layer.zPosition = 2;
-    
-    if ([_usercode isEqualToString:@""])
-    {
-        /**
-         *  Ask server for captcha if user code is not presented
-         */
+    if ([_usercode isEqualToString:@""]) {
+        // Ask server for captcha if user code is not presented.
         [self requestCaptchaImage];
     }
     
@@ -160,16 +112,7 @@
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
     
     if (isUsercodeNotEmpty) {
-        _captchaFieldHeight.constant = 0;
-        _fromThemeToCaptchaField.constant = 0;
-        
-        [_captchaValueTextField removeConstraints:_captchaValueTextField.constraints];
-        [_captchaValueTextField removeFromSuperview];
-        
-        [_captchaUpdateButton removeConstraints:_captchaUpdateButton.constraints];
-        [_captchaUpdateButton removeFromSuperview];
-
-        [_activityIndicator removeFromSuperview];
+        [_containerForPostElementsView changeConstraintsIfUserCodeNotEmpty];
     }
 }
 
@@ -181,15 +124,13 @@
 - (void)requestCaptchaImage
 {
     // Firstly we entirely hide captcha image until we have new image
-    [_captchaImage setImage:nil];
+    [_containerForPostElementsView clearCaptchaImage];
     
     [_networking requestCaptchaKeyWithCompletion:^(NSString *completion)
     {
-        /**
-         *  Present yandex captcha image to VC
-         */
-        [_captchaImage sd_setImageWithURL:[NSURL URLWithString:completion]];
-        _captchaValueTextField.text = @"";
+        // Present yandex captcha image to VC
+        [_containerForPostElementsView setCaptchaImageWithUrlString:completion];
+        [_containerForPostElementsView clearCaptchaValueField];
     }];
 }
 
@@ -216,13 +157,11 @@
      */
     self.navigationItem.prompt = nil;
     
-    /**
-     *  Get values from fields
-     */
-    NSString *name = _nameTextField.text;
-    NSString *subject = _subjectTextField.text;
-    NSString *comment = _commentTextView.text;
-    NSString *captchaValue = _captchaValueTextField.text;
+    // Get values from fields
+    NSString *name = _containerForPostElementsView.nameTextField.text;
+    NSString *subject = _containerForPostElementsView.subjectTextField.text;
+    NSString *comment = _containerForPostElementsView.commentTextView.text;
+    NSString *captchaValue = _containerForPostElementsView.captchaValueTextField.text;
     
     /**
      *  Fire actual method
@@ -243,12 +182,10 @@
 
 - (IBAction)pickPhotoAction:(id)sender
 {
-    if (!_isImagePicked)
-    {
+    if (!_isImagePicked) {
         [self pickPicture];
     }
-    else
-    {
+    else {
         [self deletePicture];
     }
     
@@ -256,13 +193,9 @@
 
 - (IBAction)cancelPostAction:(id)sender
 {
-    /**
-     *  Dismiss keyboard before dismissing View Controller
-     */
+    // Dismiss keyboard before dismissing View Controller.
     [self.view endEditing:YES];
-    /**
-     *  Fire actual dismissing method
-     */
+    // Fire actual dismissing method.
     [self goBackToThread];
 }
 
@@ -281,9 +214,7 @@
              andImageToLoad:(UIImage *)imageToLoad
 {
     
-    /**
-     *  Turn off POST button - so we can't tap it the second time before post action completed
-     */
+    // Turn off POST button - so we can't tap it the second time before post action completed.
     self.navigationItem.rightBarButtonItem.enabled = FALSE;
     
     [_networking postMessageWithTask:task
@@ -298,41 +229,30 @@
                       andImageToLoad:imageToLoad
                        andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
     {
-        /**
-         *  Set Navigation prompt accordingly to server answer
-         */
+        // Set Navigation prompt accordingly to server answer.
         NSString *serverStatusMessage = messagePostServerAnswer.statusMessage;
         self.navigationItem.prompt = serverStatusMessage;
         
         BOOL isPostWasSuccessful = messagePostServerAnswer.success;
         
-        if (isPostWasSuccessful)
-        {
-            /**
-             *  Clear comment text and saved comment if post was successfull
-             */
-            _commentTextView.text = @"";
+        if (isPostWasSuccessful) {
+            // Clear comment text and saved comment if post was successfull.
+            _containerForPostElementsView.commentTextView.text = @"";
             _sharedComment.comment = @"";
             
             NSString *threadToRedirectTo = messagePostServerAnswer.threadToRedirectTo;
             BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
             
-            if (isThreadToRedirectToNotEmpty)
-            {
+            if (isThreadToRedirectToNotEmpty) {
                 _createdThreadNum = threadToRedirectTo;
             }
-            /**
-             *  Dismiss View Controller if post was successfull
-             */
+            // Dismiss View Controller if post was successfull.
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
                        afterDelay:2.0];
         }
-        else
-        {
-            /**
-             *  Enable Post button back
-             */
+        else {
+            // Enable Post button back.
             self.navigationItem.rightBarButtonItem.enabled = TRUE;
             [self requestCaptchaImage];
         }
@@ -343,13 +263,10 @@
 
 - (void)textViewDidChangeSelection:(UITextView *)textView
 {
-    NSRange selectedRange = _commentTextView.selectedRange;
+    NSRange selectedRange = _containerForPostElementsView.commentTextView.selectedRange;
     NSUInteger selectedLocation = selectedRange.location;
     NSUInteger selectedLength = selectedRange.length;
-    if (selectedLength > 0)
-    {
-        // NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
-
+    if (selectedLength > 0) {
         [self makeMenuWithSelectedLocation:selectedLocation
                           andSelectedRange:selectedLength];
     }
@@ -433,7 +350,7 @@
     NSString *tagToinsertBefore = [NSString stringWithFormat:@"[%@]", tagToInsert];
     NSString *tagToinsertAfter = [NSString stringWithFormat:@"[/%@]", tagToInsert];
     
-    NSMutableString *mutableCommentString = [NSMutableString stringWithString:_commentTextView.text];
+    NSMutableString *mutableCommentString = [NSMutableString stringWithString:_containerForPostElementsView.commentTextView.text];
     
     // Insiert close tag first because otherwise its position will change and we'll need to recalculate it
     [mutableCommentString insertString:tagToinsertAfter
@@ -443,7 +360,7 @@
     
     NSString *newCommentString = mutableCommentString;
     
-    _commentTextView.text = newCommentString;
+    _containerForPostElementsView.commentTextView.text = newCommentString;
 }
 
 #pragma mark - Image(s) picking
@@ -459,53 +376,28 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker
-didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     _imageToLoad = info[UIImagePickerControllerOriginalImage];
     _isImagePicked = TRUE;
     
-    [self changeUploadButtonToDelete];
+    [_containerForPostElementsView changeUploadButtonToDelete];
     
     [self dismissViewControllerAnimated:YES
                              completion:nil];
 }
 
 /**
- *  Delete all pointers to photo
+ *  Delete all pointers/refs to photo
  */
 - (void)deletePicture
 {
     _imageToLoad = nil;
     _isImagePicked = FALSE;
-    [self changeUploadButtonToUpload];
+    [_containerForPostElementsView changeUploadButtonToUpload];
 }
 
-#pragma mark - Animation
 
-- (void)changeUploadButtonToDelete
-{
-    [UIView animateWithDuration:0.5f
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-        self.view.autoresizesSubviews = NO;
-        [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, M_PI/4)];
-        _uploadButton.tintColor = [UIColor redColor];
-    } completion:nil];
-}
-
-- (void)changeUploadButtonToUpload
-{
-    [UIView animateWithDuration:0.5f
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseOut
-                     animations:^{
-        self.view.autoresizesSubviews = NO;
-        [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, -M_PI/4)];
-        _uploadButton.tintColor = [[[[UIApplication sharedApplication] delegate] window] tintColor];
-    } completion:nil];
-}
 
 #pragma  mark - Navigation
 
@@ -514,26 +406,20 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     self.navigationItem.prompt = nil;
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
     
-    if (isThreadNumZero)
-    {
+    if (isThreadNumZero) {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_NEW_THREAD
                                   sender:self];
     }
-    else
-    {
+    else  {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
     }
-    
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    /**
-     *  Save comment
-     */
-    _sharedComment.comment = _commentTextView.text;
+    // Save comment for later.
+    _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     
     BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
     BOOL isSegueDismissToNewThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_NEW_THREAD];
@@ -544,26 +430,20 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
      */
     id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
     
-    if (isSegueDismissToThread)
-    {
+    if (isSegueDismissToThread) {
         /**
          *  Update thread in any case (was post successfull or not)
          */
-        if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)])
-        {
+        if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
             [strongDelegate updateThreadAfterPosting];
         }
     }
-    else if (isSegueDismissToNewThread)
-    {
-        if (_createdThreadNum)
-        {
+    else if (isSegueDismissToNewThread) {
+
+        if (_createdThreadNum) {
             NSLog(@"New thread num: %@. Redirecting.", _createdThreadNum);
-            /**
-             *  Our delegate method is not optional, but we should check if delegate implements it anyway
-             */
-            if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)])
-            {
+
+            if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
         }
