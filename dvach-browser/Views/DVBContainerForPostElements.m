@@ -250,10 +250,12 @@
 
 #pragma mark - Upload/Delete button Animation
 
+
+
 - (void)changeUploadButtonToDelete
 {
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.5f
+    [UIView animateWithDuration:0.3f
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
@@ -266,13 +268,13 @@
 - (void)changeUploadButtonToUpload
 {
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.5f
+    [UIView animateWithDuration:0.3f
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
                          [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, -M_PI/4)];
-                         _uploadButton.tintColor = [[[[UIApplication sharedApplication] delegate] window] tintColor];
+                         _uploadButton.tintColor = [UIColor whiteColor];
                      } completion:nil];
 }
 

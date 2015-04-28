@@ -18,6 +18,7 @@ IB_DESIGNABLE
 @property (nonatomic, weak) IBOutlet UITextField *subjectTextField;
 @property (nonatomic, weak) IBOutlet UITextField *emailTextField;
 @property (nonatomic, weak) IBOutlet UITextField *captchaValueTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *image1View;
 
 - (void)changeConstraintsIfUserCodeNotEmpty;
 - (void)clearCaptchaValueField;

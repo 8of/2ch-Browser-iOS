@@ -14,6 +14,8 @@
 #import "DVBNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
+#import "DVBPostPhotoContainerView.h"
+
 @interface AppDelegate ()
 
 @property (nonatomic, strong) DVBNetworking *networking;
@@ -89,6 +91,7 @@
 - (void)appearanceTudeUp {
     [UIView appearance].tintColor = DVACH_COLOR;
     [UIActivityIndicatorView appearance].color = DVACH_COLOR;
+    [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
 }
 
 #pragma mark - Core Data stack
