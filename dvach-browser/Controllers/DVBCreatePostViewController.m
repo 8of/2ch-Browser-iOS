@@ -148,6 +148,7 @@
     // Get values from fields
     NSString *name = _containerForPostElementsView.nameTextField.text;
     NSString *subject = _containerForPostElementsView.subjectTextField.text;
+    NSString *email = _containerForPostElementsView.emailTextField.text;
     NSString *comment = _containerForPostElementsView.commentTextView.text;
     NSString *captchaValue = _containerForPostElementsView.captchaValueTextField.text;
     
@@ -158,7 +159,7 @@
                      andBoard:_boardCode
                  andThreadnum:_threadNum
                       andName:name
-                     andEmail:@""
+                     andEmail:email
                    andSubject:subject
                    andComment:comment
               andcaptchaValue:captchaValue

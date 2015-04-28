@@ -322,6 +322,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
           *  Added comment field this way because makaba don't handle it right otherwise
           *  and name
           *  and subject
+          *  and e-mail
           */
          [formData appendPartWithFormData:[comment dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"comment"];
@@ -329,6 +330,8 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                                      name:@"name"];
          [formData appendPartWithFormData:[subject dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"subject"];
+         [formData appendPartWithFormData:[email dataUsingEncoding:NSUTF8StringEncoding]
+                                     name:@"email"];
          
          /**
           *  Check if image present.
