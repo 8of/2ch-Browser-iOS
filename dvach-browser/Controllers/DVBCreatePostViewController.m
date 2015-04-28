@@ -267,6 +267,8 @@
 {
     _imageToLoad = info[UIImagePickerControllerOriginalImage];
     _isImagePicked = TRUE;
+
+    [_containerForPostElementsView.image1View setImage:_imageToLoad];
     
     [_containerForPostElementsView changeUploadButtonToDelete];
     
@@ -281,6 +283,7 @@
 {
     _imageToLoad = nil;
     _isImagePicked = FALSE;
+    [_containerForPostElementsView.image1View setImage:nil];
     [_containerForPostElementsView changeUploadButtonToUpload];
 }
 
