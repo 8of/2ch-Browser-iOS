@@ -7,6 +7,8 @@
 //
 
 #import <SDWebImage/UIImageView+WebCache.h>
+
+#import "DVBConstants.h"
 #import "DVBContainerForPostElements.h"
 
 @interface DVBContainerForPostElements () <UITextViewDelegate>
@@ -51,11 +53,6 @@
 
     // Setup commentTextView appearance to look like textField.
     _commentTextView.delegate = self;
-
-    if ([_commentTextView.text isEqualToString:@""]) {
-        _commentTextView.text = @"Комментарий";
-        _commentTextView.textColor = [UIColor lightGrayColor];
-    }
 
     // Delete textView insets.
     _commentTextView.textContainer.lineFragmentPadding = 0;
@@ -102,7 +99,7 @@
 
 - (BOOL)isCommentPlaceholderNow
 {
-    NSString *placeholder = NSLocalizedString(@"Комментарий", @"Placeholder для поля комментария при отправке ответа на пост");
+    NSString *placeholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
 
     if ([_commentTextView.text isEqualToString:placeholder]) {
         return YES;
@@ -123,7 +120,7 @@
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if ([textView.text isEqualToString:@""]) {
-        textView.text = @"Комментарий";
+        textView.text = PLACEHOLDER_COMMENT_FIELD;
         textView.textColor = [UIColor lightGrayColor];
     }
     [textView resignFirstResponder];

@@ -41,3 +41,6 @@ NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegu
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
 NSString *const DVB_BOARDVIEWCONTROLLER_IDENTIFIER = @"DVBBoardViewController";
 NSString *const THREAD_CELL_IDENTIFIER = @"threadCell";
+
+// Placeholders
+NSString *const PLACEHOLDER_COMMENT_FIELD = @"Комментарий";
