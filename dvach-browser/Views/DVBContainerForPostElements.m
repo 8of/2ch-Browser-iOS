@@ -43,6 +43,9 @@
 
 - (void)setupAppearance
 {
+
+    _uploadButton.layer.cornerRadius = 11.0f;
+
     // Captcha image will be in front of activity indicator after appearing.
     _captchaImage.layer.zPosition = 2;
 
@@ -261,7 +264,7 @@
                      animations:^{
                          self.autoresizesSubviews = NO;
                          [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, M_PI/4)];
-                         _uploadButton.tintColor = [UIColor redColor];
+                         _uploadButton.backgroundColor = [UIColor redColor];
                      } completion:nil];
 }
 
@@ -274,7 +277,7 @@
                      animations:^{
                          self.autoresizesSubviews = NO;
                          [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, -M_PI/4)];
-                         _uploadButton.tintColor = [UIColor whiteColor];
+                         _uploadButton.backgroundColor = [UIColor clearColor];
                      } completion:nil];
 }
 
