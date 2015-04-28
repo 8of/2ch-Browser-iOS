@@ -78,6 +78,11 @@
     if ([commentText length] > 0) {
         _containerForPostElementsView.commentTextView.text = commentText;
     }
+    else {
+        NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
+        _containerForPostElementsView.commentTextView.text = commentFieldPlaceholder;
+        _containerForPostElementsView.commentTextView.textColor = [UIColor lightGrayColor];
+    }
     
     // Prepare usercode (aka passcode) from default.
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
@@ -306,8 +311,11 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Save comment for later.
-    _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
+    // Save comment for later if it is not a placeholder.
+    NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
+    if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
+        _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
+    }
     
     BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
     BOOL isSegueDismissToNewThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_NEW_THREAD];
