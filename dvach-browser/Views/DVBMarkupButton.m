@@ -20,4 +20,16 @@
     self.layer.borderColor = DVACH_COLOR_CG;
 }
 
+- (void)setHighlighted:(BOOL)highlighted
+{
+    [super setHighlighted:highlighted];
+
+    if (highlighted) {
+        self.layer.borderColor = DVACH_COLOR_HIGHLIGHTED_CG;
+    }
+    else {
+        self.layer.borderColor = DVACH_COLOR_CG;
+    }
+}
+
 @end

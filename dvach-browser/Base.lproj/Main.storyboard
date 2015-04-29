@@ -421,7 +421,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
                                 <rect key="frame" x="0.0" y="64" width="320" height="486"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
@@ -432,9 +432,7 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaU-q9-XAI" customClass="DVBMarkupButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="Ж">
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
+                                                        <state key="normal" title="Ж"/>
                                                         <connections>
                                                             <action selector="insertBoldTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="EeS-d0-UoY"/>
                                                         </connections>
