@@ -25,28 +25,24 @@
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
-/**
- *  Captcha
- */
+/// Captcha
 @property (nonatomic, strong) NSString *captchaValue;
-/**
- *  Usercode for posting without captcha
- */
+/// Usercode for posting without captcha
 @property (nonatomic, strong) NSString *usercode;
+// Mutable array of UIImage objects we need to attach to post
+@property (nonatomic, strong) NSMutableArray *imagesToUpload;
 /**
  *  Image for sending (1)
  */
-@property (nonatomic, strong) UIImage *imageToLoad;
-/**
- *  Checker for including/excluding photo to query
- */
-@property (nonatomic, assign) BOOL isImagePicked;
+// @property (nonatomic, strong) UIImage *imageToLoad;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
 
 // UI elements
-@property (weak, nonatomic) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
+@property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
+// Tempopary storage for add/remove picture button we just pressed
+@property (nonatomic, strong) UIButton *addPictureButton;
 
 @end
 
@@ -58,9 +54,7 @@
     [self prepareViewController];
 }
 
-/**
- *  All View Controller tuning
- */
+/// All View Controller tuning
 - (void)prepareViewController
 {
     _networking = [[DVBNetworking alloc] init];
@@ -91,6 +85,8 @@
         // Ask server for captcha if user code is not presented.
         [self requestCaptchaImage];
     }
+
+    _imagesToUpload = [@[] mutableCopy];
     
     [self changeConstraints];
 }
@@ -156,10 +152,9 @@
     NSString *email = _containerForPostElementsView.emailTextField.text;
     NSString *comment = _containerForPostElementsView.commentTextView.text;
     NSString *captchaValue = _containerForPostElementsView.captchaValueTextField.text;
-    
-    /**
-     *  Fire actual method
-     */
+
+    NSArray *imagesToUpload = [_imagesToUpload copy];
+    // Fire actual method
     [self postMessageWithTask:@"post"
                      andBoard:_boardCode
                  andThreadnum:_threadNum
@@ -169,20 +164,23 @@
                    andComment:comment
               andcaptchaValue:captchaValue
                   andUsercode:_usercode
-               andImageToLoad:_imageToLoad
+            andImagesToUpload:imagesToUpload
      ];
 
 }
 
 - (IBAction)pickPhotoAction:(id)sender
 {
-    if (!_isImagePicked) {
-        [self pickPicture];
-    }
-    else {
+    _addPictureButton = sender;
+
+    UIImageView *imageViewToCheckImage = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+
+    if (imageViewToCheckImage.image) {
         [self deletePicture];
     }
-    
+    else {
+        [self pickPicture];
+    }
 }
 
 - (IBAction)cancelPostAction:(id)sender
@@ -205,7 +203,7 @@
                  andComment:(NSString *)comment
             andcaptchaValue:(NSString *)captchaValue
                 andUsercode:(NSString *)usercode
-             andImageToLoad:(UIImage *)imageToLoad
+          andImagesToUpload:(NSArray *)imagesToUpload
 {
     
     // Turn off POST button - so we can't tap it the second time before post action completed.
@@ -220,8 +218,9 @@
                           andComment:comment
                      andcaptchaValue:captchaValue
                          andUsercode:usercode
-                      andImageToLoad:imageToLoad
+                   andImagesToUpload:imagesToUpload
                        andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
+
     {
         // Set Navigation prompt accordingly to server answer.
         NSString *serverStatusMessage = messagePostServerAnswer.statusMessage;
@@ -255,9 +254,7 @@
 
 #pragma mark - Image(s) picking
 
-/**
- *  Pick picture from gallery
- */
+/// Pick picture from gallery
 - (void)pickPicture
 {
     UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
@@ -270,26 +267,55 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    _imageToLoad = info[UIImagePickerControllerOriginalImage];
-    _isImagePicked = TRUE;
+    UIImage *imageToLoad = info[UIImagePickerControllerOriginalImage];
 
-    [_containerForPostElementsView.image1View setImage:_imageToLoad];
+    UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+
+    [imageViewToShowIn setImage:imageToLoad];
+
+    [_imagesToUpload addObject:imageToLoad];
     
-    [_containerForPostElementsView changeUploadButtonToDelete];
+    [_containerForPostElementsView changeUploadButtonToDeleteWithButton:_addPictureButton];
     
     [self dismissViewControllerAnimated:YES
                              completion:nil];
+    _addPictureButton = nil;
 }
 
-/**
- *  Delete all pointers/refs to photo
- */
+/// Delete all pointers/refs to photo.
 - (void)deletePicture
 {
-    _imageToLoad = nil;
-    _isImagePicked = FALSE;
-    [_containerForPostElementsView.image1View setImage:nil];
-    [_containerForPostElementsView changeUploadButtonToUpload];
+    // _imageToLoad = nil;
+    UIImageView *imageViewToDeleteIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+
+    UIImage *imageToDeleteFromEverywhere = imageViewToDeleteIn.image;
+
+    if (imageToDeleteFromEverywhere) {
+        BOOL isImagePresentedInArray = [_imagesToUpload containsObject:imageToDeleteFromEverywhere];
+
+        if (isImagePresentedInArray) {
+            [_imagesToUpload removeObject:imageToDeleteFromEverywhere];
+        }
+    }
+
+    [imageViewToDeleteIn setImage:nil];
+
+    [_containerForPostElementsView changeUploadButtonToUploadWithButton:_addPictureButton];
+    _addPictureButton = nil;
+}
+
+- (UIImageView *)imageViewToShowUploadingImageWithArrayOfViews:(NSArray *)arrayOfViews
+{
+    for (UIView *view in arrayOfViews) {
+        BOOL isItImageView = [view isMemberOfClass:[UIImageView class]];
+        if (isItImageView) {
+            UIImageView *imageView = (UIImageView *)view;
+
+            return imageView;
+        }
+    }
+
+    return nil;
 }
 
 #pragma  mark - Navigation

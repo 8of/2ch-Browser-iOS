@@ -22,10 +22,6 @@
 
 #import "DVBPostTableViewCell.h"
 
-static NSString *const POST_CELL_IDENTIFIER = @"postCell";
-static NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
-
-
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 101.0f;
 
@@ -573,23 +569,37 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier
-                                  sender:(id)sender
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    return YES;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue
-                 sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST])
-    {
+    if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_POST_IOS_7]) {
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         
         createPostViewController.threadNum = _threadNum;
         createPostViewController.boardCode = _boardCode;
         createPostViewController.createPostViewControllerDelegate = self;
     }
+}
+
+// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    // if we have Device with version under 8.0
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+
+        // and we have fancy popover 8.0 segue
+        if ([identifier isEqualToString:SEGUE_TO_NEW_POST]) {
+
+            // Execute iOS 7 segue
+            [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7 sender:self];
+
+            // drop iOS 8 segue
+            return NO;
+        }
+
+        return YES;
+    }
+    
+    return YES;
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex

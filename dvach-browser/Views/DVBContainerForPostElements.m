@@ -17,15 +17,11 @@
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
 @property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
-@property (nonatomic, weak) IBOutlet UIButton *uploadButton;
 
 // Constraints
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldContainerHeight;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaFieldContainer;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromPhotoToBottomEdge;
-
-// Constraints original value storages
-@property (nonatomic, assign) CGFloat contstraintFromCommentTextToBottomEdgeOriginalValue;
 
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
@@ -45,9 +41,6 @@
 
 - (void)setupAppearance
 {
-
-    _uploadButton.layer.cornerRadius = 11.0f;
-
     // Captcha image will be in front of activity indicator after appearing.
     _captchaImage.layer.zPosition = 2;
 
@@ -69,16 +62,16 @@
     _captchaUpdateButton.adjustsImageWhenDisabled = YES;
     [_captchaUpdateButton sizeToFit];
 
-    [self registerForKeyboardNotifications];
-
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(hideKeyBoard)];
 
     [self addGestureRecognizer:tapGesture];
 
-    // Get default value for bottom constraint.
-    _contstraintFromCommentTextToBottomEdgeOriginalValue = _contstraintFromPhotoToBottomEdge.constant;
+    // For iPad we set bottom padding less
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        _contstraintFromPhotoToBottomEdge.constant = 15.0f;
+    }
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
@@ -144,44 +137,6 @@
 }
 
 #pragma mark - Keyboard
-
-// Call this method somewhere in your view controller setup code.
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification *)aNotification
-{
-    NSDictionary* info = [aNotification userInfo];
-    CGRect keyPadFrame=[[UIApplication sharedApplication].keyWindow convertRect:[[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue] fromView:self];
-    CGSize kbSize =keyPadFrame.size;
-
-    CGFloat keyboardHeight = kbSize.height;
-
-    _contstraintFromPhotoToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue + keyboardHeight;
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification *)aNotification
-{
-    [self layoutIfNeeded];
-
-    _contstraintFromPhotoToBottomEdge.constant = _contstraintFromCommentTextToBottomEdgeOriginalValue;
-    [UIView animateWithDuration:1
-                     animations:^
-    {
-         // Called on parent view
-         [self.superview layoutIfNeeded];
-     }];
-}
 
 - (void)hideKeyBoard
 {
@@ -252,20 +207,22 @@
 
 
 
-- (void)changeUploadButtonToDelete
+- (void)changeUploadButtonToDeleteWithButton:(UIButton *)button
 {
+    button.layer.cornerRadius = 11.0f;
+
     [self layoutIfNeeded];
     [UIView animateWithDuration:0.3f
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, M_PI/4)];
-                         _uploadButton.backgroundColor = [UIColor redColor];
+                         [button setTransform:CGAffineTransformRotate(button.transform, M_PI/4)];
+                         button.backgroundColor = [UIColor redColor];
                      } completion:nil];
 }
 
-- (void)changeUploadButtonToUpload
+- (void)changeUploadButtonToUploadWithButton:(UIButton *)button
 {
     [self layoutIfNeeded];
     [UIView animateWithDuration:0.3f
@@ -273,8 +230,8 @@
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [_uploadButton setTransform:CGAffineTransformRotate(_uploadButton.transform, -M_PI/4)];
-                         _uploadButton.backgroundColor = [UIColor clearColor];
+                         [button setTransform:CGAffineTransformRotate(button.transform, -M_PI/4)];
+                         button.backgroundColor = [UIColor clearColor];
                      } completion:nil];
 }
 
