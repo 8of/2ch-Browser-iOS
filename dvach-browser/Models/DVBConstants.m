@@ -34,6 +34,9 @@ NSString *const SEGUE_TO_EULA = @"segueToEula";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
 NSString *const SEGUE_TO_NEW_THREAD = @"segueToNewThread";
+NSString *const SEGUE_TO_NEW_THREAD_IOS_7 = @"segueToThreadiOS7";
+NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
+NSString *const SEGUE_TO_NEW_POST_IOS_7 = @"segueToNewPostiOS7";
 NSString *const SEGUE_DISMISS_TO_THREAD = @"dismissWithCancelToThreadSegue";
 NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegue";
 
@@ -41,3 +44,7 @@ NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegu
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
 NSString *const DVB_BOARDVIEWCONTROLLER_IDENTIFIER = @"DVBBoardViewController";
 NSString *const THREAD_CELL_IDENTIFIER = @"threadCell";
+NSString *const POST_CELL_IDENTIFIER = @"postCell";
+
+// Placeholders
+NSString *const PLACEHOLDER_COMMENT_FIELD = @"Комментарий";
