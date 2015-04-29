@@ -15,6 +15,7 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 #import "DVBPostPhotoContainerView.h"
+#import "DVBMarkupButton.h"
 
 @interface AppDelegate ()
 
