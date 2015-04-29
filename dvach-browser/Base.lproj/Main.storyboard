@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -178,6 +179,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <attributedString key="attributedTitle"/>
                     </refreshControl>
+                    <connections>
+                        <segue destination="wgF-au-dzt" kind="presentation" identifier="segueToThreadiOS7" id="I74-QH-rFI"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dbD-Xg-rfD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -404,6 +408,9 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <segue destination="wgF-au-dzt" kind="presentation" identifier="segueToNewPostiOS7" id="yeg-8I-aPr"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8B3-Lb-LIO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -421,11 +428,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
                                 <rect key="frame" x="0.0" y="64" width="320" height="486"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="450"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="706"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfq-Cv-IWZ" userLabel="Markup Container">
                                                 <rect key="frame" x="15" y="130" width="290" height="30"/>
@@ -570,13 +577,10 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
                                             </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1y-7G-FSY" customClass="DVBPostPhotoContainerView">
-                                                <rect key="frame" x="15" y="365" width="70" height="70"/>
+                                                <rect key="frame" x="15" y="365" width="61" height="61"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XbM-Kz-D8k">
-                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                                                    </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sby-Ye-Jpl" userLabel="Add photo button container">
-                                                        <rect key="frame" x="24" y="24" width="22" height="22"/>
+                                                        <rect key="frame" x="20" y="20" width="22" height="22"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
@@ -595,44 +599,170 @@
                                                             <constraint firstAttribute="width" constant="22" id="m54-Xy-Xlt"/>
                                                         </constraints>
                                                     </view>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XbM-Kz-D8k">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                    </imageView>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="XbM-Kz-D8k" firstAttribute="top" secondItem="j1y-7G-FSY" secondAttribute="top" id="249-sd-K5d"/>
                                                     <constraint firstAttribute="centerX" secondItem="sby-Ye-Jpl" secondAttribute="centerX" id="4sQ-3I-DDV"/>
                                                     <constraint firstAttribute="bottom" secondItem="XbM-Kz-D8k" secondAttribute="bottom" id="Gf9-og-pKX"/>
-                                                    <constraint firstAttribute="width" constant="70" id="IYz-n0-m2f"/>
                                                     <constraint firstAttribute="centerY" secondItem="sby-Ye-Jpl" secondAttribute="centerY" id="L5B-Ee-kAP"/>
+                                                    <constraint firstAttribute="width" secondItem="j1y-7G-FSY" secondAttribute="height" multiplier="1:1" id="VFS-Ug-Qxu"/>
                                                     <constraint firstAttribute="trailing" secondItem="XbM-Kz-D8k" secondAttribute="trailing" id="XRB-Yv-NCh"/>
-                                                    <constraint firstAttribute="height" constant="70" id="hzN-lX-aF7"/>
                                                     <constraint firstItem="XbM-Kz-D8k" firstAttribute="leading" secondItem="j1y-7G-FSY" secondAttribute="leading" id="wed-eH-r61"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgX-62-n6a" customClass="DVBPostPhotoContainerView">
+                                                <rect key="frame" x="91" y="365" width="62" height="61"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XOd-v6-1ld">
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="61"/>
+                                                    </imageView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXc-Bd-DQN" userLabel="Add photo button container">
+                                                        <rect key="frame" x="20" y="20" width="22" height="22"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVa-tw-g8m">
+                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+                                                                <state key="normal">
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="n5y-sr-3U4"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="centerY" secondItem="xVa-tw-g8m" secondAttribute="centerY" id="2yt-Ya-LMb"/>
+                                                            <constraint firstAttribute="centerX" secondItem="xVa-tw-g8m" secondAttribute="centerX" id="NcQ-BT-u3F"/>
+                                                            <constraint firstAttribute="width" constant="22" id="rIj-ms-rUT"/>
+                                                            <constraint firstAttribute="height" constant="22" id="sCP-RJ-Y0E"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="XOd-v6-1ld" firstAttribute="leading" secondItem="hgX-62-n6a" secondAttribute="leading" id="YRH-Ew-X0t"/>
+                                                    <constraint firstAttribute="centerY" secondItem="dXc-Bd-DQN" secondAttribute="centerY" id="aYR-o1-Ytu"/>
+                                                    <constraint firstAttribute="centerX" secondItem="dXc-Bd-DQN" secondAttribute="centerX" id="evu-wg-ueA"/>
+                                                    <constraint firstAttribute="bottom" secondItem="XOd-v6-1ld" secondAttribute="bottom" id="jh5-st-Bwk"/>
+                                                    <constraint firstAttribute="trailing" secondItem="XOd-v6-1ld" secondAttribute="trailing" id="qKY-7p-Tmg"/>
+                                                    <constraint firstItem="XOd-v6-1ld" firstAttribute="top" secondItem="hgX-62-n6a" secondAttribute="top" id="tSK-fX-tEy"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WY1-1O-Tb7" customClass="DVBPostPhotoContainerView">
+                                                <rect key="frame" x="168" y="365" width="61" height="61"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nJq-yt-HiK">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                    </imageView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVK-jY-Wue" userLabel="Add photo button container">
+                                                        <rect key="frame" x="19" y="20" width="22" height="22"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
+                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+                                                                <state key="normal">
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="OgD-qp-kHZ"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="centerY" secondItem="98S-fQ-zan" secondAttribute="centerY" id="6NY-4x-18r"/>
+                                                            <constraint firstAttribute="centerX" secondItem="98S-fQ-zan" secondAttribute="centerX" id="DUC-PJ-GnE"/>
+                                                            <constraint firstAttribute="height" constant="22" id="M2I-kH-xgW"/>
+                                                            <constraint firstAttribute="width" constant="22" id="kXN-QX-bLY"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="trailing" secondItem="nJq-yt-HiK" secondAttribute="trailing" id="8O0-TZ-f9D"/>
+                                                    <constraint firstItem="nJq-yt-HiK" firstAttribute="top" secondItem="WY1-1O-Tb7" secondAttribute="top" id="EAO-FE-0To"/>
+                                                    <constraint firstAttribute="centerX" secondItem="VVK-jY-Wue" secondAttribute="centerX" id="GcW-wN-C3I"/>
+                                                    <constraint firstItem="nJq-yt-HiK" firstAttribute="leading" secondItem="WY1-1O-Tb7" secondAttribute="leading" id="R3u-CX-UPh"/>
+                                                    <constraint firstAttribute="centerY" secondItem="VVK-jY-Wue" secondAttribute="centerY" id="n1U-e3-n0C"/>
+                                                    <constraint firstAttribute="bottom" secondItem="nJq-yt-HiK" secondAttribute="bottom" id="we2-dY-5WW"/>
+                                                </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmU-VB-eLY" customClass="DVBPostPhotoContainerView">
+                                                <rect key="frame" x="244" y="365" width="61" height="61"/>
+                                                <subviews>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6z5-Oj-JM8">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                    </imageView>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q4K-gM-aAF" userLabel="Add photo button container">
+                                                        <rect key="frame" x="19" y="20" width="22" height="22"/>
+                                                        <subviews>
+                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="815-m3-Nve">
+                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
+                                                                <state key="normal">
+                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                </state>
+                                                                <connections>
+                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="DrP-14-EKX"/>
+                                                                </connections>
+                                                            </button>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="centerY" secondItem="815-m3-Nve" secondAttribute="centerY" id="XsB-cF-aDC"/>
+                                                            <constraint firstAttribute="centerX" secondItem="815-m3-Nve" secondAttribute="centerX" id="bm0-sv-e8o"/>
+                                                            <constraint firstAttribute="height" constant="22" id="rSx-iT-kyl"/>
+                                                            <constraint firstAttribute="width" constant="22" id="sTO-hw-vDr"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstAttribute="centerX" secondItem="q4K-gM-aAF" secondAttribute="centerX" id="GlQ-vW-pAL"/>
+                                                    <constraint firstAttribute="bottom" secondItem="6z5-Oj-JM8" secondAttribute="bottom" id="ONE-b4-3jP"/>
+                                                    <constraint firstItem="6z5-Oj-JM8" firstAttribute="top" secondItem="lmU-VB-eLY" secondAttribute="top" id="RVg-uK-kgw"/>
+                                                    <constraint firstItem="6z5-Oj-JM8" firstAttribute="leading" secondItem="lmU-VB-eLY" secondAttribute="leading" id="Rmn-bc-Fao"/>
+                                                    <constraint firstAttribute="centerY" secondItem="q4K-gM-aAF" secondAttribute="centerY" id="VmD-26-EES"/>
+                                                    <constraint firstAttribute="trailing" secondItem="6z5-Oj-JM8" secondAttribute="trailing" id="aGv-gf-alS"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="top" secondItem="lmU-VB-eLY" secondAttribute="top" id="6U6-AX-RHn"/>
                                             <constraint firstItem="NaI-O3-J3g" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="7X6-aA-TJr"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="height" secondItem="wjr-Ih-9ju" secondAttribute="height" id="8uQ-eA-oLj"/>
                                             <constraint firstItem="mfq-Cv-IWZ" firstAttribute="top" secondItem="yu0-D0-p1U" secondAttribute="bottom" constant="15" id="9Mp-zV-3Wd"/>
                                             <constraint firstAttribute="trailing" secondItem="cMi-uW-0S6" secondAttribute="trailing" constant="15" id="Dt8-aL-gre"/>
                                             <constraint firstAttribute="trailing" secondItem="yu0-D0-p1U" secondAttribute="trailing" constant="15" id="Nhn-vt-Q1G"/>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="height" secondItem="lmU-VB-eLY" secondAttribute="height" id="POH-FH-Jnj"/>
                                             <constraint firstItem="QiY-eA-Udo" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="PxN-16-2jq"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="top" secondItem="NaI-O3-J3g" secondAttribute="bottom" constant="15" id="T1N-1h-Udk"/>
                                             <constraint firstItem="mfq-Cv-IWZ" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="V4g-Rx-nYe"/>
+                                            <constraint firstItem="WY1-1O-Tb7" firstAttribute="width" secondItem="j1y-7G-FSY" secondAttribute="width" id="WE4-8A-eS2"/>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="width" secondItem="hgX-62-n6a" secondAttribute="width" id="WTF-Ul-ps9"/>
                                             <constraint firstAttribute="trailing" secondItem="wjr-Ih-9ju" secondAttribute="trailing" constant="15" id="WtV-4l-KSA"/>
                                             <constraint firstAttribute="trailing" secondItem="QiY-eA-Udo" secondAttribute="trailing" constant="15" id="YXB-hy-w9k"/>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="width" secondItem="lmU-VB-eLY" secondAttribute="width" id="Yp7-iZ-0J1"/>
                                             <constraint firstItem="yu0-D0-p1U" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="c85-hy-rhJ"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="ejg-09-wTf"/>
+                                            <constraint firstItem="hgX-62-n6a" firstAttribute="leading" secondItem="j1y-7G-FSY" secondAttribute="trailing" constant="15" id="eyf-rL-XHL"/>
                                             <constraint firstAttribute="trailing" secondItem="NaI-O3-J3g" secondAttribute="trailing" constant="15" id="fT9-kn-FeO"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="top" secondItem="wjr-Ih-9ju" secondAttribute="bottom" constant="5" id="gNl-5L-uA9"/>
                                             <constraint firstItem="QiY-eA-Udo" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="bottom" constant="15" id="hXU-tE-Wbd"/>
                                             <constraint firstAttribute="trailing" secondItem="mfq-Cv-IWZ" secondAttribute="trailing" constant="15" id="hZa-Hq-OY5"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="iAa-8K-uac"/>
-                                            <constraint firstAttribute="bottom" secondItem="j1y-7G-FSY" secondAttribute="bottom" constant="15" id="oNd-hF-hQ2"/>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="top" secondItem="hgX-62-n6a" secondAttribute="top" id="iUI-ba-fEr"/>
+                                            <constraint firstItem="WY1-1O-Tb7" firstAttribute="top" secondItem="j1y-7G-FSY" secondAttribute="top" id="j2E-8U-FC5"/>
+                                            <constraint firstItem="lmU-VB-eLY" firstAttribute="leading" secondItem="WY1-1O-Tb7" secondAttribute="trailing" constant="15" id="m5t-z1-MHW"/>
+                                            <constraint firstAttribute="bottom" secondItem="j1y-7G-FSY" secondAttribute="bottom" constant="280" id="oNd-hF-hQ2"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="q9C-Yl-ltH"/>
+                                            <constraint firstItem="WY1-1O-Tb7" firstAttribute="height" secondItem="j1y-7G-FSY" secondAttribute="height" id="qQA-vb-4oj"/>
+                                            <constraint firstItem="WY1-1O-Tb7" firstAttribute="leading" secondItem="hgX-62-n6a" secondAttribute="trailing" constant="15" id="sim-6q-npD"/>
                                             <constraint firstItem="NaI-O3-J3g" firstAttribute="top" secondItem="cMi-uW-0S6" secondAttribute="bottom" constant="5" id="tNS-uk-p91"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="top" secondItem="QiY-eA-Udo" secondAttribute="bottom" constant="15" id="tjr-HV-C99"/>
                                             <constraint firstItem="yu0-D0-p1U" firstAttribute="top" secondItem="RLY-YJ-MBR" secondAttribute="top" constant="15" id="vDr-68-HCD"/>
+                                            <constraint firstItem="j1y-7G-FSY" firstAttribute="height" secondItem="hgX-62-n6a" secondAttribute="height" id="wDq-ec-3JF"/>
+                                            <constraint firstAttribute="trailing" secondItem="lmU-VB-eLY" secondAttribute="trailing" constant="15" id="xHh-tN-2g3"/>
                                         </constraints>
+                                        <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="441"/>
+                                        </variation>
                                         <connections>
                                             <outlet property="activityIndicator" destination="jV2-RR-JBv" id="SlQ-1E-tfc"/>
                                             <outlet property="captchaFieldContainerHeight" destination="n5d-vm-GJa" id="Agi-WE-cZh"/>
@@ -640,12 +770,11 @@
                                             <outlet property="captchaUpdateButton" destination="ATw-LV-fb7" id="sa5-gZ-bhQ"/>
                                             <outlet property="captchaValueTextField" destination="1dE-mf-Pvb" id="Dwj-Fe-tAD"/>
                                             <outlet property="commentTextView" destination="yu0-D0-p1U" id="4l7-wo-4pd"/>
+                                            <outlet property="contstraintFromPhotoToBottomEdge" destination="oNd-hF-hQ2" id="963-B9-90k"/>
                                             <outlet property="emailTextField" destination="NaI-O3-J3g" id="cmK-mg-Wdy"/>
                                             <outlet property="fromThemeToCaptchaFieldContainer" destination="tjr-HV-C99" id="8e5-uX-g7i"/>
-                                            <outlet property="image1View" destination="XbM-Kz-D8k" id="KPg-Gi-fZC"/>
                                             <outlet property="nameTextField" destination="cMi-uW-0S6" id="wp9-qJ-bcL"/>
                                             <outlet property="subjectTextField" destination="wjr-Ih-9ju" id="NdT-Mr-QQs"/>
-                                            <outlet property="uploadButton" destination="Nvk-ge-8dV" id="UkC-bs-FYd"/>
                                         </connections>
                                     </view>
                                 </subviews>
@@ -711,7 +840,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Iwy-TH-KYT"/>
-        <segue reference="XRT-4w-L0S"/>
+        <segue reference="yeg-8I-aPr"/>
         <segue reference="o55-Sb-BOJ"/>
     </inferredMetricsTieBreakers>
 </document>

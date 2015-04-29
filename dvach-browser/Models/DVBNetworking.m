@@ -251,17 +251,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Posting
 
-- (void)postMessageWithTask:(NSString *)task
-                   andBoard:(NSString *)board
-               andThreadnum:(NSString *)threadNum
-                    andName:(NSString *)name
-                   andEmail:(NSString *)email
-                 andSubject:(NSString *)subject
-                 andComment:(NSString *)comment
-            andcaptchaValue:(NSString *)captchaValue
-                andUsercode:(NSString *)usercode
-             andImageToLoad:(UIImage *)imageToLoad
-              andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
+- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -332,20 +322,23 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                                      name:@"subject"];
          [formData appendPartWithFormData:[email dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"email"];
-         
-         /**
-          *  Check if image present.
-          */
-         if (imageToLoad)
-         {
-             NSData *fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
-             /**
-              *  Add image to post data
-              */
-             [formData appendPartWithFileData:fileData
-                                         name:@"image1"
-                                     fileName:@"image.jpg"
-                                     mimeType:@"image/jpeg"];
+
+         // Check if we have images to upload
+         if (imagesToUpload) {
+             NSUInteger imageIndex = 1;
+
+             for (UIImage *imageToLoad in imagesToUpload) {
+
+                 NSData *fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
+
+                 NSString *imageName = [NSString stringWithFormat:@"image%ld", (unsigned long)imageIndex];
+
+                 [formData appendPartWithFileData:fileData
+                                             name:imageName
+                                         fileName:@"image.jpg"
+                                         mimeType:@"image/jpeg"];
+                 imageIndex++;
+             }
          }
          
      }
