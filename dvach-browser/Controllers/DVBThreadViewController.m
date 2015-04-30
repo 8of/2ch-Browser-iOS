@@ -618,8 +618,15 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
                 [sharedComment topUpCommentWithPostNum:postNum];
 
-                [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                 if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+                     [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                           sender:self];
+                 }
+                 else {
+                     [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
+                                               sender:self];
+                 }
+
                 break;
             }
 
@@ -636,8 +643,14 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                                         andQuoteString:_quoteString];
                 _quoteString = @"";
 
-                [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                          sender:self];
+                if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+                    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                                              sender:self];
+                }
+                else {
+                    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
+                                              sender:self];
+                }
 
                 break;
             }
