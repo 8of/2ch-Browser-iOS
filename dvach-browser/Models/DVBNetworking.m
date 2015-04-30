@@ -6,12 +6,15 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 #import <AFNetworking/AFNetworking.h>
+
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
 #import "DVBBoard.h"
 #import "DVBValidation.h"
 #import "DVBStatus.h"
 #import "Reachlibility.h"
+
+#import "UIImage+DVBImageExtention.h"
 
 typedef NS_ENUM(NSUInteger, Status)
 {
@@ -329,14 +332,30 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
              for (UIImage *imageToLoad in imagesToUpload) {
 
-                 NSData *fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
+                 NSData *fileData;
 
                  NSString *imageName = [NSString stringWithFormat:@"image%ld", (unsigned long)imageIndex];
 
+                 NSString *imageFilename = [NSString stringWithFormat:@"image.%@", imageToLoad.imageExtention];
+
+                 NSString *imageMimeType;
+
+                 BOOL isThisJpegImage = [imageToLoad.imageExtention isEqualToString:@"jpg"];
+
+                 // Mime type for jpeg differs from its file extention string
+                 if (isThisJpegImage) {
+                     imageMimeType = @"image/jpeg";
+                     fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
+                 }
+                 else {
+                     imageMimeType = [NSString stringWithFormat:@"image/%@", imageToLoad.imageExtention];
+                     fileData = UIImagePNGRepresentation(imageToLoad);
+                 }
+
                  [formData appendPartWithFileData:fileData
                                              name:imageName
-                                         fileName:@"image.jpg"
-                                         mimeType:@"image/jpeg"];
+                                         fileName:imageFilename
+                                         mimeType:imageMimeType];
                  imageIndex++;
              }
          }
