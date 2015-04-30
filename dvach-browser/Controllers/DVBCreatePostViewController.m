@@ -8,6 +8,7 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <UINavigationItem+Loading.h>
+#import "UIImage+DVBImageExtention.h"
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -17,8 +18,6 @@
 
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
-
-#import "DVBWrapMenuItem.h"
 #import "DVBContainerForPostElements.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
@@ -267,7 +266,14 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
+    NSString *imageReferenceUrl = [info[UIImagePickerControllerReferenceURL] absoluteString];
+    NSArray *imageReferenceUrlArray = [imageReferenceUrl componentsSeparatedByString: @"ext="];
+    NSString *imageExtention = imageReferenceUrlArray.lastObject;
+
     UIImage *imageToLoad = info[UIImagePickerControllerOriginalImage];
+
+    // Set image extention to prepare image the right way before uplaoding
+    imageToLoad.imageExtention = imageExtention.lowercaseString;
 
     UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
 
