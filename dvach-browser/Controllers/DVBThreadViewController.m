@@ -562,7 +562,12 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                                                       delegate:self
                                              cancelButtonTitle:@"Отмена"
                                         destructiveButtonTitle:nil
-                                             otherButtonTitles:@"Ответить", @"Ответить с цитатой", @"Открыть в браузере", @"Пожаловаться", nil];
+                                             otherButtonTitles:
+                           @"Ответить",
+                           @"Ответить с цитатой",
+                           @"Поделиться",
+                           @"Открыть в браузере",
+                           @"Пожаловаться", nil];
     
     [_postLongPressSheet showInView:self.tableView];
 }
@@ -654,8 +659,15 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
                 break;
             }
+
+            case 2: // share
+            {
+                NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
+                [self callShareControllerWithUrlString:urlToShare];
+                break;
+            }
                 
-            case 2: // open in browser button
+            case 3: // open in browser button
             {
                 NSString *urlToOpen = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
                 NSLog(@"URL: %@", urlToOpen);
@@ -663,7 +675,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                 break;
             }
                 
-            case 3:
+            case 4:
             {
                 // Flag button
                 [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
@@ -680,6 +692,16 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             }
         }
     }
+}
+
+- (void)callShareControllerWithUrlString:(NSString *)urlString
+{
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSArray *objectsToShare = @[url];
+
+    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+
+    [self presentViewController:controller animated:YES completion:nil];
 }
 
 #pragma mark - Bad posts reporting
