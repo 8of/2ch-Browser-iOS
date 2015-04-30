@@ -22,6 +22,7 @@
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 
 @end
 
@@ -40,6 +41,11 @@
     // check if EULA accepted or not
     if (![self userAgreementAccepted]) {
         [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
+    }
+
+    // check if iOS ver prior 8.0 - disable open Settings.app feature
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        self.navigationItem.leftBarButtonItem = nil;
     }
 }
 
@@ -137,6 +143,12 @@
         boardViewController.boardCode = boardId;
         // boardViewController.pages = pages;
     }
+}
+
+#pragma mark - Settings
+
+- (IBAction)openSettingsApp:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
 @end
