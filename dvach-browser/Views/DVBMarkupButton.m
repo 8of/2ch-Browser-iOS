@@ -15,7 +15,7 @@
 {
     [super awakeFromNib];
     
-    self.layer.cornerRadius = 15;
+    self.layer.cornerRadius = 5;
     self.layer.borderWidth = 1;
     self.layer.borderColor = DVACH_COLOR_CG;
 }

@@ -441,27 +441,28 @@
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="706"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfq-Cv-IWZ" userLabel="Markup Container">
-                                                <rect key="frame" x="15" y="130" width="290" height="30"/>
+                                                <rect key="frame" x="28" y="130" width="264" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaU-q9-XAI" customClass="DVBMarkupButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="Ж"/>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                        <state key="normal" title="B"/>
                                                         <connections>
                                                             <action selector="insertBoldTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="EeS-d0-UoY"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gzk-zM-TG7" customClass="DVBMarkupButton">
                                                         <rect key="frame" x="45" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="Н">
-                                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </state>
+                                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                        <state key="normal" title="I"/>
                                                         <connections>
                                                             <action selector="insertItalicTagAction:" destination="RLY-YJ-MBR" eventType="touchUpInside" id="Nkq-CB-EBX"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMe-06-gOU" customClass="DVBMarkupButton">
-                                                        <rect key="frame" x="90" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="C">
+                                                        <rect key="frame" x="90" y="0.0" width="84" height="30"/>
+                                                        <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                        <state key="normal" title="SPOILER">
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
@@ -469,8 +470,8 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oDM-4F-ZPO" customClass="DVBMarkupButton">
-                                                        <rect key="frame" x="135" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="З">
+                                                        <rect key="frame" x="189" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="S">
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
@@ -478,8 +479,8 @@
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iVb-yP-efC" customClass="DVBMarkupButton">
-                                                        <rect key="frame" x="180" y="0.0" width="30" height="30"/>
-                                                        <state key="normal" title="П">
+                                                        <rect key="frame" x="234" y="0.0" width="30" height="30"/>
+                                                        <state key="normal" title="U">
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
@@ -499,6 +500,7 @@
                                                     <constraint firstItem="oDM-4F-ZPO" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="UzC-Gt-JOa"/>
                                                     <constraint firstAttribute="bottom" secondItem="gzk-zM-TG7" secondAttribute="bottom" id="YpY-IB-86S"/>
                                                     <constraint firstAttribute="bottom" secondItem="iVb-yP-efC" secondAttribute="bottom" id="aGz-PQ-HPS"/>
+                                                    <constraint firstAttribute="trailing" secondItem="iVb-yP-efC" secondAttribute="trailing" id="cJw-NX-fBH"/>
                                                     <constraint firstItem="iVb-yP-efC" firstAttribute="leading" secondItem="oDM-4F-ZPO" secondAttribute="trailing" constant="15" id="gkS-ES-DyN"/>
                                                     <constraint firstItem="gzk-zM-TG7" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="top" id="mYb-hL-HPm"/>
                                                     <constraint firstItem="oDM-4F-ZPO" firstAttribute="leading" secondItem="eMe-06-gOU" secondAttribute="trailing" constant="15" id="mjh-SB-Icl"/>
@@ -735,11 +737,11 @@
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="height" secondItem="wjr-Ih-9ju" secondAttribute="height" id="8uQ-eA-oLj"/>
                                             <constraint firstItem="mfq-Cv-IWZ" firstAttribute="top" secondItem="yu0-D0-p1U" secondAttribute="bottom" constant="15" id="9Mp-zV-3Wd"/>
                                             <constraint firstAttribute="trailing" secondItem="cMi-uW-0S6" secondAttribute="trailing" constant="15" id="Dt8-aL-gre"/>
+                                            <constraint firstAttribute="centerX" secondItem="mfq-Cv-IWZ" secondAttribute="centerX" id="FTM-GM-N0v"/>
                                             <constraint firstAttribute="trailing" secondItem="yu0-D0-p1U" secondAttribute="trailing" constant="15" id="Nhn-vt-Q1G"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="height" secondItem="lmU-VB-eLY" secondAttribute="height" id="POH-FH-Jnj"/>
                                             <constraint firstItem="QiY-eA-Udo" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="PxN-16-2jq"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="top" secondItem="NaI-O3-J3g" secondAttribute="bottom" constant="15" id="T1N-1h-Udk"/>
-                                            <constraint firstItem="mfq-Cv-IWZ" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="V4g-Rx-nYe"/>
                                             <constraint firstItem="WY1-1O-Tb7" firstAttribute="width" secondItem="j1y-7G-FSY" secondAttribute="width" id="WE4-8A-eS2"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="width" secondItem="hgX-62-n6a" secondAttribute="width" id="WTF-Ul-ps9"/>
                                             <constraint firstAttribute="trailing" secondItem="wjr-Ih-9ju" secondAttribute="trailing" constant="15" id="WtV-4l-KSA"/>
@@ -751,7 +753,6 @@
                                             <constraint firstAttribute="trailing" secondItem="NaI-O3-J3g" secondAttribute="trailing" constant="15" id="fT9-kn-FeO"/>
                                             <constraint firstItem="cMi-uW-0S6" firstAttribute="top" secondItem="wjr-Ih-9ju" secondAttribute="bottom" constant="5" id="gNl-5L-uA9"/>
                                             <constraint firstItem="QiY-eA-Udo" firstAttribute="top" secondItem="mfq-Cv-IWZ" secondAttribute="bottom" constant="15" id="hXU-tE-Wbd"/>
-                                            <constraint firstAttribute="trailing" secondItem="mfq-Cv-IWZ" secondAttribute="trailing" constant="15" id="hZa-Hq-OY5"/>
                                             <constraint firstItem="wjr-Ih-9ju" firstAttribute="leading" secondItem="RLY-YJ-MBR" secondAttribute="leading" constant="15" id="iAa-8K-uac"/>
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="top" secondItem="hgX-62-n6a" secondAttribute="top" id="iUI-ba-fEr"/>
                                             <constraint firstItem="WY1-1O-Tb7" firstAttribute="top" secondItem="j1y-7G-FSY" secondAttribute="top" id="j2E-8U-FC5"/>
