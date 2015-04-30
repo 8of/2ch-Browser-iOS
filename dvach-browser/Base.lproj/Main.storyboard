@@ -69,6 +69,11 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Доски" id="tKd-8Q-GaQ">
+                        <barButtonItem key="leftBarButtonItem" image="Settings" id="Nhy-6T-6su">
+                            <connections>
+                                <action selector="openSettingsApp:" destination="u8c-EJ-BLV" id="XEq-gl-Bj8"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Nki-o2-6GL">
                             <connections>
                                 <action selector="showAlertWithBoardCodePrompt:" destination="u8c-EJ-BLV" id="JGY-AS-ddk"/>
@@ -79,6 +84,7 @@
                     <connections>
                         <outlet property="searchBar" destination="0ET-fH-iEn" id="PEr-tr-b4j"/>
                         <outlet property="searchDisplayController" destination="FoM-QF-CY4" id="8Xz-C9-xTI"/>
+                        <outlet property="settingsButton" destination="Nhy-6T-6su" id="Ply-8M-ae5"/>
                         <segue destination="cAV-CW-ZuA" kind="presentation" identifier="segueToEula" animates="NO" id="0sF-TY-xlc"/>
                     </connections>
                 </tableViewController>
@@ -835,6 +841,7 @@
     <resources>
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
+        <image name="Settings" width="22" height="22"/>
         <image name="Toppage" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
