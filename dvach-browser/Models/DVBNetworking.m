@@ -226,6 +226,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              // NSLog(@"error: %@", error);
+             // error here is OK we just need to extract usercode from cookies
              NSString *usercode = [self getUsercodeFromCookies];
              completion(usercode);
          }];
@@ -238,7 +239,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 {
     NSArray *cookiesArray = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
     for (NSHTTPCookie *cookie in cookiesArray) {
-        BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"usercode"];
+        BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"usercode_nocaptcha"];
         if (isThisUsercodeCookie) {
             NSString *usercode = cookie.value;
             NSLog(@"usercode success");
@@ -250,17 +251,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Posting
 
-- (void)postMessageWithTask:(NSString *)task
-                   andBoard:(NSString *)board
-               andThreadnum:(NSString *)threadNum
-                    andName:(NSString *)name
-                   andEmail:(NSString *)email
-                 andSubject:(NSString *)subject
-                 andComment:(NSString *)comment
-            andcaptchaValue:(NSString *)captchaValue
-                andUsercode:(NSString *)usercode
-             andImageToLoad:(UIImage *)imageToLoad
-              andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
+- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -321,6 +312,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
           *  Added comment field this way because makaba don't handle it right otherwise
           *  and name
           *  and subject
+          *  and e-mail
           */
          [formData appendPartWithFormData:[comment dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"comment"];
@@ -328,20 +320,25 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                                      name:@"name"];
          [formData appendPartWithFormData:[subject dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"subject"];
-         
-         /**
-          *  Check if image present.
-          */
-         if (imageToLoad)
-         {
-             NSData *fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
-             /**
-              *  Add image to post data
-              */
-             [formData appendPartWithFileData:fileData
-                                         name:@"image1"
-                                     fileName:@"image.jpg"
-                                     mimeType:@"image/jpeg"];
+         [formData appendPartWithFormData:[email dataUsingEncoding:NSUTF8StringEncoding]
+                                     name:@"email"];
+
+         // Check if we have images to upload
+         if (imagesToUpload) {
+             NSUInteger imageIndex = 1;
+
+             for (UIImage *imageToLoad in imagesToUpload) {
+
+                 NSData *fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
+
+                 NSString *imageName = [NSString stringWithFormat:@"image%ld", (unsigned long)imageIndex];
+
+                 [formData appendPartWithFileData:fileData
+                                             name:imageName
+                                         fileName:@"image.jpg"
+                                         mimeType:@"image/jpeg"];
+                 imageIndex++;
+             }
          }
          
      }

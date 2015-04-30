@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @protocol DVBBoardsModelDelegate <NSObject>
 
@@ -14,7 +15,7 @@
 
 @end
 
-@interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate>
+@interface DVBBoardsModel : NSObject <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 
 @property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 

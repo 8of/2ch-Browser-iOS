@@ -7,12 +7,16 @@
 //
 
 #import <SDWebImage/UIImageView+WebCache.h>
-#import "DVBBoardViewController.h"
+#import <UINavigationItem+Loading.h>
+
 #import "DVBConstants.h"
-#import "DVBThreadTableViewCell.h"
-#import "DVBThreadViewController.h"
-#import "DVBAlertViewGenerator.h"
 #import "DVBBoardModel.h"
+#import "DVBAlertViewGenerator.h"
+
+#import "DVBBoardViewController.h"
+#import "DVBThreadViewController.h"
+
+#import "DVBThreadTableViewCell.h"
 
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
@@ -66,6 +70,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
     if (!_wrongBoardAlertAlreadyPresentedOnce) {
+        // Present loading indicator on the right.
+        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+
         [self loadNextBoardPage];
         [self makeRefreshAvailable];
     }
@@ -106,7 +113,11 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
             else if (!_wrongBoardAlertAlreadyPresentedOnce) {
 
                 // Update only if we have something to show
-                [self.tableView reloadData];
+
+                [self.navigationItem stopAnimating];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                });
             }
         }];
     }
@@ -176,8 +187,11 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _currentPage = 0;
         _alreadyLoadingNextPage = NO;
         _threadsArray = [completionThreadsArray mutableCopy];
-        [self.tableView reloadData];
         [self.refreshControl endRefreshing];
+        [self.navigationItem stopAnimating];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     }];
 }
 
@@ -217,13 +231,35 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
             threadViewController.threadSubject = threadSubject;
         }
     }
-    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD]) {
+    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
         createPostViewController.threadNum = @"0";
         createPostViewController.boardCode = _boardCode;
     }
+}
+
+// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+    // if we have Device with version under 8.0
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+
+        // and we have fancy popover 8.0 segue
+        if ([identifier isEqualToString:SEGUE_TO_NEW_THREAD]) {
+
+            // Execute iOS 7 segue
+            [self performSegueWithIdentifier:SEGUE_TO_NEW_THREAD_IOS_7 sender:self];
+
+            // drop iOS 8 segue
+            return NO;
+        }
+
+        return YES;
+    }
+
+    return YES;
 }
 
 - (void)sendDataToBoard:(NSUInteger)deletedObjectIndex

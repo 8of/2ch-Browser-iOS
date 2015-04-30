@@ -11,9 +11,15 @@
 #import "DVBConstants.h"
 #import "DVBBadPost.h"
 #import "DVBBadPostStorage.h"
+#import "DVBNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
+#import "DVBPostPhotoContainerView.h"
+#import "DVBMarkupButton.h"
+
 @interface AppDelegate ()
+
+@property (nonatomic, strong) DVBNetworking *networking;
 
 @end
 
@@ -23,28 +29,55 @@
     [self createDefaultSettings];
     [self appearanceTudeUp];
     [self manageAFNetworking];
+
     return YES;
 }
 
 - (void)createDefaultSettings {
-    NSDictionary* defaults = @{USER_AGREEMENT_ACCEPTED:@NO, OPEN_EXTERNAL_LINKS_IN_CHROME:@NO, USERCODE:@"", BOARDS_LIST_VERSION:@0};
+    NSDictionary* defaults = @{
+                               USER_AGREEMENT_ACCEPTED:@NO,
+                               OPEN_EXTERNAL_LINKS_IN_CHROME:@NO,
+                               PASSCODE:@"",
+                               USERCODE:@"",
+                               BOARDS_LIST_VERSION:@0
+                               };
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    
-    
-    /**
-     *  Create cookies for later posting
-     */
-    NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
-    BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
-    
-    if (isUsercodeNotEmpty)
-    {
-        NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode",
-                                                   @"value":usercode
-                                                   };
-        NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
-        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
+
+    if (!_networking) {
+        _networking = [[DVBNetworking alloc] init];
     }
+
+    NSString *passcode = [[NSUserDefaults standardUserDefaults] objectForKey:PASSCODE];
+    NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
+
+    BOOL isPassCodeNotEmpty = ![passcode isEqualToString:@""];
+    BOOL isUserCodeEmpty = [usercode isEqualToString:@""];
+
+    if (isPassCodeNotEmpty && isUserCodeEmpty) {
+        [_networking getUserCodeWithPasscode:passcode andCompletion:^(NSString *completion) {
+
+            if (completion) {
+                [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
+
+                NSString *usercode = completion;
+                [self setUserCodeCookieWithUsercode:usercode];
+            }
+        }];
+    }
+    else if (!isUserCodeEmpty) {
+        [self setUserCodeCookieWithUsercode:usercode];
+    }
+}
+/**
+ *  Create cookies for later posting with super csecret usercode
+ */
+- (void)setUserCodeCookieWithUsercode:(NSString *)usercode {
+
+    NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode_nocaptcha",
+                                               @"value":usercode
+                                               };
+    NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
+    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
 }
 /**
  *  Execute all AFNetworking methods that need to be executed one time for entire app.
@@ -57,12 +90,9 @@
  *  Tuning appearance for entire app.
  */
 - (void)appearanceTudeUp {
-    UIColor *dvachColor = [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0];
-    [[UIView appearance] setTintColor:dvachColor];
-    /**
-     *  UILabek for tableviewcell headers
-     */
-     // [[UILabel appearanceWhenContainedIn:[UITableViewHeaderFooterView class],nil] setFont:[UIFont boldSystemFontOfSize:11.0f]];
+    [UIView appearance].tintColor = DVACH_COLOR;
+    [UIActivityIndicatorView appearance].color = DVACH_COLOR;
+    [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
 }
 
 #pragma mark - Core Data stack
@@ -114,12 +144,14 @@
 }
 
 - (NSManagedObjectContext *)managedObjectContext {
+
     // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+
     if (!coordinator) {
         return nil;
     }

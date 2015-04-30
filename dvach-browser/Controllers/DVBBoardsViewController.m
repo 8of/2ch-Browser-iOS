@@ -5,12 +5,13 @@
 //  Created by Andy on 16/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
-#import "DVBBoardsViewController.h"
-#import "DVBBoardViewController.h"
 
 #import "DVBConstants.h"
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
+
+#import "DVBBoardsViewController.h"
+#import "DVBBoardViewController.h"
 
 @interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
 
@@ -20,6 +21,8 @@
 @property (strong, nonatomic) NSDictionary *boardsDict;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
+@property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 
 @end
 
@@ -39,6 +42,31 @@
     if (![self userAgreementAccepted]) {
         [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
     }
+
+    // check if iOS ver prior 8.0 - disable open Settings.app feature
+    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    // Check if table have section 0.
+    // Table View always have this 0 section - but it's hidden if user not added favourites.
+    if ([self.tableView numberOfRowsInSection:0]) {
+        // hide search bar - we can reach it by pull gesture
+        NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
+
+        // Check if first row is existing - or otherwise app will crash.
+        if (firstRow) {
+            [self.tableView scrollToRowAtIndexPath:firstRow
+                                  atScrollPosition:UITableViewScrollPositionTop
+                                          animated:NO];
+        }
+    }
+
 }
 
 #pragma mark - Board List
@@ -50,6 +78,7 @@
     
     self.tableView.dataSource = _boardsModel;
     self.tableView.delegate = _boardsModel;
+    _searchBar.delegate = _boardsModel;
 
     [self updateTable];
 }
@@ -74,7 +103,7 @@
 #pragma mark - user Agreement
 
 /**
- *  apple force me to show users an EULA before they can start using my app - so alert just showing users that agreement need to be accepted on settings screen
+ *  Check EULA ccepted or not
  *
  *  @return YES if user accepted EULA
  */
@@ -86,13 +115,12 @@
 
 #pragma mark - Navigation
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier
-                                  sender:(id)sender
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
-    if ([self userAgreementAccepted] || [identifier isEqualToString:SEGUE_TO_SETTINGS])
-    {
+    if ([self userAgreementAccepted]) {
         return YES;
     }
+
     return NO;
 }
 
@@ -115,6 +143,12 @@
         boardViewController.boardCode = boardId;
         // boardViewController.pages = pages;
     }
+}
+
+#pragma mark - Settings
+
+- (IBAction)openSettingsApp:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
 @end
