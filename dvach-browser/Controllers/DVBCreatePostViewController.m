@@ -271,6 +271,10 @@
 
     UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
 
+    // For more tidy images and keep aspect ratio.
+    imageViewToShowIn.contentMode = UIViewContentModeScaleAspectFill;
+    imageViewToShowIn.clipsToBounds = YES;
+
     [imageViewToShowIn setImage:imageToLoad];
 
     [_imagesToUpload addObject:imageToLoad];
