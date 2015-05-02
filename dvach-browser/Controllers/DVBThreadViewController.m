@@ -23,17 +23,21 @@
 #import "DVBPostTableViewCell.h"
 
 // default row height
-static CGFloat const ROW_DEFAULT_HEIGHT = 101.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 130.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
-//thumbnail contstraints for calculating layout dimentions
-static CGFloat const THUMBNAIL_CONSTRAINT_LEFT = 8.0f;
-static CGFloat const THUMBNAIL_CONSTRAINT_RIGHT = 8.0f;
-// settings for comment textView
-static CGFloat const CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC = 30.f;
-// Correction from top contstr = 8, bottom contstraint = 8 and border = 1 8+8+1 = 17
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
+// thumbnail contstraints for calculating layout dimentions
+static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
+
+/**
+ *  Correction height because of:
+ *  action-answer buttons - 30
+ *  constraint from text to top - 8
+ *  border - 1 more
+ *  just in case I added one more :)
+ */
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -43,30 +47,28 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
-// array of posts inside this thread
+// Array of posts inside this thread
 @property (nonatomic, strong) NSArray *postsArray;
 
-// model for posts in the thread
+// Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
 
-// array of all post thumb images in thread
+// Array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
-// array of all post full images in thread
+
+// Array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
 
-// action sheet for displaying bad posts flaggind (and maybe somethig more later)
+// Action sheet for displaying bad posts flaggind (and maybe somethig more later)
 @property (nonatomic, strong) UIActionSheet *postLongPressSheet;
 @property (nonatomic, strong) NSString *flaggedPostNum;
 @property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
 
 @property (nonatomic, assign) NSUInteger updatedTimes;
 
-// for marking if OP message already glagged or not (tech prop)
+// For marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
-
-// test array for new photo browser
-@property (nonatomic, strong) NSMutableArray *photos;
 
 @end
 
@@ -108,6 +110,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
         }
         else {
             NSString *answerTitle;
+
             if (_isItPostItself) {
                 answerTitle = @"";
             }
@@ -135,10 +138,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
                                                     andThreadNum:_threadNum];
     }
     
-    // System do not spend resurces on calculatingrow heights via heightForRowAtIndexPath.
+    // System do not spend resurces on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
         self.tableView.rowHeight = UITableViewAutomaticDimension;
-        self.tableView.estimatedRowHeight = 100;
+        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
     }
 }
 
@@ -146,9 +149,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 
 - (NSString *)getSubjectOrNumWithSubject:(NSString *)subject andThreadNum:(NSString *)num
 {
-    /**
-     *  If thread Subject is empty - return OP post number
-     */
+    /// If thread Subject is empty - return OP post number
     BOOL isSubjectEmpty = [subject isEqualToString:@""];
     if (isSubjectEmpty) {
         return num;
@@ -163,9 +164,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
 {
     return [_postsArray count];
 }
-/**
- *  Set every section title depending on post SUBJECT or NUMBER
- */
+
+/// Set every section title depending on post SUBJECT or NUMBER
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
@@ -209,29 +209,25 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
     NSInteger viewWidth = viewSize.width;
     
     // Set default difference (if we hve image in the cell).
-    CGFloat widthDifferenceBecauseOfImage = THUMBNAIL_WIDTH + THUMBNAIL_CONSTRAINT_LEFT + THUMBNAIL_CONSTRAINT_RIGHT;
+    CGFloat widthDifferenceBecauseOfImageAndConstraints = THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT * 3;
     
     // Determine if we really have image in the cell.
     DVBPost *postObj = _postsArray[indexPath.section];
     NSString *thumbPath = postObj.thumbPath;
     
-    // If not - then set the difference to 0.
-    if ([thumbPath isEqualToString:@""])
-    {
-        widthDifferenceBecauseOfImage = 0;
+    // If not - then set the difference just to two constraints.
+    if ([thumbPath isEqualToString:@""]) {
+        widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
     }
     
-    // we decrease window width value by taking off elements and contraints values
-    CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImage;
-    
-    // correcting width by magic number
-    CGFloat width = textViewWidth - CORRECTION_WIDTH_FOR_TEXT_VIEW_CALC;
+    // Decrease window width value by taking off elements and contraints values
+    CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
     
     UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     
     CGSize size = [self frameForText:text
                         sizeWithFont:font
-                   constrainedToSize:CGSizeMake(width, CGFLOAT_MAX)];
+                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
     
     // Return the size of the current row.
     // 81 is the minimum height! Update accordingly
@@ -246,6 +242,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 50.0f;
         }
         
         return ROW_DEFAULT_HEIGHT;
+    }
+
+    // We should not return values greater than 2009
+    if (heightForReturnWithCorrectionAndCeilf > 2008) {
+        return 2008;
     }
     
     return heightForReturnWithCorrectionAndCeilf;
@@ -291,7 +292,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             [self handleTapOnImageViewWithIndexPath:indexPath];
         }
     }
-    
 }
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
@@ -300,8 +300,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         case boardLink: {
             //открыть борду
             /*
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-            BoardViewController *controller = [storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
+            BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
             controller.boardId = urlNinja.boardId;
             [self.navigationController pushViewController:controller animated:YES];
             */
@@ -383,7 +382,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         return;
     }
     
-    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
+    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
 
     // because we need title to show us real current postNum - so if we open link from post - id from link need to be our new View Controller title
     threadViewController.postNum = post.num;
@@ -401,7 +400,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
-// Clear prompt of any status / error messages
+/// Clear prompt of any status / error messages.
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
@@ -434,9 +433,8 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         }
     }
 }
-/**
- *  Think of this as some utility function that given text, calculates how much space we need to fit that text. Calculation for texView height.
- */
+
+/// Utility function that given text, calculates how much space we need to fit that text. Calculation for texView height.
 -(CGSize)frameForText:(NSAttributedString *)text sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
 {
     CGRect frame = [text boundingRectWithSize:size
@@ -444,7 +442,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                                       context:nil];
     
     /**
-     *  This contains both height and width, but we really care about height.
+     *  This contains both height and width, but we really care only about height.
      */
     return frame.size;
 }
@@ -482,7 +480,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     }];
 }
 
-// reload thread by current thread num
+// Reload thread by current thread num
 - (void)reloadThread {
 
     if (_answersToPost) {
@@ -534,7 +532,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     UIButton *answerButton = sender;
     NSUInteger buttonClickedIndex = answerButton.tag;
     DVBPost *post = _postsArray[buttonClickedIndex];
-    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"DVBThreadViewController"];
+    DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
     NSString *postNum = post.num;
     threadViewController.postNum = postNum;
     threadViewController.answersToPost = post.replies;
@@ -706,9 +704,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Bad posts reporting
 
-/**
- *  Function for flag inappropriate content and send it to moderators DB.
- */
+/// Function for flag inappropriate content and send it to moderators DB
 - (void) sendPost:(NSString *)postNum andBoard:(NSString *)board andCompletion:(void (^)(BOOL ))completion
 {
     NSString *currentPostNum = postNum;

@@ -10,45 +10,29 @@
 #import "UrlNinja.h"
 
 @interface DVBThreadViewController : UITableViewController
-/**
- *  Board shortcode.
- */
+
+/// Board shortcode
 @property (strong, nonatomic) NSString *boardCode;
-/**
- *  Thread number
- */
+/// Thread number
 @property (strong, nonatomic) NSString *threadNum;
-/**
- *  Subject for section title in board View Controller.
- */
+/// Subject for section title in board View Controller
 @property (strong, nonatomic) NSString *threadSubject;
-/**
- *  For sending info when marking bad posts (need to update view controller content "remotely")
- */
+/// For sending info when marking bad posts (need to update view controller content "remotely")
 @property (nonatomic, assign) id delegate;
-/**
- *  Index of bad thread in threads' array (needed for just plain deleting element from array).
- */
+/// Index of bad thread in threads' array (needed for just plain deleting element from array).
 @property (nonatomic, assign) NSUInteger threadIndex;
-/**
- *  Array of answers for specific post (set it if we need to show answers for post and no entire thread)
- */
+/// Array of answers for specific post (set it if we need to show answers for post and no entire thread)
 @property (nonatomic, strong) NSArray *answersToPost;
 @property (nonatomic, assign) BOOL isItPostItself;
 @property (nonatomic, strong) NSArray *allThreadPosts;
-/**
- *  Post number - use if we show answers for specific post
- */
+/// String to quote in answer to the post
+@property (nonatomic, strong) NSString *quoteString;
+/// Post number - use if we show answers for specific post
 @property (nonatomic, strong) NSString *postNum;
-/**
- *  Reload thread by calling this method outside (like from posting View Controller after Posting new message).
- */
+
+/// Reload thread by calling this method outside (like from posting View Controller after Posting new message)
 - (void)reloadThreadFromOutside;
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
-/**
- *  String to quote in answer to the post
- */
-@property (nonatomic, strong) NSString *quoteString;
 
 @end

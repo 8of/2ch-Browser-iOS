@@ -9,19 +9,17 @@
 #import "DVBPostTableViewCell.h"
 #import "DVBConstants.h"
 
-static CGFloat const TEXTVIEW_INSET = 8;
-
 @interface DVBPostTableViewCell () <UITextViewDelegate>
 
 @property BOOL isPostHaveImage;
 
-// textView for post comment
+// TextView for post comment
 @property (nonatomic) IBOutlet UITextView *commentTextView;
-// post thumbnail
+// Post thumbnail
 @property (nonatomic) IBOutlet UIImageView *postThumb;
-// show answer to post button
+// Show answer to post button
 @property (weak, nonatomic) IBOutlet UIButton *answerButton;
-// show action sheet for the post
+// Show action sheet for the post
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 
 // Constraints - image
@@ -87,7 +85,10 @@ static CGFloat const TEXTVIEW_INSET = 8;
     // set minimum delay before textView recognize tap on link
     _commentTextView.delaysContentTouches = NO;
 
-    [_commentTextView setTextContainerInset:UIEdgeInsetsMake(TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET, TEXTVIEW_INSET)];
+    // Delete insets
+    _commentTextView.textContainer.lineFragmentPadding = 0;
+    _commentTextView.textContainerInset = UIEdgeInsetsZero;
+
     _commentTextView.attributedText = commentText;
 
     // load the image and setting image source depending on presented image or set blank image
