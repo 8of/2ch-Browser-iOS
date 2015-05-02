@@ -21,9 +21,11 @@
 #import "DVBBrowserViewControllerBuilder.h"
 
 #import "DVBPostTableViewCell.h"
+#import "DVBMediaForPostTableViewCell.h"
 
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 130.0f;
+static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 73.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
@@ -183,73 +185,106 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
     return sectionTitle;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // only one row inside every section for now
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    DVBPost *post = _postsArray[section];
+
+    // If post have more than one thumbnail...
+    if ([post.thumbPathesArray count] > 1) {
+        return 2;
+    }
+
     return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DVBPostTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
-                                                                 forIndexPath:indexPath];
-    [self configureCell:cell
-      forRowAtIndexPath:indexPath];
+    UITableViewCell *cell;
+    DVBPost *post = _postsArray[indexPath.section];
+    NSUInteger row = indexPath.row;
+
+    // If post have more than one thumbnail...
+    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
+        cell = (DVBMediaForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_MEDIA_IDENTIFIER
+                                                                             forIndexPath:indexPath];
+        [self configureMediaCell:cell
+               forRowAtIndexPath:indexPath];
+
+    }
+    else {
+        cell = (DVBPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
+                                                                     forIndexPath:indexPath];
+        [self configureCell:cell
+          forRowAtIndexPath:indexPath];
+    }
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // I am using a helper method here to get the text at a given cell.
-    NSAttributedString *text = [self getTextAtIndex:indexPath];
-    
-    // Getting the width/height needed by the dynamic text view.
+    NSUInteger row = indexPath.row;
+    DVBPost *post = _postsArray[indexPath.section];
 
-    CGSize viewSize = self.tableView.bounds.size;
-    NSInteger viewWidth = viewSize.width;
-    
-    // Set default difference (if we hve image in the cell).
-    CGFloat widthDifferenceBecauseOfImageAndConstraints = THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT * 3;
-    
-    // Determine if we really have image in the cell.
-    DVBPost *postObj = _postsArray[indexPath.section];
-    NSString *thumbPath = postObj.thumbPath;
-    
-    // If not - then set the difference just to two constraints.
-    if ([thumbPath isEqualToString:@""]) {
-        widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
+    // If post have more than one thumbnail...
+    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
+        return ROW_MEDIA_DEFAULT_HEIGHT;
     }
-    
-    // Decrease window width value by taking off elements and contraints values
-    CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
-    
-    UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    
-    CGSize size = [self frameForText:text
-                        sizeWithFont:font
-                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
-    
-    // Return the size of the current row.
-    // 81 is the minimum height! Update accordingly
-    CGFloat heightToReturn = size.height;
-    
-    CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
-    
-    if (heightToReturn < ROW_DEFAULT_HEIGHT) {
+    else {
 
+        // I am using a helper method here to get the text at a given cell.
+        NSAttributedString *text = [self getTextAtIndex:indexPath];
+        
+        // Getting the width/height needed by the dynamic text view.
+
+        CGSize viewSize = self.tableView.bounds.size;
+        NSInteger viewWidth = viewSize.width;
+        
+        // Set default difference (if we hve image in the cell).
+        CGFloat widthDifferenceBecauseOfImageAndConstraints = THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT * 3;
+        
+        // Determine if we really have image in the cell.
+        DVBPost *postObj = _postsArray[indexPath.section];
+        NSString *thumbPath = postObj.thumbPath;
+        
+        // If not - then set the difference just to two constraints.
         if ([thumbPath isEqualToString:@""]) {
-            return heightForReturnWithCorrectionAndCeilf;
+            widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
         }
         
-        return ROW_DEFAULT_HEIGHT;
+        // Decrease window width value by taking off elements and contraints values
+        CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
+        
+        UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+        
+        CGSize size = [self frameForText:text
+                            sizeWithFont:font
+                       constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
+        
+        // Return the size of the current row.
+        // 81 is the minimum height! Update accordingly
+        CGFloat heightToReturn = size.height;
+        
+        CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
+        
+        if (heightToReturn < ROW_DEFAULT_HEIGHT) {
+
+            if ([thumbPath isEqualToString:@""]) {
+                return heightForReturnWithCorrectionAndCeilf;
+            }
+            
+            return ROW_DEFAULT_HEIGHT;
+        }
+
+        // We should not return values greater than 2009
+        if (heightForReturnWithCorrectionAndCeilf > 2008) {
+            return 2008;
+        }
+        
+        return heightForReturnWithCorrectionAndCeilf;
     }
 
-    // We should not return values greater than 2009
-    if (heightForReturnWithCorrectionAndCeilf > 2008) {
-        return 2008;
-    }
-    
-    return heightForReturnWithCorrectionAndCeilf;
+    return 0;
 }
 
 // We do not need this because we set it in another place.
@@ -264,7 +299,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPost *selectedPost = _postsArray[indexPath.section];
-    // NSString *thumbUrl = selectedPost.thumbPath;
     
     NSString *fullUrlString = selectedPost.path;
     
@@ -431,6 +465,17 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         if (_answersToPost) {
             confCell.disableActionButton = YES;
         }
+    }
+}
+
+- (void)configureMediaCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell isKindOfClass:[DVBMediaForPostTableViewCell class]]) {
+        DVBPost *post = _postsArray[indexPath.section];
+
+        DVBMediaForPostTableViewCell *confCell = (DVBMediaForPostTableViewCell *)cell;
+        confCell.threadViewController = self;
+        [confCell prepareCellWithThumbPathesArray:post.thumbPathesArray andPathesArray:post.pathesArray];
     }
 }
 
@@ -781,12 +826,59 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 
 #pragma mark - Photo gallery
 
+- (void)openMediaWithUrlString:(NSString *)fullUrlString
+{
+    // Check if cell have real image / webm video or just placeholder
+    if (![fullUrlString isEqualToString:@""]) {
+        // if contains .webm
+        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
+            BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
+
+            if (canOpenInVLC) {
+                [[UIApplication sharedApplication] openURL:fullUrl];
+            }
+            else {
+                NSLog(@"Need VLC to open this");
+                NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
+                self.navigationItem.prompt = installVLCPrompt;
+                [self performSelector:@selector(clearPrompt)
+                           withObject:nil
+                           afterDelay:2.0];
+            }
+        }
+        // if not
+        else {
+            [self createAndPushGalleryWithUrlString:fullUrlString];
+        }
+    }
+}
+
 // Tap on image method
 - (void)handleTapOnImageViewWithIndexPath:(NSIndexPath *)indexPath
 {
     [self createAndPushGalleryWithIndexPath:indexPath];
 }
 
+// New approach
+- (void)createAndPushGalleryWithUrlString:(NSString *)urlString
+{
+    DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
+
+    NSUInteger indexForImageShowing = [_fullImagesArray indexOfObject:urlString];
+
+    if (indexForImageShowing < [_fullImagesArray count]) {
+
+        [galleryBrowser prepareWithIndex:indexForImageShowing
+                     andThumbImagesArray:_thumbImagesArray
+                      andFullImagesArray:_fullImagesArray];
+
+        // Present
+        [self.navigationController pushViewController:galleryBrowser animated:YES];
+    }
+}
+
+// old approach
 - (void)createAndPushGalleryWithIndexPath:(NSIndexPath *)indexPath
 {
     DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
@@ -795,8 +887,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     DVBPost *postObj = _postsArray[indexForImageShowing];
     NSString *path = postObj.path;
     NSUInteger index = [_fullImagesArray indexOfObject:path];
-
-    galleryBrowser.index = index;
     
     [galleryBrowser prepareWithIndex:index
           andThumbImagesArray:_thumbImagesArray

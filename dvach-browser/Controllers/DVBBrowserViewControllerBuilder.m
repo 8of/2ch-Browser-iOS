@@ -10,6 +10,7 @@
 
 @interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate>
 
+@property (nonatomic, assign) NSUInteger index;
 // array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
 // array of all post full images in thread
@@ -20,6 +21,8 @@
 @implementation DVBBrowserViewControllerBuilder
 
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray {
+
+    _index = index;
 
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;

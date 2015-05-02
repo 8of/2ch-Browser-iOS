@@ -48,6 +48,10 @@ NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
 NSString *const DVB_BOARDVIEWCONTROLLER_IDENTIFIER = @"DVBBoardViewController";
 NSString *const THREAD_CELL_IDENTIFIER = @"threadCell";
 NSString *const POST_CELL_IDENTIFIER = @"postCell";
+NSString *const POST_CELL_MEDIA_IDENTIFIER = @"mediaForPostCell";
 
 // Placeholders
 NSString *const PLACEHOLDER_COMMENT_FIELD = @"Комментарий";
+
+// Files
+NSString *const FILENAME_THUMB_IMAGE_PLACEHOLDER = @"Noimage.png";

@@ -35,4 +35,6 @@
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
 
+- (void)openMediaWithUrlString:(NSString *)fullUrlString;
+
 @end
