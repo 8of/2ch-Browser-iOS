@@ -140,8 +140,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
     
     // System do not spend resurces on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
         self.tableView.rowHeight = UITableViewAutomaticDimension;
-        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
     }
 }
 
@@ -513,12 +513,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 - (IBAction)reloadThreadAction:(id)sender
 {
     [self reloadThread];
-}
-
-- (IBAction)scrollToTop:(id)sender
-{
-    CGPoint pointToScrollTo = CGPointMake(0, 0 - self.tableView.contentInset.top);
-    [self.tableView setContentOffset:pointToScrollTo animated:YES];
 }
 
 - (IBAction)scrollToBottom:(id)sender
