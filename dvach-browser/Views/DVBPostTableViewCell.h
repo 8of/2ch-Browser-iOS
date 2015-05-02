@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+// Cell for showing posts in thread Table View Controller
+
 #import <UIKit/UIKit.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "DVBThreadViewController.h"
-/**
- *  cell for showing posts in thread Table View Controller
- */
+
 @interface DVBPostTableViewCell : UITableViewCell
 
 // Pass data to cell
