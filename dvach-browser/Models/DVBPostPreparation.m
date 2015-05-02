@@ -72,7 +72,7 @@
     //    commentStyle.lineSpacing = kCommentLineSpacing;
     [maComment addAttribute:NSParagraphStyleAttributeName value:commentStyle range:range];
     
-    //em
+    // em
     UIFont *emFont = [UIFont fontWithName:@"HelveticaNeue-Italic" size:bodyFontSize];
     NSMutableArray *emRangeArray = [NSMutableArray array];
     NSRegularExpression *em = [[NSRegularExpression alloc]initWithPattern:@"<em[^>]*>(.*?)</em>" options:0 error:nil];
@@ -82,7 +82,7 @@
         [emRangeArray addObject:value];
     }];
     
-    //strong
+    // strong
     UIFont *strongFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:bodyFontSize];
     NSMutableArray *strongRangeArray = [NSMutableArray array];
     NSRegularExpression *strong = [[NSRegularExpression alloc]initWithPattern:@"<strong[^>]*>(.*?)</strong>" options:0 error:nil];
@@ -92,7 +92,7 @@
         [strongRangeArray addObject:value];
     }];
     
-    //emstrong
+    // emstrong
     UIFont *emStrongFont = [UIFont fontWithName:@"HelveticaNeue-BoldItalic" size:bodyFontSize];
     for (NSValue *emRangeValue in emRangeArray) {
         //value to range
@@ -105,29 +105,35 @@
             }
         }
     }
+
+    // underline
+    NSRegularExpression *underline = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"u\">(.*?)</span>" options:0 error:nil];
+    [underline enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [maComment addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:result.range];
+    }];
     
-    //strike
+    // strike
     //не будет работать с tttattributedlabel, нужно переделывать ссылки и все такое
     NSRegularExpression *strike = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"s\">(.*?)</span>" options:0 error:nil];
     [strike enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:result.range];
     }];
     
-    //spoiler
+    // spoiler
     UIColor *spoilerColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
     NSRegularExpression *spoiler = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"spoiler\">(.*?)</span>" options:0 error:nil];
     [spoiler enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSForegroundColorAttributeName value:spoilerColor range:result.range];
     }];
     
-    //quote
+    // quote
     UIColor *quoteColor = [UIColor colorWithRed:(17/255.0) green:(139/255.0) blue:(116/255.0) alpha:1.0];
     NSRegularExpression *quote = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"unkfunc\">(.*?)</span>" options:0 error:nil];
     [quote enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSForegroundColorAttributeName value:quoteColor range:result.range];
     }];
     
-    //link
+    // link
     UIColor *linkColor = [UIColor colorWithRed:(255/255.0) green:(102/255.0) blue:(0/255.0) alpha:1.0];
     NSRegularExpression *link = [[NSRegularExpression alloc]initWithPattern:@"<a[^>]*>(.*?)</a>" options:0 error:nil];
     NSRegularExpression *linkLink = [[NSRegularExpression alloc]initWithPattern:@"href=\"(.*?)\"" options:0 error:nil];
@@ -173,7 +179,7 @@
         }
     }];
     
-    //находим все теги и сохраняем в массив
+    // находим все теги и сохраняем в массив
     NSMutableArray *tagArray = [NSMutableArray array];
     NSRegularExpression *tag = [[NSRegularExpression alloc]initWithPattern:@"<[^>]*>" options:0 error:nil];
     [tag enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -181,7 +187,7 @@
         [tagArray addObject:value];
     }];
     
-    //вырезательный цикл
+    // вырезательный цикл
     int shift = 0;
     for (NSValue *rangeValue in tagArray) {
         NSRange cutRange = [rangeValue rangeValue];
@@ -190,7 +196,7 @@
         shift += cutRange.length;
     }
     
-    //чистим переводы строк в начале и конце
+    // чистим переводы строк в начале и конце
     NSRegularExpression *whitespaceStart = [[NSRegularExpression alloc]initWithPattern:@"^\\s\\s*" options:0 error:nil];
     NSTextCheckingResult *wsResult = [whitespaceStart firstMatchInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length])];
     [maComment deleteCharactersInRange:wsResult.range];
@@ -199,7 +205,7 @@
     NSTextCheckingResult *weResult = [whitespaceEnd firstMatchInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length])];
     [maComment deleteCharactersInRange:weResult.range];
     
-    //и пробелы в начале каждой строки
+    // и пробелы в начале каждой строки
     NSMutableArray *whitespaceLineStartArray = [NSMutableArray array];
     NSRegularExpression *whitespaceLineStart = [[NSRegularExpression alloc]initWithPattern:@"^[\\t\\f\\p{Z}]+" options:NSRegularExpressionAnchorsMatchLines error:nil];
     [whitespaceLineStart enumerateMatchesInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -215,7 +221,7 @@
         whitespaceLineStartShift += cutRange.length;
     }
     
-    //и двойные переводы
+    // и двойные переводы
     NSMutableArray *whitespaceDoubleArray = [NSMutableArray array];
     NSRegularExpression *whitespaceDouble = [[NSRegularExpression alloc]initWithPattern:@"[\\n\\r]{3,}" options:0 error:nil];
     [whitespaceDouble enumerateMatchesInString:[maComment string] options:0 range:NSMakeRange(0, [maComment length]) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {

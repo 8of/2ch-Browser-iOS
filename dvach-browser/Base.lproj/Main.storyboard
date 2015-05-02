@@ -391,11 +391,6 @@
                         </connections>
                     </tableView>
                     <toolbarItems>
-                        <barButtonItem image="Toppage" id="90I-0L-cAI">
-                            <connections>
-                                <action selector="scrollToTop:" destination="3hz-5v-Niv" id="Kx0-oP-RPS"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem image="Bottompage" id="lMc-P3-Z0E">
                             <connections>
                                 <action selector="scrollToBottom:" destination="3hz-5v-Niv" id="asC-QQ-psR"/>
@@ -849,7 +844,6 @@
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="22" height="22"/>
         <image name="Settings" width="22" height="22"/>
-        <image name="Toppage" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
