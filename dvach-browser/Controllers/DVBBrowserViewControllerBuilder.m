@@ -70,10 +70,7 @@
     
     return nil;
 }
-/**
- *  Не очень нравится идея перезаписывать respondsToSelector
- *  Но есть свои плюсы, например система не тратит ресурсы на вызов и просчёт через heightForRowAtIndexPath
- */
+
 - (void)removeAllWebmLinksFromThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
 {
     NSMutableArray *thumbImagesMutableArray = [thumbImagesArray mutableCopy];
