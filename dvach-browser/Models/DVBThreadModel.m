@@ -287,11 +287,11 @@
 
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    _privateThumbImagesArray = [NSMutableArray array];
+    _privateThumbImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
-        NSString *thumbPath = post.thumbPath;
-        BOOL isThumbPathNotEmpty = ![thumbPath isEqualToString:@""];
-        if (isThumbPathNotEmpty) {
+        NSArray *postThumbsArray = post.thumbPathesArray;
+
+        for (NSString *thumbPath in postThumbsArray) {
             [_privateThumbImagesArray addObject:thumbPath];
         }
     }
@@ -302,12 +302,12 @@
 
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    _privateFullImagesArray = [NSMutableArray array];
+    _privateFullImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
-        NSString *fullImagePath = post.path;
-        BOOL isFullImagePathNotEmpty = ![fullImagePath isEqualToString:@""];
-        if (isFullImagePathNotEmpty) {
-            [_privateFullImagesArray addObject:fullImagePath];
+        NSArray *postThumbsArray = post.pathesArray;
+
+        for (NSString *thumbPath in postThumbsArray) {
+            [_privateFullImagesArray addObject:thumbPath];
         }
     }
    _fullImagesArray = _privateFullImagesArray;

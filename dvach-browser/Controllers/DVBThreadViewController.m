@@ -576,6 +576,27 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     threadViewController.postNum = postNum;
     threadViewController.answersToPost = post.replies;
 
+    /*
+
+    NSMutableArray *thumbsPathesArrayForGallery = [@[] mutableCopy];
+    NSMutableArray *pathesArrayForGallery = [@[] mutableCopy];
+
+    // generate gallery from answers pictures
+    for (DVBPost *post in post.replies) {
+        NSArray *postThumbsArray = post.thumbPathesArray;
+        NSArray *postPathesArray = post.pathesArray;
+        NSUInteger currentThumbPathIndex = 0;
+
+        for (NSString *thumbPath in postThumbsArray) {
+            if (postPathesArray[currentThumbPathIndex]) {
+                [thumbsPathesArrayForGallery addObject:thumbPath];
+                [pathesArrayForGallery addObject:postPathesArray[currentThumbPathIndex]];
+            }
+            currentThumbPathIndex++;
+        }
+    }
+     */
+
     // check if we have full array of posts
     if (_allThreadPosts) { // if we have - then just pass it further
         threadViewController.allThreadPosts = _allThreadPosts;
@@ -584,7 +605,8 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         threadViewController.allThreadPosts = _postsArray;
     }
 
-    [self.navigationController pushViewController:threadViewController animated:YES];
+    [self.navigationController pushViewController:threadViewController
+                                         animated:YES];
 }
 
 - (IBAction)showPostActions:(id)sender
