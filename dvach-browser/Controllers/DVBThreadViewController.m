@@ -20,12 +20,14 @@
 #import "DVBCreatePostViewController.h"
 #import "DVBBrowserViewControllerBuilder.h"
 
-#import "DVBPostTableViewCell.h"
 #import "DVBMediaForPostTableViewCell.h"
+#import "DVBPostTableViewCell.h"
+#import "DVBActionsForPostTableViewCell.h"
 
 // default row height
-static CGFloat const ROW_DEFAULT_HEIGHT = 130.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 73.0f;
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 73.0f;
+static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 30.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
@@ -34,12 +36,11 @@ static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
 
 /**
  *  Correction height because of:
- *  action-answer buttons - 30
  *  constraint from text to top - 8
  *  border - 1 more
  *  just in case I added one more :)
  */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -191,10 +192,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
 
     // If post have more than one thumbnail...
     if ([post.thumbPathesArray count] > 1) {
-        return 2;
+        return 3;
     }
 
-    return 1;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -211,6 +212,18 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
                forRowAtIndexPath:indexPath];
 
     }
+    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one
+        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
+                                                                                  forIndexPath:indexPath];
+        [self configureActionsCell:cell
+                 forRowAtIndexPath:indexPath];
+    }
+    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one
+        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
+                                                                                  forIndexPath:indexPath];
+        [self configureActionsCell:cell
+                 forRowAtIndexPath:indexPath];
+    }
     else {
         cell = (DVBPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
                                                                      forIndexPath:indexPath];
@@ -226,9 +239,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
     NSUInteger row = indexPath.row;
     DVBPost *post = _postsArray[indexPath.section];
 
-    // If post have more than one thumbnail...
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
+    if (([post.thumbPathesArray count] > 1)&&(row == 0)) { // If post have more than one thumbnail and this is first row
         return ROW_MEDIA_DEFAULT_HEIGHT;
+    }
+    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one thumbnail and this is third row
+        return ROW_ACTIONS_DEFAULT_HEIGHT;
+    }
+    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one thumbnail and this is second row
+        return ROW_ACTIONS_DEFAULT_HEIGHT;
     }
     else {
 
@@ -413,38 +431,51 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
 {
     if ([cell isKindOfClass:[DVBPostTableViewCell class]]) {
         DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
-        
         DVBPost *post = _postsArray[indexPath.section];
         
         NSString *thumbUrlString = post.thumbPath;
         NSString *fullUrlString = post.path;
-        NSUInteger indexForButton = indexPath.section;
 
         BOOL showVideoIcon = (post.mediaType == webm);
+
+        confCell.threadViewController = self;
         
         [confCell prepareCellWithCommentText:post.comment
                        andPostThumbUrlString:thumbUrlString
                         andPostFullUrlString:fullUrlString
-                         andPostRepliesCount:[post.replies count]
-                                    andIndex:indexForButton
                             andShowVideoIcon:showVideoIcon];
-        
-        confCell.threadViewController = self;
-
-        if (_answersToPost) {
-            confCell.disableActionButton = YES;
-        }
     }
 }
 
 - (void)configureMediaCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([cell isKindOfClass:[DVBMediaForPostTableViewCell class]]) {
+        DVBMediaForPostTableViewCell *confCell = (DVBMediaForPostTableViewCell *)cell;
         DVBPost *post = _postsArray[indexPath.section];
 
-        DVBMediaForPostTableViewCell *confCell = (DVBMediaForPostTableViewCell *)cell;
         confCell.threadViewController = self;
-        [confCell prepareCellWithThumbPathesArray:post.thumbPathesArray andPathesArray:post.pathesArray];
+        [confCell prepareCellWithThumbPathesArray:post.thumbPathesArray
+                                   andPathesArray:post.pathesArray];
+    }
+}
+
+- (void)configureActionsCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell isKindOfClass:[DVBActionsForPostTableViewCell class]]) {
+        DVBActionsForPostTableViewCell *confCell = (DVBActionsForPostTableViewCell *)cell;
+        DVBPost *post = _postsArray[indexPath.section];
+
+        NSUInteger indexForButton = indexPath.section;
+
+        BOOL shouldDisableActionButton = NO;
+
+        if (_answersToPost) {
+            shouldDisableActionButton = YES;
+        }
+
+        [confCell prepareCellWithPostRepliesCount:[post.replies count]
+                                         andIndex:indexForButton
+                           andDisableActionButton:shouldDisableActionButton];
     }
 }
 

@@ -39,7 +39,6 @@
     _postWebmIcon1.hidden = YES;
     _postWebmIcon2.hidden = YES;
     _postWebmIcon3.hidden = YES;
-
 }
 
 - (void)prepareCellWithThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray
