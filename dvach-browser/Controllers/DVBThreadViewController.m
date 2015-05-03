@@ -313,7 +313,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                 [[UIApplication sharedApplication] openURL:fullUrl];
             }
             else {
-                NSLog(@"Need VLC to open this");
                 NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
                 self.navigationItem.prompt = installVLCPrompt;
                 [self performSelector:@selector(clearPrompt)
@@ -383,7 +382,7 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             break;
         }
     }
-    NSLog(@"url type: %lu", (unsigned long)url.type);
+    // NSLog(@"url type: %lu", (unsigned long)url.type);
 
     return YES;
 }
@@ -729,7 +728,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
             case 3: // open in browser button
             {
                 NSString *urlToOpen = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
-                NSLog(@"URL: %@", urlToOpen);
                 [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlToOpen]];
                 break;
             }
@@ -773,7 +771,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     if (networkStatus == NotReachable) {
-        NSLog(@"Cannot find internet.");
         BOOL result = NO;
         return completion(result);
     }
@@ -861,7 +858,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
                 [[UIApplication sharedApplication] openURL:fullUrl];
             }
             else {
-                NSLog(@"Need VLC to open this");
                 NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
                 self.navigationItem.prompt = installVLCPrompt;
                 [self performSelector:@selector(clearPrompt)

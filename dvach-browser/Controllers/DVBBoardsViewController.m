@@ -13,6 +13,8 @@
 #import "DVBBoardsViewController.h"
 #import "DVBBoardViewController.h"
 
+static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
+
 @interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
 
 /**
@@ -59,14 +61,14 @@
         // hide search bar - we can reach it by pull gesture
         NSIndexPath *firstRow = [NSIndexPath indexPathForRow:0 inSection:0];
 
-        // Check if first row is existing - or otherwise app will crash.
-        if (firstRow) {
+        // Check if first row is existing - or otherwise app will crash
+        // and Check if user scrolled table already or not
+        if (firstRow && (self.tableView.contentOffset.y < MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR)) {
             [self.tableView scrollToRowAtIndexPath:firstRow
                                   atScrollPosition:UITableViewScrollPositionTop
                                           animated:NO];
         }
     }
-
 }
 
 #pragma mark - Board List

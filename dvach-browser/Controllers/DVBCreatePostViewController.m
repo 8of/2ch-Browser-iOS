@@ -373,7 +373,7 @@
     else if (isSegueDismissToNewThread) {
 
         if (_createdThreadNum) {
-            NSLog(@"New thread num: %@. Redirecting.", _createdThreadNum);
+            // NSLog(@"New thread num: %@. Redirecting.", _createdThreadNum);
 
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
