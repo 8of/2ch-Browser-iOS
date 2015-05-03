@@ -289,43 +289,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 40.0f;
 
 // We do not need this because we set it in another place.
 /*
-- (CGFloat)tableView:(UITableView *)tableView
-estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return UITableViewAutomaticDimension;
 }
  */
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    DVBPost *selectedPost = _postsArray[indexPath.section];
-    
-    NSString *fullUrlString = selectedPost.path;
-    
-    // Check if cell have real image / webm video or just placeholder
-    if (![fullUrlString isEqualToString:@""]) {
-        // if contains .webm
-        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-            NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
-            BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
-            
-            if (canOpenInVLC) {
-                [[UIApplication sharedApplication] openURL:fullUrl];
-            }
-            else {
-                NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
-                self.navigationItem.prompt = installVLCPrompt;
-                [self performSelector:@selector(clearPrompt)
-                           withObject:nil
-                           afterDelay:2.0];
-            }
-        }
-        // if not
-        else {
-            [self handleTapOnImageViewWithIndexPath:indexPath];
-        }
-    }
-}
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
 {
@@ -449,12 +417,14 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         DVBPost *post = _postsArray[indexPath.section];
         
         NSString *thumbUrlString = post.thumbPath;
+        NSString *fullUrlString = post.path;
         NSUInteger indexForButton = indexPath.section;
 
         BOOL showVideoIcon = (post.mediaType == webm);
         
         [confCell prepareCellWithCommentText:post.comment
                        andPostThumbUrlString:thumbUrlString
+                        andPostFullUrlString:fullUrlString
                          andPostRepliesCount:[post.replies count]
                                     andIndex:indexForButton
                             andShowVideoIcon:showVideoIcon];
@@ -574,27 +544,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     NSString *postNum = post.num;
     threadViewController.postNum = postNum;
     threadViewController.answersToPost = post.replies;
-
-    /*
-
-    NSMutableArray *thumbsPathesArrayForGallery = [@[] mutableCopy];
-    NSMutableArray *pathesArrayForGallery = [@[] mutableCopy];
-
-    // generate gallery from answers pictures
-    for (DVBPost *post in post.replies) {
-        NSArray *postThumbsArray = post.thumbPathesArray;
-        NSArray *postPathesArray = post.pathesArray;
-        NSUInteger currentThumbPathIndex = 0;
-
-        for (NSString *thumbPath in postThumbsArray) {
-            if (postPathesArray[currentThumbPathIndex]) {
-                [thumbsPathesArrayForGallery addObject:thumbPath];
-                [pathesArrayForGallery addObject:postPathesArray[currentThumbPathIndex]];
-            }
-            currentThumbPathIndex++;
-        }
-    }
-     */
 
     // check if we have full array of posts
     if (_allThreadPosts) { // if we have - then just pass it further
@@ -872,20 +821,14 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
     }
 }
 
-// Tap on image method
-- (void)handleTapOnImageViewWithIndexPath:(NSIndexPath *)indexPath
-{
-    [self createAndPushGalleryWithIndexPath:indexPath];
-}
-
 // New approach
 - (void)createAndPushGalleryWithUrlString:(NSString *)urlString
 {
-    DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
-
     NSUInteger indexForImageShowing = [_fullImagesArray indexOfObject:urlString];
 
     if (indexForImageShowing < [_fullImagesArray count]) {
+
+        DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
 
         [galleryBrowser prepareWithIndex:indexForImageShowing
                      andThumbImagesArray:_thumbImagesArray
@@ -894,24 +837,6 @@ estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
         // Present
         [self.navigationController pushViewController:galleryBrowser animated:YES];
     }
-}
-
-// old approach
-- (void)createAndPushGalleryWithIndexPath:(NSIndexPath *)indexPath
-{
-    DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
-
-    NSUInteger indexForImageShowing = indexPath.section;
-    DVBPost *postObj = _postsArray[indexForImageShowing];
-    NSString *path = postObj.path;
-    NSUInteger index = [_fullImagesArray indexOfObject:path];
-    
-    [galleryBrowser prepareWithIndex:index
-          andThumbImagesArray:_thumbImagesArray
-           andFullImagesArray:_fullImagesArray];
-
-    // Present
-    [self.navigationController pushViewController:galleryBrowser animated:YES];
 }
 
 #pragma mark - DVBCreatePostViewControllerDelegate
