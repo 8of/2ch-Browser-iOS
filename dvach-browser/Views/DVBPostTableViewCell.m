@@ -12,7 +12,8 @@
 @interface DVBPostTableViewCell () <UITextViewDelegate>
 
 @property BOOL isPostHaveImage;
-
+// Thumbnail url
+@property (nonatomic, strong) NSString *fullPathUrlString;
 // TextView for post comment
 @property (nonatomic) IBOutlet UITextView *commentTextView;
 // Post thumbnail
@@ -40,7 +41,7 @@
     _commentTextView.delegate = self;
 }
 
-- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andShowVideoIcon:(BOOL)showVideoIcon
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString andPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andShowVideoIcon:(BOOL)showVideoIcon
 {
     // prepare Answer button
     _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
@@ -100,6 +101,8 @@
 
         [self rebuildPostThumbImageWithImagePresence:YES
                             andWithVideoIconPresence:showVideoIcon];
+
+        _fullPathUrlString = postFullUrlString;
     }
     else
     {
@@ -218,10 +221,7 @@
 {
     NSRange selectedRange = _commentTextView.selectedRange;
     NSUInteger selectedLength = selectedRange.length;
-    if (selectedLength > 1)
-    {
-        // NSLog(@"Selected text range loc: %lu, and length: %lu", (unsigned long)selectedRange.location, (unsigned long)selectedRange.length);
-
+    if (selectedLength > 1) {
         _threadViewController.quoteString = [self createQuoteStringWithSelectedRange:selectedRange];
     }
 }
@@ -237,6 +237,12 @@
     NSString *commentString = _commentTextView.text;
 
     return [commentString substringWithRange:selectedRange];
+}
+
+#pragma mark - Actions
+
+- (IBAction)touchFirstPicture:(id)sender {
+    [_threadViewController openMediaWithUrlString:_fullPathUrlString];
 }
 
 @end
