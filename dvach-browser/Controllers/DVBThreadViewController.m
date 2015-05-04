@@ -72,6 +72,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
 // For marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
+// iOS 8+ reference for iPad - to "give a birth" to popover share controller
+@property (nonatomic, strong) UIButton *buttonToShowPopoverFrom;
 
 @end
 
@@ -598,6 +600,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 - (IBAction)showPostActions:(id)sender
 {
     UIButton *answerButton = sender;
+
+    // Need for iOS 8 - iPad
+    _buttonToShowPopoverFrom = answerButton;
+
     NSUInteger buttonClickedIndex = answerButton.tag;
     DVBPost *post = _postsArray[buttonClickedIndex];
     // setting variable to bad post number (we'll use it soon)
@@ -747,7 +753,13 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
     // Only for iOS 8
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
-        activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+        if (_buttonToShowPopoverFrom) {
+            activityViewController.popoverPresentationController.sourceView = _buttonToShowPopoverFrom;
+            activityViewController.popoverPresentationController.sourceRect = _buttonToShowPopoverFrom.bounds;
+        }
+        else {
+            activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+        }
     }
 
     [self presentViewController:activityViewController animated:YES completion:nil];
