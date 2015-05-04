@@ -7,6 +7,7 @@
 //
 
 #import <UINavigationItem+Loading.h>
+#import <TUSafariActivity/TUSafariActivity.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -23,6 +24,8 @@
 #import "DVBMediaForPostTableViewCell.h"
 #import "DVBPostTableViewCell.h"
 #import "DVBActionsForPostTableViewCell.h"
+
+#import "ARChromeActivity.h"
 
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 73.0f;
@@ -617,7 +620,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                            @"Ответить",
                            @"Ответить с цитатой",
                            @"Поделиться",
-                           @"Открыть в браузере",
                            @"Пожаловаться", nil];
     
     [_postLongPressSheet showInView:self.tableView];
@@ -718,14 +720,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                 break;
             }
                 
-            case 3: // open in browser button
-            {
-                NSString *urlToOpen = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlToOpen]];
-                break;
-            }
-                
-            case 4:
+            case 3:
             {
                 // Flag button
                 [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
@@ -749,7 +744,15 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     NSURL *url = [NSURL URLWithString:urlString];
     NSArray *objectsToShare = @[url];
 
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+    TUSafariActivity *safariAtivity = [[TUSafariActivity alloc] init];
+
+    ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
+
+    NSString *openInChromActivityTitle = NSLocalizedString(@"Открыть в Chrome", @"Title of the open in chrome share activity.");
+
+    [chromeActivity setActivityTitle:openInChromActivityTitle];
+
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariAtivity, chromeActivity]];
 
     // Only for iOS 8
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
