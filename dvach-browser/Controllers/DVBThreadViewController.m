@@ -743,9 +743,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     NSURL *url = [NSURL URLWithString:urlString];
     NSArray *objectsToShare = @[url];
 
-    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
 
-    [self presentViewController:controller animated:YES completion:nil];
+    // Only for iOS 8
+    if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
+        activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+    }
+
+    [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
 #pragma mark - Bad posts reporting
