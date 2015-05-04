@@ -87,8 +87,7 @@
             NSDictionary *postsArray = threadsDict[0];
             NSArray *posts2Array = postsArray[@"posts"];
             
-            for (id key in posts2Array)
-            {
+            for (id key in posts2Array) {
                 NSString *num = [key[@"num"] stringValue];
                 
                 [postNumMutableArray addObject:num];
@@ -120,23 +119,55 @@
                 NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
                 
                 NSMutableArray *repliesToArray = [_postPreparation repliesToArrayForPost];
-                
-                NSDictionary *files = key[@"files"][0];
+
+                NSArray *files = key[@"files"];
+
+                NSDictionary *files_first = key[@"files"][0];
                 
                 NSString *thumbPath = [[NSMutableString alloc] init];
                 NSString *picPath = [[NSMutableString alloc] init];
                 
                 DVBPostMediaType mediaType = noMedia;
-                
-                if (files != nil)
-                {
-                    NSString *fullFileName = files[@"path"];
+
+
+                NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
+                NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
+
+                // new approach
+                if (files) {
+                    for (NSDictionary *fileDictionary in files) {
+                        NSString *fullFileName = fileDictionary[@"path"];
+
+                        mediaType = [_postPreparation mediaTypeInsidePostWithPicPath:fullFileName];
+
+                        thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fileDictionary[@"thumbnail"]];
+
+                        [singlePostThumbPathesArrayMutable addObject:thumbPath];
+                        [_privateThumbImagesArray addObject:thumbPath];
+
+                        // check webm or not
+                        if (mediaType == webm) { // if contains .webm
+                            // make VLC webm link
+                            picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
+                        }
+                        else {                    // if regular image
+                            picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
+                        }
+
+                        [singlePostPathesArrayMutable addObject:picPath];
+                        [_privateFullImagesArray addObject:picPath];
+                    }
+                }
+
+                // old approach
+                if (files_first) {
+                    NSString *fullFileName = files_first[@"path"];
                     
                     mediaType = [_postPreparation mediaTypeInsidePostWithPicPath:fullFileName];
                     
-                    thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files[@"thumbnail"]];
+                    thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files_first[@"thumbnail"]];
                     
-                    [_privateThumbImagesArray addObject:thumbPath];
+                    // [_privateThumbImagesArray addObject:thumbPath];
                     
                     // check webm or not
                     if (mediaType == webm) // if contains .webm
@@ -149,20 +180,33 @@
                         picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
                     }
                     
-                    [_privateFullImagesArray addObject:picPath];
+                    // [_privateFullImagesArray addObject:picPath];
+                }
+
+                NSArray *pathesArray = [singlePostPathesArrayMutable copy];
+                NSArray *thumbPathesArray = [singlePostThumbPathesArrayMutable copy];
+
+                // If post have multiple media attachments - just drop "old" full-thumb-pathes
+                if ([pathesArray count] > 1) {
+                    picPath = @"";
+                    thumbPath = @"";
+                    mediaType = noMedia;
                 }
                 
-                DVBPost *post = [[DVBPost alloc] initWithNum:num
+                DVBPost *post = [[DVBPost alloc]    initWithNum:num
                                                         subject:subject
                                                         comment:attributedComment
                                                            path:picPath
                                                       thumbPath:thumbPath
-                                                           date:date
+                                                    pathesArray:pathesArray
+                                               thumbPathesArray:thumbPathesArray
+                                                        date:date
                                                         dateAgo:dateAgo
                                                       repliesTo:repliesToArray
                                                       mediaType:mediaType
                                                            name:nameForPost
                                                            sage:isSage];
+
                 [_privatePostsArray addObject:post];
             }
             
@@ -243,11 +287,11 @@
 
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    _privateThumbImagesArray = [NSMutableArray array];
+    _privateThumbImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
-        NSString *thumbPath = post.thumbPath;
-        BOOL isThumbPathNotEmpty = ![thumbPath isEqualToString:@""];
-        if (isThumbPathNotEmpty) {
+        NSArray *postThumbsArray = post.thumbPathesArray;
+
+        for (NSString *thumbPath in postThumbsArray) {
             [_privateThumbImagesArray addObject:thumbPath];
         }
     }
@@ -258,12 +302,12 @@
 
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray
 {
-    _privateFullImagesArray = [NSMutableArray array];
+    _privateFullImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
-        NSString *fullImagePath = post.path;
-        BOOL isFullImagePathNotEmpty = ![fullImagePath isEqualToString:@""];
-        if (isFullImagePathNotEmpty) {
-            [_privateFullImagesArray addObject:fullImagePath];
+        NSArray *postThumbsArray = post.pathesArray;
+
+        for (NSString *thumbPath in postThumbsArray) {
+            [_privateFullImagesArray addObject:thumbPath];
         }
     }
    _fullImagesArray = _privateFullImagesArray;

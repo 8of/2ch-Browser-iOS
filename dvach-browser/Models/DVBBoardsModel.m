@@ -350,10 +350,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return NO;
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NSLocalizedString(@"Удалить", @"Кнопка удаления доски из списка избранных досок");
-}
-
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {

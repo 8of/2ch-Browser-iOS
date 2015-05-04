@@ -33,7 +33,20 @@
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
 		948A243B1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */; };
 		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
+		94A5E4591AF76E0C00824347 /* ARChromeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A5E4521AF76E0C00824347 /* ARChromeActivity.m */; };
+		94A5E4651AF77E4500824347 /* ARChromeActivity.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4601AF77E4500824347 /* ARChromeActivity.png */; };
+		94A5E4661AF77E4500824347 /* ARChromeActivity@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4611AF77E4500824347 /* ARChromeActivity@2x.png */; };
+		94A5E4671AF77E4500824347 /* ARChromeActivity@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4621AF77E4500824347 /* ARChromeActivity@3x.png */; };
+		94A5E4681AF77E4500824347 /* ARChromeActivity~iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4631AF77E4500824347 /* ARChromeActivity~iPad.png */; };
+		94A5E4691AF77E4500824347 /* ARChromeActivity~iPad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4641AF77E4500824347 /* ARChromeActivity~iPad@2x.png */; };
+		94A5E4781AF7811D00824347 /* ARChromeActivity-7.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4741AF7811D00824347 /* ARChromeActivity-7.png */; };
+		94A5E4791AF7811D00824347 /* ARChromeActivity-7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4751AF7811D00824347 /* ARChromeActivity-7@2x.png */; };
+		94A5E47A1AF7811D00824347 /* ARChromeActivity-7~iPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4761AF7811D00824347 /* ARChromeActivity-7~iPad.png */; };
+		94A5E47B1AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 94A5E4771AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png */; };
+		94D565E41AF66688004CE1B3 /* DVBActionsForPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D565E31AF66688004CE1B3 /* DVBActionsForPostTableViewCell.m */; };
 		94DD37A71ACA7E5100C658EB /* DefaultBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */; };
+		94DDF8421AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DDF8411AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.m */; };
+		94DDF8481AF540C300AA6F6A /* DVBWebmIconImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DDF8471AF540C300AA6F6A /* DVBWebmIconImageView.m */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
 		A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */; };
 		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
@@ -114,7 +127,25 @@
 		948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPhotoContainerView.m; path = Views/DVBPostPhotoContainerView.m; sourceTree = "<group>"; };
 		94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMessagePostServerAnswer.h; path = Models/Objects/DVBMessagePostServerAnswer.h; sourceTree = "<group>"; };
 		94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMessagePostServerAnswer.m; path = Models/Objects/DVBMessagePostServerAnswer.m; sourceTree = "<group>"; };
+		94A5E44D1AF76A5A00824347 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		94A5E4511AF76E0C00824347 /* ARChromeActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ARChromeActivity.h; path = Views/Activities/ARChromeActivity/ARChromeActivity.h; sourceTree = "<group>"; };
+		94A5E4521AF76E0C00824347 /* ARChromeActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ARChromeActivity.m; path = Views/Activities/ARChromeActivity/ARChromeActivity.m; sourceTree = "<group>"; };
+		94A5E4601AF77E4500824347 /* ARChromeActivity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ARChromeActivity.png; path = Views/Activities/ARChromeActivity/ARChromeActivity.png; sourceTree = "<group>"; };
+		94A5E4611AF77E4500824347 /* ARChromeActivity@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity@2x.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity@2x.png"; sourceTree = "<group>"; };
+		94A5E4621AF77E4500824347 /* ARChromeActivity@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity@3x.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity@3x.png"; sourceTree = "<group>"; };
+		94A5E4631AF77E4500824347 /* ARChromeActivity~iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity~iPad.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity~iPad.png"; sourceTree = "<group>"; };
+		94A5E4641AF77E4500824347 /* ARChromeActivity~iPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity~iPad@2x.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity~iPad@2x.png"; sourceTree = "<group>"; };
+		94A5E4741AF7811D00824347 /* ARChromeActivity-7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity-7.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity-7.png"; sourceTree = "<group>"; };
+		94A5E4751AF7811D00824347 /* ARChromeActivity-7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity-7@2x.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity-7@2x.png"; sourceTree = "<group>"; };
+		94A5E4761AF7811D00824347 /* ARChromeActivity-7~iPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity-7~iPad.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity-7~iPad.png"; sourceTree = "<group>"; };
+		94A5E4771AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ARChromeActivity-7~iPad@2x.png"; path = "Views/Activities/ARChromeActivity/ARChromeActivity-7~iPad@2x.png"; sourceTree = "<group>"; };
+		94D565E21AF66688004CE1B3 /* DVBActionsForPostTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBActionsForPostTableViewCell.h; path = Views/Cells/DVBActionsForPostTableViewCell.h; sourceTree = "<group>"; };
+		94D565E31AF66688004CE1B3 /* DVBActionsForPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBActionsForPostTableViewCell.m; path = Views/Cells/DVBActionsForPostTableViewCell.m; sourceTree = "<group>"; };
 		94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultBoards.plist; sourceTree = "<group>"; };
+		94DDF8401AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMediaForPostTableViewCell.h; path = Views/DVBMediaForPostTableViewCell.h; sourceTree = "<group>"; };
+		94DDF8411AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMediaForPostTableViewCell.m; path = Views/DVBMediaForPostTableViewCell.m; sourceTree = "<group>"; };
+		94DDF8461AF540C300AA6F6A /* DVBWebmIconImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBWebmIconImageView.h; path = Views/DVBWebmIconImageView.h; sourceTree = "<group>"; };
+		94DDF8471AF540C300AA6F6A /* DVBWebmIconImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBWebmIconImageView.m; path = Views/DVBWebmIconImageView.m; sourceTree = "<group>"; };
 		A100A4501AAEF56F0027F917 /* DVBBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardModel.h; path = Models/DVBBoardModel.h; sourceTree = "<group>"; };
 		A100A4511AAEF56F0027F917 /* DVBBoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardModel.m; path = Models/DVBBoardModel.m; sourceTree = "<group>"; };
 		A15552331ABC06EF00E7DB1D /* DVBThreadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadModel.h; path = Models/DVBThreadModel.h; sourceTree = "<group>"; };
@@ -350,6 +381,41 @@
 			name = Helpers;
 			sourceTree = "<group>";
 		};
+		949B76281AF766EF00DDA65F /* Activities */ = {
+			isa = PBXGroup;
+			children = (
+				94A5E4501AF76DF200824347 /* ARChromeActivity */,
+			);
+			name = Activities;
+			sourceTree = "<group>";
+		};
+		94A5E4501AF76DF200824347 /* ARChromeActivity */ = {
+			isa = PBXGroup;
+			children = (
+				94A5E4741AF7811D00824347 /* ARChromeActivity-7.png */,
+				94A5E4751AF7811D00824347 /* ARChromeActivity-7@2x.png */,
+				94A5E4761AF7811D00824347 /* ARChromeActivity-7~iPad.png */,
+				94A5E4771AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png */,
+				94A5E4511AF76E0C00824347 /* ARChromeActivity.h */,
+				94A5E4521AF76E0C00824347 /* ARChromeActivity.m */,
+				94A5E4601AF77E4500824347 /* ARChromeActivity.png */,
+				94A5E4611AF77E4500824347 /* ARChromeActivity@2x.png */,
+				94A5E4621AF77E4500824347 /* ARChromeActivity@3x.png */,
+				94A5E4631AF77E4500824347 /* ARChromeActivity~iPad.png */,
+				94A5E4641AF77E4500824347 /* ARChromeActivity~iPad@2x.png */,
+			);
+			name = ARChromeActivity;
+			sourceTree = "<group>";
+		};
+		94D565E51AF6668D004CE1B3 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				94D565E21AF66688004CE1B3 /* DVBActionsForPostTableViewCell.h */,
+				94D565E31AF66688004CE1B3 /* DVBActionsForPostTableViewCell.m */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		9DEEB8F279E1E1CC7340EF72 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,6 +428,8 @@
 		A1155D1C1A26486400810321 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				949B76281AF766EF00DDA65F /* Activities */,
+				94D565E51AF6668D004CE1B3 /* Cells */,
 				A155FF191AB7366000BE31F4 /* DVBBoardTableViewCell.h */,
 				A155FF1A1AB7366000BE31F4 /* DVBBoardTableViewCell.m */,
 				A155FF1B1AB7366000BE31F4 /* DVBPostTableViewCell.h */,
@@ -374,6 +442,10 @@
 				943F99C91AED8E5000A85C61 /* DVBMarkupButton.m */,
 				948A24391AF02F0400CDEB52 /* DVBPostPhotoContainerView.h */,
 				948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */,
+				94DDF8401AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.h */,
+				94DDF8411AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.m */,
+				94DDF8461AF540C300AA6F6A /* DVBWebmIconImageView.h */,
+				94DDF8471AF540C300AA6F6A /* DVBWebmIconImageView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -484,11 +556,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94A5E47A1AF7811D00824347 /* ARChromeActivity-7~iPad.png in Resources */,
+				94A5E4691AF77E4500824347 /* ARChromeActivity~iPad@2x.png in Resources */,
 				84CFC51919E1526E004D0BB8 /* Main.storyboard in Resources */,
+				94A5E47B1AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png in Resources */,
+				94A5E4791AF7811D00824347 /* ARChromeActivity-7@2x.png in Resources */,
 				94DD37A71ACA7E5100C658EB /* DefaultBoards.plist in Resources */,
+				94A5E4661AF77E4500824347 /* ARChromeActivity@2x.png in Resources */,
 				84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */,
+				94A5E4681AF77E4500824347 /* ARChromeActivity~iPad.png in Resources */,
+				94A5E4651AF77E4500824347 /* ARChromeActivity.png in Resources */,
+				94A5E4781AF7811D00824347 /* ARChromeActivity-7.png in Resources */,
 				946394161A87A26C004CAB6E /* BadBoards.plist in Resources */,
 				84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */,
+				94A5E4671AF77E4500824347 /* ARChromeActivity@3x.png in Resources */,
 				94449B401AD02E9700307AE9 /* BoardCategories.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -552,8 +633,10 @@
 				A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */,
 				944CC80A1AECFDB900C45F7C /* DVBContainerForPostElements.m in Sources */,
 				948A243B1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m in Sources */,
+				94DDF8421AF4FF7F00AA6F6A /* DVBMediaForPostTableViewCell.m in Sources */,
 				A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */,
 				A155FF041AB735DD00BE31F4 /* DVBBadPostStorage.m in Sources */,
+				94DDF8481AF540C300AA6F6A /* DVBWebmIconImageView.m in Sources */,
 				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
 				A155FF171AB7362A00BE31F4 /* DVBStatus.m in Sources */,
 				84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */,
@@ -564,10 +647,12 @@
 				8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */,
 				8497BF2C1AD3F978001616C2 /* UrlNinja.m in Sources */,
 				A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */,
+				94A5E4591AF76E0C00824347 /* ARChromeActivity.m in Sources */,
 				A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
+				94D565E41AF66688004CE1B3 /* DVBActionsForPostTableViewCell.m in Sources */,
 				A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
@@ -604,6 +689,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				84CFC51819E1526E004D0BB8 /* Base */,
+				94A5E44D1AF76A5A00824347 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

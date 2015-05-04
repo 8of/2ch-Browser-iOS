@@ -10,8 +10,6 @@
 
 @interface DVBBrowserViewControllerBuilder : MWPhotoBrowser
 
-@property (nonatomic, assign) NSUInteger index;
-
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray;
 
 @end

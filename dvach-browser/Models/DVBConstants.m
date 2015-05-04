@@ -22,14 +22,17 @@ NSString *const COMPLAINT_URL = @"http://8of.org/2ch/tickets";
 NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.hk/makaba/captcha.fcgi";
 NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@";
 
-// settings
+// Settings
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
 NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";
 
-// segues
+// Storyboard VC ID's
+NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER = @"DVBThreadViewController";
+
+// Segues
 NSString *const SEGUE_TO_EULA = @"segueToEula";
 NSString *const SEGUE_TO_BOARD = @"segueToBoard";
 NSString *const SEGUE_TO_THREAD = @"segueToThread";
@@ -40,11 +43,16 @@ NSString *const SEGUE_TO_NEW_POST_IOS_7 = @"segueToNewPostiOS7";
 NSString *const SEGUE_DISMISS_TO_THREAD = @"dismissWithCancelToThreadSegue";
 NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegue";
 
-// cells
+// Cells
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
 NSString *const DVB_BOARDVIEWCONTROLLER_IDENTIFIER = @"DVBBoardViewController";
 NSString *const THREAD_CELL_IDENTIFIER = @"threadCell";
 NSString *const POST_CELL_IDENTIFIER = @"postCell";
+NSString *const POST_CELL_MEDIA_IDENTIFIER = @"mediaForPostCell";
+NSString *const POST_CELL_ACTIONS_IDENTIFIER = @"actionsForPostCell";
 
 // Placeholders
 NSString *const PLACEHOLDER_COMMENT_FIELD = @"Комментарий";
+
+// Files
+NSString *const FILENAME_THUMB_IMAGE_PLACEHOLDER = @"Noimage.png";

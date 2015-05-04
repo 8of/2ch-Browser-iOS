@@ -16,14 +16,6 @@
 
 #import "UIImage+DVBImageExtention.h"
 
-typedef NS_ENUM(NSUInteger, Status)
-{
-    Revision = 0,
-    Production,
-    Semi
-};
-
-static NSString *const MY_ADDRESS_FOR_BOARDS_LIST = @"http://8of.org/2ch/boards.json";
 static NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
 static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
 
@@ -50,9 +42,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
     return self;
 }
 
-/**
- *  Check network status.
- */
+/// Check network status.
 - (BOOL)getNetworkStatus {
 
     NetworkStatus networkStatus = [_networkReachability currentReachabilityStatus];
@@ -64,90 +54,21 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
     
     return YES;
 }
-/**
- *  This one is tricky.
- *  We trying to understand with help of my own server - is it application under review now or not?
- */
-- (void)getServiceStatus:(void (^)(NSUInteger))completion
-{
-    
-    if ([self getNetworkStatus]) {
-
-        [self getServiceStatusLater:^(NSUInteger status)
-        {
-            completion(status);
-        }];
-    }
-}
 
 #pragma mark - Boards list
 
-- (void)getServiceStatusLater:(void (^)(NSUInteger))completion
+- (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion
 {
-    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager.requestSerializer setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
-    [manager GET:STATUS_REQUEST_ADDRESS parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/html", @"application/json",nil]];
+    [manager GET:REAL_ADDRESS_FOR_BOARDS_LIST parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
     {
-        NSUInteger status = [responseObject[@"status"] integerValue];
-        NSUInteger version = [responseObject[@"version"] integerValue];
-        DVBStatus *statusModel = [DVBStatus sharedStatus];
-        [statusModel setStatus:status andVersion:version];
-        completion(status);
+        completion(responseObject);
     }
          failure:^(AFHTTPRequestOperation *operation, NSError *error)
     {
         NSLog(@"error: %@", error);
-        completion(2);
-    }];
-}
-
-- (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion
-{
-    
-    [self getServiceStatus:^(NSUInteger status)
-    {
-        NSLog(@"Server status: %lu", (unsigned long)status);
-        
-        // DVBStatus *statusModel = [DVBStatus sharedStatus];
-        // [statusModel setStatus:status];
-        
-        NSString *boardListAddress;
-        Status statusSwitch = status;
-        switch (statusSwitch)
-        {
-            case Revision:
-                _filterContent = YES;
-                boardListAddress = MY_ADDRESS_FOR_BOARDS_LIST;
-                break;
-            case Production:
-                /**
-                 *  If my server status tell me that application in production already - then we don't need filter content and just show what we've got.
-                 */
-                _filterContent = NO;
-                boardListAddress = REAL_ADDRESS_FOR_BOARDS_LIST;
-                break;
-            case Semi:
-                /**
-                 *  for later use
-                 *  there will be the 3rd stance for smart showing/hiding
-                 */
-                _filterContent = NO;
-                boardListAddress = REAL_ADDRESS_FOR_BOARDS_LIST;
-                break;
-        }
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/html", @"application/json",nil]];
-        [manager GET:boardListAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
-        {
-            completion(responseObject);
-        }
-             failure:^(AFHTTPRequestOperation *operation, NSError *error)
-        {
-            NSLog(@"error: %@", error);
-            completion(nil);
-        }];
+        completion(nil);
     }];
 }
 

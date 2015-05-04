@@ -14,15 +14,10 @@
 
 @property (nonatomic, readonly) BOOL filterContent;
 
-- (void)getServiceStatusLater:(void (^)(NSUInteger))completion;
 - (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion;
 
-/**
- *  Get threads for single page of single board
- */
-- (void)getThreadsWithBoard:(NSString *)board
-                    andPage:(NSUInteger)page
-              andCompletion:(void (^)(NSDictionary *))completion;
+/// Get threads for single page of single board
+- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion;
 
 /**
  *  Get posts for single page of single board
