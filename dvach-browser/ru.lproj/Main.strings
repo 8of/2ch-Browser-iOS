@@ -1,0 +1,75 @@
+
+/* Class = "UITextField"; placeholder = "Капча"; ObjectID = "1dE-mf-Pvb"; */
+"1dE-mf-Pvb.placeholder" = "Капча";
+
+/* Class = "UIBarButtonItem"; title = "Back to board"; ObjectID = "2XB-A1-oiC"; */
+"2XB-A1-oiC.title" = "Back to board";
+
+/* Class = "UIButton"; normalTitle = "Ответы"; ObjectID = "6Bl-zo-iuC"; */
+"6Bl-zo-iuC.normalTitle" = "Ответы";
+
+/* Class = "UIBarButtonItem"; title = "Back to thread"; ObjectID = "CM4-aw-PZE"; */
+"CM4-aw-PZE.title" = "Back to thread";
+
+/* Class = "UINavigationItem"; title = "Треды"; ObjectID = "MEn-bw-bzK"; */
+"MEn-bw-bzK.title" = "Треды";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "NaI-O3-J3g"; */
+"NaI-O3-J3g.placeholder" = "Email";
+
+/* Class = "UIButton"; normalTitle = "Действия"; ObjectID = "O18-H2-BYg"; */
+"O18-H2-BYg.normalTitle" = "Действия";
+
+/* Class = "UIBarButtonItem"; title = "Отправить"; ObjectID = "bGY-MK-GAa"; */
+"bGY-MK-GAa.title" = "Отправить";
+
+/* Class = "UITextField"; placeholder = "Имя"; ObjectID = "cMi-uW-0S6"; */
+"cMi-uW-0S6.placeholder" = "Имя";
+
+/* Class = "UIBarButtonItem"; title = "Закрыть"; ObjectID = "dUR-YR-YFs"; */
+"dUR-YR-YFs.title" = "Закрыть";
+
+/* Class = "UINavigationItem"; title = "Соглашение"; ObjectID = "e7e-pO-DdX"; */
+"e7e-pO-DdX.title" = "Соглашение";
+
+/* Class = "UIButton"; normalTitle = "SPOILER"; ObjectID = "eMe-06-gOU"; */
+"eMe-06-gOU.normalTitle" = "SPOILER";
+
+/* Class = "UILabel"; text = "Comment"; ObjectID = "ggV-qV-ALA"; */
+"ggV-qV-ALA.text" = "Comment";
+
+/* Class = "UIButton"; normalTitle = "I"; ObjectID = "gzk-zM-TG7"; */
+"gzk-zM-TG7.normalTitle" = "I";
+
+/* Class = "UIButton"; normalTitle = "U"; ObjectID = "iVb-yP-efC"; */
+"iVb-yP-efC.normalTitle" = "U";
+
+/* Class = "UINavigationItem"; title = "Тред"; ObjectID = "iaG-NT-yBd"; */
+"iaG-NT-yBd.title" = "Тред";
+
+/* Class = "UIButton"; normalTitle = "S"; ObjectID = "oDM-4F-ZPO"; */
+"oDM-4F-ZPO.normalTitle" = "S";
+
+/* Class = "UIButton"; normalTitle = "B"; ObjectID = "oaU-q9-XAI"; */
+"oaU-q9-XAI.normalTitle" = "B";
+
+/* Class = "UIBarButtonItem"; title = "Принять"; ObjectID = "ouW-Gj-1Po"; */
+"ouW-Gj-1Po.title" = "Принять";
+
+/* Class = "UILabel"; text = "Subtitle"; ObjectID = "rko-Sx-hLa"; */
+"rko-Sx-hLa.text" = "Subtitle";
+
+/* Class = "UINavigationItem"; title = "Создать пост"; ObjectID = "tIb-EB-OqK"; */
+"tIb-EB-OqK.title" = "Создать пост";
+
+/* Class = "UINavigationItem"; title = "Доски"; ObjectID = "tKd-8Q-GaQ"; */
+"tKd-8Q-GaQ.title" = "Доски";
+
+/* Class = "UILabel"; text = "Title"; ObjectID = "ufO-dA-3ij"; */
+"ufO-dA-3ij.text" = "Title";
+
+/* Class = "UITextField"; placeholder = "Тема"; ObjectID = "wjr-Ih-9ju"; */
+"wjr-Ih-9ju.placeholder" = "Тема";
+
+/* Class = "UILabel"; text = "Utility"; ObjectID = "zj3-lK-H6n"; */
+"zj3-lK-H6n.text" = "Utility";
