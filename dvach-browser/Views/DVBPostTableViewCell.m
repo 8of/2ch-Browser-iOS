@@ -54,10 +54,10 @@
     _commentTextView.attributedText = commentText;
 
     // load the image and setting image source depending on presented image or set blank image
-    // need to rewrite it to use different table cells if there is no image in post
     if (![postThumbUrlString isEqualToString:@""]) {
         [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                              placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+                      placeholderImage:[UIImage imageNamed:@"Noimage.png"]
+                               options:SDWebImageRetryFailed];
 
         [self rebuildPostThumbImageWithImagePresence:YES
                             andWithVideoIconPresence:showVideoIcon];

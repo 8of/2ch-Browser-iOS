@@ -45,34 +45,22 @@ static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
-@protocol sendDataProtocol <NSObject>
-
-- (void)sendDataToBoard:(NSUInteger)deletedObjectIndex;
-
-@end
-
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // Array of posts inside this thread
 @property (nonatomic, strong) NSArray *postsArray;
-
 // Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
-
 // Array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
-
 // Array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
-
 // Action sheet for displaying bad posts flaggind (and maybe somethig more later)
 @property (nonatomic, strong) UIActionSheet *postLongPressSheet;
 @property (nonatomic, strong) NSString *flaggedPostNum;
 @property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
-
 @property (nonatomic, assign) NSUInteger updatedTimes;
-
 // For marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
@@ -153,7 +141,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
                                                     andThreadNum:_threadNum];
     }
     
-    // System do not spend resurces on calculating row heights via heightForRowAtIndexPath.
+    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
         self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
         self.tableView.rowHeight = UITableViewAutomaticDimension;
