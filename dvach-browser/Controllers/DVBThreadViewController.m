@@ -180,7 +180,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     return [_postsArray count];
 }
 
-/// Set every section title depending on post SUBJECT or NUMBER
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
@@ -202,7 +201,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 {
     DVBPost *post = _postsArray[section];
 
-    // If post have more than one thumbnail...
+    // If post have more than one thumbnail
     if ([post.thumbPathesArray count] > 1) {
         return 3;
     }
@@ -321,67 +320,18 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
 {
-    switch (url.type) {
-        case boardLink: {
-            //открыть борду
-            /*
-            BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
-            controller.boardId = urlNinja.boardId;
-            [self.navigationController pushViewController:controller animated:YES];
-            */
-            
-            return NO;
-            
-            break;
-        }
-        case boardThreadLink: {
-            // [self openThreadWithUrlNinja:urlNinja];
+    UrlNinja *urlNinjaHelper = [[UrlNinja alloc] init];
 
-            return NO;
-            
-            break;
-        }
-        case boardThreadPostLink: {
+    __weak __typeof__(self) weakSelf = self;
+    urlNinjaHelper.urlOpener = weakSelf;
 
-            // if we do not have boardId of threadNum assidned - we take them from passed url
-            if (!_threadNum) {
-                _threadNum = url.threadId;
-            }
-            if (!_boardCode) {
-                _boardCode = url.boardId;
-            }
+    BOOL answer = [urlNinjaHelper isLinkInternalWithLink:url andThreadNum:_threadNum andBoardCode:_boardCode];
 
-            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
-            if ([_threadNum isEqualToString:url.threadId] && [_boardCode isEqualToString:url.boardId]) {
-                [self openPostWithUrlNinja:url];
-
-                return YES;
-                /*
-                if ([self.thread.linksReference containsObject:urlNinja.postId]) {
-                    [self openPostWithUrlNinja:urlNinja];
-                    return NO;
-                }
-                 */
-            }
-            // [self openThreadWithUrlNinja:urlNinja];
-        }
-            break;
-        default: {
-            // [self makeExternalLinkActionSheetWithUrl:URL];
-
-            return NO;
-            
-            break;
-        }
-    }
-    // NSLog(@"url type: %lu", (unsigned long)url.type);
-
-    return YES;
+    return answer;
 }
 
 - (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
 {
-    
     NSString *postNum = urlNinja.postId;
     
     NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
@@ -425,7 +375,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
-/// Clear prompt of any status / error messages.
+/// Clear prompt from any status / error messages.
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
@@ -653,7 +603,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    
     if (actionSheet == _postLongPressSheet) {
 
         switch (buttonIndex) {
@@ -755,17 +704,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
-#pragma mark - Bad posts reporting
-
-- (void)showPromptAboutReportedPost
-{
-    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
-    self.navigationItem.prompt = complaintSentPrompt;
-    [self performSelector:@selector(clearPrompt)
-               withObject:nil
-               afterDelay:2.0];
-}
-
 #pragma mark - Photo gallery
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString
@@ -795,7 +733,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     }
 }
 
-// New approach
 - (void)createAndPushGalleryWithUrlString:(NSString *)urlString
 {
     NSUInteger indexForImageShowing = [_fullImagesArray indexOfObject:urlString];
@@ -808,7 +745,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
                      andThumbImagesArray:_thumbImagesArray
                       andFullImagesArray:_fullImagesArray];
 
-        // Present
         [self.navigationController pushViewController:galleryBrowser animated:YES];
     }
 }
@@ -817,7 +753,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 -(void)updateThreadAfterPosting
 {
-    // Update Thread from network.
     [self reloadThread];
 }
 
@@ -838,6 +773,17 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     }
     
     return [super respondsToSelector:selector];
+}
+
+#pragma mark - Bad posts reporting
+
+- (void)showPromptAboutReportedPost
+{
+    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
+    self.navigationItem.prompt = complaintSentPrompt;
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:2.0];
 }
 
 @end

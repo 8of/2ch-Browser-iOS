@@ -37,6 +37,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 // Yes if we already know that board code was wrong and already presented user alert with this info
 @property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
+@property (nonatomic, assign) BOOL viewAlreadyAppeared;
 
 @end
 
@@ -50,9 +51,19 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     [self.navigationController setToolbarHidden:YES animated:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear: animated];
+    _viewAlreadyAppeared = YES;
+    if (_wrongBoardAlertAlreadyPresentedOnce) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _viewAlreadyAppeared = NO;
     
     _currentPage = 0;
 
@@ -108,12 +119,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
                 _wrongBoardAlertAlreadyPresentedOnce = YES;
                 
                 // Go back if board isn't there
-                [self.navigationController popToRootViewControllerAnimated:YES];
+                if (_viewAlreadyAppeared) {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
             }
             else if (!_wrongBoardAlertAlreadyPresentedOnce) {
-
                 // Update only if we have something to show
-
                 [self.navigationItem stopAnimating];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];

@@ -7,6 +7,7 @@
 //
 
 #import "UrlNinja.h"
+#import "DVBThreadViewController.h"
 
 @implementation UrlNinja
 
@@ -85,5 +86,66 @@
     return [[UrlNinja alloc]initWithUrl:url];
 }
 
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url andThreadNum:(NSString *)threadNum andBoardCode:(NSString *)boardCode
+{
+    switch (url.type) {
+        case boardLink: {
+            //открыть борду
+            /*
+             BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
+             controller.boardId = urlNinja.boardId;
+             [self.navigationController pushViewController:controller animated:YES];
+             */
+
+            return NO;
+
+            break;
+        }
+        case boardThreadLink: {
+            // [self openThreadWithUrlNinja:urlNinja];
+
+            return NO;
+
+            break;
+        }
+        case boardThreadPostLink: {
+
+            // if we do not have boardId of threadNum assidned - we take them from passed url
+            if (!threadNum) {
+                threadNum = url.threadId;
+            }
+            if (!boardCode) {
+                boardCode = url.boardId;
+            }
+
+            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
+            if ([threadNum isEqualToString:url.threadId] && [boardCode isEqualToString:url.boardId]) {
+                if ([_urlOpener respondsToSelector:@selector(openPostWithUrlNinja:)]) {
+                    [_urlOpener openPostWithUrlNinja:url];
+                }
+
+                return YES;
+                /*
+                 if ([self.thread.linksReference containsObject:urlNinja.postId]) {
+                 [self openPostWithUrlNinja:urlNinja];
+                 return NO;
+                 }
+                 */
+            }
+            // [self openThreadWithUrlNinja:urlNinja];
+        }
+            break;
+        default: {
+            // [self makeExternalLinkActionSheetWithUrl:URL];
+
+            return NO;
+
+            break;
+        }
+    }
+    // NSLog(@"url type: %lu", (unsigned long)url.type);
+    
+    return YES;
+}
 
 @end

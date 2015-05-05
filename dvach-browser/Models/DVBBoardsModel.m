@@ -12,7 +12,6 @@
 #import "DVBBoard.h"
 
 #import "DVBNetworking.h"
-#import "DVBStatus.h"
 #import "DVBValidation.h"
 #import "DVBBoardTableViewCell.h"
 #import "DVBConstants.h"
