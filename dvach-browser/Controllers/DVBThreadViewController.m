@@ -545,8 +545,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
             _postsArray = [postsArrayBlock mutableCopy];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
+                [self.navigationItem stopAnimating];
             });
-            [self.navigationItem stopAnimating];
         }];
     }
 }
@@ -566,7 +566,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 - (IBAction)scrollToBottom:(id)sender
 {
     CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
-    [self.tableView setContentOffset:pointToScrollTo animated:YES];
+    [self.tableView setContentOffset:pointToScrollTo animated:NO];
 }
 
 - (IBAction)showAnswers:(id)sender
