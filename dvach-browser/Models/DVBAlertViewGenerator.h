@@ -23,7 +23,6 @@
 - (UIAlertView *)alertViewWithTitle:(NSString *)title
                         description:(NSString *)description
                             buttons:(NSArray *)buttons;
-- (UIAlertView *)alertViewForPassCodeWithIndexPath:(NSIndexPath *)indexPath;
 - (UIAlertView *)alertViewForBoardCode;
 
 @end

@@ -10,40 +10,9 @@
 
 @interface DVBValidation ()
 
-@property (strong, nonatomic) NSArray *badBoards;
-
 @end
 
 @implementation DVBValidation
-
-- (instancetype) init
-{
-    self = [super init];
-    if (self)
-    {
-        [self makeBadBoardsArray];
-        _filterContent = YES;
-    }
-    return self;
-}
-
-/**
- *  Temp solutions just to move out this method from controller.
- *  Need to create another class for this purpose later.
- */
-- (void)makeBadBoardsArray
-{
-    if (!_badBoards)
-    {
-        _badBoards =[NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"BadBoards" ofType:@"plist"]];
-    }
-}
-
-- (BOOL)checkBadBoardWithBoard:(NSString *)board
-{
-    BOOL isBoardInBadBoardsArray = [_badBoards containsObject: board];
-    return isBoardInBadBoardsArray;
-}
 
 - (BOOL)checkBoardShortCodeWith:(NSString *)boardCode
 {
