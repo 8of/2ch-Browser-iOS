@@ -9,8 +9,6 @@
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
-#import "DVBBadPost.h"
-#import "DVBBadPostStorage.h"
 #import "DVBNetworking.h"
 #import "AFNetworkActivityIndicatorManager.h"
 

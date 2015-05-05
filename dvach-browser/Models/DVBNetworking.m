@@ -355,9 +355,6 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
 
 #pragma mark - Captcha
 
-/**
- *  Request key from 2ch server to get captcha image
- */
 - (void)requestCaptchaKeyWithCompletion:(void (^)(NSString *))completion
 {
     if ([self getNetworkStatus]) {
@@ -371,21 +368,40 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
          {
              NSString *captchaKeyAnswer = [[NSString alloc] initWithData:responseObject
                                                                 encoding:NSUTF8StringEncoding];
-             if ([captchaKeyAnswer hasPrefix:@"CHECK"])
-             {
+             if ([captchaKeyAnswer hasPrefix:@"CHECK"]) {
                  NSArray *arrayOfCaptchaKeyAnswers = [captchaKeyAnswer componentsSeparatedByString: @"\n"];
                  
                  NSString *captchaKey = [arrayOfCaptchaKeyAnswers lastObject];
                  
-                 /**
-                  *  Set var for requesting Yandex key image now and posting later.
-                  */
+                 // Set var for requesting Yandex key image now and posting later.
                  _captchaKey = captchaKey;
                  
                  NSString *urlOfYandexCaptchaImage = [[NSString alloc] initWithFormat:GET_CAPTCHA_IMAGE_URL, captchaKey];
                  
                  completion(urlOfYandexCaptchaImage);             
              }
+         }
+                    failure:^(NSURLSessionDataTask *task, NSError *error)
+         {
+             NSLog(@"Error: %@", error);
+         }];
+    }
+}
+
+#pragma mark - Thread reporting
+
+- (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment
+{
+    if ([self getNetworkStatus]) {
+        AFHTTPSessionManager *reportManager = [AFHTTPSessionManager manager];
+        reportManager.responseSerializer = [AFHTTPResponseSerializer serializer];
+        [reportManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
+
+        [reportManager POST:REPORT_THREAD_URL
+                 parameters:nil
+                    success:^(NSURLSessionDataTask *task, id responseObject)
+         {
+             NSLog(@"Report sent");
          }
                     failure:^(NSURLSessionDataTask *task, NSError *error)
          {

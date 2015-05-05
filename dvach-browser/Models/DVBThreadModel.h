@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DVBBadPostStorage.h"
 
 @interface DVBThreadModel : NSObject
 
@@ -28,10 +27,8 @@
  */
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion;
 
-// flag and delete post
-- (void)flagPostWithIndex:(NSUInteger)index
-        andFlaggedPostNum:(NSString *)flaggedPostNum
-      andOpAlreadyDeleted:(BOOL)opAlreadyDeleted;
+// Report thread
+- (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment;
 /**
  *  Generate array of thumbnail images from posts
  *
