@@ -41,9 +41,9 @@ static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
  *  Correction height because of:
  *  constraint from text to top - 8
  *  border - 1 more
- *  just in case I added one more :)
+ *  just in case I added 5 more :)
  */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 @protocol sendDataProtocol <NSObject>
 
@@ -284,16 +284,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
         
         // Decrease window width value by taking off elements and contraints values
         CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
-        
-        UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-        
-        CGSize size = [self frameForText:text
-                            sizeWithFont:font
-                       constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
-        
+
         // Return the size of the current row.
-        // 81 is the minimum height! Update accordingly
-        CGFloat heightToReturn = size.height;
+        CGFloat heightToReturn = [self heightForText:text
+                                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
         
         CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
         
@@ -303,7 +297,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                 return heightForReturnWithCorrectionAndCeilf;
             }
             
-            return ROW_DEFAULT_HEIGHT;
+            return (ROW_DEFAULT_HEIGHT + 1);
         }
 
         // We should not return values greater than 2009
@@ -491,17 +485,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     }
 }
 
-/// Utility function that given text, calculates how much space we need to fit that text. Calculation for texView height.
--(CGSize)frameForText:(NSAttributedString *)text sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
+/// Utility method for calculation how much space we need to fit that text. Calculation for texView height.
+-(CGFloat)heightForText:(NSAttributedString *)text constrainedToSize:(CGSize)size
 {
-    CGRect frame = [text boundingRectWithSize:size
-                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                      context:nil];
-    
-    /**
-     *  This contains both height and width, but we really care only about height.
-     */
-    return frame.size;
+    CGRect frame = CGRectIntegral([text boundingRectWithSize:size
+                                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                     context:nil]);
+
+    return frame.size.height;
 }
 
 /**
