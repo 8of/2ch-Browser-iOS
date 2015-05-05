@@ -188,9 +188,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _alreadyLoadingNextPage = NO;
         _threadsArray = [completionThreadsArray mutableCopy];
         [self.refreshControl endRefreshing];
-        [self.navigationItem stopAnimating];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
+            [self.navigationItem stopAnimating];
         });
     }];
 }
