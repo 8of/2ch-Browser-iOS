@@ -202,7 +202,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     if([[segue identifier] isEqualToString:SEGUE_TO_THREAD])
     {
         DVBThreadViewController *threadViewController = segue.destinationViewController;
-        threadViewController.delegate = self;
         threadViewController.boardCode = _boardCode;
         
         if (_createdThreadNum) {
@@ -260,20 +259,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     }
 
     return YES;
-}
-
-- (void)sendDataToBoard:(NSUInteger)deletedObjectIndex
-{
-    [_threadsArray removeObjectAtIndex:deletedObjectIndex];
-    [self.tableView reloadData];
-    
-    NSString *complaintSentAlertTitle = NSLocalizedString(@"Жалоба отправлена", @"Заголовок alert'a сообщает о том, что жалоба отправлена.");
-    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба поставлена в очередь на проверку. Тред был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
-    UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:complaintSentAlertTitle
-                                                         description:complaintSentAlertMessage
-                                                             buttons:nil];
-    [alertView show];
-    
 }
 
 - (void)openThredWithCreatedThread:(NSString *)threadNum

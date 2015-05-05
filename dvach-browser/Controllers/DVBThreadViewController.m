@@ -14,8 +14,8 @@
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
-#import "DVBBadPost.h"
 #import "DVBComment.h"
+#import "DVBAlertViewGenerator.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -704,22 +704,18 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
                 break;
             }
 
-            case 2: // share
+            case 2: // Share
             {
                 NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
                 [self callShareControllerWithUrlString:urlToShare];
                 break;
             }
                 
-            case 3:
+            case 3: // Report button
             {
-                // Flag button
-                [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
-                    NSLog(@"Post complaint sent.");
-                    if (done) {
-                        [self deletePostWithIndex:_selectedWithLongPressSection andFlaggedPostNum:_flaggedPostNum];
-                    }
-                }];
+                [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
+
+                [self showPromptAboutReportedPost];
                 break;
             }
             default:
@@ -761,84 +757,13 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 #pragma mark - Bad posts reporting
 
-/// Function for flag inappropriate content and send it to moderators DB
-- (void) sendPost:(NSString *)postNum andBoard:(NSString *)board andCompletion:(void (^)(BOOL ))completion
+- (void)showPromptAboutReportedPost
 {
-    NSString *currentPostNum = postNum;
-    NSString *currentBoard = board;
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable) {
-        BOOL result = NO;
-        return completion(result);
-    }
-    else {
-        
-        // building URL for sendin JSON to my server (for tickets)
-        // there is better one-line solution for this - need to use stringWithFormat
-        // rewrite in future!
-        
-        NSMutableString *requestAddress = [[NSMutableString alloc] initWithString:COMPLAINT_URL];
-        [requestAddress appendString:@"?postnum="];
-        [requestAddress appendString:currentPostNum];
-        [requestAddress appendString:@"&board="];
-        [requestAddress appendString:currentBoard];
-        
-        NSURLRequest *activeRequest = [NSURLRequest requestWithURL:
-                                       [NSURL URLWithString:requestAddress]];
-        
-        [NSURLConnection sendAsynchronousRequest:activeRequest
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response,
-                                                   NSData *data,
-                                                   NSError *connectionError)
-         {
-             NSError *jsonError;
-             
-             NSMutableDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data
-                                                                               options:NSJSONReadingAllowFragments
-                                                                                 error:&jsonError];
-             
-             NSString *status = resultDict[@"status"];
-             
-             BOOL ok = YES;
-             
-             if (![status isEqualToString:@"1"])
-             {
-                 completion(NO);
-             }
-             
-             completion(ok);
-         }];
-    }
-}
-
-- (void)deletePostWithIndex:(NSUInteger)index andFlaggedPostNum:(NSString *)flaggedPostNum
-{
-    [_threadModel flagPostWithIndex:index andFlaggedPostNum:flaggedPostNum andOpAlreadyDeleted:_opAlreadyDeleted];
-    
-    if (index == 0) {
-        [self.delegate sendDataToBoard:_threadIndex];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        [self.tableView reloadData];
-        [self showAlertAboutReportedPost];
-    }
-}
-
-- (void)showAlertAboutReportedPost
-{
-    NSString *complaintSentAlertTitle = NSLocalizedString(@"Жалоба отправлена", @"Заголовок alert'a сообщает о том, что жалоба отправлена.");
-    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба посталена в очередь на проверку модератором. Пост был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
-    
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:complaintSentAlertTitle
-                                                        message:complaintSentAlertMessage
-                                                       delegate:self
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:@"OK", nil];
-    [alertView setTag:1];
-    [alertView show];
+    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
+    self.navigationItem.prompt = complaintSentPrompt;
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:2.0];
 }
 
 #pragma mark - Photo gallery
@@ -894,12 +819,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 {
     // Update Thread from network.
     [self reloadThread];
-    
-    // Scroll thread to bottom. Not working as it should for now.
-    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
-    [self.tableView setContentOffset:pointToScrollTo animated:YES];
-    
-    NSLog(@"Table updated after posting.");
 }
 
 #pragma mark - Selector checking

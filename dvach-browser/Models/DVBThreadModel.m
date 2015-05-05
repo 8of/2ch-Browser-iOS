@@ -11,8 +11,6 @@
 #import "DVBConstants.h"
 #import "DVBPost.h"
 #import "DVBPostPreparation.h"
-#import "DVBBadPostStorage.h"
-#import "DVBBadPost.h"
 #import "DateFormatter.h"
 
 @interface DVBThreadModel ()
@@ -24,21 +22,12 @@
 @property (nonatomic, strong) NSMutableArray *privateFullImagesArray;
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBPostPreparation *postPreparation;
-// storage for bad posts, marked on this specific device
-@property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
 @property (nonatomic, strong) NSArray *postNumArray;
 
 @end
 
 @implementation DVBThreadModel
-/*
-- (instancetype)init
-{
-    @throw [NSException exceptionWithName:@"Need board code and thread num" reason:@"Use -[[DVBThreadModel alloc] initWithBoardCode:andThreadNum:]" userInfo:nil];
-    
-    return nil;
-}
-*/
+
 - (instancetype)initWithBoardCode:(NSString *)boardCode
                      andThreadNum:(NSString *)threadNum
 {
@@ -49,18 +38,6 @@
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
         _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode andThreadId:threadNum];
-        
-        /**
-         Handling bad posts on this device
-         */
-        _badPostsStorage = [[DVBBadPostStorage alloc] init];
-        NSString *badPostsPath = [_badPostsStorage badPostsArchivePath];
-        
-        _badPostsStorage.badPostsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:badPostsPath];
-        if (!_badPostsStorage.badPostsArray)
-        {
-            _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects:nil];
-        }
     }
     
     return self;
@@ -91,17 +68,6 @@
                 NSString *num = [key[@"num"] stringValue];
                 
                 [postNumMutableArray addObject:num];
-                
-                // server gives me number but I need string
-                NSString *tmpNumForPredicate = [key[@"num"] stringValue];
-                
-                //searching for bad posts
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", tmpNumForPredicate];
-                NSArray *filtered = [_badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
-                
-                if ([filtered count] > 0) {
-                    continue;
-                }
                 
                 NSString *comment = key[@"comment"];
                 NSString *subject = key[@"subject"];
@@ -259,30 +225,11 @@
     }
 }
 
-- (void)flagPostWithIndex:(NSUInteger)index
-        andFlaggedPostNum:(NSString *)flaggedPostNum
-      andOpAlreadyDeleted:(BOOL)opAlreadyDeleted
+- (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment
 {
-    [_privatePostsArray removeObjectAtIndex:index];
-    _postsArray = _privatePostsArray;
-    BOOL threadOrNot = NO;
-    if ((index == 0)&&(!opAlreadyDeleted))
-    {
-        threadOrNot = YES;
-        opAlreadyDeleted = YES;
-    }
-    DVBBadPost *tmpBadPost = [[DVBBadPost alloc] initWithNum:flaggedPostNum
-                                                 threadOrNot:threadOrNot];
-    [_badPostsStorage.badPostsArray addObject:tmpBadPost];
-    BOOL badPostsSavingSuccess = [_badPostsStorage saveChanges];
-    if (badPostsSavingSuccess)
-    {
-        NSLog(@"Bad Posts saved to file");
-    }
-    else
-    {
-        NSLog(@"Couldn't save bad posts to file");
-    }
+    [_networking reportThreadWithBoardCode:board
+                                 andThread:thread
+                                andComment:comment];
 }
 
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray
