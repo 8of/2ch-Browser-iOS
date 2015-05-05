@@ -52,7 +52,8 @@
         postThumb.contentMode = UIViewContentModeScaleAspectFill;
         postThumb.clipsToBounds = YES;
         [postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                     placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]];
+                     placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]
+                              options:SDWebImageRetryFailed];
 
         DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
 
