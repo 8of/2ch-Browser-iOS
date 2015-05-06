@@ -145,7 +145,7 @@
     if (!_enableGrid) _startOnGrid = NO;
 	
 	// View
-//	self.view.backgroundColor = [UIColor blackColor];
+	self.view.backgroundColor = [UIColor blackColor];
     self.view.clipsToBounds = YES;
 	
 	// Setup paging scrolling view
@@ -156,15 +156,21 @@
 	_pagingScrollView.delegate = self;
 	_pagingScrollView.showsHorizontalScrollIndicator = NO;
 	_pagingScrollView.showsVerticalScrollIndicator = NO;
-    // turn off for white
-//	_pagingScrollView.backgroundColor = [UIColor blackColor];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        _pagingScrollView.backgroundColor = [UIColor blackColor];
+    }
+
     _pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
 	[self.view addSubview:_pagingScrollView];
 	
     // Toolbar
     _toolbar = [[UIToolbar alloc] initWithFrame:[self frameForToolbarAtOrientation:self.interfaceOrientation]];
-    // turn off for white
-//    _toolbar.tintColor = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7") ? [UIColor whiteColor] : nil;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        _toolbar.tintColor = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7") ? [UIColor whiteColor] : nil;
+    }
+
     if ([_toolbar respondsToSelector:@selector(setBarTintColor:)]) {
         _toolbar.barTintColor = nil;
     }
@@ -172,9 +178,11 @@
         [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
         [_toolbar setBackgroundImage:nil forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsLandscapePhone];
     }
-    
-    // turn off for white
-//    _toolbar.barStyle = UIBarStyleBlackTranslucent;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        _toolbar.barStyle = UIBarStyleBlackTranslucent;
+    }
+
     _toolbar.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
     
     // Toolbar Items
@@ -447,15 +455,21 @@
 - (void)setNavBarAppearance:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     UINavigationBar *navBar = self.navigationController.navigationBar;
-    // turn off for white
-//    navBar.tintColor = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7") ? [UIColor whiteColor] : nil;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        navBar.tintColor = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"7") ? [UIColor whiteColor] : nil;
+    }
+
     if ([navBar respondsToSelector:@selector(setBarTintColor:)]) {
         navBar.barTintColor = nil;
         navBar.shadowImage = nil;
     }
     navBar.translucent = YES;
-    // turn off for white
-//    navBar.barStyle = UIBarStyleBlackTranslucent;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        navBar.barStyle = UIBarStyleBlackTranslucent;
+    }
+
     if ([[UINavigationBar class] respondsToSelector:@selector(appearance)]) {
         [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
         [navBar setBackgroundImage:nil forBarMetrics:UIBarMetricsLandscapePhone];
