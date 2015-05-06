@@ -62,8 +62,10 @@
     self.collectionView.alwaysBounceVertical = YES;
     
     self.collectionView.backgroundColor = [UIColor whiteColor];
-    // turn off for white
-//    self.collectionView.backgroundColor = [UIColor blackColor];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        self.collectionView.backgroundColor = [UIColor blackColor];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

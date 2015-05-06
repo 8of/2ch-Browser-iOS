@@ -101,10 +101,11 @@
     
     [appearance setTrackTintColor:[[UIColor blackColor] colorWithAlphaComponent:0.3f]];
     [appearance setProgressTintColor:[UIColor blackColor]];
-    // turn off for white
-//    [appearance setTrackTintColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3f]];
-//    [appearance setProgressTintColor:[UIColor whiteColor]];
-    
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        [appearance setTrackTintColor:[[UIColor whiteColor] colorWithAlphaComponent:0.3f]];
+        [appearance setProgressTintColor:[UIColor whiteColor]];
+    }
     
     [appearance setBackgroundColor:[UIColor clearColor]];
     [appearance setThicknessRatio:0.3f];

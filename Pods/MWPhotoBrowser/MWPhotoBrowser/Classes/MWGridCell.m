@@ -30,8 +30,10 @@
         // Grey background
         
         self.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
-        // turn off for white
-        // self.backgroundColor = [UIColor colorWithWhite:0.12 alpha:1];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+            self.backgroundColor = [UIColor colorWithWhite:0.12 alpha:1];
+        }
         
         // Image
         _imageView = [UIImageView new];

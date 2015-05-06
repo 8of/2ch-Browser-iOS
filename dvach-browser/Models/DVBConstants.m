@@ -22,6 +22,7 @@ NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@
 NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
 
 // Settings
+NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
 NSString *const PASSCODE = @"passcode";
