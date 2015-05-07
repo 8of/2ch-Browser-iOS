@@ -111,7 +111,7 @@
     
     [_postThumb setImage:nil];
     
-    _imageLeftConstraint.constant = 8.0f;
+    _imageLeftConstraint.constant = 10.0f;
     _imageWidthConstraint.constant = 65.0f;
     _imageHeightConstraint.constant = 65.0f;
     _videoiconWidthContstraint.constant = 30.0f;

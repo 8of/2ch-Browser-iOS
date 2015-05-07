@@ -29,21 +29,21 @@
 
 // default row height
 static CGFloat const ROW_DEFAULT_HEIGHT = 73.0f;
-static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 73.0f;
+static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 30.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
 // thumbnail contstraints for calculating layout dimentions
-static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
+static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
 /**
  *  Correction height because of:
- *  constraint from text to top - 8
+ *  constraint from text to top - 10
  *  border - 1 more
  *  just in case I added 5 more :)
  */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
