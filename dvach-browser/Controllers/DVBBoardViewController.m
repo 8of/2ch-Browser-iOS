@@ -19,6 +19,7 @@
 #import "DVBThreadTableViewCell.h"
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 220.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
@@ -39,6 +40,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 // Yes if we already know that board code was wrong and already presented user alert with this info
 @property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
 @property (nonatomic, assign) BOOL viewAlreadyAppeared;
+@property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
 
 @end
 
@@ -65,6 +67,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 {
     [super viewDidLoad];
     _viewAlreadyAppeared = NO;
+    _alreadyDidTheSizeClassTrick = NO;
     
     _currentPage = 0;
 
@@ -96,7 +99,15 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+            self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+        }
+        else {
+            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
+        }
+
         self.tableView.rowHeight = UITableViewAutomaticDimension;
     }
 }
@@ -135,6 +146,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
                 [self.navigationItem stopAnimating];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
+
+                    if (!_alreadyDidTheSizeClassTrick) {
+                        [self.tableView setNeedsLayout];
+                        [self.tableView layoutIfNeeded];
+                        [self.tableView reloadData];
+                    }
                 });
             }
         }];
@@ -190,10 +207,21 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
     DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.section];
-    
+
     [cell prepareCellWithThreadObject:threadTmpObj];
     
     return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    return heightToReturn;
 }
 
 - (void)reloadBoardPage
@@ -211,10 +239,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         });
     }];
 }
-
-#pragma mark - Table view - heights
-
-
 
 #pragma mark - Navigation
 

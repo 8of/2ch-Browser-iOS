@@ -11,18 +11,15 @@
 
 @interface DVBThreadTableViewCell ()
 
-/**
- *  text of post
- */
+// Text of post
 @property (nonatomic) IBOutlet UILabel* detailedLabel;
-/**
- *  tech label for posts and images count
- */
+// Tech label for posts and images count
 @property (nonatomic) IBOutlet UILabel* utilityLabel;
-/**
- *  image for showing OP thumbnail image
- */
+// Image for showing OP thumbnail image
 @property (nonatomic) IBOutlet UIImageView *threadThumb;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
+
+
 
 @end
 
@@ -37,6 +34,10 @@
 
     _detailedLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        _detailedLabel.numberOfLines = 6;
+    }
 }
 
 - (void)prepareCellWithThreadObject: (DVBThread *)threadObject
@@ -63,12 +64,12 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     [self.contentView layoutIfNeeded];
-    
+
     [_detailedLabel sizeToFit];
     _detailedLabel.preferredMaxLayoutWidth = CGRectGetWidth(_detailedLabel.frame);
-    
+
     [_utilityLabel sizeToFit];
     _utilityLabel.preferredMaxLayoutWidth = CGRectGetWidth(_utilityLabel.frame);
 }
@@ -76,10 +77,10 @@
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    
+
     _detailedLabel.text = @"";
     _utilityLabel.text = @"";
-    
+
     [self setNeedsUpdateConstraints];
     [self.layer removeAllAnimations];
 }
