@@ -46,6 +46,15 @@
     _postThumb1.image = nil;
     _postThumb2.image = nil;
     _postThumb3.image = nil;
+
+    _postThumb0.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb0.clipsToBounds = YES;
+    _postThumb1.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb1.clipsToBounds = YES;
+    _postThumb2.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb2.clipsToBounds = YES;
+    _postThumb3.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb3.clipsToBounds = YES;
 }
 
 - (void)prepareForReuse
@@ -71,8 +80,7 @@
     for (NSString *postThumbUrlString in thumbPathesArray) {
 
         UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
-        postThumb.contentMode = UIViewContentModeScaleAspectFill;
-        postThumb.clipsToBounds = YES;
+
         [postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
                      placeholderImage:nil
                               options:SDWebImageRetryFailed];
