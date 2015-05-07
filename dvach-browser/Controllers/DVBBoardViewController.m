@@ -18,6 +18,7 @@
 
 #import "DVBThreadTableViewCell.h"
 
+static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
@@ -91,6 +92,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = nil;
+    }
+
+    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
+    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
     }
 }
 
@@ -206,6 +213,10 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     }];
 }
 
+#pragma mark - Table view - heights
+
+
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -291,6 +302,25 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
+}
+
+#pragma mark - Selector checking
+
+#pragma mark - Respoder rewrite
+
+- (BOOL)respondsToSelector:(SEL)selector
+{
+    static BOOL useSelector;
+    static dispatch_once_t predicate = 0;
+    dispatch_once(&predicate, ^{
+        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
+    });
+
+    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
+        return useSelector;
+    }
+
+    return [super respondsToSelector:selector];
 }
 
 @end
