@@ -18,6 +18,8 @@
 
 #import "DVBThreadTableViewCell.h"
 
+static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 220.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
@@ -37,6 +39,8 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 // Yes if we already know that board code was wrong and already presented user alert with this info
 @property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
+@property (nonatomic, assign) BOOL viewAlreadyAppeared;
+@property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
 
 @end
 
@@ -50,9 +54,20 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     [self.navigationController setToolbarHidden:YES animated:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear: animated];
+    _viewAlreadyAppeared = YES;
+    if (_wrongBoardAlertAlreadyPresentedOnce) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _viewAlreadyAppeared = NO;
+    _alreadyDidTheSizeClassTrick = NO;
     
     _currentPage = 0;
 
@@ -81,6 +96,20 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = nil;
     }
+
+    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
+    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+            self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+        }
+        else {
+            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
+        }
+
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+    }
 }
 
 /**
@@ -108,15 +137,21 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
                 _wrongBoardAlertAlreadyPresentedOnce = YES;
                 
                 // Go back if board isn't there
-                [self.navigationController popToRootViewControllerAnimated:YES];
+                if (_viewAlreadyAppeared) {
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                }
             }
             else if (!_wrongBoardAlertAlreadyPresentedOnce) {
-
                 // Update only if we have something to show
-
                 [self.navigationItem stopAnimating];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
+
+                    if (!_alreadyDidTheSizeClassTrick) {
+                        [self.tableView setNeedsLayout];
+                        [self.tableView layoutIfNeeded];
+                        [self.tableView reloadData];
+                    }
                 });
             }
         }];
@@ -167,16 +202,26 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     return subject;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView
-         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
     DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.section];
-    
+
     [cell prepareCellWithThreadObject:threadTmpObj];
     
     return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    return heightToReturn;
 }
 
 - (void)reloadBoardPage
@@ -188,9 +233,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _alreadyLoadingNextPage = NO;
         _threadsArray = [completionThreadsArray mutableCopy];
         [self.refreshControl endRefreshing];
-        [self.navigationItem stopAnimating];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
+            [self.navigationItem stopAnimating];
         });
     }];
 }
@@ -202,7 +247,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     if([[segue identifier] isEqualToString:SEGUE_TO_THREAD])
     {
         DVBThreadViewController *threadViewController = segue.destinationViewController;
-        threadViewController.delegate = self;
         threadViewController.boardCode = _boardCode;
         
         if (_createdThreadNum) {
@@ -262,20 +306,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     return YES;
 }
 
-- (void)sendDataToBoard:(NSUInteger)deletedObjectIndex
-{
-    [_threadsArray removeObjectAtIndex:deletedObjectIndex];
-    [self.tableView reloadData];
-    
-    NSString *complaintSentAlertTitle = NSLocalizedString(@"Жалоба отправлена", @"Заголовок alert'a сообщает о том, что жалоба отправлена.");
-    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба поставлена в очередь на проверку. Тред был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
-    UIAlertView *alertView = [_alertViewGenerator alertViewWithTitle:complaintSentAlertTitle
-                                                         description:complaintSentAlertMessage
-                                                             buttons:nil];
-    [alertView show];
-    
-}
-
 - (void)openThredWithCreatedThread:(NSString *)threadNum
 {
     _createdThreadNum = threadNum;
@@ -295,6 +325,25 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
+}
+
+#pragma mark - Selector checking
+
+#pragma mark - Respoder rewrite
+
+- (BOOL)respondsToSelector:(SEL)selector
+{
+    static BOOL useSelector;
+    static dispatch_once_t predicate = 0;
+    dispatch_once(&predicate, ^{
+        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
+    });
+
+    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
+        return useSelector;
+    }
+
+    return [super respondsToSelector:selector];
 }
 
 @end

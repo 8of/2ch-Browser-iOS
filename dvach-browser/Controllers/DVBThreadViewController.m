@@ -14,8 +14,8 @@
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
-#import "DVBBadPost.h"
 #import "DVBComment.h"
+#import "DVBAlertViewGenerator.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -27,52 +27,40 @@
 
 #import "ARChromeActivity.h"
 
-// default row height
-static CGFloat const ROW_DEFAULT_HEIGHT = 73.0f;
-static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 73.0f;
+// Default row heights
+static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
+static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 30.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
 // thumbnail contstraints for calculating layout dimentions
-static CGFloat const HORISONTAL_CONSTRAINT = 8.0f; // we have 3 of them
+static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
 /**
  *  Correction height because of:
- *  constraint from text to top - 8
+ *  constraint from text to top - 10
  *  border - 1 more
- *  just in case I added one more :)
+ *  just in case I added 5 more :)
  */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
-
-@protocol sendDataProtocol <NSObject>
-
-- (void)sendDataToBoard:(NSUInteger)deletedObjectIndex;
-
-@end
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // Array of posts inside this thread
 @property (nonatomic, strong) NSArray *postsArray;
-
 // Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
-
 // Array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
-
 // Array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
-
 // Action sheet for displaying bad posts flaggind (and maybe somethig more later)
 @property (nonatomic, strong) UIActionSheet *postLongPressSheet;
 @property (nonatomic, strong) NSString *flaggedPostNum;
 @property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
-
 @property (nonatomic, assign) NSUInteger updatedTimes;
-
 // For marking if OP message already glagged or not (tech prop)
 @property (nonatomic, assign) BOOL opAlreadyDeleted;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
@@ -153,7 +141,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                                                     andThreadNum:_threadNum];
     }
     
-    // System do not spend resurces on calculating row heights via heightForRowAtIndexPath.
+    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
         self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
         self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -180,7 +168,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     return [_postsArray count];
 }
 
-/// Set every section title depending on post SUBJECT or NUMBER
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
@@ -202,7 +189,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 {
     DVBPost *post = _postsArray[section];
 
-    // If post have more than one thumbnail...
+    // If post have more than one thumbnail
     if ([post.thumbPathesArray count] > 1) {
         return 3;
     }
@@ -284,16 +271,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
         
         // Decrease window width value by taking off elements and contraints values
         CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
-        
-        UIFont *font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-        
-        CGSize size = [self frameForText:text
-                            sizeWithFont:font
-                       constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
-        
+
         // Return the size of the current row.
-        // 81 is the minimum height! Update accordingly
-        CGFloat heightToReturn = size.height;
+        CGFloat heightToReturn = [self heightForText:text
+                                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
         
         CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
         
@@ -303,7 +284,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                 return heightForReturnWithCorrectionAndCeilf;
             }
             
-            return ROW_DEFAULT_HEIGHT;
+            return (ROW_DEFAULT_HEIGHT + 1);
         }
 
         // We should not return values greater than 2009
@@ -327,67 +308,18 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
 {
-    switch (url.type) {
-        case boardLink: {
-            //открыть борду
-            /*
-            BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
-            controller.boardId = urlNinja.boardId;
-            [self.navigationController pushViewController:controller animated:YES];
-            */
-            
-            return NO;
-            
-            break;
-        }
-        case boardThreadLink: {
-            // [self openThreadWithUrlNinja:urlNinja];
+    UrlNinja *urlNinjaHelper = [[UrlNinja alloc] init];
 
-            return NO;
-            
-            break;
-        }
-        case boardThreadPostLink: {
+    __weak __typeof__(self) weakSelf = self;
+    urlNinjaHelper.urlOpener = weakSelf;
 
-            // if we do not have boardId of threadNum assidned - we take them from passed url
-            if (!_threadNum) {
-                _threadNum = url.threadId;
-            }
-            if (!_boardCode) {
-                _boardCode = url.boardId;
-            }
+    BOOL answer = [urlNinjaHelper isLinkInternalWithLink:url andThreadNum:_threadNum andBoardCode:_boardCode];
 
-            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
-            if ([_threadNum isEqualToString:url.threadId] && [_boardCode isEqualToString:url.boardId]) {
-                [self openPostWithUrlNinja:url];
-
-                return YES;
-                /*
-                if ([self.thread.linksReference containsObject:urlNinja.postId]) {
-                    [self openPostWithUrlNinja:urlNinja];
-                    return NO;
-                }
-                 */
-            }
-            // [self openThreadWithUrlNinja:urlNinja];
-        }
-            break;
-        default: {
-            // [self makeExternalLinkActionSheetWithUrl:URL];
-
-            return NO;
-            
-            break;
-        }
-    }
-    // NSLog(@"url type: %lu", (unsigned long)url.type);
-
-    return YES;
+    return answer;
 }
 
 - (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
 {
-    
     NSString *postNum = urlNinja.postId;
     
     NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
@@ -431,7 +363,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     [self.navigationController pushViewController:threadViewController animated:YES];
 }
 
-/// Clear prompt of any status / error messages.
+/// Clear prompt from any status / error messages.
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
@@ -491,17 +423,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     }
 }
 
-/// Utility function that given text, calculates how much space we need to fit that text. Calculation for texView height.
--(CGSize)frameForText:(NSAttributedString *)text sizeWithFont:(UIFont *)font constrainedToSize:(CGSize)size
+/// Utility method for calculation how much space we need to fit that text. Calculation for texView height.
+-(CGFloat)heightForText:(NSAttributedString *)text constrainedToSize:(CGSize)size
 {
-    CGRect frame = [text boundingRectWithSize:size
-                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                      context:nil];
-    
-    /**
-     *  This contains both height and width, but we really care only about height.
-     */
-    return frame.size;
+    CGRect frame = CGRectIntegral([text boundingRectWithSize:size
+                                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
+                                                     context:nil]);
+
+    return frame.size.height;
 }
 
 /**
@@ -554,8 +483,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
             _postsArray = [postsArrayBlock mutableCopy];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
+                [self.navigationItem stopAnimating];
             });
-            [self.navigationItem stopAnimating];
         }];
     }
 }
@@ -575,7 +504,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 - (IBAction)scrollToBottom:(id)sender
 {
     CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
-    [self.tableView setContentOffset:pointToScrollTo animated:YES];
+    [self.tableView setContentOffset:pointToScrollTo animated:NO];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -662,7 +591,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    
     if (actionSheet == _postLongPressSheet) {
 
         switch (buttonIndex) {
@@ -713,22 +641,18 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                 break;
             }
 
-            case 2: // share
+            case 2: // Share
             {
                 NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
                 [self callShareControllerWithUrlString:urlToShare];
                 break;
             }
                 
-            case 3:
+            case 3: // Report button
             {
-                // Flag button
-                [self sendPost:_flaggedPostNum andBoard:_boardCode andCompletion:^(BOOL done) {
-                    NSLog(@"Post complaint sent.");
-                    if (done) {
-                        [self deletePostWithIndex:_selectedWithLongPressSection andFlaggedPostNum:_flaggedPostNum];
-                    }
-                }];
+                [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
+
+                [self showPromptAboutReportedPost];
                 break;
             }
             default:
@@ -768,88 +692,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     [self presentViewController:activityViewController animated:YES completion:nil];
 }
 
-#pragma mark - Bad posts reporting
-
-/// Function for flag inappropriate content and send it to moderators DB
-- (void) sendPost:(NSString *)postNum andBoard:(NSString *)board andCompletion:(void (^)(BOOL ))completion
-{
-    NSString *currentPostNum = postNum;
-    NSString *currentBoard = board;
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable) {
-        BOOL result = NO;
-        return completion(result);
-    }
-    else {
-        
-        // building URL for sendin JSON to my server (for tickets)
-        // there is better one-line solution for this - need to use stringWithFormat
-        // rewrite in future!
-        
-        NSMutableString *requestAddress = [[NSMutableString alloc] initWithString:COMPLAINT_URL];
-        [requestAddress appendString:@"?postnum="];
-        [requestAddress appendString:currentPostNum];
-        [requestAddress appendString:@"&board="];
-        [requestAddress appendString:currentBoard];
-        
-        NSURLRequest *activeRequest = [NSURLRequest requestWithURL:
-                                       [NSURL URLWithString:requestAddress]];
-        
-        [NSURLConnection sendAsynchronousRequest:activeRequest
-                                           queue:[NSOperationQueue mainQueue]
-                               completionHandler:^(NSURLResponse *response,
-                                                   NSData *data,
-                                                   NSError *connectionError)
-         {
-             NSError *jsonError;
-             
-             NSMutableDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:data
-                                                                               options:NSJSONReadingAllowFragments
-                                                                                 error:&jsonError];
-             
-             NSString *status = resultDict[@"status"];
-             
-             BOOL ok = YES;
-             
-             if (![status isEqualToString:@"1"])
-             {
-                 completion(NO);
-             }
-             
-             completion(ok);
-         }];
-    }
-}
-
-- (void)deletePostWithIndex:(NSUInteger)index andFlaggedPostNum:(NSString *)flaggedPostNum
-{
-    [_threadModel flagPostWithIndex:index andFlaggedPostNum:flaggedPostNum andOpAlreadyDeleted:_opAlreadyDeleted];
-    
-    if (index == 0) {
-        [self.delegate sendDataToBoard:_threadIndex];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        [self.tableView reloadData];
-        [self showAlertAboutReportedPost];
-    }
-}
-
-- (void)showAlertAboutReportedPost
-{
-    NSString *complaintSentAlertTitle = NSLocalizedString(@"Жалоба отправлена", @"Заголовок alert'a сообщает о том, что жалоба отправлена.");
-    NSString *complaintSentAlertMessage = NSLocalizedString(@"Ваша жалоба посталена в очередь на проверку модератором. Пост был скрыт.", @"Текст alert'a сообщает о том, что жалоба отправлена.");
-    
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:complaintSentAlertTitle
-                                                        message:complaintSentAlertMessage
-                                                       delegate:self
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:@"OK", nil];
-    [alertView setTag:1];
-    [alertView show];
-}
-
 #pragma mark - Photo gallery
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString
@@ -879,7 +721,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     }
 }
 
-// New approach
 - (void)createAndPushGalleryWithUrlString:(NSString *)urlString
 {
     NSUInteger indexForImageShowing = [_fullImagesArray indexOfObject:urlString];
@@ -892,7 +733,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
                      andThumbImagesArray:_thumbImagesArray
                       andFullImagesArray:_fullImagesArray];
 
-        // Present
         [self.navigationController pushViewController:galleryBrowser animated:YES];
     }
 }
@@ -901,14 +741,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
 
 -(void)updateThreadAfterPosting
 {
-    // Update Thread from network.
     [self reloadThread];
-    
-    // Scroll thread to bottom. Not working as it should for now.
-    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
-    [self.tableView setContentOffset:pointToScrollTo animated:YES];
-    
-    NSLog(@"Table updated after posting.");
 }
 
 #pragma mark - Selector checking
@@ -928,6 +761,17 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 10.0f;
     }
     
     return [super respondsToSelector:selector];
+}
+
+#pragma mark - Bad posts reporting
+
+- (void)showPromptAboutReportedPost
+{
+    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
+    self.navigationItem.prompt = complaintSentPrompt;
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:2.0];
 }
 
 @end

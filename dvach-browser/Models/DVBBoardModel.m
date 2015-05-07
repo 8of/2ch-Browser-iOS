@@ -9,7 +9,6 @@
 #import "DVBBoardModel.h"
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
-#import "DVBBadPostStorage.h"
 #import "DVBThread.h"
 #import "NSString+HTML.h"
 
@@ -19,10 +18,6 @@
 @property (nonatomic, assign) NSUInteger currentPage;
 @property (nonatomic, assign) NSUInteger maxPage;
 @property (nonatomic, strong) NSMutableArray *privateThreadsArray;
-/**
- *  For storing bad posts (bad posts market by user).
- */
-@property (nonatomic, strong) DVBBadPostStorage *badPostsStorage;
 @property (nonatomic, strong) DVBNetworking *networking;
 
 @end
@@ -44,7 +39,6 @@
         _maxPage = maxPage;
         _networking = [[DVBNetworking alloc] init];
        _privateThreadsArray = [NSMutableArray array];
-        [self loadBadPostsArray];
     }
     
     return self;
@@ -69,15 +63,6 @@
             
             // very important note: unlikely in other NUM keys in other JSON answers - here server answers STRING SOMETIMES and NOT ONLY NUMBER
             NSString *num = [opPost objectForKey:@"num"];
-            
-            // filtering posts to not show bad ones from phone storage
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.num contains[cd] %@", num];
-            NSArray *filtered = [_badPostsStorage.badPostsArray filteredArrayUsingPredicate:predicate];
-            
-            // if no norml messages left (only bad on this page - for example - then just go to next FOR iteration)
-            if ([filtered count] > 0) {
-                continue;
-            }
             
             NSString *subject = [opPost objectForKey:@"subject"];
             NSString *comment = [opPost objectForKey:@"comment"];
@@ -144,20 +129,6 @@
     [self loadNextPageWithCompletion:^(NSArray *threadsCompletion) {
         completion(threadsCompletion);
     }];
-}
-
-/**
- Loading array with bad posts if it exists, otherwise - create nil array for this purpose.
- */
-- (void)loadBadPostsArray
-{
-    _badPostsStorage = [[DVBBadPostStorage alloc] init];
-    NSString *path = [_badPostsStorage badPostsArchivePath];
-    
-    _badPostsStorage.badPostsArray = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
-    if (!_badPostsStorage.badPostsArray) {
-        _badPostsStorage.badPostsArray = [[NSMutableArray alloc] initWithObjects: nil];
-    }
 }
 
 @end

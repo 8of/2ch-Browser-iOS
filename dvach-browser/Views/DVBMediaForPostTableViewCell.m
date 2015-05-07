@@ -35,10 +35,41 @@
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
+
     _postWebmIcon0.hidden = YES;
     _postWebmIcon1.hidden = YES;
     _postWebmIcon2.hidden = YES;
     _postWebmIcon3.hidden = YES;
+
+    _postThumb0.image = nil;
+    _postThumb1.image = nil;
+    _postThumb2.image = nil;
+    _postThumb3.image = nil;
+
+    _postThumb0.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb0.clipsToBounds = YES;
+    _postThumb1.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb1.clipsToBounds = YES;
+    _postThumb2.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb2.clipsToBounds = YES;
+    _postThumb3.contentMode = UIViewContentModeScaleAspectFill;
+    _postThumb3.clipsToBounds = YES;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+
+    _postWebmIcon0.hidden = YES;
+    _postWebmIcon1.hidden = YES;
+    _postWebmIcon2.hidden = YES;
+    _postWebmIcon3.hidden = YES;
+
+    _postThumb0.image = nil;
+    _postThumb1.image = nil;
+    _postThumb2.image = nil;
+    _postThumb3.image = nil;
 }
 
 - (void)prepareCellWithThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray
@@ -49,10 +80,10 @@
     for (NSString *postThumbUrlString in thumbPathesArray) {
 
         UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
-        postThumb.contentMode = UIViewContentModeScaleAspectFill;
-        postThumb.clipsToBounds = YES;
+
         [postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                     placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]];
+                     placeholderImage:nil
+                              options:SDWebImageRetryFailed];
 
         DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
 
@@ -60,9 +91,6 @@
             NSString *pathString = pathesArray[currentImageIndex];
             if ([self isMediaTypeWebmWithPicPath:pathString]) {
                 webmIconImageView.hidden = NO;
-            }
-            else {
-                webmIconImageView.hidden = YES;
             }
         }
 

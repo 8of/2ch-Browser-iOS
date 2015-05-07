@@ -15,14 +15,14 @@ NSString *const GOOGLE_CHROME_HTTPS_SCHEME = @"googlechromes://";
 NSString *const GOOGLE_CHROME_HTTP_SCHEME = @"googlechrome://";
 
 // URLs
-NSString *const STATUS_REQUEST_ADDRESS = @"http://8of.org/2ch/status.json";
 NSString *const DVACH_BASE_URL = @"https://2ch.hk/";
 NSString *const DVACH_BASE_URL_WITHOUT_SCHEME = @"2ch.hk/";
-NSString *const COMPLAINT_URL = @"http://8of.org/2ch/tickets";
 NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.hk/makaba/captcha.fcgi";
 NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@";
+NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
 
 // Settings
+NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
 NSString *const PASSCODE = @"passcode";

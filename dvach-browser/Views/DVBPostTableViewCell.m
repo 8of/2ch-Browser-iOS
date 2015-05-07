@@ -28,13 +28,27 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
 
+// Constraint storages of initial values
+@property (nonatomic, assign) CGFloat imageLeftConstraintStorage;
+@property (nonatomic, assign) CGFloat imageWidthConstraintStorage;
+@property (nonatomic, assign) CGFloat imageHeightConstraintStorage;
+@property (nonatomic, assign) CGFloat videoiconWidthContstraintStorage;
+@property (nonatomic, assign) CGFloat videoiconHeightContstraintStorage;
+
 @end
 
 @implementation DVBPostTableViewCell
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
+    
     _commentTextView.delegate = self;
+    _imageLeftConstraintStorage = _imageLeftConstraint.constant;
+    _imageWidthConstraintStorage = _imageWidthConstraint.constant;
+    _imageHeightConstraintStorage = _imageHeightConstraint.constant;
+    _videoiconWidthContstraintStorage = _videoiconWidthContstraint.constant;
+    _videoiconHeightContstraintStorage = _videoiconHeightContstraint.constant;
 }
 
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString  andShowVideoIcon:(BOOL)showVideoIcon
@@ -54,10 +68,10 @@
     _commentTextView.attributedText = commentText;
 
     // load the image and setting image source depending on presented image or set blank image
-    // need to rewrite it to use different table cells if there is no image in post
     if (![postThumbUrlString isEqualToString:@""]) {
         [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                              placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+                      placeholderImage:[UIImage imageNamed:@"Noimage.png"]
+                               options:SDWebImageRetryFailed];
 
         [self rebuildPostThumbImageWithImagePresence:YES
                             andWithVideoIconPresence:showVideoIcon];
@@ -65,7 +79,7 @@
         _fullPathUrlString = postFullUrlString;
     }
     else {
-        _postThumb.image = [UIImage imageNamed:@"Noimage.png"];
+        _postThumb.image = nil;
         [self rebuildPostThumbImageWithImagePresence:NO
                             andWithVideoIconPresence:NO];
     }
@@ -111,11 +125,11 @@
     
     [_postThumb setImage:nil];
     
-    _imageLeftConstraint.constant = 8.0f;
-    _imageWidthConstraint.constant = 65.0f;
-    _imageHeightConstraint.constant = 65.0f;
-    _videoiconWidthContstraint.constant = 30.0f;
-    _videoiconHeightContstraint.constant = 30.0f;
+    _imageLeftConstraint.constant = _imageLeftConstraintStorage;
+    _imageWidthConstraint.constant = _imageWidthConstraintStorage;
+    _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+    _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
+    _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
     _isPostHaveImage = YES;
     
     [self setNeedsUpdateConstraints];

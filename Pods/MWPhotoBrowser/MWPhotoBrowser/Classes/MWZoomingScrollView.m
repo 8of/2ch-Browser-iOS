@@ -41,8 +41,11 @@
 		_tapView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         _tapView.backgroundColor = [UIColor whiteColor];
-        // turn off for white
-//		_tapView.backgroundColor = [UIColor blackColor];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+            _tapView.backgroundColor = [UIColor blackColor];
+        }
+
 		[self addSubview:_tapView];
 		
 		// Image view
@@ -52,8 +55,11 @@
         
         // 
         _photoImageView.backgroundColor = [UIColor whiteColor];
-        // turn off for white
-//		_photoImageView.backgroundColor = [UIColor blackColor];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+            _photoImageView.backgroundColor = [UIColor blackColor];
+        }
+
 		[self addSubview:_photoImageView];
 		
 		// Loading indicator
@@ -78,8 +84,11 @@
         
 		// Setup
         self.backgroundColor = [UIColor whiteColor];
-        // turn off for white
-//		self.backgroundColor = [UIColor blackColor];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+            self.backgroundColor = [UIColor blackColor];
+        }
+
 		self.delegate = self;
 		self.showsHorizontalScrollIndicator = NO;
 		self.showsVerticalScrollIndicator = NO;

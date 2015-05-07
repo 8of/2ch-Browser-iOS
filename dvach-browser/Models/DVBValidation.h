@@ -13,16 +13,8 @@
 #import <Foundation/Foundation.h>
 
 @interface DVBValidation : NSObject
-/**
- *  Should we filter/showing specific content
- */
-@property (nonatomic, readonly) BOOL filterContent;
 
-- (BOOL)checkBadBoardWithBoard:(NSString *)board;
-
-/**
- *  Check shortcode for presence of different symbols
- */
+/// Check shortcode for presence of different symbols
 - (BOOL)checkBoardShortCodeWith:(NSString *)boardCode;
 
 @end
