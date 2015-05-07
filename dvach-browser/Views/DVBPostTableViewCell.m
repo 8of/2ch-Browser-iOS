@@ -41,6 +41,8 @@
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
+    
     _commentTextView.delegate = self;
     _imageLeftConstraintStorage = _imageLeftConstraint.constant;
     _imageWidthConstraintStorage = _imageWidthConstraint.constant;
