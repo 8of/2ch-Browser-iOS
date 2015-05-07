@@ -132,9 +132,25 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="udf-rB-IcA">
                                             <rect key="frame" x="10" y="10" width="65" height="65"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="65" id="Fjn-bz-1Hj"/>
                                                 <constraint firstAttribute="width" constant="65" id="TYI-DK-cMv"/>
+                                                <constraint firstAttribute="width" constant="200" id="i2i-Q9-RiO"/>
+                                                <constraint firstAttribute="height" constant="200" id="kuN-9u-B2g"/>
+                                                <constraint firstAttribute="height" constant="65" id="yqL-xu-zkE"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="i2i-Q9-RiO"/>
+                                                    <exclude reference="kuN-9u-B2g"/>
+                                                </mask>
+                                            </variation>
+                                            <variation key="heightClass=regular-widthClass=regular">
+                                                <mask key="constraints">
+                                                    <exclude reference="TYI-DK-cMv"/>
+                                                    <include reference="i2i-Q9-RiO"/>
+                                                    <include reference="kuN-9u-B2g"/>
+                                                    <exclude reference="yqL-xu-zkE"/>
+                                                </mask>
+                                            </variation>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Utility" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zj3-lK-H6n">
                                             <rect key="frame" x="85" y="31" width="225" height="17"/>
@@ -151,7 +167,7 @@
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="10" id="YX7-8C-adV"/>
                                         <constraint firstAttribute="trailing" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="ZNC-5y-9iz"/>
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="leading" secondItem="vxw-Jc-Fk2" secondAttribute="leading" constant="10" id="Zyk-3H-Nwn"/>
-                                        <constraint firstAttribute="bottom" secondItem="udf-rB-IcA" secondAttribute="bottom" constant="10" id="aXM-u5-MFg"/>
+                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="udf-rB-IcA" secondAttribute="bottom" constant="10" id="aXM-u5-MFg"/>
                                         <constraint firstItem="zj3-lK-H6n" firstAttribute="top" secondItem="ggV-qV-ALA" secondAttribute="bottom" constant="4" id="jqp-G5-S8f"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="zj3-lK-H6n" secondAttribute="bottom" constant="10" id="w0K-ku-Uky"/>
                                     </constraints>
@@ -159,6 +175,7 @@
                                 <inset key="separatorInset" minX="28" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="detailedLabel" destination="ggV-qV-ALA" id="UIn-py-5Ya"/>
+                                    <outlet property="imageWidthConstraint" destination="i2i-Q9-RiO" id="W4U-he-Png"/>
                                     <outlet property="threadThumb" destination="udf-rB-IcA" id="2qF-Kl-zGA"/>
                                     <outlet property="utilityLabel" destination="zj3-lK-H6n" id="Im9-rY-pto"/>
                                     <segue destination="3hz-5v-Niv" kind="show" identifier="segueToThread" id="Xk9-pa-bWO"/>
