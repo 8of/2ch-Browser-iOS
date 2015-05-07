@@ -35,10 +35,32 @@
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
+
     _postWebmIcon0.hidden = YES;
     _postWebmIcon1.hidden = YES;
     _postWebmIcon2.hidden = YES;
     _postWebmIcon3.hidden = YES;
+
+    _postThumb0.image = nil;
+    _postThumb1.image = nil;
+    _postThumb2.image = nil;
+    _postThumb3.image = nil;
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+
+    _postWebmIcon0.hidden = YES;
+    _postWebmIcon1.hidden = YES;
+    _postWebmIcon2.hidden = YES;
+    _postWebmIcon3.hidden = YES;
+
+    _postThumb0.image = nil;
+    _postThumb1.image = nil;
+    _postThumb2.image = nil;
+    _postThumb3.image = nil;
 }
 
 - (void)prepareCellWithThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray
@@ -61,9 +83,6 @@
             NSString *pathString = pathesArray[currentImageIndex];
             if ([self isMediaTypeWebmWithPicPath:pathString]) {
                 webmIconImageView.hidden = NO;
-            }
-            else {
-                webmIconImageView.hidden = YES;
             }
         }
 
