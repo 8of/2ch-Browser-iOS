@@ -18,7 +18,7 @@
 
 #import "DVBThreadTableViewCell.h"
 
-static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 85.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 220.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
