@@ -44,6 +44,9 @@
     // Captcha image will be in front of activity indicator after appearing.
     _captchaImage.layer.zPosition = 2;
 
+    // Captch button will be in front of everything
+    _captchaUpdateButton.layer.zPosition = 3;
+
     // Setup commentTextView appearance to look like textField.
     _commentTextView.delegate = self;
 
