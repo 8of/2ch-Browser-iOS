@@ -662,8 +662,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
-                                <rect key="frame" x="0.0" y="64" width="320" height="486"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
+                                <rect key="frame" x="0.0" y="20" width="320" height="530"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="706"/>
@@ -742,36 +742,39 @@
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="R8v-6t-d37">
                                                         <rect key="frame" x="0.0" y="0.0" width="200" height="60"/>
                                                         <constraints>
+                                                            <constraint firstAttribute="height" constant="60" id="JWE-Wr-kF3"/>
                                                             <constraint firstAttribute="width" constant="200" id="eox-kf-qEm"/>
                                                         </constraints>
                                                     </imageView>
                                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="jV2-RR-JBv">
                                                         <rect key="frame" x="90" y="20" width="20" height="20"/>
                                                     </activityIndicatorView>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ATw-LV-fb7" userLabel="Update captcha button">
-                                                        <rect key="frame" x="268" y="0.0" width="22" height="22"/>
+                                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Капча" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1dE-mf-Pvb">
+                                                        <rect key="frame" x="210" y="0.0" width="80" height="60"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="22" id="HCJ-Cp-e3E"/>
-                                                            <constraint firstAttribute="height" constant="22" id="Tq8-jM-bfq"/>
+                                                            <constraint firstAttribute="width" constant="80" id="7Zr-eb-DB1"/>
+                                                            <constraint firstAttribute="height" constant="60" id="hsl-Ol-um8"/>
                                                         </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad"/>
+                                                    </textField>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ATw-LV-fb7" userLabel="Update captcha button">
+                                                        <rect key="frame" x="167" y="27" width="33" height="33"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="33" id="MRW-YT-3q3"/>
+                                                            <constraint firstAttribute="height" constant="33" id="nfK-f5-GPE"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <state key="normal" image="Refresh"/>
                                                         <connections>
                                                             <action selector="captchaUpdateAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="ZJb-dP-1eN"/>
                                                         </connections>
                                                     </button>
-                                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Капча" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1dE-mf-Pvb">
-                                                        <rect key="frame" x="210" y="43" width="80" height="17"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="80" id="7Zr-eb-DB1"/>
-                                                        </constraints>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad"/>
-                                                    </textField>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="R8v-6t-d37" firstAttribute="top" secondItem="QiY-eA-Udo" secondAttribute="top" id="6zy-Ir-wfV"/>
-                                                    <constraint firstItem="ATw-LV-fb7" firstAttribute="top" secondItem="QiY-eA-Udo" secondAttribute="top" id="FJD-bb-SLo"/>
                                                     <constraint firstItem="R8v-6t-d37" firstAttribute="centerX" secondItem="jV2-RR-JBv" secondAttribute="centerX" id="Got-PI-h6o"/>
+                                                    <constraint firstItem="R8v-6t-d37" firstAttribute="bottom" secondItem="ATw-LV-fb7" secondAttribute="bottom" id="Gwq-O5-c7T"/>
                                                     <constraint firstItem="1dE-mf-Pvb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="R8v-6t-d37" secondAttribute="trailing" constant="10" id="NTz-iA-TjD"/>
                                                     <constraint firstAttribute="trailing" secondItem="1dE-mf-Pvb" secondAttribute="trailing" id="UrK-Xv-PGh"/>
                                                     <constraint firstAttribute="bottom" secondItem="1dE-mf-Pvb" secondAttribute="bottom" id="VrH-by-J4S"/>
@@ -779,7 +782,7 @@
                                                     <constraint firstItem="R8v-6t-d37" firstAttribute="leading" secondItem="QiY-eA-Udo" secondAttribute="leading" id="fQW-eT-a01"/>
                                                     <constraint firstAttribute="bottom" secondItem="R8v-6t-d37" secondAttribute="bottom" id="kMX-1p-vMJ"/>
                                                     <constraint firstAttribute="height" constant="60" id="n5d-vm-GJa"/>
-                                                    <constraint firstAttribute="trailing" secondItem="ATw-LV-fb7" secondAttribute="trailing" id="yzm-tt-hRf"/>
+                                                    <constraint firstItem="R8v-6t-d37" firstAttribute="trailing" secondItem="ATw-LV-fb7" secondAttribute="trailing" id="yHc-BL-eEj"/>
                                                 </constraints>
                                             </view>
                                             <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Тема" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wjr-Ih-9ju">
@@ -1069,13 +1072,13 @@
     </scenes>
     <resources>
         <image name="Bottompage" width="22" height="22"/>
-        <image name="Refresh" width="22" height="22"/>
+        <image name="Refresh" width="44" height="44"/>
         <image name="Settings" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="XRT-4w-L0S"/>
         <segue reference="Iwy-TH-KYT"/>
-        <segue reference="Xk9-pa-bWO"/>
+        <segue reference="o55-Sb-BOJ"/>
     </inferredMetricsTieBreakers>
 </document>

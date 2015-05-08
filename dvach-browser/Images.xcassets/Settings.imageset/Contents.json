@@ -2,8 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "Settings.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
