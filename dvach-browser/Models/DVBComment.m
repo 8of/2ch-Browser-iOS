@@ -75,7 +75,7 @@
     additionalCommentString = [additionalCommentString stringByReplacingOccurrencesOfString:@"\n>\n" withString:@"\n"];
 
     // merge old comment text + ">" symbol + new comment with ">" symbols inside
-    NSString *commentToSingleton = [[NSString alloc] initWithFormat:@"%@>%@", comment, additionalCommentString];
+    NSString *commentToSingleton = [[NSString alloc] initWithFormat:@"%@>%@\n", comment, additionalCommentString];
 
     comment = commentToSingleton;
 }
