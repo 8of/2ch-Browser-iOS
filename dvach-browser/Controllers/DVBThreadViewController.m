@@ -324,6 +324,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     if (scrollView.contentOffset.y > 100) {
         [_threadsScrollPositionManager.threads setValue:[NSNumber numberWithFloat:scrollView.contentOffset.y] forKey:_threadNum];
+        _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
     }
 }
 
