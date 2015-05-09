@@ -617,14 +617,7 @@
                             <outlet property="delegate" destination="3hz-5v-Niv" id="SK3-bB-zWn"/>
                         </connections>
                     </tableView>
-                    <toolbarItems>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="EJM-0B-k22"/>
-                        <barButtonItem systemItem="refresh" id="OC5-6d-88W">
-                            <connections>
-                                <action selector="reloadThreadAction:" destination="3hz-5v-Niv" id="pPz-GS-an6"/>
-                            </connections>
-                        </barButtonItem>
-                    </toolbarItems>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Тред" id="iaG-NT-yBd">
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="tpv-GH-b3T">
                             <connections>

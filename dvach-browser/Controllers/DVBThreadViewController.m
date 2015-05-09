@@ -45,6 +45,8 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
+static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
+
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // Array of posts inside this thread
@@ -73,7 +75,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self toolbarHandler];
+    [self rightBarButtonHandler];
 }
 
 // This preventing table view from jumping when we push other controller (answers/ gallery on top of it).
@@ -90,20 +92,21 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     [self reloadThread];
 }
 
-- (void)toolbarHandler
+- (void)rightBarButtonHandler
 {
     if (_answersToPost) {
-        [self.navigationController setToolbarHidden:YES animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
     }
     else {
-        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
 }
 
 - (void)prepareViewController
 {
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+
     _opAlreadyDeleted = NO;
     
     if (_answersToPost) {
@@ -132,7 +135,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         _fullImagesArray = [arrayOfFullImages mutableCopy];
     }
     else {
-        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
@@ -485,11 +487,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }
 }
 
-- (void)reloadThreadFromOutside
-{
-    [self reloadThread];
-}
-
 #pragma mark - Actions from Storyboard
 
 - (IBAction)reloadThreadAction:(id)sender
@@ -731,7 +728,45 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 -(void)updateThreadAfterPosting
 {
-    [self reloadThread];
+    DVBComment *comment = [DVBComment sharedComment];
+
+    if (comment.createdPost) {
+        [self.tableView beginUpdates];
+
+        NSMutableArray *postsArrayMutable = [_postsArray mutableCopy];
+        NSUInteger newSectionIndex = _postsArray.count;
+        [postsArrayMutable addObject:comment.createdPost];
+        _postsArray = [postsArrayMutable copy];
+        postsArrayMutable = nil;
+
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
+
+        [self.tableView endUpdates];
+        comment.createdPost = nil;
+
+        [NSTimer scheduledTimerWithTimeInterval:0.7
+                                         target:self
+                                       selector:@selector(scrollToBottom)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
+#pragma mark - Timer methods
+
+- (void)scrollToBottom
+{
+    CGFloat yOffset = 0;
+
+    if (self.tableView.contentSize.height > self.tableView.bounds.size.height) {
+        yOffset = self.tableView.contentSize.height - self.tableView.bounds.size.height;
+    }
+
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+        [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
+    }
 }
 
 #pragma mark - Selector checking
