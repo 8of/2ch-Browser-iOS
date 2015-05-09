@@ -8,6 +8,7 @@
 
 #import <UINavigationItem+Loading.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -340,10 +341,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
  */
 - (void)makeRefreshAvailable
 {
+    // Top refresh
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
+
+    // Bottom refresh
+    UIRefreshControl *bottomRefreshControl = [[UIRefreshControl alloc] init];
+    bottomRefreshControl.triggerVerticalOffset = 100.;
+    [bottomRefreshControl addTarget:self
+                             action:@selector(reloadThreadWithBottomRefresher)
+                   forControlEvents:UIControlEventValueChanged];
+    self.tableView.bottomRefreshControl = bottomRefreshControl;
 }
 
 #pragma mark - Links
@@ -516,6 +526,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }];
 }
 
+- (void)reloadThreadWithBottomRefresher
+{
+    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    [self reloadThread];
+}
+
 // Reload thread by current thread num
 - (void)reloadThread {
 
@@ -535,6 +551,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 [self.tableView reloadData];
                 [self.navigationItem stopAnimating];
                 [self.refreshControl endRefreshing];
+                [self.tableView.bottomRefreshControl endRefreshing];
             });
         }];
     }
