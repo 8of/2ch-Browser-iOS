@@ -38,16 +38,11 @@
  *  Count of posts inside given thread.
  */
 @property (strong, nonatomic) NSNumber *postsCount;
-/**
- *  Path for open post's thumnail image.
- */
+/// Path for open post's thumnail image
 @property (strong, nonatomic) NSString *thumbnail;
+/// Path for open post's thumnail image
+@property (strong, nonatomic) NSString *fullImage;
 
-- (instancetype)initWithNum:(NSString *)threadNum
-                    Subject:(NSString *)threadTitle
-                  opComment:(NSString *)threadOpComment
-                 filesCount:(NSNumber *)threadFilesCount
-                 postsCount:(NSNumber *)threadPostsCount
-                  thumbPath:(NSString *)threadThumbPath;
+- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath fullPath:(NSString *)threadFullPath;
 
 @end

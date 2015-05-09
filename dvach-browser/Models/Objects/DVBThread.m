@@ -10,13 +10,8 @@
 
 @implementation DVBThread
 
-- (instancetype)initWithNum:(NSString *)threadNum
-                    Subject:(NSString *)threadTitle
-                  opComment:(NSString *)threadOpComment
-                 filesCount:(NSNumber *)threadFilesCount
-                 postsCount:(NSNumber *)threadPostsCount
-                  thumbPath:(NSString *)threadThumbPath {
-    
+- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath fullPath:(NSString *)threadFullPath
+{
     self = [super init];
     if (self) {
         _num = threadNum;
@@ -25,6 +20,7 @@
         _filesCount = threadFilesCount;
         _postsCount = threadPostsCount;
         _thumbnail = threadThumbPath;
+        _fullImage = threadFullPath;
     }
     return self;
 }

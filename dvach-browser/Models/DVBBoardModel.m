@@ -77,23 +77,27 @@
             postsCount = [[NSNumber alloc] initWithInteger:totalPostsCount];
             
             NSDictionary *files = [[opPost objectForKey:@"files"] objectAtIndex:0];
-            
-            // building URL for getting full image url from mutiple strings
-            // there is better one-line solution for this - need to use stringWithFormat
-            // rewrite in future!
-            
-            NSMutableString *fullThumbPath = [[NSMutableString alloc] initWithString:DVACH_BASE_URL];
-            [fullThumbPath appendString:_boardCode];
-            [fullThumbPath appendString:@"/"];
+
             NSString *tmpThumbnail = [files objectForKey:@"thumbnail"];
 
             if (!tmpThumbnail) {
+                NSLog(@"Something is not right with the thumbnail or full picture");
                 continue;
             }
+            NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
 
-            [fullThumbPath appendString:tmpThumbnail];
-            NSString *thumbPath = fullThumbPath;
-            fullThumbPath = nil;
+            NSString *fullPicturePath;
+
+            if ([files objectForKey:@"path"]) {
+
+                NSString *tmpFullpath = [files objectForKey:@"path"];
+
+                BOOL isContainWebm = ([tmpFullpath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
+
+                if (!isContainWebm) {
+                    fullPicturePath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpFullpath];
+                }
+            }
             
             /**
              Create thred object for storing all info for later use, and write object to mutable array
@@ -103,7 +107,7 @@
                                                         opComment:comment
                                                        filesCount:filesCount
                                                        postsCount:postsCount
-                                                        thumbPath:thumbPath];
+                                                        thumbPath:thumbPath fullPath:fullPicturePath];
             [_privateThreadsArray addObject:threadObj];
             threadObj = nil;
         }
@@ -130,5 +134,7 @@
         completion(threadsCompletion);
     }];
 }
+
+
 
 @end
