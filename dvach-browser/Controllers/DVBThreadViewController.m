@@ -122,6 +122,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     
     if (_answersToPost) {
 
+        // Disable refresh controll for answers VC (because we have nothing to refresh
+        self.refreshControl = nil;
+
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
         }
@@ -163,6 +166,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             [_threadsScrollPositionManager.threads setValue:initialScrollValue
                                                      forKey:_threadNum];
         }
+
+        [self makeRefreshAvailable];
     }
     
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
@@ -326,6 +331,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         [_threadsScrollPositionManager.threads setValue:[NSNumber numberWithFloat:scrollView.contentOffset.y] forKey:_threadNum];
         _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
     }
+}
+
+#pragma mark - Refresh
+
+/**
+ Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
+ */
+- (void)makeRefreshAvailable
+{
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self
+                            action:@selector(reloadThread)
+                  forControlEvents:UIControlEventValueChanged];
 }
 
 #pragma mark - Links
@@ -516,6 +534,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.navigationItem stopAnimating];
+                [self.refreshControl endRefreshing];
             });
         }];
     }
