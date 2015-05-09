@@ -46,14 +46,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 @implementation DVBBoardViewController
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-
-    // Because we need to turn off toolbar every time view appears, not only when it loads first time
-    [self.navigationController setToolbarHidden:YES animated:NO];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear: animated];
