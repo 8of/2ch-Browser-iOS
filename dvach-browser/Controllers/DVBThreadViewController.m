@@ -171,16 +171,12 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
-    NSString *subject = postTmpObj.subject;
     NSString *date = postTmpObj.date;
-    
-    subject = [self getSubjectOrNumWithSubject:subject
-                                  andThreadNum:postTmpObj.num];
     
     // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
     NSInteger postNumToShow = section + 1;
     
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@ - %@", (long)postNumToShow, subject, date];
+    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld  %@", (long)postNumToShow, date];
     
     return sectionTitle;
 }

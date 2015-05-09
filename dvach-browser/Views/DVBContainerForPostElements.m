@@ -172,7 +172,7 @@
 
         NSMutableString *mutableCommentString = [NSMutableString stringWithString:_commentTextView.text];
 
-        // Insiert close tag first because otherwise its position will change and we'll need to recalculate it
+        // Insert close tag first because otherwise its position will change and we'll need to recalculate it
         [mutableCommentString insertString:tagToinsertAfter
                                    atIndex:locationForCloseTag];
         [mutableCommentString insertString:tagToinsertBefore
