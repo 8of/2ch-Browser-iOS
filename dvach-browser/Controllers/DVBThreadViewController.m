@@ -16,6 +16,7 @@
 #import "DVBPost.h"
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
+#import "DVBThreadsScrollPositionManager.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -68,6 +69,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
 @property (nonatomic, strong) UIButton *buttonToShowPopoverFrom;
 
+// Auto scrolling stuff
+@property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
+@property (nonatomic, strong) NSNumber *autoScrollTo;
+
 @end
 
 @implementation DVBThreadViewController
@@ -76,6 +81,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     [super viewDidAppear:animated];
     [self rightBarButtonHandler];
+
+    if (_autoScrollTo) {
+        CGFloat scrollToOFfset = [_autoScrollTo floatValue];
+        [self.tableView setContentOffset:CGPointMake(0, scrollToOFfset)
+                                animated:NO];
+    }
 }
 
 // This preventing table view from jumping when we push other controller (answers/ gallery on top of it).
@@ -141,6 +152,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                          andThreadNum:_threadNum];
         _threadModel = [[DVBThreadModel alloc] initWithBoardCode:_boardCode
                                                     andThreadNum:_threadNum];
+
+        _threadsScrollPositionManager = [DVBThreadsScrollPositionManager sharedThreads];
+
+        if ([_threadsScrollPositionManager.threads objectForKey:_threadNum]) {
+            _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
+        }
+        else {
+            NSNumber *initialScrollValue = [NSNumber numberWithFloat:self.tableView.contentOffset.y];
+            [_threadsScrollPositionManager.threads setValue:initialScrollValue
+                                                     forKey:_threadNum];
+        }
     }
     
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
@@ -295,6 +317,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     return 0;
 }
+
+#pragma mark - Scroll Delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView.contentOffset.y > 100) {
+        [_threadsScrollPositionManager.threads setValue:[NSNumber numberWithFloat:scrollView.contentOffset.y] forKey:_threadNum];
+    }
+}
+
+#pragma mark - Links
 
 // We do not need this because we set it in another place.
 /*
