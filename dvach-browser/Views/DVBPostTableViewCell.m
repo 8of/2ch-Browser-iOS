@@ -69,9 +69,12 @@
 
     // load the image and setting image source depending on presented image or set blank image
     if (![postThumbUrlString isEqualToString:@""]) {
-        [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                      placeholderImage:[UIImage imageNamed:@"Noimage.png"]
-                               options:SDWebImageRetryFailed];
+        [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString] placeholderImage:[UIImage imageNamed:@"Noimage.png"] options:SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
+            if (error) {
+                NSLog(@"Error while loading image: %@", error.localizedDescription);
+                NSLog(@"Error code: %ld", (long)error.code);
+            }
+        }];
 
         [self rebuildPostThumbImageWithImagePresence:YES
                             andWithVideoIconPresence:showVideoIcon];
