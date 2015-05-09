@@ -26,6 +26,7 @@
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
 @property (nonatomic, assign) NSUInteger commentViewSelectedLength;
+@property (nonatomic, assign) NSUInteger commentViewNeedToSetCarretToPosition;
 
 @end
 
@@ -75,6 +76,8 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         _contstraintFromPhotoToBottomEdge.constant = 15.0f;
     }
+
+    [_commentTextView becomeFirstResponder];
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
@@ -176,8 +179,12 @@
                                    atIndex:locationForOpenTag];
 
         NSString *newCommentString = mutableCommentString;
+
+        _commentViewNeedToSetCarretToPosition = _commentViewSelectedStartLocation + tagToinsertBefore.length;
         
         _commentTextView.text = newCommentString;
+
+        _commentTextView.selectedRange = NSMakeRange(_commentViewNeedToSetCarretToPosition,0);
     }
 }
 
@@ -207,8 +214,6 @@
 }
 
 #pragma mark - Upload/Delete button Animation
-
-
 
 - (void)changeUploadButtonToDeleteWithButton:(UIButton *)button
 {
