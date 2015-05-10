@@ -53,6 +53,12 @@
     [self prepareViewController];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self saveCommentForLater];
+}
+
 /// All View Controller tuning
 - (void)prepareViewController
 {
@@ -347,12 +353,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Save comment for later if it is not a placeholder.
-    NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
-    if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
-        _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
-    }
-    
     BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
     BOOL isSegueDismissToNewThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_NEW_THREAD];
     
@@ -379,6 +379,16 @@
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
         }
+    }
+}
+
+/// Write comment text to singleton
+- (void)saveCommentForLater
+{
+    // Save comment for later if it is not a placeholder.
+    NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
+    if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
+        _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     }
 }
 
