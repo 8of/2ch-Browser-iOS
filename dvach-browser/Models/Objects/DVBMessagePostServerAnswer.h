@@ -12,11 +12,10 @@
 
 @property (nonatomic, assign, readonly) BOOL success;
 @property (nonatomic, strong, readonly) NSString *statusMessage;
-///  New thread id number
 @property (nonatomic, strong, readonly) NSString *threadToRedirectTo;
-/// Num of new post in current thread
-@property (nonatomic, strong, readonly) NSString *num;
 
-- (instancetype)initWithSuccess:(BOOL)success andStatusMessage:(NSString *)statusMessage andNum:(NSString *)postNum andThreadToRedirectTo:(NSString *)threadToRedirectTo;
+- (instancetype)initWithSuccess:(BOOL)success
+               andStatusMessage:(NSString *)statusMessage
+          andThreadToRedirectTo:(NSString *)threadToRedirectTo;
 
 @end

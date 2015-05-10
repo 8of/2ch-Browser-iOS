@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+// iOS version checkers
+#define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)
+#define SYSTEM_VERSION_GREATER_THAN(v)              ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedDescending)
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
+
 // Colors
 #define DVACH_COLOR [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0]
 #define DVACH_COLOR_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0] CGColor]
