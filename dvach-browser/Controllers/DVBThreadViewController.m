@@ -568,6 +568,16 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     [self reloadThread];
 }
 
+- (IBAction)scrollToBottom:(id)sender
+{
+    CGFloat heightDifference = self.tableView.contentSize.height - self.tableView.frame.size.height + self.navigationController.toolbar.frame.size.height;
+
+    CGPoint pointToScrollTo = CGPointMake(0, heightDifference);
+
+    [self.tableView setContentOffset:pointToScrollTo
+                            animated:NO];
+}
+
 - (IBAction)showAnswers:(id)sender
 {
     UIButton *answerButton = sender;
