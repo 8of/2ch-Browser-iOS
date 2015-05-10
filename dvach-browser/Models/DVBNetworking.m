@@ -309,13 +309,15 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
          BOOL isRedirectAnswer = [status isEqualToString:@"Redirect"];
          
          if (isOKanswer || isRedirectAnswer) {
-             /**
-              *  If answer is good - make preparations in current ViewController
-              */
+
+             // If answer is good - make preparations in current ViewController
              NSString *successTitle = NSLocalizedString(@"Успешно", @"Title of the createPostVC when post was successfull");
+
+             NSString *postNum = [responseDictionary[@"Num"] stringValue];
              
              DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:YES
                                                                                                       andStatusMessage:successTitle
+                                                                                                                andNum:postNum
                                                                                                  andThreadToRedirectTo:nil];
              
              if (isRedirectAnswer) {
@@ -324,6 +326,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
                  if (threadNumToRedirect) {
                      messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:YES
                                                                                   andStatusMessage:successTitle
+                                                                                            andNum:nil
                                                                              andThreadToRedirectTo:threadNumToRedirect];
                  }
                  
@@ -335,6 +338,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
              // If post wasn't successful. Change prompt to error reason.
              DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:NO
                                                                                                       andStatusMessage:reason
+                                                                                                                andNum:nil
                                                                                                  andThreadToRedirectTo:nil];
              completion(messagePostServerAnswer);
          }
@@ -347,6 +351,7 @@ static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi
          NSString *cancelTitle = NSLocalizedString(@"Ошибка", @"Title of the createPostVC when post was NOT successful");
          DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:NO
                                                                                                   andStatusMessage:cancelTitle
+                                                                                                            andNum:nil
                                                                                              andThreadToRedirectTo:nil];
          completion(messagePostServerAnswer);
      }];

@@ -19,15 +19,14 @@
     return nil;
 }
 
-- (instancetype)initWithSuccess:(BOOL)success
-               andStatusMessage:(NSString *)statusMessage
-          andThreadToRedirectTo:(NSString *)threadToRedirectTo
+- (instancetype)initWithSuccess:(BOOL)success andStatusMessage:(NSString *)statusMessage andNum:(NSString *)postNum andThreadToRedirectTo:(NSString *)threadToRedirectTo
 {
     self = [super init];
     if (self)
     {
         _success = success;
         _statusMessage = statusMessage;
+        _num = postNum;
         _threadToRedirectTo = threadToRedirectTo;
     }
     

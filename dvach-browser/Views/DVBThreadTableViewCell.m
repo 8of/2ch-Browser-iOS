@@ -56,7 +56,17 @@
     _utilityLabel.text = utilityText;
 
     // Set thumbnail for OP post of each thread.
+
     NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
+
+    // We need to set bigger image for iPad
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+
+        if (threadObject.fullImage) {
+            thumbUrl = [NSURL URLWithString:threadObject.fullImage];
+        }
+    }
+
     UIImage *placeholderImage = [UIImage imageNamed:@"Noimage.png"];
     [_threadThumb sd_setImageWithURL:thumbUrl placeholderImage:placeholderImage];
 }

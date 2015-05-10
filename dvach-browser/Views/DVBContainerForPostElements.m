@@ -26,6 +26,7 @@
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
 @property (nonatomic, assign) NSUInteger commentViewSelectedLength;
+@property (nonatomic, assign) NSUInteger commentViewNeedToSetCarretToPosition;
 
 @end
 
@@ -43,6 +44,9 @@
 {
     // Captcha image will be in front of activity indicator after appearing.
     _captchaImage.layer.zPosition = 2;
+
+    // Captch button will be in front of everything
+    _captchaUpdateButton.layer.zPosition = 3;
 
     // Setup commentTextView appearance to look like textField.
     _commentTextView.delegate = self;
@@ -72,6 +76,8 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         _contstraintFromPhotoToBottomEdge.constant = 15.0f;
     }
+
+    [_commentTextView becomeFirstResponder];
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
@@ -166,15 +172,19 @@
 
         NSMutableString *mutableCommentString = [NSMutableString stringWithString:_commentTextView.text];
 
-        // Insiert close tag first because otherwise its position will change and we'll need to recalculate it
+        // Insert close tag first because otherwise its position will change and we'll need to recalculate it
         [mutableCommentString insertString:tagToinsertAfter
                                    atIndex:locationForCloseTag];
         [mutableCommentString insertString:tagToinsertBefore
                                    atIndex:locationForOpenTag];
 
         NSString *newCommentString = mutableCommentString;
+
+        _commentViewNeedToSetCarretToPosition = _commentViewSelectedStartLocation + tagToinsertBefore.length;
         
         _commentTextView.text = newCommentString;
+
+        _commentTextView.selectedRange = NSMakeRange(_commentViewNeedToSetCarretToPosition,0);
     }
 }
 
@@ -204,8 +214,6 @@
 }
 
 #pragma mark - Upload/Delete button Animation
-
-
 
 - (void)changeUploadButtonToDeleteWithButton:(UIButton *)button
 {

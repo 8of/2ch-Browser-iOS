@@ -8,6 +8,7 @@
 
 #import <UINavigationItem+Loading.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -16,6 +17,7 @@
 #import "DVBPost.h"
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
+#import "DVBThreadsScrollPositionManager.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -45,6 +47,8 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
+static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
+
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // Array of posts inside this thread
@@ -66,6 +70,10 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
 @property (nonatomic, strong) UIButton *buttonToShowPopoverFrom;
 
+// Auto scrolling stuff
+@property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
+@property (nonatomic, strong) NSNumber *autoScrollTo;
+
 @end
 
 @implementation DVBThreadViewController
@@ -73,7 +81,13 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self toolbarHandler];
+    [self rightBarButtonHandler];
+
+    if (_autoScrollTo) {
+        CGFloat scrollToOFfset = [_autoScrollTo floatValue];
+        [self.tableView setContentOffset:CGPointMake(0, scrollToOFfset)
+                                animated:NO];
+    }
 }
 
 // This preventing table view from jumping when we push other controller (answers/ gallery on top of it).
@@ -90,23 +104,27 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     [self reloadThread];
 }
 
-- (void)toolbarHandler
+- (void)rightBarButtonHandler
 {
     if (_answersToPost) {
-        [self.navigationController setToolbarHidden:YES animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
     }
     else {
-        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
 }
 
 - (void)prepareViewController
 {
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+
     _opAlreadyDeleted = NO;
     
     if (_answersToPost) {
+
+        // Disable refresh controll for answers VC (because we have nothing to refresh
+        self.refreshControl = nil;
 
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
@@ -132,13 +150,25 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         _fullImagesArray = [arrayOfFullImages mutableCopy];
     }
     else {
-        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
                                          andThreadNum:_threadNum];
         _threadModel = [[DVBThreadModel alloc] initWithBoardCode:_boardCode
                                                     andThreadNum:_threadNum];
+
+        _threadsScrollPositionManager = [DVBThreadsScrollPositionManager sharedThreads];
+
+        if ([_threadsScrollPositionManager.threads objectForKey:_threadNum]) {
+            _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
+        }
+        else {
+            NSNumber *initialScrollValue = [NSNumber numberWithFloat:self.tableView.contentOffset.y];
+            [_threadsScrollPositionManager.threads setValue:initialScrollValue
+                                                     forKey:_threadNum];
+        }
+
+        [self makeRefreshAvailable];
     }
     
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
@@ -171,16 +201,12 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
-    NSString *subject = postTmpObj.subject;
     NSString *date = postTmpObj.date;
-    
-    subject = [self getSubjectOrNumWithSubject:subject
-                                  andThreadNum:postTmpObj.num];
     
     // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
     NSInteger postNumToShow = section + 1;
     
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld %@ - %@", (long)postNumToShow, subject, date];
+    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld  %@", (long)postNumToShow, date];
     
     return sectionTitle;
 }
@@ -297,6 +323,40 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
     return 0;
 }
+
+#pragma mark - Scroll Delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView.contentOffset.y > 100) {
+        [_threadsScrollPositionManager.threads setValue:[NSNumber numberWithFloat:scrollView.contentOffset.y] forKey:_threadNum];
+        _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
+    }
+}
+
+#pragma mark - Refresh
+
+/**
+ Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
+ */
+- (void)makeRefreshAvailable
+{
+    // Top refresh
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self
+                            action:@selector(reloadThread)
+                  forControlEvents:UIControlEventValueChanged];
+
+    // Bottom refresh
+    UIRefreshControl *bottomRefreshControl = [[UIRefreshControl alloc] init];
+    bottomRefreshControl.triggerVerticalOffset = 100.;
+    [bottomRefreshControl addTarget:self
+                             action:@selector(reloadThreadWithBottomRefresher)
+                   forControlEvents:UIControlEventValueChanged];
+    self.tableView.bottomRefreshControl = bottomRefreshControl;
+}
+
+#pragma mark - Links
 
 // We do not need this because we set it in another place.
 /*
@@ -466,6 +526,12 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }];
 }
 
+- (void)reloadThreadWithBottomRefresher
+{
+    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    [self reloadThread];
+}
+
 // Reload thread by current thread num
 - (void)reloadThread {
 
@@ -484,14 +550,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.navigationItem stopAnimating];
+                [self.refreshControl endRefreshing];
+                [self.tableView.bottomRefreshControl endRefreshing];
             });
         }];
     }
-}
-
-- (void)reloadThreadFromOutside
-{
-    [self reloadThread];
 }
 
 #pragma mark - Actions from Storyboard
@@ -499,12 +562,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 - (IBAction)reloadThreadAction:(id)sender
 {
     [self reloadThread];
-}
-
-- (IBAction)scrollToBottom:(id)sender
-{
-    CGPoint pointToScrollTo = CGPointMake(0, self.tableView.contentSize.height - self.tableView.frame.size.height);
-    [self.tableView setContentOffset:pointToScrollTo animated:NO];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -741,7 +798,45 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 -(void)updateThreadAfterPosting
 {
-    [self reloadThread];
+    DVBComment *comment = [DVBComment sharedComment];
+
+    if (comment.createdPost) {
+        [self.tableView beginUpdates];
+
+        NSMutableArray *postsArrayMutable = [_postsArray mutableCopy];
+        NSUInteger newSectionIndex = _postsArray.count;
+        [postsArrayMutable addObject:comment.createdPost];
+        _postsArray = [postsArrayMutable copy];
+        postsArrayMutable = nil;
+
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
+
+        [self.tableView endUpdates];
+        comment.createdPost = nil;
+
+        [NSTimer scheduledTimerWithTimeInterval:0.7
+                                         target:self
+                                       selector:@selector(scrollToBottom)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
+#pragma mark - Timer methods
+
+- (void)scrollToBottom
+{
+    CGFloat yOffset = 0;
+
+    if (self.tableView.contentSize.height > self.tableView.bounds.size.height) {
+        yOffset = self.tableView.contentSize.height - self.tableView.bounds.size.height;
+    }
+
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+        [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
+    }
 }
 
 #pragma mark - Selector checking

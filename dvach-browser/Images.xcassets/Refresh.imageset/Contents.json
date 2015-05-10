@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "reload.png"
+      "filename" : "Refresh.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "reload@2x.png"
+      "filename" : "Refresh@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "reload@3x.png"
+      "filename" : "Refresh@3x.png"
     }
   ],
   "info" : {
