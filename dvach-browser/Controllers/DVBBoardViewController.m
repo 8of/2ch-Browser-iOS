@@ -19,7 +19,7 @@
 #import "DVBThreadTableViewCell.h"
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 85.0f;
-static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 220.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
@@ -45,6 +45,14 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 @end
 
 @implementation DVBBoardViewController
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+
+    // Because we need to turn off toolbar every time view appears, not only when it loads first time
+    [self.navigationController setToolbarHidden:YES animated:NO];
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {

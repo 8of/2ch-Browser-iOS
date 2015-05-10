@@ -8,7 +8,6 @@
 
 #import <UINavigationItem+Loading.h>
 #import <TUSafariActivity/TUSafariActivity.h>
-#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -47,8 +46,6 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
-static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
-
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 // Array of posts inside this thread
@@ -81,20 +78,29 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self rightBarButtonHandler];
+
+    //[self rightBarButtonHandler];
 
     if (_autoScrollTo) {
         CGFloat scrollToOFfset = [_autoScrollTo floatValue];
         [self.tableView setContentOffset:CGPointMake(0, scrollToOFfset)
                                 animated:NO];
     }
+
+    [self toolbarHandler];
 }
 
-// This preventing table view from jumping when we push other controller (answers/ gallery on top of it).
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.tableView reloadData];
+
+    BOOL isIOSgreater80 = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0");
+    BOOL isIOSlessTHAN83 = SYSTEM_VERSION_LESS_THAN(@"8.3");
+
+    // This preventing table view from jumping when we push other controller (answers/ gallery on top of it) in iOS 8.1-8.2
+    if (isIOSgreater80 && isIOSlessTHAN83) {
+        [self.tableView reloadData];
+    }
 }
 
 - (void)viewDidLoad
@@ -104,21 +110,20 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self reloadThread];
 }
 
-- (void)rightBarButtonHandler
+- (void)toolbarHandler
 {
     if (_answersToPost) {
+        [self.navigationController setToolbarHidden:YES animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
     }
     else {
+        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
 }
 
 - (void)prepareViewController
 {
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-
     _opAlreadyDeleted = NO;
     
     if (_answersToPost) {
@@ -150,6 +155,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         _fullImagesArray = [arrayOfFullImages mutableCopy];
     }
     else {
+        [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
@@ -173,8 +179,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT; // Maybe we need to set it to less number or othervise scroll to bottom of the table View will be fatal
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
     }
 }
 
@@ -346,7 +351,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
-
+/*
     // Bottom refresh
     UIRefreshControl *bottomRefreshControl = [[UIRefreshControl alloc] init];
     bottomRefreshControl.triggerVerticalOffset = 100.;
@@ -354,6 +359,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                              action:@selector(reloadThreadWithBottomRefresher)
                    forControlEvents:UIControlEventValueChanged];
     self.tableView.bottomRefreshControl = bottomRefreshControl;
+*/
 }
 
 #pragma mark - Links
@@ -526,12 +532,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }];
 }
 
-- (void)reloadThreadWithBottomRefresher
-{
-    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-    [self reloadThread];
-}
-
 // Reload thread by current thread num
 - (void)reloadThread {
 
@@ -551,10 +551,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 [self.tableView reloadData];
                 [self.navigationItem stopAnimating];
                 [self.refreshControl endRefreshing];
-                [self.tableView.bottomRefreshControl endRefreshing];
             });
         }];
     }
+}
+
+- (void)reloadThreadFromOutside
+{
+    [self reloadThread];
 }
 
 #pragma mark - Actions from Storyboard
@@ -562,6 +566,16 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (IBAction)reloadThreadAction:(id)sender
 {
     [self reloadThread];
+}
+
+- (IBAction)scrollToBottom:(id)sender
+{
+    CGFloat heightDifference = self.tableView.contentSize.height - self.tableView.frame.size.height + self.navigationController.toolbar.frame.size.height;
+
+    CGPoint pointToScrollTo = CGPointMake(0, heightDifference);
+
+    [self.tableView setContentOffset:pointToScrollTo
+                            animated:NO];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -798,64 +812,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 -(void)updateThreadAfterPosting
 {
-    DVBComment *comment = [DVBComment sharedComment];
-
-    if (comment.createdPost) {
-        [self.tableView beginUpdates];
-
-        NSMutableArray *postsArrayMutable = [_postsArray mutableCopy];
-        NSUInteger newSectionIndex = _postsArray.count;
-        [postsArrayMutable addObject:comment.createdPost];
-        _postsArray = [postsArrayMutable copy];
-        postsArrayMutable = nil;
-
-        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
-
-        [self.tableView endUpdates];
-        comment.createdPost = nil;
-
-        [NSTimer scheduledTimerWithTimeInterval:0.7
-                                         target:self
-                                       selector:@selector(scrollToBottom)
-                                       userInfo:nil
-                                        repeats:NO];
-    }
-}
-
-#pragma mark - Timer methods
-
-- (void)scrollToBottom
-{
-    CGFloat yOffset = 0;
-
-    if (self.tableView.contentSize.height > self.tableView.bounds.size.height) {
-        yOffset = self.tableView.contentSize.height - self.tableView.bounds.size.height;
-    }
-
-    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
-
-    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-        [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
-    }
-}
-
-#pragma mark - Selector checking
-
-#pragma mark - Respoder rewrite
-
-- (BOOL)respondsToSelector:(SEL)selector
-{
-    static BOOL useSelector;
-    static dispatch_once_t predicate = 0;
-    dispatch_once(&predicate, ^{
-        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
-    });
-    
-    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
-        return useSelector;
-    }
-    
-    return [super respondsToSelector:selector];
+    [self reloadThread];
 }
 
 #pragma mark - Bad posts reporting

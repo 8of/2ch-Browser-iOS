@@ -28,6 +28,9 @@
 /// Post number - use if we show answers for specific post
 @property (nonatomic, strong) NSString *postNum;
 
+/// Reload thread by calling this method outside (like from posting View Controller after Posting new message)
+- (void)reloadThreadFromOutside;
+
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString;

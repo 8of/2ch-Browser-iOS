@@ -19,8 +19,6 @@
 @property (nonatomic) IBOutlet UIImageView *threadThumb;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
 
-
-
 @end
 
 @implementation DVBThreadTableViewCell
@@ -36,7 +34,7 @@
     _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _detailedLabel.numberOfLines = 6;
+        _detailedLabel.numberOfLines = 3;
     }
 }
 
@@ -58,14 +56,6 @@
     // Set thumbnail for OP post of each thread.
 
     NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
-
-    // We need to set bigger image for iPad
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-
-        if (threadObject.fullImage) {
-            thumbUrl = [NSURL URLWithString:threadObject.fullImage];
-        }
-    }
 
     UIImage *placeholderImage = [UIImage imageNamed:@"Noimage.png"];
     [_threadThumb sd_setImageWithURL:thumbUrl placeholderImage:placeholderImage];
