@@ -12,16 +12,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "DVBPost.h"
-
 @interface DVBComment : NSObject
 {
     NSString *comment;
 }
 
 @property (nonatomic, retain) NSString *comment;
-
-@property (nonatomic, strong) DVBPost *createdPost;
 
 + (id)sharedComment;
 /**

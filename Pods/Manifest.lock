@@ -20,10 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - CCBottomRefreshControl (0.5):
-    - Masonry
   - DACircularProgress (2.2.0)
-  - Masonry (0.6.1)
   - MBProgressHUD (0.9.1)
   - MWPhotoBrowser (1.4.1.1):
     - MBProgressHUD (~> 0.8)
@@ -38,7 +35,6 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (= 2.5.0)
-  - CCBottomRefreshControl
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
   - TUSafariActivity (~> 1.0)
@@ -60,9 +56,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: 96ac9bf3eda33582701cb1fcc5b896aa1e20311e
-  CCBottomRefreshControl: 2cfdbd6f5be5181f5f070637605981d5557e8e32
   DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
-  Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWPhotoBrowser: 963c6b795e9c8fb62f7b4d3465c4d8cf5bee9869
   PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
