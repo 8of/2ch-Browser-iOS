@@ -36,6 +36,7 @@
                                USER_AGREEMENT_ACCEPTED:@NO,
                                OPEN_EXTERNAL_LINKS_IN_CHROME:@NO,
                                SETTING_ENABLE_DARK_THEME:@NO,
+                               SETTING_ENABLE_LITTLE_BODY_FONT:@NO,
                                PASSCODE:@"",
                                USERCODE:@"",
                                BOARDS_LIST_VERSION:@0

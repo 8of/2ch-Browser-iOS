@@ -7,6 +7,9 @@
 //
 
 #import <SDWebImage/UIImageView+WebCache.h>
+
+#import "DVBConstants.h"
+
 #import "DVBThreadTableViewCell.h"
 
 @interface DVBThreadTableViewCell ()
@@ -32,6 +35,11 @@
 
     _detailedLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        _detailedLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         _detailedLabel.numberOfLines = 3;

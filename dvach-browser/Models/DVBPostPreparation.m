@@ -6,7 +6,10 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 #import <UIKit/UIKit.h>
+
 #import "DVBPostPreparation.h"
+
+#import "DVBConstants.h"
 #import "UrlNinja.h"
 #import "NSString+HTML.h"
 
@@ -49,7 +52,13 @@
 
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment
 {
-    UIFontDescriptor *bodyFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+    UIFontDescriptor *bodyFontDescriptor;
+    bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleCaption1];
+    }
+
     CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
     
     // чистка исходника и посильная замена хтмл-литералов
