@@ -21,6 +21,9 @@ NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.pm/makaba/captcha.fcgi";
 NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@";
 NSString *const REPORT_THREAD_URL = @"https://2ch.pm/makaba/makaba.fcgi";
 
+NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.pm/makaba/mobile.fcgi?task=get_boards";
+NSString *const URL_TO_GET_USERCODE = @"https://2ch.pm/makaba/makaba.fcgi";
+
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
