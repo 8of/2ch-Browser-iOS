@@ -15,9 +15,6 @@
 
 #import "UIImage+DVBImageExtention.h"
 
-static NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
-static NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
-
 @interface DVBNetworking ()
 
 @property (nonatomic, strong) Reachability *networkReachability;
