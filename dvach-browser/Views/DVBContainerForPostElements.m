@@ -56,11 +56,20 @@
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
 
     // Setup dynamic font sizes.
-    _nameTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _subjectTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _captchaValueTextField.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _captchaUpdateButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+
+    UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+
+    _captchaValueTextField.font = defaultFont;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+
+    _nameTextField.font = defaultFont;
+    _subjectTextField.font = defaultFont;
+    _emailTextField.font = defaultFont;
+
+    _commentTextView.font = defaultFont;
 
     // Setup button appearance.
     _captchaUpdateButton.adjustsImageWhenDisabled = YES;

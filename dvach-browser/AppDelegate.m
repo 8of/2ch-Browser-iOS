@@ -67,6 +67,9 @@
     else if (!isUserCodeEmpty) {
         [self setUserCodeCookieWithUsercode:usercode];
     }
+
+    // Turn off SHake to Undo because of tags
+    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 }
 /**
  *  Create cookies for later posting with super csecret usercode
