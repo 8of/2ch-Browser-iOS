@@ -17,6 +17,7 @@
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
 #import "DVBThreadsScrollPositionManager.h"
+#import "DVBMediaOpener.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -45,6 +46,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  *  just in case I added 5 more :)
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
+static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -62,14 +64,14 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 @property (nonatomic, strong) NSString *flaggedPostNum;
 @property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
 @property (nonatomic, assign) NSUInteger updatedTimes;
-// For marking if OP message already glagged or not (tech prop)
-@property (nonatomic, assign) BOOL opAlreadyDeleted;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
 @property (nonatomic, strong) UIButton *buttonToShowPopoverFrom;
+@property (nonatomic, assign) BOOL presentedSomething;
 
 // Auto scrolling stuff
 @property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
 @property (nonatomic, strong) NSNumber *autoScrollTo;
+@property (nonatomic, assign) CGFloat topBarDifference;
 
 @end
 
@@ -79,12 +81,13 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 {
     [super viewDidAppear:animated];
 
-    //[self rightBarButtonHandler];
-
-    if (_autoScrollTo) {
-        CGFloat scrollToOFfset = [_autoScrollTo floatValue];
-        [self.tableView setContentOffset:CGPointMake(0, scrollToOFfset)
+    if (_autoScrollTo && !_presentedSomething) {
+        CGFloat scrollToOffset = [_autoScrollTo floatValue];
+        [self.tableView setContentOffset:CGPointMake(0, scrollToOffset)
                                 animated:NO];
+    }
+    else {
+        _presentedSomething = NO;
     }
 
     [self toolbarHandler];
@@ -124,8 +127,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (void)prepareViewController
 {
-    _opAlreadyDeleted = NO;
-    
     if (_answersToPost) {
 
         // Disable refresh controll for answers VC (because we have nothing to refresh
@@ -164,6 +165,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
                                                     andThreadNum:_threadNum];
 
         _threadsScrollPositionManager = [DVBThreadsScrollPositionManager sharedThreads];
+
+        _topBarDifference = 0;
 
         if ([_threadsScrollPositionManager.threads objectForKey:_threadNum]) {
             _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
@@ -280,7 +283,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }
     else {
 
-        // I am using a helper method here to get the text at a given cell.
+        // Helper method to get the text at a given cell.
         NSAttributedString *text = [self getTextAtIndex:indexPath];
         
         // Getting the width/height needed by the dynamic text view.
@@ -318,7 +321,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
             return (ROW_DEFAULT_HEIGHT + 1);
         }
 
-        // We should not return values greater than 2009
+        // Should not return values greater than 2009
         if (heightForReturnWithCorrectionAndCeilf > 2008) {
             return 2008;
         }
@@ -333,17 +336,31 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    // Trying to figure out scroll position to store it for restoring later
     if (scrollView.contentOffset.y > 100) {
-        [_threadsScrollPositionManager.threads setValue:[NSNumber numberWithFloat:scrollView.contentOffset.y] forKey:_threadNum];
-        _autoScrollTo = [_threadsScrollPositionManager.threads objectForKey:_threadNum];
+        // When we go back - table jumps in this values - so the correction is needed here
+        CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+
+        CGFloat topBarDifference = MIN(statusBarSize.width, statusBarSize.height) + self.navigationController.navigationBar.frame.size.height;
+
+        if (topBarDifference >= _topBarDifference) {
+            _topBarDifference = topBarDifference;
+        }
+
+        CGFloat scrollPositionToStore = scrollView.contentOffset.y - _topBarDifference;
+
+        NSNumber *scrollPosition = [NSNumber numberWithFloat:scrollPositionToStore];
+
+        [_threadsScrollPositionManager.threads setValue:scrollPosition
+                                                 forKey:_threadNum];
+        _autoScrollTo = [_threadsScrollPositionManager.threads
+                         objectForKey:_threadNum];
     }
 }
 
 #pragma mark - Refresh
 
-/**
- Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
- */
+/// Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
 - (void)makeRefreshAvailable
 {
     // Top refresh
@@ -351,15 +368,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
-/*
-    // Bottom refresh
-    UIRefreshControl *bottomRefreshControl = [[UIRefreshControl alloc] init];
-    bottomRefreshControl.triggerVerticalOffset = 100.;
-    [bottomRefreshControl addTarget:self
-                             action:@selector(reloadThreadWithBottomRefresher)
-                   forControlEvents:UIControlEventValueChanged];
-    self.tableView.bottomRefreshControl = bottomRefreshControl;
-*/
 }
 
 #pragma mark - Links
@@ -556,11 +564,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }
 }
 
-- (void)reloadThreadFromOutside
-{
-    [self reloadThread];
-}
-
 #pragma mark - Actions from Storyboard
 
 - (IBAction)reloadThreadAction:(id)sender
@@ -570,12 +573,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (IBAction)scrollToBottom:(id)sender
 {
-    CGFloat heightDifference = self.tableView.contentSize.height - self.tableView.frame.size.height + self.navigationController.toolbar.frame.size.height;
-
-    CGPoint pointToScrollTo = CGPointMake(0, heightDifference);
-
-    [self.tableView setContentOffset:pointToScrollTo
-                            animated:NO];
+    [self scrollToBottom];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -595,6 +593,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
         threadViewController.allThreadPosts = _postsArray;
     }
+
+    _presentedSomething = YES;
 
     [self.navigationController pushViewController:threadViewController
                                          animated:YES];
@@ -629,6 +629,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    _presentedSomething = YES;
     if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_POST_IOS_7]) {
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         
@@ -767,52 +768,55 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString
 {
-    // Check if cell have real image / webm video or just placeholder
-    if (![fullUrlString isEqualToString:@""]) {
-        // if contains .webm
-        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-            NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
-            BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
-
-            if (canOpenInVLC) {
-                [[UIApplication sharedApplication] openURL:fullUrl];
-            }
-            else {
-                NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
-                self.navigationItem.prompt = installVLCPrompt;
-                [self performSelector:@selector(clearPrompt)
-                           withObject:nil
-                           afterDelay:2.0];
-            }
-        }
-        // if not
-        else {
-            [self createAndPushGalleryWithUrlString:fullUrlString];
-        }
-    }
-}
-
-- (void)createAndPushGalleryWithUrlString:(NSString *)urlString
-{
-    NSUInteger indexForImageShowing = [_fullImagesArray indexOfObject:urlString];
-
-    if (indexForImageShowing < [_fullImagesArray count]) {
-
-        DVBBrowserViewControllerBuilder *galleryBrowser = [[DVBBrowserViewControllerBuilder alloc] initWithDelegate:nil];
-
-        [galleryBrowser prepareWithIndex:indexForImageShowing
-                     andThumbImagesArray:_thumbImagesArray
-                      andFullImagesArray:_fullImagesArray];
-
-        [self.navigationController pushViewController:galleryBrowser animated:YES];
-    }
+    _presentedSomething = YES;
+    DVBMediaOpener *mediaOpener = [[DVBMediaOpener alloc] initWithViewController:self];
+    [mediaOpener openMediaWithUrlString:fullUrlString
+                    andThumbImagesArray:_thumbImagesArray
+                     andFullImagesArray:_fullImagesArray];
 }
 
 #pragma mark - DVBCreatePostViewControllerDelegate
 
 -(void)updateThreadAfterPosting
 {
-    [self reloadThread];
+    DVBComment *comment = [DVBComment sharedComment];
+
+        if (comment.createdPost) {
+            [self.tableView beginUpdates];
+
+            NSMutableArray *postsArrayMutable = [_postsArray mutableCopy];
+            NSUInteger newSectionIndex = _postsArray.count;
+            [postsArrayMutable addObject:comment.createdPost];
+            _postsArray = [postsArrayMutable copy];
+            postsArrayMutable = nil;
+
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
+
+            [self.tableView endUpdates];
+            comment.createdPost = nil;
+
+            // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
+            CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+            if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+
+                [NSTimer scheduledTimerWithTimeInterval:0.7
+                                                 target:self
+                                               selector:@selector(scrollToBottom)
+                                               userInfo:nil
+                                                repeats:NO];
+            }
+        }
+}
+
+- (void)scrollToBottom
+{
+    CGFloat heightDifference = self.tableView.contentSize.height - self.tableView.frame.size.height + self.navigationController.toolbar.frame.size.height;
+
+    CGPoint pointToScrollTo = CGPointMake(0, heightDifference);
+
+    [self.tableView setContentOffset:pointToScrollTo
+                            animated:YES];
 }
 
 #pragma mark - Bad posts reporting
