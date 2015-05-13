@@ -26,6 +26,7 @@ NSString *const URL_TO_GET_USERCODE = @"https://2ch.pm/makaba/makaba.fcgi";
 
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
+NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
 NSString *const PASSCODE = @"passcode";

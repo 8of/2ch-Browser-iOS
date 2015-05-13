@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBConstants.h"
+
 #import "DVBActionsForPostTableViewCell.h"
 
 @interface DVBActionsForPostTableViewCell ()
@@ -23,6 +25,10 @@
 {
     // prepare Answer button
     _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+
     NSString *answerButtonPretext = NSLocalizedString(@"Ответы", "Надпись на кнопке к посту для показа количества ответов и перехода к ним");
     NSString *answerButtonPretextNoAnswers = NSLocalizedString(@"Нет ответов", "Надпись на кнопке к посту для показа количества ответов и перехода к ним когда ответов нет");
     NSString *actionButtonPretext = NSLocalizedString(@"Действия", "Надпись на кнопке Действия если действия доступны");
@@ -53,6 +59,10 @@
 
     // prepare action button
     _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+
     [_actionButton setTitle:actionButtonTitle forState:UIControlStateNormal];
     [_actionButton sizeToFit];
     _actionButton.tag = index;
