@@ -13,52 +13,27 @@
 #import "Reachlibility.h"
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
-#import "DVBPost.h"
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
 #import "DVBThreadsScrollPositionManager.h"
 #import "DVBMediaOpener.h"
+#import "DVBThreadControllerTableViewManager.h"
 
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBBrowserViewControllerBuilder.h"
 
-#import "DVBMediaForPostTableViewCell.h"
-#import "DVBPostTableViewCell.h"
-#import "DVBActionsForPostTableViewCell.h"
-
 #import "ARChromeActivity.h"
 
-// Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 30.0f;
-
-// thumbnail width in post row
-static CGFloat const THUMBNAIL_WIDTH = 65.f;
-// thumbnail contstraints for calculating layout dimentions
-static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
-
-/**
- *  Correction height because of:
- *  constraint from text to top - 10
- *  border - 1 more
- *  just in case I added 5 more :)
- */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
-// Array of posts inside this thread
-@property (nonatomic, strong) NSArray *postsArray;
+@property (nonatomic, strong) DVBThreadControllerTableViewManager *threadControllerTableViewManager;
+
 // Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
-// Array of all post thumb images in thread
-@property (nonatomic, strong) NSArray *thumbImagesArray;
-// Array of all post full images in thread
-@property (nonatomic, strong) NSArray *fullImagesArray;
-@property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
+
 // Action sheet for displaying bad posts flaggind (and maybe somethig more later)
 @property (nonatomic, strong) UIActionSheet *postLongPressSheet;
 @property (nonatomic, strong) NSString *flaggedPostNum;
@@ -127,7 +102,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)prepareViewController
 {
+    _threadControllerTableViewManager = [[DVBThreadControllerTableViewManager alloc] initWith:self];
+    self.tableView.delegate = _threadControllerTableViewManager;
+    self.tableView.dataSource = _threadControllerTableViewManager;
+
     if (_answersToPost) {
+
+        _threadControllerTableViewManager.answersToPost = _answersToPost;
 
         // Disable refresh controll for answers VC (because we have nothing to refresh
         self.refreshControl = nil;
@@ -150,10 +131,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         _threadModel = [[DVBThreadModel alloc] init];
         
         NSArray *arrayOfThumbs = [_threadModel thumbImagesArrayForPostsArray:_answersToPost];
-        _thumbImagesArray = [arrayOfThumbs mutableCopy];
+        _threadControllerTableViewManager.thumbImagesArray = arrayOfThumbs;
         
         NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
-        _fullImagesArray = [arrayOfFullImages mutableCopy];
+        _threadControllerTableViewManager.fullImagesArray = arrayOfFullImages;
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
@@ -179,11 +160,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
         [self makeRefreshAvailable];
     }
-    
-    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
-    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-        self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
-    }
 }
 
 #pragma mark - Set titles and gestures
@@ -197,139 +173,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
     
     return subject;
-}
-
-#pragma mark - Table view
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [_postsArray count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    DVBPost *postTmpObj = _postsArray[section];
-    NSString *date = postTmpObj.date;
-    
-    // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
-    NSInteger postNumToShow = section + 1;
-    
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld  %@", (long)postNumToShow, date];
-    
-    return sectionTitle;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    DVBPost *post = _postsArray[section];
-
-    // If post have more than one thumbnail
-    if ([post.thumbPathesArray count] > 1) {
-        return 3;
-    }
-
-    return 2;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell;
-    DVBPost *post = _postsArray[indexPath.section];
-    NSUInteger row = indexPath.row;
-
-    // If post have more than one thumbnail...
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
-        cell = (DVBMediaForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_MEDIA_IDENTIFIER
-                                                                             forIndexPath:indexPath];
-        [self configureMediaCell:cell
-               forRowAtIndexPath:indexPath];
-
-    }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one
-        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
-                                                                                  forIndexPath:indexPath];
-        [self configureActionsCell:cell
-                 forRowAtIndexPath:indexPath];
-    }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one
-        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
-                                                                                  forIndexPath:indexPath];
-        [self configureActionsCell:cell
-                 forRowAtIndexPath:indexPath];
-    }
-    else {
-        cell = (DVBPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
-                                                                     forIndexPath:indexPath];
-        [self configureCell:cell
-          forRowAtIndexPath:indexPath];
-    }
-    
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSUInteger row = indexPath.row;
-    DVBPost *post = _postsArray[indexPath.section];
-
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) { // If post have more than one thumbnail and this is first row
-        return ROW_MEDIA_DEFAULT_HEIGHT;
-    }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one thumbnail and this is third row
-        return ROW_ACTIONS_DEFAULT_HEIGHT;
-    }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one thumbnail and this is second row
-        return ROW_ACTIONS_DEFAULT_HEIGHT;
-    }
-    else {
-
-        // Helper method to get the text at a given cell.
-        NSAttributedString *text = [self getTextAtIndex:indexPath];
-        
-        // Getting the width/height needed by the dynamic text view.
-
-        CGSize viewSize = self.tableView.bounds.size;
-        NSInteger viewWidth = viewSize.width;
-        
-        // Set default difference (if we hve image in the cell).
-        CGFloat widthDifferenceBecauseOfImageAndConstraints = THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT * 3;
-        
-        // Determine if we really have image in the cell.
-        DVBPost *postObj = _postsArray[indexPath.section];
-        NSString *thumbPath = postObj.thumbPath;
-        
-        // If not - then set the difference just to two constraints.
-        if ([thumbPath isEqualToString:@""]) {
-            widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
-        }
-        
-        // Decrease window width value by taking off elements and contraints values
-        CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
-
-        // Return the size of the current row.
-        CGFloat heightToReturn = [self heightForText:text
-                                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
-        
-        CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
-        
-        if (heightToReturn < ROW_DEFAULT_HEIGHT) {
-
-            if ([thumbPath isEqualToString:@""]) {
-                return heightForReturnWithCorrectionAndCeilf;
-            }
-            
-            return (ROW_DEFAULT_HEIGHT + 1);
-        }
-
-        // Should not return values greater than 2009
-        if (heightForReturnWithCorrectionAndCeilf > 2008) {
-            return 2008;
-        }
-        
-        return heightForReturnWithCorrectionAndCeilf;
-    }
-
-    return 0;
 }
 
 #pragma mark - Scroll Delegate
@@ -372,14 +215,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Links
 
-// We do not need this because we set it in another place.
-/*
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewAutomaticDimension;
-}
- */
-
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
 {
     UrlNinja *urlNinjaHelper = [[UrlNinja alloc] init];
@@ -398,7 +233,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     
     NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
     
-    NSArray *arrayOfPosts = [_postsArray filteredArrayUsingPredicate:postNumPredicate];
+    NSArray *arrayOfPosts = [_threadControllerTableViewManager.postsArray filteredArrayUsingPredicate:postNumPredicate];
 
     DVBPost *post;
     
@@ -431,94 +266,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         threadViewController.allThreadPosts = _allThreadPosts;
     }
     else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
-        threadViewController.allThreadPosts = _postsArray;
+        threadViewController.allThreadPosts = _threadControllerTableViewManager.postsArray;
     }
 
-    [self.navigationController pushViewController:threadViewController animated:YES];
+    [self.navigationController pushViewController:threadViewController
+                                         animated:YES];
 }
 
 /// Clear prompt from any status / error messages.
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
-}
-
-#pragma mark - Cell configuration and calculation
-
-- (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell isKindOfClass:[DVBPostTableViewCell class]]) {
-        DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-        
-        NSString *thumbUrlString = post.thumbPath;
-        NSString *fullUrlString = post.path;
-
-        BOOL showVideoIcon = (post.mediaType == webm);
-
-        confCell.threadViewController = self;
-        
-        [confCell prepareCellWithCommentText:post.comment
-                       andPostThumbUrlString:thumbUrlString
-                        andPostFullUrlString:fullUrlString
-                            andShowVideoIcon:showVideoIcon];
-    }
-}
-
-- (void)configureMediaCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell isKindOfClass:[DVBMediaForPostTableViewCell class]]) {
-        DVBMediaForPostTableViewCell *confCell = (DVBMediaForPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-
-        confCell.threadViewController = self;
-        [confCell prepareCellWithThumbPathesArray:post.thumbPathesArray
-                                   andPathesArray:post.pathesArray];
-    }
-}
-
-- (void)configureActionsCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell isKindOfClass:[DVBActionsForPostTableViewCell class]]) {
-        DVBActionsForPostTableViewCell *confCell = (DVBActionsForPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-
-        NSUInteger indexForButton = indexPath.section;
-
-        BOOL shouldDisableActionButton = NO;
-
-        if (_answersToPost) {
-            shouldDisableActionButton = YES;
-        }
-
-        [confCell prepareCellWithPostRepliesCount:[post.replies count]
-                                         andIndex:indexForButton
-                           andDisableActionButton:shouldDisableActionButton];
-    }
-}
-
-/// Utility method for calculation how much space we need to fit that text. Calculation for texView height.
--(CGFloat)heightForText:(NSAttributedString *)text constrainedToSize:(CGSize)size
-{
-    CGRect frame = CGRectIntegral([text boundingRectWithSize:size
-                                                     options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading)
-                                                     context:nil]);
-
-    return frame.size.height;
-}
-
-/**
- *  Think of this as a source for the text to be rendered in the text view.
- *  I used a dictionary to map indexPath to some dynamically fetched text.
- */
-- (NSAttributedString *)getTextAtIndex:(NSIndexPath *)indexPath
-{
-    
-    NSUInteger tmpIndex = indexPath.section;
-    DVBPost *tmpObj =  _postsArray[tmpIndex];
-    NSAttributedString *tmpComment = tmpObj.comment;
-    
-    return tmpComment;
 }
 
 #pragma mark - Data management and processing
@@ -533,9 +291,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
-        _postsArray = _threadModel.postsArray;
-        _thumbImagesArray = _threadModel.thumbImagesArray;
-        _fullImagesArray = _threadModel.fullImagesArray;
+        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
+        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
+        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
         completion(completionsPosts);
     }];
 }
@@ -544,7 +302,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)reloadThread {
 
     if (_answersToPost) {
-        _postsArray = [_answersToPost mutableCopy];
+        _threadControllerTableViewManager.postsArray = [_answersToPost mutableCopy];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
@@ -554,7 +312,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                       andThread:_threadNum
                   andCompletion:^(NSArray *postsArrayBlock)
         {
-            _postsArray = [postsArrayBlock mutableCopy];
+            _threadControllerTableViewManager.postsArray = postsArrayBlock;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.navigationItem stopAnimating];
@@ -580,7 +338,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     UIButton *answerButton = sender;
     NSUInteger buttonClickedIndex = answerButton.tag;
-    DVBPost *post = _postsArray[buttonClickedIndex];
+    DVBPost *post = _threadControllerTableViewManager.postsArray[buttonClickedIndex];
     DVBThreadViewController *threadViewController = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
     NSString *postNum = post.num;
     threadViewController.postNum = postNum;
@@ -591,7 +349,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         threadViewController.allThreadPosts = _allThreadPosts;
     }
     else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
-        threadViewController.allThreadPosts = _postsArray;
+        threadViewController.allThreadPosts = _threadControllerTableViewManager.postsArray;
     }
 
     _presentedSomething = YES;
@@ -608,7 +366,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     _buttonToShowPopoverFrom = answerButton;
 
     NSUInteger buttonClickedIndex = answerButton.tag;
-    DVBPost *post = _postsArray[buttonClickedIndex];
+    DVBPost *post = _threadControllerTableViewManager.postsArray[buttonClickedIndex];
     // setting variable to bad post number (we'll use it soon)
     _flaggedPostNum = post.num;
     _selectedWithLongPressSection = buttonClickedIndex;
@@ -671,7 +429,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             {
                 DVBComment *sharedComment = [DVBComment sharedComment];
 
-                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
+                DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:_selectedWithLongPressSection];
                 NSString *postNum = post.num;
 
                 [sharedComment topUpCommentWithPostNum:postNum];
@@ -692,7 +450,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             {
                 DVBComment *sharedComment = [DVBComment sharedComment];
 
-                DVBPost *post = [_postsArray objectAtIndex:_selectedWithLongPressSection];
+                DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:_selectedWithLongPressSection];
                 NSString *postNum = post.num;
                 NSAttributedString *postComment = post.comment;
 
@@ -761,7 +519,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         }
     }
 
-    [self presentViewController:activityViewController animated:YES completion:nil];
+    [self presentViewController:activityViewController
+                       animated:YES
+                     completion:nil];
 }
 
 #pragma mark - Photo gallery
@@ -771,8 +531,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     _presentedSomething = YES;
     DVBMediaOpener *mediaOpener = [[DVBMediaOpener alloc] initWithViewController:self];
     [mediaOpener openMediaWithUrlString:fullUrlString
-                    andThumbImagesArray:_thumbImagesArray
-                     andFullImagesArray:_fullImagesArray];
+                    andThumbImagesArray:_threadControllerTableViewManager.thumbImagesArray
+                     andFullImagesArray:_threadControllerTableViewManager.fullImagesArray];
 }
 
 #pragma mark - DVBCreatePostViewControllerDelegate
@@ -784,10 +544,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         if (comment.createdPost) {
             [self.tableView beginUpdates];
 
-            NSMutableArray *postsArrayMutable = [_postsArray mutableCopy];
-            NSUInteger newSectionIndex = _postsArray.count;
+            NSMutableArray *postsArrayMutable = [_threadControllerTableViewManager.postsArray mutableCopy];
+            NSUInteger newSectionIndex = _threadControllerTableViewManager.postsArray.count;
             [postsArrayMutable addObject:comment.createdPost];
-            _postsArray = [postsArrayMutable copy];
+            _threadControllerTableViewManager.postsArray = [postsArrayMutable copy];
             postsArrayMutable = nil;
 
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];

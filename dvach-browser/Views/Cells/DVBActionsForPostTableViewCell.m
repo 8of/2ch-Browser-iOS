@@ -73,8 +73,6 @@
 
     [_answerButton setEnabled:YES];
     [_actionButton setEnabled:YES];
-
-    [self.layer removeAllAnimations];
 }
 
 @end
