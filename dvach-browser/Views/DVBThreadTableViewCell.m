@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
 
@@ -62,17 +62,16 @@
     _utilityLabel.text = utilityText;
 
     // Set thumbnail for OP post of each thread.
-
     NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
-
     UIImage *placeholderImage = [UIImage imageNamed:@"Noimage.png"];
-    [_threadThumb sd_setImageWithURL:thumbUrl placeholderImage:placeholderImage];
+
+    [_threadThumb setImageWithURL:thumbUrl
+                 placeholderImage:placeholderImage];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-
     [self.contentView layoutIfNeeded];
 
     [_detailedLabel sizeToFit];

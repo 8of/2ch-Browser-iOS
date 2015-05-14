@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import <UIImageView+AFNetworking.h>
+
 #import "DVBPostTableViewCell.h"
 #import "DVBConstants.h"
 
@@ -49,32 +51,27 @@
     _imageHeightConstraintStorage = _imageHeightConstraint.constant;
     _videoiconWidthContstraintStorage = _videoiconWidthContstraint.constant;
     _videoiconHeightContstraintStorage = _videoiconHeightContstraint.constant;
-}
 
-- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString  andShowVideoIcon:(BOOL)showVideoIcon
-{
-    
     // for more tidy images and keep aspect ratio
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
-    
+
     // set minimum delay before textView recognize tap on link
     _commentTextView.delaysContentTouches = NO;
 
     // Delete insets
     _commentTextView.textContainer.lineFragmentPadding = 0;
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
+}
 
+- (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString  andShowVideoIcon:(BOOL)showVideoIcon
+{
     _commentTextView.attributedText = commentText;
 
     // load the image and setting image source depending on presented image or set blank image
     if (![postThumbUrlString isEqualToString:@""]) {
-        [_postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString] placeholderImage:[UIImage imageNamed:@"Noimage.png"] options:SDWebImageRetryFailed completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-            if (error) {
-                NSLog(@"Error while loading image: %@", error.localizedDescription);
-                NSLog(@"Error code: %ld", (long)error.code);
-            }
-        }];
+        [_postThumb setImageWithURL:[NSURL URLWithString:postThumbUrlString]
+                  placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
 
         [self rebuildPostThumbImageWithImagePresence:YES
                             andWithVideoIconPresence:showVideoIcon];
