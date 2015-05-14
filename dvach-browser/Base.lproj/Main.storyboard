@@ -629,6 +629,12 @@
                                 <action selector="shareAction:" destination="3hz-5v-Niv" id="ZYW-hM-CLD"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="FPN-TD-Wpr"/>
+                        <barButtonItem image="ReportFlag" id="TQ6-Ar-xpr">
+                            <connections>
+                                <action selector="reportAction:" destination="3hz-5v-Niv" id="JGa-O7-r3W"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="EJM-0B-k22"/>
                         <barButtonItem systemItem="refresh" id="OC5-6d-88W">
                             <connections>
@@ -1082,6 +1088,7 @@
     <resources>
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="44" height="44"/>
+        <image name="ReportFlag" width="26" height="26"/>
         <image name="Settings" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
