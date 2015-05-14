@@ -334,6 +334,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self scrollToBottom];
 }
 
+- (IBAction)shareAction:(id)sender
+{
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
+    [self callShareControllerWithUrlString:urlToShare];
+}
+
 - (IBAction)showAnswers:(id)sender
 {
     UIButton *answerButton = sender;
@@ -377,7 +383,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                              otherButtonTitles:
                            @"Ответить",
                            @"Ответить с цитатой",
-                           @"Поделиться",
                            @"Пожаловаться", nil];
     
     [_postLongPressSheet showInView:self.tableView];
@@ -418,6 +423,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     
     return YES;
 }
+
+#pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
@@ -470,15 +477,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
                 break;
             }
-
-            case 2: // Share
-            {
-                NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
-                [self callShareControllerWithUrlString:urlToShare];
-                break;
-            }
                 
-            case 3: // Report button
+            case 2: // Report button
             {
                 [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
 
@@ -492,6 +492,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         }
     }
 }
+
+#pragma mark - UIActivityViewController
 
 - (void)callShareControllerWithUrlString:(NSString *)urlString
 {
