@@ -340,6 +340,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self callShareControllerWithUrlString:urlToShare];
 }
 
+- (IBAction)reportAction:(id)sender
+{
+    [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
+    [self showPromptAboutReportedPost];
+}
+
 - (IBAction)showAnswers:(id)sender
 {
     UIButton *answerButton = sender;
@@ -382,8 +388,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                         destructiveButtonTitle:nil
                                              otherButtonTitles:
                            @"Ответить",
-                           @"Ответить с цитатой",
-                           @"Пожаловаться", nil];
+                           @"Ответить с цитатой", nil];
     
     [_postLongPressSheet showInView:self.tableView];
 }
@@ -477,14 +482,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
                 break;
             }
-                
-            case 2: // Report button
-            {
-                [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
 
-                [self showPromptAboutReportedPost];
-                break;
-            }
             default:
             {
                 break;
