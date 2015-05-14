@@ -29,14 +29,16 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *shareButton;
 @property (nonatomic, strong) DVBThreadControllerTableViewManager *threadControllerTableViewManager;
 
-// Model for posts in the thread
+/// Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
 
-// Action sheet for displaying bad posts flaggind (and maybe somethig more later)
+/// Action sheet for displaying bad posts flaggind (and maybe somethig more later)
 @property (nonatomic, strong) UIActionSheet *postLongPressSheet;
-@property (nonatomic, strong) NSString *flaggedPostNum;
+/// Action sheet for reporting bad threads
+@property (nonatomic, strong) UIActionSheet *reportSheet;
 @property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
 @property (nonatomic, assign) NSUInteger updatedTimes;
 // iOS 8+ reference for iPad - to "give a birth" to popover share controller
@@ -281,13 +283,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Data management and processing
 
-/**
- *  Get data from 2ch server
- *
- *  @param board      <#board description#>
- *  @param threadNum  <#threadNum description#>
- *  @param completion <#completion description#>
- */
+/// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
@@ -298,7 +294,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }];
 }
 
-// Reload thread by current thread num
+/// Reload thread by current thread num
 - (void)reloadThread {
 
     if (_answersToPost) {
@@ -342,8 +338,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reportAction:(id)sender
 {
-    [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
-    [self showPromptAboutReportedPost];
+    NSString *cancelButtonTitle = NSLocalizedString(@"Отмена", @"Кнопка Отмена");
+    NSString *destructiveButtonTitle = NSLocalizedString(@"Пожаловаться", @"Кнопка Пожаловаться");
+    _reportSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                               delegate:self
+                                      cancelButtonTitle:cancelButtonTitle
+                                 destructiveButtonTitle:destructiveButtonTitle
+                                      otherButtonTitles:nil];
+
+    [_reportSheet showInView:self.tableView];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -378,9 +381,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     _buttonToShowPopoverFrom = answerButton;
 
     NSUInteger buttonClickedIndex = answerButton.tag;
-    DVBPost *post = _threadControllerTableViewManager.postsArray[buttonClickedIndex];
-    // setting variable to bad post number (we'll use it soon)
-    _flaggedPostNum = post.num;
     _selectedWithLongPressSection = buttonClickedIndex;
     _postLongPressSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                       delegate:self
@@ -489,6 +489,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             }
         }
     }
+    else if ((actionSheet == _reportSheet) && (buttonIndex == 0)) {
+        [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
+        [self showPromptAboutReportedPost];
+    }
 }
 
 #pragma mark - UIActivityViewController
@@ -510,13 +514,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     // Only for iOS 8
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
-        if (_buttonToShowPopoverFrom) {
-            activityViewController.popoverPresentationController.sourceView = _buttonToShowPopoverFrom;
-            activityViewController.popoverPresentationController.sourceRect = _buttonToShowPopoverFrom.bounds;
-        }
-        else {
-            activityViewController.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
-        }
+        activityViewController.popoverPresentationController.barButtonItem = _shareButton;
     }
 
     [self presentViewController:activityViewController
