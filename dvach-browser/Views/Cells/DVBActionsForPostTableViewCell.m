@@ -21,14 +21,25 @@
 
 @implementation DVBActionsForPostTableViewCell
 
-- (void)prepareCellWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton
+- (void)awakeFromNib
 {
+    [super awakeFromNib];
+
     // prepare Answer button
     _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
     }
 
+    // prepare Action button
+    _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+}
+
+- (void)prepareCellWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton
+{
     NSString *answerButtonPretext = NSLocalizedString(@"Ответы", "Надпись на кнопке к посту для показа количества ответов и перехода к ним");
     NSString *answerButtonPretextNoAnswers = NSLocalizedString(@"Нет ответов", "Надпись на кнопке к посту для показа количества ответов и перехода к ним когда ответов нет");
     NSString *actionButtonPretext = NSLocalizedString(@"Действия", "Надпись на кнопке Действия если действия доступны");
@@ -53,22 +64,17 @@
         actionButtonTitle = actionButtonPretext;
     }
 
-    [_answerButton setTitle:answerButtonTitle forState:UIControlStateNormal];
-    [_answerButton sizeToFit];
+    [_answerButton setTitle:answerButtonTitle
+                   forState:UIControlStateNormal];
     _answerButton.tag = index;
 
-    // prepare action button
-    _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    }
-
-    [_actionButton setTitle:actionButtonTitle forState:UIControlStateNormal];
-    [_actionButton sizeToFit];
+    [_actionButton setTitle:actionButtonTitle
+                   forState:UIControlStateNormal];
     _actionButton.tag = index;
 }
 
-- (void)prepareForReuse {
+- (void)prepareForReuse
+{
     [super prepareForReuse];
 
     [_answerButton setEnabled:YES];
