@@ -623,6 +623,12 @@
                                 <action selector="scrollToBottom:" destination="3hz-5v-Niv" id="asC-QQ-psR"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="qgc-r4-CjR"/>
+                        <barButtonItem systemItem="action" id="NrN-BE-Zun">
+                            <connections>
+                                <action selector="shareAction:" destination="3hz-5v-Niv" id="ZYW-hM-CLD"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="EJM-0B-k22"/>
                         <barButtonItem systemItem="refresh" id="OC5-6d-88W">
                             <connections>
