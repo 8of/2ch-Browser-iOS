@@ -576,29 +576,23 @@
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ExV-Kj-e3l" id="SKe-Es-YgT">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bl-zo-iuC">
+                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bl-zo-iuC">
                                             <rect key="frame" x="288" y="10" width="22" height="22"/>
-                                            <state key="normal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
+                                            <state key="normal" image="ShowAnswersButton"/>
                                             <connections>
                                                 <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="wY1-0v-by2"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
+                                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
                                             <rect key="frame" x="10" y="10" width="22" height="22"/>
-                                            <state key="normal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
+                                            <state key="normal" image="AnswerToPost"/>
                                             <connections>
                                                 <action selector="answerToPost:" destination="3hz-5v-Niv" eventType="touchUpInside" id="PFd-O8-HWC"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozg-qD-Pix" userLabel="Answer Quote">
+                                        <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozg-qD-Pix" userLabel="Answer Quote">
                                             <rect key="frame" x="42" y="10" width="22" height="22"/>
-                                            <state key="normal">
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
+                                            <state key="normal" image="AnswerToPostWithQuote"/>
                                             <connections>
                                                 <action selector="answerToPostWithQuote:" destination="3hz-5v-Niv" eventType="touchUpInside" id="UZr-cW-gQq"/>
                                             </connections>
@@ -1096,10 +1090,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AnswerToPost" width="22" height="22"/>
+        <image name="AnswerToPostWithQuote" width="22" height="22"/>
         <image name="Bottompage" width="22" height="22"/>
         <image name="Refresh" width="44" height="44"/>
         <image name="ReportFlag" width="26" height="26"/>
         <image name="Settings" width="22" height="22"/>
+        <image name="ShowAnswersButton" width="22" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
