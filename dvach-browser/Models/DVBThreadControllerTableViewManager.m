@@ -17,7 +17,7 @@
 // Default row heights
 static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 30.0f;
+static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;

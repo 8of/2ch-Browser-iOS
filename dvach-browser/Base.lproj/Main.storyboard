@@ -570,45 +570,54 @@
                                     <outlet property="videoiconWidthContstraint" destination="heg-3M-hoz" id="fY4-Mq-cHn"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="30" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="42" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ExV-Kj-e3l" id="SKe-Es-YgT">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bl-zo-iuC">
-                                            <rect key="frame" x="257" y="0.0" width="53" height="30"/>
-                                            <state key="normal" title="Ответы">
+                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bl-zo-iuC">
+                                            <rect key="frame" x="288" y="10" width="22" height="22"/>
+                                            <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
                                                 <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="wY1-0v-by2"/>
                                             </connections>
                                         </button>
-                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="O18-H2-BYg">
-                                            <rect key="frame" x="10" y="0.0" width="69" height="30"/>
-                                            <state key="normal" title="Действия">
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoLight" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
+                                            <rect key="frame" x="10" y="10" width="22" height="22"/>
+                                            <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
-                                                <action selector="showPostActions:" destination="3hz-5v-Niv" eventType="touchUpInside" id="s3A-ba-54n"/>
+                                                <action selector="answerToPost:" destination="3hz-5v-Niv" eventType="touchUpInside" id="PFd-O8-HWC"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozg-qD-Pix" userLabel="Answer Quote">
+                                            <rect key="frame" x="42" y="10" width="22" height="22"/>
+                                            <state key="normal">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="answerToPostWithQuote:" destination="3hz-5v-Niv" eventType="touchUpInside" id="UZr-cW-gQq"/>
                                             </connections>
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="O18-H2-BYg" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" constant="10" id="24x-q4-T3H"/>
-                                        <constraint firstItem="O18-H2-BYg" firstAttribute="top" secondItem="SKe-Es-YgT" secondAttribute="top" id="7qL-LF-Oti"/>
+                                        <constraint firstAttribute="centerY" secondItem="6Bl-zo-iuC" secondAttribute="centerY" id="0SN-Je-GF7"/>
+                                        <constraint firstItem="r2q-Xe-K6B" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" constant="10" id="Ge0-zf-0o0"/>
                                         <constraint firstAttribute="trailing" secondItem="6Bl-zo-iuC" secondAttribute="trailing" constant="10" id="TAF-eF-WSa"/>
-                                        <constraint firstAttribute="bottom" secondItem="O18-H2-BYg" secondAttribute="bottom" id="XBr-BU-9AJ"/>
-                                        <constraint firstItem="6Bl-zo-iuC" firstAttribute="top" secondItem="SKe-Es-YgT" secondAttribute="top" id="b6H-DV-7XX"/>
-                                        <constraint firstItem="6Bl-zo-iuC" firstAttribute="height" secondItem="O18-H2-BYg" secondAttribute="height" id="cGO-P8-0Du"/>
-                                        <constraint firstAttribute="bottom" secondItem="6Bl-zo-iuC" secondAttribute="bottom" id="lac-Gt-kIz"/>
-                                        <constraint firstItem="6Bl-zo-iuC" firstAttribute="centerY" secondItem="O18-H2-BYg" secondAttribute="centerY" id="wBx-iw-UlU"/>
+                                        <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="bis-72-Mc7"/>
+                                        <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="drh-rZ-K6L"/>
+                                        <constraint firstItem="Ozg-qD-Pix" firstAttribute="leading" secondItem="r2q-Xe-K6B" secondAttribute="trailing" constant="10" id="mXw-aG-iuw"/>
+                                        <constraint firstAttribute="centerY" secondItem="Ozg-qD-Pix" secondAttribute="centerY" id="zOh-Ze-LK3"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="actionButton" destination="O18-H2-BYg" id="uef-6S-pX2"/>
                                     <outlet property="answerButton" destination="6Bl-zo-iuC" id="cyO-fS-iR7"/>
+                                    <outlet property="answerToPostButton" destination="r2q-Xe-K6B" id="E3k-0R-Alg"/>
+                                    <outlet property="answerToPostWithQuoteButton" destination="Ozg-qD-Pix" id="Eze-1l-96z"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
