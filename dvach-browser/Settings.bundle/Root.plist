@@ -15,6 +15,16 @@
 			<false/>
 		</dict>
 		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Little font</string>
+			<key>Key</key>
+			<string>enableLittleBodyFont</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>
@@ -41,16 +51,6 @@
 			<string>Open in Chrome</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Little font</string>
-			<key>Key</key>
-			<string>enableLittleBodyFont</string>
-			<key>DefaultValue</key>
-			<false/>
 		</dict>
 	</array>
 	<key>StringsTable</key>
