@@ -35,14 +35,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Model for posts in the thread
 @property (nonatomic, strong) DVBThreadModel *threadModel;
 
-/// Action sheet for displaying bad posts flaggind (and maybe somethig more later)
-@property (nonatomic, strong) UIActionSheet *postLongPressSheet;
 /// Action sheet for reporting bad threads
 @property (nonatomic, strong) UIActionSheet *reportSheet;
-@property (nonatomic, assign) NSUInteger selectedWithLongPressSection;
 @property (nonatomic, assign) NSUInteger updatedTimes;
-// iOS 8+ reference for iPad - to "give a birth" to popover share controller
-@property (nonatomic, strong) UIButton *buttonToShowPopoverFrom;
 @property (nonatomic, assign) BOOL presentedSomething;
 
 // Auto scrolling stuff
@@ -349,6 +344,54 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [_reportSheet showInView:self.tableView];
 }
 
+- (IBAction)answerToPost:(id)sender
+{
+    UIButton *pressedButton = (UIButton *)sender;
+    NSUInteger indexForObject = pressedButton.tag;
+
+    DVBComment *sharedComment = [DVBComment sharedComment];
+
+    DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:indexForObject];
+    NSString *postNum = post.num;
+
+    [sharedComment topUpCommentWithPostNum:postNum];
+
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                                  sender:self];
+    }
+    else {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
+                                  sender:self];
+    }
+}
+
+- (IBAction)answerToPostWithQuote:(id)sender
+{
+    UIButton *pressedButton = (UIButton *)sender;
+    NSUInteger indexForObject = pressedButton.tag;
+
+    DVBComment *sharedComment = [DVBComment sharedComment];
+
+    DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:indexForObject];
+    NSString *postNum = post.num;
+    NSAttributedString *postComment = post.comment;
+
+    [sharedComment topUpCommentWithPostNum:postNum
+                       andOriginalPostText:postComment
+                            andQuoteString:_quoteString];
+    _quoteString = @"";
+
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                                  sender:self];
+    }
+    else {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
+                                  sender:self];
+    }
+}
+
 - (IBAction)showAnswers:(id)sender
 {
     UIButton *answerButton = sender;
@@ -371,26 +414,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     [self.navigationController pushViewController:threadViewController
                                          animated:YES];
-}
-
-- (IBAction)showPostActions:(id)sender
-{
-    UIButton *answerButton = sender;
-
-    // Need for iOS 8 - iPad
-    _buttonToShowPopoverFrom = answerButton;
-
-    NSUInteger buttonClickedIndex = answerButton.tag;
-    _selectedWithLongPressSection = buttonClickedIndex;
-    _postLongPressSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                      delegate:self
-                                             cancelButtonTitle:@"Отмена"
-                                        destructiveButtonTitle:nil
-                                             otherButtonTitles:
-                           @"Ответить",
-                           @"Ответить с цитатой", nil];
-    
-    [_postLongPressSheet showInView:self.tableView];
 }
 
 #pragma mark - Navigation
@@ -433,64 +456,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
-    if (actionSheet == _postLongPressSheet) {
-
-        switch (buttonIndex) {
-                
-            case 0: // add post answer to comment and make segue
-            {
-                DVBComment *sharedComment = [DVBComment sharedComment];
-
-                DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:_selectedWithLongPressSection];
-                NSString *postNum = post.num;
-
-                [sharedComment topUpCommentWithPostNum:postNum];
-
-                 if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-                     [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                          sender:self];
-                 }
-                 else {
-                     [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                               sender:self];
-                 }
-
-                break;
-            }
-
-            case 1: // answer with quote
-            {
-                DVBComment *sharedComment = [DVBComment sharedComment];
-
-                DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:_selectedWithLongPressSection];
-                NSString *postNum = post.num;
-                NSAttributedString *postComment = post.comment;
-
-                [sharedComment topUpCommentWithPostNum:postNum
-                                   andOriginalPostText:postComment
-                                        andQuoteString:_quoteString];
-                _quoteString = @"";
-
-                if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-                    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                              sender:self];
-                }
-                else {
-                    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                              sender:self];
-                }
-
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
-        }
-    }
-    else if ((actionSheet == _reportSheet) && (buttonIndex == 0)) {
-        [_threadModel reportThreadWithBoardCode:_boardCode andThread:_threadNum andComment:@"нарушение правил"];
+    if ((actionSheet == _reportSheet) && (buttonIndex == 0)) {
+        [_threadModel reportThreadWithBoardCode:_boardCode
+                                      andThread:_threadNum
+                                     andComment:@"нарушение правил"];
         [self showPromptAboutReportedPost];
     }
 }
