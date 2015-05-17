@@ -20,6 +20,7 @@
 #define DVACH_COLOR_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0] CGColor]
 #define DVACH_COLOR_HIGHLIGHTED [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:0.3]
 #define DVACH_COLOR_HIGHLIGHTED_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:0.3] CGColor]
+#define THUMBNAIL_GREY_BORDER [[UIColor colorWithRed:(151.0/255.0) green:(151.0/255.0) blue:(151.0/255.0) alpha:1.0] CGColor]
 
 // URL schemes
 FOUNDATION_EXPORT NSString *const HTTPS_SCHEME;
