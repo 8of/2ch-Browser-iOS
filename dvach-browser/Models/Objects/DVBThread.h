@@ -14,35 +14,23 @@
 
 #import <Foundation/Foundation.h>
 
-//
-
 @interface DVBThread : NSObject
 
-/**
- *  Number of the open post of the thread.
- */
-@property (strong, nonatomic) NSString *num;
-/**
- *  Subject of the thread (for section title in board View Controller and thread View Controller title).
- */
-@property (strong, nonatomic) NSString *subject;
-/**
- *  Text of open post message.
- */
-@property (strong, nonatomic) NSString *comment;
-/**
- *  Count of files inside the thread.
- */
-@property (strong, nonatomic) NSNumber *filesCount;
-/**
- *  Count of posts inside given thread.
- */
-@property (strong, nonatomic) NSNumber *postsCount;
+/// UID of the open post of the thread.
+@property (nonatomic, strong) NSString *num;
+/// Subject of the thread
+@property (nonatomic, strong) NSString *subject;
+/// Text of open post message.
+@property (nonatomic, strong) NSString *comment;
+/// Count of files inside the thread.
+@property (nonatomic, strong) NSNumber *filesCount;
+/// Count of posts inside given thread.
+@property (nonatomic, strong) NSNumber *postsCount;
 /// Path for open post's thumnail image
-@property (strong, nonatomic) NSString *thumbnail;
-/// Path for open post's thumnail image
-@property (strong, nonatomic) NSString *fullImage;
+@property (nonatomic, strong) NSString *thumbnail;
 
-- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath fullPath:(NSString *)threadFullPath;
+@property (nonatomic, strong) NSString *timeSinceFirstPost;
+
+- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath andTimeSinceFirstPost:(NSString *)timeSinceFirstPost;
 
 @end
