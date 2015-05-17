@@ -123,7 +123,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggV-qV-ALA">
-                                            <rect key="frame" x="85" y="8" width="185" height="17"/>
+                                            <rect key="frame" x="85" y="8" width="64" height="17"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
@@ -152,12 +152,12 @@
                                             </variation>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Comment" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="zj3-lK-H6n">
-                                            <rect key="frame" x="85" y="27" width="185" height="17"/>
+                                            <rect key="frame" x="85" y="27" width="64" height="17"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" horizontalHuggingPriority="300" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="ihu-z9-QYM" userLabel="Count container">
+                                        <view contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="ihu-z9-QYM" userLabel="Count container">
                                             <rect key="frame" x="280" y="48" width="30" height="27"/>
                                             <subviews>
                                                 <label userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="310" horizontalCompressionResistancePriority="752" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lu7-uw-ZhU" userLabel="Count">
@@ -177,7 +177,7 @@
                                                 <constraint firstAttribute="bottom" secondItem="lu7-uw-ZhU" secondAttribute="bottom" constant="3" id="jop-Td-Tte"/>
                                             </constraints>
                                         </view>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4n-GN-jp4">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4n-GN-jp4">
                                             <rect key="frame" x="280" y="8" width="30" height="17"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -186,7 +186,7 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="trailing" secondItem="zj3-lK-H6n" secondAttribute="trailing" id="FAl-4E-Kue"/>
-                                        <constraint firstItem="ihu-z9-QYM" firstAttribute="leading" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="Qp2-7S-2My"/>
+                                        <constraint firstItem="ihu-z9-QYM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="Qp2-7S-2My"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="8" id="S5z-oc-RLj"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="udf-rB-IcA" secondAttribute="trailing" constant="10" id="Syd-5F-2Xw"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="zj3-lK-H6n" secondAttribute="leading" id="TaP-IS-3WE"/>
@@ -194,6 +194,7 @@
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="leading" secondItem="vxw-Jc-Fk2" secondAttribute="leading" constant="10" id="Zyk-3H-Nwn"/>
                                         <constraint firstAttribute="bottom" secondItem="udf-rB-IcA" secondAttribute="bottom" constant="10" id="aXM-u5-MFg"/>
                                         <constraint firstItem="zj3-lK-H6n" firstAttribute="top" secondItem="ggV-qV-ALA" secondAttribute="bottom" constant="2" id="jqp-G5-S8f"/>
+                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="lbw-zD-RQ9"/>
                                         <constraint firstAttribute="trailing" secondItem="ihu-z9-QYM" secondAttribute="trailing" constant="10" id="otJ-LA-2B7"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="zj3-lK-H6n" secondAttribute="bottom" id="w0K-ku-Uky"/>
                                         <constraint firstAttribute="trailing" secondItem="d4n-GN-jp4" secondAttribute="trailing" constant="10" id="wQ1-fj-kHB"/>
@@ -718,7 +719,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
                                 <rect key="frame" x="0.0" y="20" width="320" height="530"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
@@ -1141,7 +1142,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Iwy-TH-KYT"/>
-        <segue reference="XRT-4w-L0S"/>
-        <segue reference="o55-Sb-BOJ"/>
+        <segue reference="yeg-8I-aPr"/>
+        <segue reference="Xk9-pa-bWO"/>
     </inferredMetricsTieBreakers>
 </document>
