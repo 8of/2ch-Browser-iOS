@@ -584,14 +584,20 @@
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
-                                            <rect key="frame" x="10" y="10" width="22" height="22"/>
+                                            <rect key="frame" x="0.0" y="10" width="42" height="22"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="42" id="09C-UW-mbU"/>
+                                            </constraints>
                                             <state key="normal" image="AnswerToPost"/>
                                             <connections>
                                                 <action selector="answerToPost:" destination="3hz-5v-Niv" eventType="touchUpInside" id="PFd-O8-HWC"/>
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozg-qD-Pix" userLabel="Answer Quote">
-                                            <rect key="frame" x="42" y="10" width="22" height="22"/>
+                                            <rect key="frame" x="42" y="10" width="42" height="22"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="42" id="rlR-JK-AlF"/>
+                                            </constraints>
                                             <state key="normal" image="AnswerToPostWithQuote"/>
                                             <connections>
                                                 <action selector="answerToPostWithQuote:" destination="3hz-5v-Niv" eventType="touchUpInside" id="UZr-cW-gQq"/>
@@ -600,11 +606,11 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="centerY" secondItem="6Bl-zo-iuC" secondAttribute="centerY" id="0SN-Je-GF7"/>
-                                        <constraint firstItem="r2q-Xe-K6B" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" constant="10" id="Ge0-zf-0o0"/>
+                                        <constraint firstItem="r2q-Xe-K6B" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" id="Ge0-zf-0o0"/>
                                         <constraint firstAttribute="trailing" secondItem="6Bl-zo-iuC" secondAttribute="trailing" constant="10" id="TAF-eF-WSa"/>
                                         <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="bis-72-Mc7"/>
                                         <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="drh-rZ-K6L"/>
-                                        <constraint firstItem="Ozg-qD-Pix" firstAttribute="leading" secondItem="r2q-Xe-K6B" secondAttribute="trailing" constant="10" id="mXw-aG-iuw"/>
+                                        <constraint firstItem="Ozg-qD-Pix" firstAttribute="leading" secondItem="r2q-Xe-K6B" secondAttribute="trailing" id="mXw-aG-iuw"/>
                                         <constraint firstAttribute="centerY" secondItem="Ozg-qD-Pix" secondAttribute="centerY" id="zOh-Ze-LK3"/>
                                     </constraints>
                                 </tableViewCellContentView>
