@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <SDWebImage/UIImageView+WebCache.h>
 #import <UINavigationItem+Loading.h>
 
 #import "DVBConstants.h"
@@ -18,9 +17,9 @@
 
 #import "DVBThreadTableViewCell.h"
 
-static CGFloat const ROW_DEFAULT_HEIGHT = 85.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
@@ -178,35 +177,19 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [_threadsArray count];
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    DVBThread *threadTmpObj = [_threadsArray objectAtIndex:section];
-    
-    /**
-     *  Get subject from OP post subject variable or set subject to number post.
-     */
-    NSString *subject = threadTmpObj.subject;
-    if ([subject isEqualToString:@""])
-    {
-        subject = threadTmpObj.num;
-    }
-
-    return subject;
+    return [_threadsArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
-    DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.section];
+    DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.row];
 
     [cell prepareCellWithThreadObject:threadTmpObj];
     
@@ -222,6 +205,24 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
     }
 
     return heightToReturn;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Remove seperator inset
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+
+    // Prevent the cell from inheriting the Table View's margin settings
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+        [cell setPreservesSuperviewLayoutMargins:NO];
+    }
+
+    // Explictly set your cell's layout margins
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
 }
 
 - (void)reloadBoardPage
@@ -244,8 +245,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([[segue identifier] isEqualToString:SEGUE_TO_THREAD])
-    {
+    if([[segue identifier] isEqualToString:SEGUE_TO_THREAD]) {
         DVBThreadViewController *threadViewController = segue.destinationViewController;
         threadViewController.boardCode = _boardCode;
         
@@ -264,12 +264,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
             NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
             
             DVBThread *tempThreadObj;
-            tempThreadObj = [_threadsArray objectAtIndex:selectedCellPath.section];
+            tempThreadObj = [_threadsArray objectAtIndex:selectedCellPath.row];
             
             NSString *threadNum = tempThreadObj.num;
             NSString *threadSubject = tempThreadObj.subject;
 
-            threadViewController.threadIndex = selectedCellPath.section;
+            threadViewController.threadIndex = selectedCellPath.row;
             
             threadViewController.threadNum = threadNum;
             threadViewController.threadSubject = threadSubject;
@@ -318,10 +318,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 1000.0f;
 // Check scroll position - we need it to load additional pages
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat actualPosition = self.tableView.contentOffset.y;
-    CGFloat contentHeight = self.tableView.contentSize.height - DIFFERENCE_BEFORE_ENDLESS_FIRE;
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
     
-    if ((actualPosition >= contentHeight) && (!_alreadyLoadingNextPage)) {
+    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) && (!_alreadyLoadingNextPage)) {
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }

@@ -10,6 +10,6 @@
 
 @interface DateFormatter : NSObject
 
-+(NSString *)dateFromTimestamp:(NSInteger)timestamp;
++ (NSString *)dateFromTimestamp:(NSInteger)timestamp;
 
 @end

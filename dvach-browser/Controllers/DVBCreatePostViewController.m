@@ -13,6 +13,7 @@
 #import "DVBConstants.h"
 #import "Reachlibility.h"
 #import "DVBNetworking.h"
+#import "DVBPost.h"
 #import "DVBComment.h"
 #import "DVBMessagePostServerAnswer.h"
 
@@ -36,6 +37,7 @@
 // @property (nonatomic, strong) UIImage *imageToLoad;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
+@property (nonatomic, strong) DVBPost *postToAddToThread;
 
 // UI elements
 @property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
@@ -234,16 +236,22 @@
         BOOL isPostWasSuccessful = messagePostServerAnswer.success;
         
         if (isPostWasSuccessful) {
-            // Clear comment text and saved comment if post was successfull.
-            _containerForPostElementsView.commentTextView.text = @"";
-            _sharedComment.comment = @"";
             
             NSString *threadToRedirectTo = messagePostServerAnswer.threadToRedirectTo;
             BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
             
-            if (isThreadToRedirectToNotEmpty) {
+            if (threadToRedirectTo && isThreadToRedirectToNotEmpty) {
                 _createdThreadNum = threadToRedirectTo;
             }
+            else {
+                _postToAddToThread = [self postFromViewControllerInfoWithAnswer:messagePostServerAnswer];
+                _sharedComment.createdPost = _postToAddToThread;
+            }
+
+            // Clear comment text and saved comment if post was successfull.
+            _containerForPostElementsView.commentTextView.text = @"";
+            _sharedComment.comment = @"";
+
             // Dismiss View Controller if post was successfull.
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
@@ -373,8 +381,6 @@
     else if (isSegueDismissToNewThread) {
 
         if (_createdThreadNum) {
-            // NSLog(@"New thread num: %@. Redirecting.", _createdThreadNum);
-
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
@@ -390,6 +396,39 @@
     if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
         _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     }
+}
+
+#pragma mark - Create post object to add to previos thread
+
+- (DVBPost *)postFromViewControllerInfoWithAnswer:(DVBMessagePostServerAnswer *)serverAnswer
+{
+        NSString *num = serverAnswer.num;
+        NSString *subject = _containerForPostElementsView.subjectTextField.text;
+
+        UIFontDescriptor *bodyFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+        CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
+
+        NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:_containerForPostElementsView.commentTextView.text];
+        NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
+        [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
+
+        NSString *name = _containerForPostElementsView.nameTextField.text;
+
+        DVBPost *post = [[DVBPost alloc] initWithNum:num
+                                             subject:subject
+                                             comment:[maComment copy]
+                                                path:@""
+                                           thumbPath:@""
+                                         pathesArray:nil
+                                    thumbPathesArray:nil
+                                                date:@""
+                                             dateAgo:@"0 с"
+                                           repliesTo:nil
+                                           mediaType:noMedia
+                                                name:name
+                                                sage:NO];
+
+        return post;
 }
 
 @end

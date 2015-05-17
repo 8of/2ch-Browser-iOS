@@ -91,6 +91,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 }
 
 - (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+    // Cancel focus on Search field - or app can crash.
+    [self.view endEditing:YES];
     UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
     [boardCodeAlertView show];
 }

@@ -6,14 +6,16 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBConstants.h"
+
 #import "DVBActionsForPostTableViewCell.h"
 
 @interface DVBActionsForPostTableViewCell ()
 
+@property (nonatomic, weak) IBOutlet UIButton *answerToPostButton;
+@property (nonatomic, weak) IBOutlet UIButton *answerToPostWithQuoteButton;
 // Show answer to post button
 @property (nonatomic, weak) IBOutlet UIButton *answerButton;
-// Show action sheet for the post
-@property (nonatomic, weak) IBOutlet UIButton *actionButton;
 
 @end
 
@@ -21,50 +23,36 @@
 
 - (void)prepareCellWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton
 {
-    // prepare Answer button
-    _answerButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    NSString *answerButtonPretext = NSLocalizedString(@"Ответы", "Надпись на кнопке к посту для показа количества ответов и перехода к ним");
-    NSString *answerButtonPretextNoAnswers = NSLocalizedString(@"Нет ответов", "Надпись на кнопке к посту для показа количества ответов и перехода к ним когда ответов нет");
-    NSString *actionButtonPretext = NSLocalizedString(@"Действия", "Надпись на кнопке Действия если действия доступны");
-    NSString *actionButtonPretextNoAnswers = NSLocalizedString(@"", "Надпись на кнопке Действия если действия не доступны");
-
     NSString *answerButtonTitle;
-    NSString *actionButtonTitle;
 
     if (postRepliesCount > 0) {
-        answerButtonTitle = [NSString stringWithFormat:@"%@ (%ld)", answerButtonPretext, (unsigned long)postRepliesCount];
-    }
-    else {
-        answerButtonTitle = answerButtonPretextNoAnswers;
-        [_answerButton setEnabled:NO];
+        answerButtonTitle = [NSString stringWithFormat:@" %ld", (unsigned long)postRepliesCount];
+        [_answerButton setEnabled:YES];
+        [_answerButton setTitle:answerButtonTitle
+                       forState:UIControlStateNormal];
+        _answerButton.tag = index;
     }
 
     if (disableActionButton) {
-        actionButtonTitle = actionButtonPretextNoAnswers;
-        [_actionButton setEnabled:NO];
+        [_answerToPostButton setEnabled:NO];
+        [_answerToPostWithQuoteButton setEnabled:NO];
     }
     else {
-        actionButtonTitle = actionButtonPretext;
+        _answerToPostButton.tag = index;
+        _answerToPostWithQuoteButton.tag = index;
     }
-
-    [_answerButton setTitle:answerButtonTitle forState:UIControlStateNormal];
-    [_answerButton sizeToFit];
-    _answerButton.tag = index;
-
-    // prepare action button
-    _actionButton.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    [_actionButton setTitle:actionButtonTitle forState:UIControlStateNormal];
-    [_actionButton sizeToFit];
-    _actionButton.tag = index;
 }
 
-- (void)prepareForReuse {
+- (void)prepareForReuse
+{
     [super prepareForReuse];
 
-    [_answerButton setEnabled:YES];
-    [_actionButton setEnabled:YES];
+    [_answerButton setEnabled:NO];
+    [_answerButton setTitle:nil
+                   forState:UIControlStateNormal];
 
-    [self.layer removeAllAnimations];
+    [_answerToPostButton setEnabled:YES];
+    [_answerToPostWithQuoteButton setEnabled:YES];
 }
 
 @end

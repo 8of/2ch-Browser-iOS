@@ -9,7 +9,6 @@
 // Cell for showing posts in thread Table View Controller
 
 #import <UIKit/UIKit.h>
-#import <SDWebImage/UIImageView+WebCache.h>
 
 #import "DVBThreadViewController.h"
 

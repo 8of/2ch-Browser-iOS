@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
 
@@ -81,9 +81,7 @@
 
         UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
 
-        [postThumb sd_setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                     placeholderImage:nil
-                              options:SDWebImageRetryFailed];
+        [postThumb setImageWithURL:[NSURL URLWithString:postThumbUrlString]];
 
         DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
 
