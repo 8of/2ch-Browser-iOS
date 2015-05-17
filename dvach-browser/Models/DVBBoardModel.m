@@ -11,6 +11,7 @@
 #import "DVBConstants.h"
 #import "DVBThread.h"
 #import "NSString+HTML.h"
+#import "DateFormatter.h"
 
 @interface DVBBoardModel ()
 
@@ -86,19 +87,10 @@
             }
             NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
 
-            NSString *fullPicturePath;
+            // time since first post
+            NSInteger timestamp = [[opPost objectForKey:@"timestamp"] integerValue];
+            NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
 
-            if ([files objectForKey:@"path"]) {
-
-                NSString *tmpFullpath = [files objectForKey:@"path"];
-
-                BOOL isContainWebm = ([tmpFullpath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
-
-                if (!isContainWebm) {
-                    fullPicturePath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpFullpath];
-                }
-            }
-            
             /**
              Create thred object for storing all info for later use, and write object to mutable array
              */
@@ -107,7 +99,8 @@
                                                         opComment:comment
                                                        filesCount:filesCount
                                                        postsCount:postsCount
-                                                        thumbPath:thumbPath fullPath:fullPicturePath];
+                                                        thumbPath:thumbPath
+                                            andTimeSinceFirstPost:dateAgo];
             [_privateThreadsArray addObject:threadObj];
             threadObj = nil;
         }
