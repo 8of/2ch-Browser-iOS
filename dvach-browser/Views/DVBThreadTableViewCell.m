@@ -14,13 +14,13 @@
 
 @interface DVBThreadTableViewCell ()
 
-// Text of post
-@property (nonatomic) IBOutlet UILabel* detailedLabel;
-// Tech label for posts and images count
-@property (nonatomic) IBOutlet UILabel* utilityLabel;
+@property (nonatomic) IBOutlet UILabel* titleLabel;
+@property (nonatomic) IBOutlet UILabel* commentLabel;
+@property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
 // Image for showing OP thumbnail image
 @property (nonatomic) IBOutlet UIImageView *threadThumb;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
 
 @end
 
@@ -30,66 +30,79 @@
 {
     [super awakeFromNib];
 
+    [self.contentView setOpaque:YES];
+    [self.backgroundView setOpaque:YES];
+
+    [_threadThumb setOpaque:YES];
+    [_threadThumb.layer setOpaque:YES];
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
 
-    _detailedLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    // _threadThumb.layer.cornerRadius = 14.0f;
+    // [_threadThumb.layer setBorderColor: THUMBNAIL_GREY_BORDER];
+    // [_threadThumb.layer setBorderWidth: 1.0];
+
+    _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    _titleLabel.layer.masksToBounds = NO;
+
+    _dateLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    _dateLabel.layer.masksToBounds = NO;
+
+    _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _commentLabel.layer.masksToBounds = NO;
+
+    [_postsCountLabel setOpaque:YES];
+    [_postsCountLabel.layer setOpaque:YES];
+    _postsCountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _postsCountLabel.layer.masksToBounds = NO;
+
+    _postsCountContainerView.layer.cornerRadius = 6.0f;
+    [_postsCountContainerView.layer setBorderColor: THUMBNAIL_GREY_BORDER];
+    [_postsCountContainerView.layer setBorderWidth: 1.0];
+    _postsCountContainerView.layer.masksToBounds = NO;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        _detailedLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-        _utilityLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+        _dateLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+
+        _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        _postsCountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
     }
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _detailedLabel.numberOfLines = 3;
+        _commentLabel.numberOfLines = 3;
     }
 }
 
 - (void)prepareCellWithThreadObject: (DVBThread *)threadObject
 {
-    // Set OP post comment for each thread.
-    _detailedLabel.text = threadObject.comment;
+    NSString *title = threadObject.subject;
+    if ([title isEqualToString:@""]) {
+        title = threadObject.num;
+    }
 
-    /**
-     Utility text (posts count and files count)
-     
-     :returns: full ready NSString utility string.
-     */
-    NSString *postsSubString = NSLocalizedString(@" постов ", @"Часть подстроки ПОСТОВ для статусного сообщения под вступительным текстом каждого сообщения в списке тредов.");
-    NSString *imagesSubString = NSLocalizedString(@" изображений ", @"Часть подстроки ИЗОБРАЖЕНИЙ для статусного сообщения под вступительным текстом каждого сообщения в списке тредов.");
-    NSString *utilityText = [[NSString alloc] initWithFormat:@"%@%@%@%@", [threadObject.postsCount stringValue], postsSubString, [threadObject.filesCount stringValue], imagesSubString];
-    _utilityLabel.text = utilityText;
+    _titleLabel.text = title;
 
-    // Set thumbnail for OP post of each thread.
+    _commentLabel.text = threadObject.comment;
+
     NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
-    UIImage *placeholderImage = [UIImage imageNamed:@"Noimage.png"];
+    [_threadThumb setImageWithURL:thumbUrl];
 
-    [_threadThumb setImageWithURL:thumbUrl
-                 placeholderImage:placeholderImage];
-}
+    _postsCountLabel.text = [threadObject.postsCount stringValue];
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [self.contentView layoutIfNeeded];
-
-    [_detailedLabel sizeToFit];
-    _detailedLabel.preferredMaxLayoutWidth = CGRectGetWidth(_detailedLabel.frame);
-
-    [_utilityLabel sizeToFit];
-    _utilityLabel.preferredMaxLayoutWidth = CGRectGetWidth(_utilityLabel.frame);
+    _dateLabel.text = threadObject.timeSinceFirstPost;
 }
 
 - (void)prepareForReuse
 {
     [super prepareForReuse];
 
-    _detailedLabel.text = @"";
-    _utilityLabel.text = @"";
+    _titleLabel.text = nil;
+    _commentLabel.text = nil;
+    _dateLabel.text = nil;
+    _postsCountLabel.text = nil;
 
-    [self setNeedsUpdateConstraints];
-    [self.layer removeAllAnimations];
+    [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 }
 
 @end
