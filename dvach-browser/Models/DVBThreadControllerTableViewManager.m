@@ -15,7 +15,7 @@
 #import "DVBActionsForPostTableViewCell.h"
 
 // Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 80.0f; // top up by 5 = 4 - magic number and 1 - border
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
 
