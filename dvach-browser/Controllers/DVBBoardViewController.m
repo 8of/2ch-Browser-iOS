@@ -19,7 +19,7 @@
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 600.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
@@ -318,10 +318,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 600.0f;
 // Check scroll position - we need it to load additional pages
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat actualPosition = self.tableView.contentOffset.y;
-    CGFloat contentHeight = self.tableView.contentSize.height - DIFFERENCE_BEFORE_ENDLESS_FIRE;
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
     
-    if ((actualPosition >= contentHeight) && (!_alreadyLoadingNextPage)) {
+    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) && (!_alreadyLoadingNextPage)) {
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
