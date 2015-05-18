@@ -19,7 +19,7 @@
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
