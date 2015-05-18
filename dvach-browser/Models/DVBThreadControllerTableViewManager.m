@@ -285,4 +285,31 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     return tmpComment;
 }
 
+#pragma mark - Scroll Delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    // Trying to figure out scroll position to store it for restoring later
+    if (scrollView.contentOffset.y > 100) {
+        // When we go back - table jumps in this values - so the correction is needed here
+        CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+
+        CGFloat topBarDifference = MIN(statusBarSize.width, statusBarSize.height) + _threadViewController.navigationController.navigationBar.frame.size.height;
+
+        if (topBarDifference >= _threadViewController.topBarDifference) {
+            _threadViewController.topBarDifference = topBarDifference;
+        }
+
+        CGFloat scrollPositionToStore = scrollView.contentOffset.y - _threadViewController.topBarDifference;
+
+        NSNumber *scrollPosition = [NSNumber numberWithFloat:scrollPositionToStore];
+
+        [_threadViewController.threadsScrollPositionManager.threads setValue:scrollPosition
+                                                 forKey:_threadViewController.threadNum];
+        
+        _threadViewController.autoScrollTo = [_threadViewController.threadsScrollPositionManager.threads
+                         objectForKey:_threadViewController.threadNum];
+    }
+}
+
 @end

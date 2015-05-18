@@ -15,7 +15,6 @@
 #import "DVBNetworking.h"
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
-#import "DVBThreadsScrollPositionManager.h"
 #import "DVBMediaOpener.h"
 #import "DVBThreadControllerTableViewManager.h"
 
@@ -39,11 +38,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, strong) UIActionSheet *reportSheet;
 @property (nonatomic, assign) NSUInteger updatedTimes;
 @property (nonatomic, assign) BOOL presentedSomething;
-
-// Auto scrolling stuff
-@property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
-@property (nonatomic, strong) NSNumber *autoScrollTo;
-@property (nonatomic, assign) CGFloat topBarDifference;
 
 @end
 
@@ -170,32 +164,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
     
     return subject;
-}
-
-#pragma mark - Scroll Delegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    // Trying to figure out scroll position to store it for restoring later
-    if (scrollView.contentOffset.y > 100) {
-        // When we go back - table jumps in this values - so the correction is needed here
-        CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
-
-        CGFloat topBarDifference = MIN(statusBarSize.width, statusBarSize.height) + self.navigationController.navigationBar.frame.size.height;
-
-        if (topBarDifference >= _topBarDifference) {
-            _topBarDifference = topBarDifference;
-        }
-
-        CGFloat scrollPositionToStore = scrollView.contentOffset.y - _topBarDifference;
-
-        NSNumber *scrollPosition = [NSNumber numberWithFloat:scrollPositionToStore];
-
-        [_threadsScrollPositionManager.threads setValue:scrollPosition
-                                                 forKey:_threadNum];
-        _autoScrollTo = [_threadsScrollPositionManager.threads
-                         objectForKey:_threadNum];
-    }
 }
 
 #pragma mark - Refresh
