@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UrlNinja.h"
+#import "DVBThreadsScrollPositionManager.h"
 
 @interface DVBThreadViewController : UITableViewController
 
@@ -27,6 +28,11 @@
 @property (nonatomic, strong) NSString *quoteString;
 /// Post number - use if we show answers for specific post
 @property (nonatomic, strong) NSString *postNum;
+
+// Auto scrolling stuff
+@property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
+@property (nonatomic, assign) CGFloat topBarDifference;
+@property (nonatomic, strong) NSNumber *autoScrollTo;
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
 
