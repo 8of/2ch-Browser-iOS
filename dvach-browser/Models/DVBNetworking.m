@@ -187,25 +187,17 @@
                              @"thread":threadNum
                              };
     
-    /**
-     *  Convert to mutable to add more parameters, depending on situation
-     */
+    // Convert to mutable to add more parameters, depending on situation
     NSMutableDictionary *mutableParams = [params mutableCopy];
-    
-    /**
-     *  Check userCode
-     */
+
+    // Check userCode
     BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
-    if (isUsercodeNotEmpty)
-    {
-        /**
-         *  If usercode presented then use as part of the message
-         */
-        NSLog(@"usercode way: %@", usercode);
+    if (isUsercodeNotEmpty) {
+        // If usercode presented then use as part of the message
+        // NSLog(@"usercode way: %@", usercode);
         [mutableParams setValue:usercode forKey:@"usercode"];
     }
-    else
-    {
+    else {
         /**
          *  Otherwise include captcha values
          */
@@ -217,10 +209,8 @@
         [mutableParams setValue:captchaValue
                          forKey:@"captcha_value"];
     }
-    
-    /**
-     *  Back to unmutable dictionary to be safe
-     */
+
+    // Back to unmutable dictionary to be safe
     params = mutableParams;
     
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];

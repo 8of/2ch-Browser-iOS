@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -874,72 +874,84 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1y-7G-FSY" customClass="DVBPostPhotoContainerView">
                                                 <rect key="frame" x="15" y="365" width="61" height="61"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XbM-Kz-D8k">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XbM-Kz-D8k" customClass="DVBPictureToSendPreviewImageView">
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
                                                     </imageView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sby-Ye-Jpl" userLabel="Add photo button container">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sby-Ye-Jpl" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="20" y="20" width="22" height="22"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="4QQ-eS-dGg" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                <state key="normal">
-                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                                </state>
-                                                                <connections>
-                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="V5j-q0-zXo"/>
-                                                                </connections>
-                                                            </button>
+                                                            </imageView>
                                                         </subviews>
                                                         <constraints>
+                                                            <constraint firstItem="4QQ-eS-dGg" firstAttribute="leading" secondItem="sby-Ye-Jpl" secondAttribute="leading" id="71g-Ph-aXY"/>
+                                                            <constraint firstAttribute="bottom" secondItem="4QQ-eS-dGg" secondAttribute="bottom" id="Jqp-QV-3rs"/>
                                                             <constraint firstAttribute="height" constant="22" id="Mdd-yT-Xyc"/>
-                                                            <constraint firstAttribute="centerX" secondItem="Nvk-ge-8dV" secondAttribute="centerX" id="Q3S-hc-djB"/>
-                                                            <constraint firstAttribute="centerY" secondItem="Nvk-ge-8dV" secondAttribute="centerY" id="bor-qM-Ztw"/>
+                                                            <constraint firstItem="4QQ-eS-dGg" firstAttribute="top" secondItem="sby-Ye-Jpl" secondAttribute="top" id="kej-NJ-sNo"/>
                                                             <constraint firstAttribute="width" constant="22" id="m54-Xy-Xlt"/>
+                                                            <constraint firstAttribute="trailing" secondItem="4QQ-eS-dGg" secondAttribute="trailing" id="wmB-Cz-5ov"/>
                                                         </constraints>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                        <connections>
+                                                            <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="V5j-q0-zXo"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstItem="XbM-Kz-D8k" firstAttribute="top" secondItem="j1y-7G-FSY" secondAttribute="top" id="249-sd-K5d"/>
                                                     <constraint firstAttribute="centerX" secondItem="sby-Ye-Jpl" secondAttribute="centerX" id="4sQ-3I-DDV"/>
                                                     <constraint firstAttribute="bottom" secondItem="XbM-Kz-D8k" secondAttribute="bottom" id="Gf9-og-pKX"/>
                                                     <constraint firstAttribute="centerY" secondItem="sby-Ye-Jpl" secondAttribute="centerY" id="L5B-Ee-kAP"/>
+                                                    <constraint firstItem="Nvk-ge-8dV" firstAttribute="leading" secondItem="j1y-7G-FSY" secondAttribute="leading" id="N1r-5j-CiW"/>
                                                     <constraint firstAttribute="width" secondItem="j1y-7G-FSY" secondAttribute="height" multiplier="1:1" id="VFS-Ug-Qxu"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Nvk-ge-8dV" secondAttribute="trailing" id="WJX-zr-qd1"/>
                                                     <constraint firstAttribute="trailing" secondItem="XbM-Kz-D8k" secondAttribute="trailing" id="XRB-Yv-NCh"/>
+                                                    <constraint firstItem="Nvk-ge-8dV" firstAttribute="top" secondItem="j1y-7G-FSY" secondAttribute="top" id="g65-3b-U64"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Nvk-ge-8dV" secondAttribute="bottom" id="gjI-Lc-Z63"/>
                                                     <constraint firstItem="XbM-Kz-D8k" firstAttribute="leading" secondItem="j1y-7G-FSY" secondAttribute="leading" id="wed-eH-r61"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgX-62-n6a" customClass="DVBPostPhotoContainerView">
                                                 <rect key="frame" x="91" y="365" width="62" height="61"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XOd-v6-1ld">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XOd-v6-1ld" customClass="DVBPictureToSendPreviewImageView">
                                                         <rect key="frame" x="0.0" y="0.0" width="62" height="61"/>
                                                     </imageView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXc-Bd-DQN" userLabel="Add photo button container">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXc-Bd-DQN" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="20" y="20" width="22" height="22"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVa-tw-g8m">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="nbz-cE-tFY" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                <state key="normal">
-                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                                </state>
-                                                                <connections>
-                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="n5y-sr-3U4"/>
-                                                                </connections>
-                                                            </button>
+                                                            </imageView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="centerY" secondItem="xVa-tw-g8m" secondAttribute="centerY" id="2yt-Ya-LMb"/>
-                                                            <constraint firstAttribute="centerX" secondItem="xVa-tw-g8m" secondAttribute="centerX" id="NcQ-BT-u3F"/>
+                                                            <constraint firstAttribute="trailing" secondItem="nbz-cE-tFY" secondAttribute="trailing" id="BC3-iA-EAh"/>
+                                                            <constraint firstItem="nbz-cE-tFY" firstAttribute="leading" secondItem="dXc-Bd-DQN" secondAttribute="leading" id="XlR-RG-A3H"/>
+                                                            <constraint firstItem="nbz-cE-tFY" firstAttribute="top" secondItem="dXc-Bd-DQN" secondAttribute="top" id="ZI5-h3-oEO"/>
+                                                            <constraint firstAttribute="bottom" secondItem="nbz-cE-tFY" secondAttribute="bottom" id="bzu-nG-u8g"/>
                                                             <constraint firstAttribute="width" constant="22" id="rIj-ms-rUT"/>
                                                             <constraint firstAttribute="height" constant="22" id="sCP-RJ-Y0E"/>
                                                         </constraints>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVa-tw-g8m">
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="61"/>
+                                                        <connections>
+                                                            <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="n5y-sr-3U4"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="xVa-tw-g8m" firstAttribute="top" secondItem="hgX-62-n6a" secondAttribute="top" id="1BU-Oo-wVJ"/>
+                                                    <constraint firstItem="xVa-tw-g8m" firstAttribute="leading" secondItem="hgX-62-n6a" secondAttribute="leading" id="MMx-ST-PN5"/>
                                                     <constraint firstItem="XOd-v6-1ld" firstAttribute="leading" secondItem="hgX-62-n6a" secondAttribute="leading" id="YRH-Ew-X0t"/>
                                                     <constraint firstAttribute="centerY" secondItem="dXc-Bd-DQN" secondAttribute="centerY" id="aYR-o1-Ytu"/>
                                                     <constraint firstAttribute="centerX" secondItem="dXc-Bd-DQN" secondAttribute="centerX" id="evu-wg-ueA"/>
+                                                    <constraint firstAttribute="bottom" secondItem="xVa-tw-g8m" secondAttribute="bottom" id="hM2-GI-j1q"/>
                                                     <constraint firstAttribute="bottom" secondItem="XOd-v6-1ld" secondAttribute="bottom" id="jh5-st-Bwk"/>
+                                                    <constraint firstAttribute="trailing" secondItem="xVa-tw-g8m" secondAttribute="trailing" id="pig-Jl-GMc"/>
                                                     <constraint firstAttribute="trailing" secondItem="XOd-v6-1ld" secondAttribute="trailing" id="qKY-7p-Tmg"/>
                                                     <constraint firstItem="XOd-v6-1ld" firstAttribute="top" secondItem="hgX-62-n6a" secondAttribute="top" id="tSK-fX-tEy"/>
                                                 </constraints>
@@ -947,73 +959,85 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WY1-1O-Tb7" customClass="DVBPostPhotoContainerView">
                                                 <rect key="frame" x="168" y="365" width="61" height="61"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nJq-yt-HiK">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nJq-yt-HiK" customClass="DVBPictureToSendPreviewImageView">
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
                                                     </imageView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVK-jY-Wue" userLabel="Add photo button container">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVK-jY-Wue" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="19" y="20" width="22" height="22"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="6OX-mh-Sjj" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                <state key="normal">
-                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                                </state>
-                                                                <connections>
-                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="OgD-qp-kHZ"/>
-                                                                </connections>
-                                                            </button>
+                                                            </imageView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="centerY" secondItem="98S-fQ-zan" secondAttribute="centerY" id="6NY-4x-18r"/>
-                                                            <constraint firstAttribute="centerX" secondItem="98S-fQ-zan" secondAttribute="centerX" id="DUC-PJ-GnE"/>
+                                                            <constraint firstAttribute="bottom" secondItem="6OX-mh-Sjj" secondAttribute="bottom" id="5H6-BZ-lKR"/>
                                                             <constraint firstAttribute="height" constant="22" id="M2I-kH-xgW"/>
+                                                            <constraint firstAttribute="trailing" secondItem="6OX-mh-Sjj" secondAttribute="trailing" id="XSv-Yj-eFJ"/>
+                                                            <constraint firstItem="6OX-mh-Sjj" firstAttribute="leading" secondItem="VVK-jY-Wue" secondAttribute="leading" id="aLZ-pJ-dr3"/>
                                                             <constraint firstAttribute="width" constant="22" id="kXN-QX-bLY"/>
+                                                            <constraint firstItem="6OX-mh-Sjj" firstAttribute="top" secondItem="VVK-jY-Wue" secondAttribute="top" id="yFz-KM-eqK"/>
                                                         </constraints>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                        <connections>
+                                                            <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="OgD-qp-kHZ"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="nJq-yt-HiK" secondAttribute="trailing" id="8O0-TZ-f9D"/>
+                                                    <constraint firstAttribute="trailing" secondItem="98S-fQ-zan" secondAttribute="trailing" id="DzA-Nb-wNh"/>
                                                     <constraint firstItem="nJq-yt-HiK" firstAttribute="top" secondItem="WY1-1O-Tb7" secondAttribute="top" id="EAO-FE-0To"/>
                                                     <constraint firstAttribute="centerX" secondItem="VVK-jY-Wue" secondAttribute="centerX" id="GcW-wN-C3I"/>
                                                     <constraint firstItem="nJq-yt-HiK" firstAttribute="leading" secondItem="WY1-1O-Tb7" secondAttribute="leading" id="R3u-CX-UPh"/>
+                                                    <constraint firstItem="98S-fQ-zan" firstAttribute="leading" secondItem="WY1-1O-Tb7" secondAttribute="leading" id="c84-Gv-rjr"/>
+                                                    <constraint firstItem="98S-fQ-zan" firstAttribute="top" secondItem="WY1-1O-Tb7" secondAttribute="top" id="d5b-ji-s5Y"/>
                                                     <constraint firstAttribute="centerY" secondItem="VVK-jY-Wue" secondAttribute="centerY" id="n1U-e3-n0C"/>
+                                                    <constraint firstAttribute="bottom" secondItem="98S-fQ-zan" secondAttribute="bottom" id="uz2-NY-IQP"/>
                                                     <constraint firstAttribute="bottom" secondItem="nJq-yt-HiK" secondAttribute="bottom" id="we2-dY-5WW"/>
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmU-VB-eLY" customClass="DVBPostPhotoContainerView">
                                                 <rect key="frame" x="244" y="365" width="61" height="61"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6z5-Oj-JM8">
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6z5-Oj-JM8" customClass="DVBPictureToSendPreviewImageView">
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
                                                     </imageView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q4K-gM-aAF" userLabel="Add photo button container">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q4K-gM-aAF" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="19" y="20" width="22" height="22"/>
                                                         <subviews>
-                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="contactAdd" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="815-m3-Nve">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="mxh-fE-7VH" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
-                                                                <state key="normal">
-                                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                                </state>
-                                                                <connections>
-                                                                    <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="DrP-14-EKX"/>
-                                                                </connections>
-                                                            </button>
+                                                            </imageView>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstAttribute="centerY" secondItem="815-m3-Nve" secondAttribute="centerY" id="XsB-cF-aDC"/>
-                                                            <constraint firstAttribute="centerX" secondItem="815-m3-Nve" secondAttribute="centerX" id="bm0-sv-e8o"/>
+                                                            <constraint firstItem="mxh-fE-7VH" firstAttribute="leading" secondItem="q4K-gM-aAF" secondAttribute="leading" id="5WA-0q-3mG"/>
+                                                            <constraint firstItem="mxh-fE-7VH" firstAttribute="top" secondItem="q4K-gM-aAF" secondAttribute="top" id="ClE-8E-0Mz"/>
+                                                            <constraint firstAttribute="trailing" secondItem="mxh-fE-7VH" secondAttribute="trailing" id="If5-tC-KLq"/>
                                                             <constraint firstAttribute="height" constant="22" id="rSx-iT-kyl"/>
                                                             <constraint firstAttribute="width" constant="22" id="sTO-hw-vDr"/>
+                                                            <constraint firstAttribute="bottom" secondItem="mxh-fE-7VH" secondAttribute="bottom" id="tom-Hl-udg"/>
                                                         </constraints>
                                                     </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="815-m3-Nve">
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
+                                                        <connections>
+                                                            <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="DrP-14-EKX"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
+                                                    <constraint firstItem="815-m3-Nve" firstAttribute="leading" secondItem="lmU-VB-eLY" secondAttribute="leading" id="7go-7f-yNS"/>
                                                     <constraint firstAttribute="centerX" secondItem="q4K-gM-aAF" secondAttribute="centerX" id="GlQ-vW-pAL"/>
+                                                    <constraint firstAttribute="trailing" secondItem="815-m3-Nve" secondAttribute="trailing" id="KcG-10-Fvv"/>
                                                     <constraint firstAttribute="bottom" secondItem="6z5-Oj-JM8" secondAttribute="bottom" id="ONE-b4-3jP"/>
                                                     <constraint firstItem="6z5-Oj-JM8" firstAttribute="top" secondItem="lmU-VB-eLY" secondAttribute="top" id="RVg-uK-kgw"/>
                                                     <constraint firstItem="6z5-Oj-JM8" firstAttribute="leading" secondItem="lmU-VB-eLY" secondAttribute="leading" id="Rmn-bc-Fao"/>
                                                     <constraint firstAttribute="centerY" secondItem="q4K-gM-aAF" secondAttribute="centerY" id="VmD-26-EES"/>
+                                                    <constraint firstItem="815-m3-Nve" firstAttribute="top" secondItem="lmU-VB-eLY" secondAttribute="top" id="XPs-mw-qVG"/>
                                                     <constraint firstAttribute="trailing" secondItem="6z5-Oj-JM8" secondAttribute="trailing" id="aGv-gf-alS"/>
+                                                    <constraint firstAttribute="bottom" secondItem="815-m3-Nve" secondAttribute="bottom" id="kpR-kQ-KBY"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -1130,6 +1154,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AddImage" width="22" height="22"/>
         <image name="AnswerToPost" width="22" height="22"/>
         <image name="AnswerToPostWithQuote" width="22" height="22"/>
         <image name="Bottompage" width="22" height="22"/>
@@ -1140,8 +1165,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="XRT-4w-L0S"/>
         <segue reference="Iwy-TH-KYT"/>
-        <segue reference="Xk9-pa-bWO"/>
+        <segue reference="XRT-4w-L0S"/>
+        <segue reference="o55-Sb-BOJ"/>
     </inferredMetricsTieBreakers>
 </document>

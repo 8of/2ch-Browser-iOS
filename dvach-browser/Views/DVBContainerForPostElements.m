@@ -11,6 +11,8 @@
 #import "DVBConstants.h"
 #import "DVBContainerForPostElements.h"
 
+static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
+
 @interface DVBContainerForPostElements () <UITextViewDelegate>
 
 // UI elements
@@ -224,32 +226,47 @@
 
 #pragma mark - Upload/Delete button Animation
 
-- (void)changeUploadButtonToDeleteWithButton:(UIButton *)button
+- (void)changeUploadViewToDeleteView:(UIView *)view andsetImage:(UIImage *)image forImageView:(UIImageView *)imageView
 {
-    button.layer.cornerRadius = 11.0f;
-
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.3f
+    // animate plus
+    [UIView animateWithDuration:IMAGE_CHANGE_ANIMATE_TIME
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [button setTransform:CGAffineTransformRotate(button.transform, M_PI/4)];
-                         button.backgroundColor = [UIColor redColor];
+                         [view setTransform:CGAffineTransformRotate(view.transform, M_PI/4)];
+                         view.backgroundColor = [UIColor redColor];
                      } completion:nil];
+
+    // animate image change
+    [UIView transitionWithView:imageView
+                      duration:IMAGE_CHANGE_ANIMATE_TIME
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        imageView.image = image;
+                    } completion:NULL];
 }
 
-- (void)changeUploadButtonToUploadWithButton:(UIButton *)button
+- (void)changeDeleteViewToUploadView:(UIView *)view andClearImageView:(UIImageView *)imageView
 {
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.3f
+    // animate plus
+    [UIView animateWithDuration:IMAGE_CHANGE_ANIMATE_TIME
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [button setTransform:CGAffineTransformRotate(button.transform, -M_PI/4)];
-                         button.backgroundColor = [UIColor clearColor];
+                         [view setTransform:CGAffineTransformRotate(view.transform, -M_PI/4)];
+                         view.backgroundColor = [UIColor clearColor];
                      } completion:nil];
+    // animate image change
+    [UIView transitionWithView:imageView
+                      duration:IMAGE_CHANGE_ANIMATE_TIME
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        imageView.image = nil;
+                    } completion:NULL];
 }
 
 @end
