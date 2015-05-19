@@ -30,14 +30,16 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  *  border - 1 more
  *  just in case I added 5 more :)
  */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
+static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 
 @interface DVBThreadControllerTableViewManager ()
 
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
-//@property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
+
+// Constraints for table height calculations
+
 
 @end
 
@@ -154,7 +156,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         NSAttributedString *text = [self getTextAtIndex:indexPath];
 
         // Getting the width/height needed by the dynamic text view.
-
         CGSize viewSize = _threadViewController.tableView.bounds.size;
         NSInteger viewWidth = viewSize.width;
 
@@ -189,9 +190,12 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         }
 
         // Should not return values greater than 2009
+        // turn off this because sometimes we have REALLY long posts
+        /*
         if (heightForReturnWithCorrectionAndCeilf > 2008) {
             return 2008;
         }
+         */
 
         return heightForReturnWithCorrectionAndCeilf;
     }
