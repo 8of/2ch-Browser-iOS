@@ -719,7 +719,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
-                                <rect key="frame" x="0.0" y="64" width="320" height="486"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="530"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="706"/>
@@ -893,7 +893,7 @@
                                                             <constraint firstAttribute="trailing" secondItem="4QQ-eS-dGg" secondAttribute="trailing" id="wmB-Cz-5ov"/>
                                                         </constraints>
                                                     </view>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
+                                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="V5j-q0-zXo"/>
@@ -936,7 +936,7 @@
                                                             <constraint firstAttribute="height" constant="22" id="sCP-RJ-Y0E"/>
                                                         </constraints>
                                                     </view>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVa-tw-g8m">
+                                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xVa-tw-g8m">
                                                         <rect key="frame" x="0.0" y="0.0" width="62" height="61"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="n5y-sr-3U4"/>
@@ -978,7 +978,7 @@
                                                             <constraint firstItem="6OX-mh-Sjj" firstAttribute="top" secondItem="VVK-jY-Wue" secondAttribute="top" id="yFz-KM-eqK"/>
                                                         </constraints>
                                                     </view>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
+                                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="OgD-qp-kHZ"/>
