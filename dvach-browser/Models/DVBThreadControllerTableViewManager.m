@@ -312,4 +312,28 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
     }
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (!_threadViewController.answersToPost) {
+        [_threadViewController.navigationController setToolbarHidden:YES
+                                                            animated:YES];
+    }
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!_threadViewController.answersToPost) {
+        [_threadViewController.navigationController setToolbarHidden:NO
+                                                        animated:YES];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (!_threadViewController.answersToPost) {
+        [_threadViewController.navigationController setToolbarHidden:NO
+                                                        animated:YES];
+    }
+}
+
 @end

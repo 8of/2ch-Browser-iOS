@@ -494,8 +494,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
 
         if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-
-            [NSTimer scheduledTimerWithTimeInterval:0.7
+            [NSTimer scheduledTimerWithTimeInterval:1.0
                                              target:self
                                            selector:@selector(scrollToBottom)
                                            userInfo:nil
