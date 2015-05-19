@@ -10,11 +10,4 @@
 
 @implementation DVBAddPhotoIconImageView
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    self.image = [self.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [self setTintColor:[UIColor whiteColor]];
-}
-
 @end
