@@ -15,7 +15,7 @@
 #import "DVBActionsForPostTableViewCell.h"
 
 // Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 80.0f; // top up by 5 = 4 - magic number and 1 - border
+static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
 
@@ -28,7 +28,6 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
  *  Correction height because of:
  *  constraint from text to top - 10
  *  border - 1 more
- *  just in case I added 5 more :)
  */
 static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 
@@ -37,9 +36,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
 
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
-
-// Constraints for table height calculations
-
 
 @end
 
