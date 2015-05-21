@@ -142,7 +142,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
             }
             else if (!_wrongBoardAlertAlreadyPresentedOnce) {
                 // Update only if we have something to show
-                [self.navigationItem stopAnimating];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
 
@@ -151,6 +150,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
                     }
+
+                    [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                     target:self
+                                                   selector:@selector(stopAnimateLoading)
+                                                   userInfo:nil
+                                                    repeats:NO];
                 });
             }
         }];
@@ -236,7 +241,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
-            [self.navigationItem stopAnimating];
+
+            [NSTimer scheduledTimerWithTimeInterval:0.5
+                                             target:self
+                                           selector:@selector(stopAnimateLoading)
+                                           userInfo:nil
+                                            repeats:NO];
         });
     }];
 }
@@ -343,6 +353,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 
     return [super respondsToSelector:selector];
+}
+
+#pragma mark - loading stopper
+
+- (void)stopAnimateLoading
+{
+    [self.navigationItem stopAnimating];
 }
 
 @end
