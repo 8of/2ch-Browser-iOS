@@ -11,6 +11,7 @@
 @implementation DVBThreadsScrollPositionManager
 
 @synthesize threads;
+@synthesize threadPostCounts;
 
 + (id)sharedThreads
 {
@@ -27,6 +28,9 @@
     if (self = [super init]) {
         if (!self.threads) {
             self.threads = [@{} mutableCopy];
+        }
+        if (!self.threadPostCounts) {
+            self.threadPostCounts = [@{} mutableCopy];
         }
     }
     return self;

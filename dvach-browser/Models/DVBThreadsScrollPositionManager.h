@@ -11,10 +11,13 @@
 @interface DVBThreadsScrollPositionManager : NSObject
 {
     NSMutableDictionary *threads;
+    NSMutableDictionary *threadPostCounts;
 }
 
 /// Dicitonary with keys - thread numbers and values - NSNUmbers
 @property (nonatomic, strong) NSMutableDictionary *threads;
+/// Dicitonary with keys - thread numbers and values - NSNUmbers - post count in specific thread
+@property (nonatomic, strong) NSMutableDictionary *threadPostCounts;
 
 + (id)sharedThreads;
 
