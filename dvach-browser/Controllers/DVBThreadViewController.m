@@ -38,6 +38,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, strong) UIActionSheet *reportSheet;
 @property (nonatomic, assign) NSUInteger updatedTimes;
 @property (nonatomic, assign) BOOL presentedSomething;
+/// New posts count added with last thread update
+@property (nonatomic, strong) NSNumber *previousPostsCount;
 
 @end
 
@@ -147,6 +149,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             NSNumber *initialScrollValue = [NSNumber numberWithFloat:self.tableView.contentOffset.y];
             [_threadsScrollPositionManager.threads setValue:initialScrollValue
                                                      forKey:_threadNum];
+        }
+
+        if (_threadsScrollPositionManager.threadPostCounts[_threadNum]) {
+            _previousPostsCount = _threadsScrollPositionManager.threadPostCounts[_threadNum];
+        }
+        else {
+            _previousPostsCount = 0;
         }
 
         [self makeRefreshAvailable];
@@ -274,8 +283,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             _threadControllerTableViewManager.postsArray = postsArrayBlock;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
-                [self.navigationItem stopAnimating];
                 [self.refreshControl endRefreshing];
+                [self checkNewPostsCount];
             });
         }];
     }
@@ -522,6 +531,52 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:2.0];
+}
+
+#pragma mark - New posts count handling
+
+/// Check if server have new posts and scroll if user already scrolled to the end
+- (void)checkNewPostsCount
+{
+    NSInteger additionalPostCount = [_threadControllerTableViewManager.postsArray count] - [_previousPostsCount integerValue];
+
+    CGFloat stopAnimateTimerInterval = 0.5;
+
+    if (([_previousPostsCount integerValue] > 0) && (additionalPostCount > 0)) {
+        self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)additionalPostCount, @"новых"];
+        [self performSelector:@selector(clearPrompt)
+                   withObject:nil
+                   afterDelay:1.5];
+
+        // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
+        CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+        if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+            [NSTimer scheduledTimerWithTimeInterval:2.0
+                                             target:self
+                                           selector:@selector(scrollToBottom)
+                                           userInfo:nil
+                                            repeats:NO];
+        }
+
+        stopAnimateTimerInterval = 2.0;
+    }
+
+    NSNumber *postsCountNewValue = [NSNumber numberWithInteger:[_threadControllerTableViewManager.postsArray count]];
+
+    _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
+    _previousPostsCount = postsCountNewValue;
+
+    [NSTimer scheduledTimerWithTimeInterval:stopAnimateTimerInterval
+                                     target:self
+                                   selector:@selector(stopAnimateLoading)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+- (void)stopAnimateLoading
+{
+    [self.navigationItem stopAnimating];
 }
 
 @end
