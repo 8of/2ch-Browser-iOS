@@ -19,6 +19,7 @@
 static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f; // +5 because of bold font problem
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 43.0f;
+static CGFloat const ADDITIONAL_HEIGHT_FOR_IPAD = 40.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
@@ -59,6 +60,9 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
         // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
         if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
             _threadViewController.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                _threadViewController.tableView.estimatedRowHeight = ADDITIONAL_HEIGHT_FOR_IPAD;
+            }
         }
     }
 
@@ -147,7 +151,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
         return titleCellHeight;
     }
     else if (([post.thumbPathesArray count] > 1)&&(row == 1)) { // If post have more than one thumbnail and this is first row
-        return ROW_MEDIA_DEFAULT_HEIGHT;
+        CGFloat realRowMediaHeight = ROW_MEDIA_DEFAULT_HEIGHT;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            realRowMediaHeight = realRowMediaHeight + ADDITIONAL_HEIGHT_FOR_IPAD;
+        }
+        return realRowMediaHeight;
     }
     else if (([post.thumbPathesArray count] > 1)&&(row == 3)) { // If post have more than one thumbnail and this is third row
         return ROW_ACTIONS_DEFAULT_HEIGHT;
@@ -184,13 +192,19 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 
         CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
 
-        if (heightToReturn < ROW_DEFAULT_HEIGHT) {
+        CGFloat minimumTextRowHeightToCompareTo = ROW_DEFAULT_HEIGHT;
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            minimumTextRowHeightToCompareTo = ROW_DEFAULT_HEIGHT + ADDITIONAL_HEIGHT_FOR_IPAD;
+        }
+
+        if (heightToReturn < minimumTextRowHeightToCompareTo) {
 
             if ([thumbPath isEqualToString:@""]) {
                 return heightForReturnWithCorrectionAndCeilf;
             }
 
-            return (ROW_DEFAULT_HEIGHT + 6);
+            return (minimumTextRowHeightToCompareTo + 6);
         }
 
         return heightForReturnWithCorrectionAndCeilf;
