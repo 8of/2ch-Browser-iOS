@@ -385,6 +385,9 @@
                                             <subviews>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lpn-uM-1j2">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                 </imageView>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="aSZ-GX-JPn" customClass="DVBWebmIconImageView">
                                                     <rect key="frame" x="18" y="18" width="30" height="30"/>
@@ -392,12 +395,18 @@
                                                         <constraint firstAttribute="height" constant="30" id="PIn-eg-wiE"/>
                                                         <constraint firstAttribute="width" constant="30" id="S9a-mt-7R2"/>
                                                     </constraints>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="18" y="36" width="30" height="30"/>
+                                                    </variation>
                                                 </imageView>
                                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Fk-dz-XeM">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
                                                     <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                     <connections>
                                                         <action selector="touchFirstPicture:" destination="egL-u1-lAb" eventType="touchUpInside" id="MLX-3n-JEU"/>
                                                     </connections>
@@ -405,12 +414,14 @@
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
+                                                <constraint firstAttribute="width" constant="100" id="0fx-ZI-UBJ"/>
                                                 <constraint firstAttribute="width" constant="65" id="2IE-so-tmR"/>
                                                 <constraint firstAttribute="bottom" secondItem="7Fk-dz-XeM" secondAttribute="bottom" id="4P2-ga-cnG"/>
                                                 <constraint firstAttribute="height" constant="65" id="IMw-nD-GHB"/>
                                                 <constraint firstAttribute="centerY" secondItem="aSZ-GX-JPn" secondAttribute="centerY" id="Lce-u8-NQW"/>
                                                 <constraint firstAttribute="trailing" secondItem="7Fk-dz-XeM" secondAttribute="trailing" id="MAu-IE-p3z"/>
                                                 <constraint firstItem="7Fk-dz-XeM" firstAttribute="top" secondItem="pxj-D5-eE9" secondAttribute="top" id="VFZ-EM-sNW"/>
+                                                <constraint firstAttribute="height" constant="100" id="Vnl-P8-8gi"/>
                                                 <constraint firstAttribute="trailing" secondItem="lpn-uM-1j2" secondAttribute="trailing" id="ZiM-KU-4gn"/>
                                                 <constraint firstAttribute="centerX" secondItem="aSZ-GX-JPn" secondAttribute="centerX" id="tNQ-e3-6Jp"/>
                                                 <constraint firstItem="lpn-uM-1j2" firstAttribute="leading" secondItem="pxj-D5-eE9" secondAttribute="leading" id="ueS-br-r4s"/>
@@ -418,12 +429,30 @@
                                                 <constraint firstAttribute="bottom" secondItem="lpn-uM-1j2" secondAttribute="bottom" id="xWI-DO-U1G"/>
                                                 <constraint firstItem="7Fk-dz-XeM" firstAttribute="leading" secondItem="pxj-D5-eE9" secondAttribute="leading" id="zMA-TR-5gb"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="0fx-ZI-UBJ"/>
+                                                    <exclude reference="Vnl-P8-8gi"/>
+                                                </mask>
+                                            </variation>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="10" y="10" width="65" height="100"/>
+                                                <mask key="constraints">
+                                                    <include reference="0fx-ZI-UBJ"/>
+                                                    <exclude reference="2IE-so-tmR"/>
+                                                    <exclude reference="IMw-nD-GHB"/>
+                                                    <include reference="Vnl-P8-8gi"/>
+                                                </mask>
+                                            </variation>
                                         </view>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FMZ-3r-xwQ" userLabel="Media Container View">
                                             <rect key="frame" x="85" y="10" width="65" height="65"/>
                                             <subviews>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Xv-D6-k0d">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                 </imageView>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="qGI-vc-tTu" customClass="DVBWebmIconImageView">
                                                     <rect key="frame" x="18" y="18" width="30" height="30"/>
@@ -431,12 +460,18 @@
                                                         <constraint firstAttribute="height" constant="30" id="BeW-fJ-oPz"/>
                                                         <constraint firstAttribute="width" constant="30" id="WQi-AS-jic"/>
                                                     </constraints>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="18" y="36" width="30" height="30"/>
+                                                    </variation>
                                                 </imageView>
                                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m6p-Iu-csY">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
                                                     <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                     <connections>
                                                         <action selector="touchSecondPicture:" destination="egL-u1-lAb" eventType="touchUpInside" id="KSx-Nc-BSn"/>
                                                     </connections>
@@ -455,12 +490,18 @@
                                                 <constraint firstItem="0Xv-D6-k0d" firstAttribute="top" secondItem="FMZ-3r-xwQ" secondAttribute="top" id="wzZ-kX-0sR"/>
                                                 <constraint firstAttribute="centerX" secondItem="qGI-vc-tTu" secondAttribute="centerX" id="xUz-Wh-oUG"/>
                                             </constraints>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="85" y="10" width="65" height="100"/>
+                                            </variation>
                                         </view>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T6f-1R-oq5" userLabel="Media Container View">
                                             <rect key="frame" x="160" y="10" width="65" height="65"/>
                                             <subviews>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5wO-31-4JI">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                 </imageView>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="7hY-vA-2Cz" customClass="DVBWebmIconImageView">
                                                     <rect key="frame" x="18" y="18" width="30" height="30"/>
@@ -468,12 +509,18 @@
                                                         <constraint firstAttribute="width" constant="30" id="Ebt-W6-4Dx"/>
                                                         <constraint firstAttribute="height" constant="30" id="mka-CF-oZA"/>
                                                     </constraints>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="18" y="36" width="30" height="30"/>
+                                                    </variation>
                                                 </imageView>
                                                 <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c9G-NJ-m8U">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
                                                     <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                     <connections>
                                                         <action selector="touchThirdPicture:" destination="egL-u1-lAb" eventType="touchUpInside" id="j6j-QL-xwR"/>
                                                     </connections>
@@ -492,12 +539,18 @@
                                                 <constraint firstAttribute="centerY" secondItem="7hY-vA-2Cz" secondAttribute="centerY" id="ktb-dp-r3S"/>
                                                 <constraint firstAttribute="bottom" secondItem="c9G-NJ-m8U" secondAttribute="bottom" id="n13-7c-djx"/>
                                             </constraints>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="160" y="10" width="65" height="100"/>
+                                            </variation>
                                         </view>
                                         <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T1m-nR-C5c" userLabel="Media Container View">
                                             <rect key="frame" x="235" y="10" width="65" height="65"/>
                                             <subviews>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="5pf-To-eyt">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                 </imageView>
                                                 <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="yW8-9Q-Q3f" customClass="DVBWebmIconImageView">
                                                     <rect key="frame" x="18" y="18" width="30" height="30"/>
@@ -505,12 +558,18 @@
                                                         <constraint firstAttribute="height" constant="30" id="Bov-4b-XA4"/>
                                                         <constraint firstAttribute="width" constant="30" id="u99-h4-A7A"/>
                                                     </constraints>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="18" y="36" width="30" height="30"/>
+                                                    </variation>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mWv-Hx-2X2">
                                                     <rect key="frame" x="0.0" y="0.0" width="65" height="65"/>
                                                     <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="65" height="100"/>
+                                                    </variation>
                                                     <connections>
                                                         <action selector="touchFourthPicture:" destination="egL-u1-lAb" eventType="touchUpInside" id="Bgb-vv-Xxc"/>
                                                     </connections>
@@ -529,6 +588,9 @@
                                                 <constraint firstItem="mWv-Hx-2X2" firstAttribute="leading" secondItem="T1m-nR-C5c" secondAttribute="leading" id="ipe-SP-otU"/>
                                                 <constraint firstAttribute="centerX" secondItem="yW8-9Q-Q3f" secondAttribute="centerX" id="lwo-Dc-1yr"/>
                                             </constraints>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="235" y="10" width="65" height="100"/>
+                                            </variation>
                                         </view>
                                     </subviews>
                                     <constraints>
@@ -578,8 +640,25 @@
                                             <rect key="frame" x="10" y="10" width="65" height="65"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="65" id="BBN-af-gX6"/>
+                                                <constraint firstAttribute="height" constant="100" id="BSi-1c-XbN"/>
+                                                <constraint firstAttribute="width" constant="100" id="C8I-EZ-43G"/>
                                                 <constraint firstAttribute="height" constant="65" id="OGr-6H-kGh"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="BSi-1c-XbN"/>
+                                                    <exclude reference="C8I-EZ-43G"/>
+                                                </mask>
+                                            </variation>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="10" y="10" width="100" height="65"/>
+                                                <mask key="constraints">
+                                                    <exclude reference="BBN-af-gX6"/>
+                                                    <include reference="BSi-1c-XbN"/>
+                                                    <include reference="C8I-EZ-43G"/>
+                                                    <exclude reference="OGr-6H-kGh"/>
+                                                </mask>
+                                            </variation>
                                         </imageView>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="yH4-O5-Yl8" customClass="DVBWebmIconImageView">
                                             <rect key="frame" x="28" y="28" width="30" height="30"/>
@@ -587,12 +666,18 @@
                                                 <constraint firstAttribute="height" constant="30" id="0Oy-4z-DNy"/>
                                                 <constraint firstAttribute="width" constant="30" id="heg-3M-hoz"/>
                                             </constraints>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="46" y="28" width="30" height="30"/>
+                                            </variation>
                                         </imageView>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGQ-tC-pT5" userLabel="Show gallery">
                                             <rect key="frame" x="10" y="10" width="65" height="65"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                                <rect key="frame" x="10" y="10" width="100" height="65"/>
+                                            </variation>
                                             <connections>
                                                 <action selector="touchFirstPicture:" destination="BNP-kc-CNb" eventType="touchUpInside" id="b0f-Lg-s4H"/>
                                             </connections>
@@ -618,8 +703,10 @@
                                 <connections>
                                     <outlet property="commentTextView" destination="M3z-Su-Ix2" id="Ure-zX-opp"/>
                                     <outlet property="imageHeightConstraint" destination="OGr-6H-kGh" id="uwZ-CL-OoB"/>
+                                    <outlet property="imageHeightConstraintIPAD" destination="BSi-1c-XbN" id="80z-vO-y6a"/>
                                     <outlet property="imageLeftConstraint" destination="K4S-vg-FxB" id="05S-Pw-2tT"/>
                                     <outlet property="imageWidthConstraint" destination="BBN-af-gX6" id="DBX-GP-T2i"/>
+                                    <outlet property="imageWidthConstraintIPAD" destination="C8I-EZ-43G" id="W9C-Zb-IPc"/>
                                     <outlet property="postThumb" destination="jQY-pz-yxx" id="4OM-rw-ETE"/>
                                     <outlet property="videoiconHeightContstraint" destination="0Oy-4z-DNy" id="v9C-gH-9Rd"/>
                                     <outlet property="videoiconWidthContstraint" destination="heg-3M-hoz" id="fY4-Mq-cHn"/>
@@ -1112,7 +1199,7 @@
                                             <constraint firstItem="j1y-7G-FSY" firstAttribute="height" secondItem="hgX-62-n6a" secondAttribute="height" id="wDq-ec-3JF"/>
                                             <constraint firstAttribute="trailing" secondItem="lmU-VB-eLY" secondAttribute="trailing" constant="15" id="xHh-tN-2g3"/>
                                         </constraints>
-                                        <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
+                                        <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="441"/>
                                             <mask key="constraints">
                                                 <exclude reference="oNd-hF-hQ2"/>
@@ -1199,8 +1286,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="yeg-8I-aPr"/>
-        <segue reference="o55-Sb-BOJ"/>
         <segue reference="Iwy-TH-KYT"/>
+        <segue reference="yeg-8I-aPr"/>
+        <segue reference="Xk9-pa-bWO"/>
     </inferredMetricsTieBreakers>
 </document>
