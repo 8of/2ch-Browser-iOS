@@ -71,20 +71,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 {
     return [_postsArray count];
 }
-/*
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    DVBPost *postTmpObj = _postsArray[section];
-    NSString *date = postTmpObj.date;
 
-    // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
-    NSInteger postNumToShow = section + 1;
-
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld  %@", (long)postNumToShow, date];
-
-    return sectionTitle;
-}
-*/
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     DVBPost *post = _postsArray[section];
@@ -206,27 +193,11 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
             return (ROW_DEFAULT_HEIGHT + 6);
         }
 
-        // Should not return values greater than 2009
-        // turn off this because sometimes we have REALLY long posts
-        /*
-        if (heightForReturnWithCorrectionAndCeilf > 2008) {
-            return 2008;
-        }
-         */
-
         return heightForReturnWithCorrectionAndCeilf;
     }
     
     return 0;
 }
-
-// We do not need this because othervise scroll bottom and then to top will be 'jumpy'
-/*
- - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- return UITableViewAutomaticDimension;
- }
- */
 
 #pragma mark - Cell configuration and calculation
 
