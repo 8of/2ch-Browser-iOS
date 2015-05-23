@@ -242,6 +242,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
         threadViewController.allThreadPosts = _threadControllerTableViewManager.postsArray;
     }
+    _presentedSomething = YES;
 
     [self.navigationController pushViewController:threadViewController
                                          animated:YES];
