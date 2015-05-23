@@ -41,28 +41,60 @@
                             </connections>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="boardEntryCell" textLabel="ufO-dA-3ij" detailTextLabel="rko-Sx-hLa" style="IBUITableViewCellStyleSubtitle" id="HNc-61-slu" customClass="DVBBoardTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="boardEntryCell" id="HNc-61-slu" customClass="DVBBoardTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HNc-61-slu" id="9Zm-Cq-lXa">
+                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HNc-61-slu" id="9Zm-Cq-lXa">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ufO-dA-3ij">
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rko-Sx-hLa">
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rn4-By-Zxq" userLabel="TitleView">
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="22"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLZ-GI-F81">
+                                                    <rect key="frame" x="15" y="1" width="272" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="fLZ-GI-F81" secondAttribute="trailing" id="nlr-Do-onw"/>
+                                                <constraint firstAttribute="bottom" secondItem="fLZ-GI-F81" secondAttribute="bottom" id="uC2-pm-sFH"/>
+                                                <constraint firstItem="fLZ-GI-F81" firstAttribute="leading" secondItem="rn4-By-Zxq" secondAttribute="leading" constant="15" id="zBM-0J-wjX"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tZZ-MF-9OI" userLabel="Subtitle View">
+                                            <rect key="frame" x="0.0" y="22" width="287" height="21"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuO-9F-NvY">
+                                                    <rect key="frame" x="15" y="0.0" width="272" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="cuO-9F-NvY" firstAttribute="top" secondItem="tZZ-MF-9OI" secondAttribute="top" id="ZbR-FN-3RL"/>
+                                                <constraint firstAttribute="trailing" secondItem="cuO-9F-NvY" secondAttribute="trailing" id="eGN-Wa-caf"/>
+                                                <constraint firstItem="cuO-9F-NvY" firstAttribute="leading" secondItem="tZZ-MF-9OI" secondAttribute="leading" constant="15" id="hp6-pY-5rT"/>
+                                            </constraints>
+                                        </view>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="tZZ-MF-9OI" firstAttribute="leading" secondItem="9Zm-Cq-lXa" secondAttribute="leading" id="2KY-jd-uWI"/>
+                                        <constraint firstAttribute="bottom" secondItem="tZZ-MF-9OI" secondAttribute="bottom" id="BGs-iG-9LB"/>
+                                        <constraint firstItem="rn4-By-Zxq" firstAttribute="top" secondItem="9Zm-Cq-lXa" secondAttribute="top" id="H4D-e8-yB2"/>
+                                        <constraint firstItem="tZZ-MF-9OI" firstAttribute="top" secondItem="rn4-By-Zxq" secondAttribute="bottom" id="Ox0-5V-RMa"/>
+                                        <constraint firstAttribute="trailing" secondItem="tZZ-MF-9OI" secondAttribute="trailing" id="QXc-xB-eAA"/>
+                                        <constraint firstAttribute="trailing" secondItem="rn4-By-Zxq" secondAttribute="trailing" id="fzf-cz-1Nn"/>
+                                        <constraint firstItem="rn4-By-Zxq" firstAttribute="leading" secondItem="9Zm-Cq-lXa" secondAttribute="leading" id="jWR-cR-SoI"/>
+                                        <constraint firstItem="rn4-By-Zxq" firstAttribute="height" secondItem="tZZ-MF-9OI" secondAttribute="height" id="kYs-2e-sXc"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="subtitle" destination="rko-Sx-hLa" id="fzV-GV-I5A"/>
-                                    <outlet property="title" destination="ufO-dA-3ij" id="bLd-lB-SDb"/>
+                                    <outlet property="subtitle" destination="cuO-9F-NvY" id="3ni-xU-g0Y"/>
+                                    <outlet property="title" destination="fLZ-GI-F81" id="Ca9-pv-uYg"/>
                                     <segue destination="js8-qz-HcM" kind="show" identifier="segueToBoard" id="xwW-TO-L0b"/>
                                 </connections>
                             </tableViewCell>
@@ -1286,8 +1318,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Iwy-TH-KYT"/>
-        <segue reference="yeg-8I-aPr"/>
         <segue reference="Xk9-pa-bWO"/>
+        <segue reference="xwW-TO-L0b"/>
+        <segue reference="yeg-8I-aPr"/>
     </inferredMetricsTieBreakers>
 </document>

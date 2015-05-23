@@ -145,13 +145,13 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         
         // Set board id and pages count for future board/thread requests.
         boardViewController.boardCode = boardId;
-        // boardViewController.pages = pages;
     }
 }
 
 #pragma mark - Settings
 
-- (IBAction)openSettingsApp:(id)sender {
+- (IBAction)openSettingsApp:(id)sender
+{
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
