@@ -22,13 +22,17 @@
 @property (nonatomic) IBOutlet UIImageView *postThumb;
 
 // Constraints - image
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageLeftConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidthConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageHeightConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageLeftConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageWidthConstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageHeightConstraint;
+
+// Constraints - image - additional for iPad
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageWidthConstraintIPAD;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageHeightConstraintIPAD;
 
 // Constraints - video-icon
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
 
 // Constraint storages of initial values
 @property (nonatomic, assign) CGFloat imageLeftConstraintStorage;
@@ -47,8 +51,16 @@
     
     _commentTextView.delegate = self;
     _imageLeftConstraintStorage = _imageLeftConstraint.constant;
-    _imageWidthConstraintStorage = _imageWidthConstraint.constant;
-    _imageHeightConstraintStorage = _imageHeightConstraint.constant;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        _imageWidthConstraintStorage = _imageWidthConstraintIPAD.constant;
+        _imageHeightConstraintStorage = _imageHeightConstraintIPAD.constant;
+    }
+    else {
+        _imageWidthConstraintStorage = _imageWidthConstraint.constant;
+        _imageHeightConstraintStorage = _imageHeightConstraint.constant;
+    }
+
     _videoiconWidthContstraintStorage = _videoiconWidthContstraint.constant;
     _videoiconHeightContstraintStorage = _videoiconHeightContstraint.constant;
 
@@ -89,8 +101,15 @@
 {
     if (!isImagePresent) {
         _imageLeftConstraint.constant = 0;
-        _imageWidthConstraint.constant = 0;
-        _imageHeightConstraint.constant = 0;
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            _imageWidthConstraintIPAD.constant = 0;
+            _imageHeightConstraintIPAD.constant = 0;
+        }
+        else {
+            _imageWidthConstraint.constant = 0;
+            _imageHeightConstraint.constant = 0;
+        }
         _isPostHaveImage = NO;
     }
 
@@ -117,7 +136,8 @@
     return YES;
 }
 
-- (void)prepareForReuse {
+- (void)prepareForReuse
+{
     [super prepareForReuse];
     
     _commentTextView.text = nil;
@@ -126,8 +146,16 @@
     [_postThumb setImage:nil];
     
     _imageLeftConstraint.constant = _imageLeftConstraintStorage;
-    _imageWidthConstraint.constant = _imageWidthConstraintStorage;
-    _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        _imageWidthConstraintIPAD.constant = _imageWidthConstraintStorage;
+        _imageHeightConstraintIPAD.constant = _imageHeightConstraintStorage;
+    }
+    else {
+        _imageWidthConstraint.constant = _imageWidthConstraintStorage;
+        _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+    }
+
     _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
     _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
     _isPostHaveImage = YES;
