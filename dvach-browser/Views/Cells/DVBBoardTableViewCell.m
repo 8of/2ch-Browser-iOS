@@ -17,6 +17,14 @@
 
 @implementation DVBBoardTableViewCell
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+
+    _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -33,7 +41,6 @@
     if (boardId && isBoardIdNotEmpty) {
         _title.text = boardId;
     }
-    _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
 
     // need additional checkup - or subtitle won't update itself on change
     _subtitle.text = @" ";
@@ -41,13 +48,6 @@
     if (name && isNameNotEmpty) {
         _subtitle.text = name;
     }
-    _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [self.contentView layoutIfNeeded];
 }
 
 - (void)prepareForReuse
