@@ -17,9 +17,18 @@
 // Show answer to post button
 @property (nonatomic, weak) IBOutlet UIButton *answerButton;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *separatorHeight;
+
 @end
 
 @implementation DVBActionsForPostTableViewCell
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+
+    _separatorHeight.constant = 0.5f;
+}
 
 - (void)prepareCellWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton
 {

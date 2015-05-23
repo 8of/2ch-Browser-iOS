@@ -10,14 +10,15 @@
 #import "DVBPost.h"
 #import "DVBThreadControllerTableViewManager.h"
 
-#import "DVBMediaForPostTableViewCell.h"
 #import "DVBPostTableViewCell.h"
+#import "DVBTitleForPostTableViewCell.h"
+#import "DVBMediaForPostTableViewCell.h"
 #import "DVBActionsForPostTableViewCell.h"
 
 // Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 80.0f; // +5 because of bold font problem
+static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f; // +5 because of bold font problem
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
+static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 43.0f;
 
 // thumbnail width in post row
 static CGFloat const THUMBNAIL_WIDTH = 65.f;
@@ -70,7 +71,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 {
     return [_postsArray count];
 }
-
+/*
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     DVBPost *postTmpObj = _postsArray[section];
@@ -83,17 +84,17 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 
     return sectionTitle;
 }
-
+*/
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     DVBPost *post = _postsArray[section];
 
     // If post have more than one thumbnail
     if ([post.thumbPathesArray count] > 1) {
-        return 3;
+        return 4;
     }
 
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -102,21 +103,28 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
     DVBPost *post = _postsArray[indexPath.section];
     NSUInteger row = indexPath.row;
 
+    if (row == 0) {
+        cell = (DVBTitleForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_TITLE_IDENTIFIER
+                                                                                forIndexPath:indexPath];
+        [self configureTitleCell:cell
+               forRowAtIndexPath:indexPath];
+    }
+
     // If post have more than one thumbnail...
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
+    else if (([post.thumbPathesArray count] > 1)&&(row == 1)) {
         cell = (DVBMediaForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_MEDIA_IDENTIFIER
                                                                                 forIndexPath:indexPath];
         [self configureMediaCell:cell
                forRowAtIndexPath:indexPath];
 
     }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one
+    else if (([post.thumbPathesArray count] > 1)&&(row == 3)) { // If post have more than one
         cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
                                                                                   forIndexPath:indexPath];
         [self configureActionsCell:cell
                  forRowAtIndexPath:indexPath];
     }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one
+    else if (([post.thumbPathesArray count] < 2)&&(row == 2)) { // If post have only one
         cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
                                                                                   forIndexPath:indexPath];
         [self configureActionsCell:cell
@@ -137,17 +145,30 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
     NSUInteger row = indexPath.row;
     DVBPost *post = _postsArray[indexPath.section];
 
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) { // If post have more than one thumbnail and this is first row
+    if (row == 0) { // title cell
+
+        UIFont *fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+            fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+        }
+
+        CGSize size = [post.num sizeWithAttributes:@{NSFontAttributeName:fontFromSettings}];
+
+        CGFloat titleCellHeight = size.height + HORISONTAL_CONSTRAINT;
+
+        return titleCellHeight;
+    }
+    else if (([post.thumbPathesArray count] > 1)&&(row == 1)) { // If post have more than one thumbnail and this is first row
         return ROW_MEDIA_DEFAULT_HEIGHT;
     }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one thumbnail and this is third row
+    else if (([post.thumbPathesArray count] > 1)&&(row == 3)) { // If post have more than one thumbnail and this is third row
         return ROW_ACTIONS_DEFAULT_HEIGHT;
     }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one thumbnail and this is second row
+    else if (([post.thumbPathesArray count] < 2)&&(row == 2)) { // If post have only one thumbnail and this is second row
         return ROW_ACTIONS_DEFAULT_HEIGHT;
     }
     else {
-
         // Helper method to get the text at a given cell.
         NSAttributedString *text = [self getTextAtIndex:indexPath];
 
@@ -182,7 +203,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
                 return heightForReturnWithCorrectionAndCeilf;
             }
 
-            return (ROW_DEFAULT_HEIGHT + 1);
+            return (ROW_DEFAULT_HEIGHT + 6);
         }
 
         // Should not return values greater than 2009
@@ -226,6 +247,23 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
                        andPostThumbUrlString:thumbUrlString
                         andPostFullUrlString:fullUrlString
                             andShowVideoIcon:showVideoIcon];
+    }
+}
+- (void)configureTitleCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([cell isKindOfClass:[DVBTitleForPostTableViewCell class]]) {
+        DVBTitleForPostTableViewCell *confCell = (DVBTitleForPostTableViewCell *)cell;
+
+        DVBPost *post = _postsArray[indexPath.section];
+        NSString *dateAgo = post.dateAgo;
+        NSString *num = post.num;
+
+        // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
+        NSInteger postNumToShow = indexPath.section + 1;
+
+        NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
+
+        [confCell prepareCellWithTitle:title];
     }
 }
 
@@ -311,5 +349,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
                          objectForKey:_threadViewController.threadNum];
     }
 }
+
 
 @end

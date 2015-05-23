@@ -351,6 +351,29 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="8" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="titleForPostCell" rowHeight="42" id="q0S-YQ-UiY" customClass="DVBTitleForPostTableViewCell">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="q0S-YQ-UiY" id="kPv-C3-uxZ">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rZK-la-iI0">
+                                            <rect key="frame" x="10" y="21" width="300" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="rZK-la-iI0" secondAttribute="trailing" constant="10" id="Pv1-hY-7WK"/>
+                                        <constraint firstItem="rZK-la-iI0" firstAttribute="leading" secondItem="kPv-C3-uxZ" secondAttribute="leading" constant="10" id="Vou-1X-wvk"/>
+                                        <constraint firstAttribute="bottom" secondItem="rZK-la-iI0" secondAttribute="bottom" id="aUp-b4-pAp"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="titleLabel" destination="rZK-la-iI0" id="ty3-Ys-KhR"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="mediaForPostCell" rowHeight="75" id="egL-u1-lAb" customClass="DVBMediaForPostTableViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -602,12 +625,19 @@
                                     <outlet property="videoiconWidthContstraint" destination="heg-3M-hoz" id="fY4-Mq-cHn"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="42" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="43" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ExV-Kj-e3l" id="SKe-Es-YgT">
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
+                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="z1f-VR-Rkw" userLabel="Separator">
+                                            <rect key="frame" x="0.0" y="42" width="320" height="1"/>
+                                            <color key="backgroundColor" red="0.78431372549019607" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="ZsP-H0-d8t"/>
+                                            </constraints>
+                                        </view>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
                                             <rect key="frame" x="0.0" y="10" width="42" height="22"/>
                                             <constraints>
@@ -638,9 +668,12 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="r2q-Xe-K6B" firstAttribute="centerY" secondItem="6Bl-zo-iuC" secondAttribute="centerY" id="7j6-ME-Wc8"/>
+                                        <constraint firstAttribute="trailing" secondItem="z1f-VR-Rkw" secondAttribute="trailing" id="ESf-vP-9R5"/>
                                         <constraint firstItem="r2q-Xe-K6B" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" id="Ge0-zf-0o0"/>
+                                        <constraint firstAttribute="bottom" secondItem="z1f-VR-Rkw" secondAttribute="bottom" id="HYe-VE-3sg"/>
                                         <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="K1g-d0-Jhb"/>
                                         <constraint firstAttribute="trailing" secondItem="6Bl-zo-iuC" secondAttribute="trailing" constant="10" id="TAF-eF-WSa"/>
+                                        <constraint firstItem="z1f-VR-Rkw" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" id="fXZ-up-2JY"/>
                                         <constraint firstItem="r2q-Xe-K6B" firstAttribute="centerY" secondItem="Ozg-qD-Pix" secondAttribute="centerY" id="mQr-gi-fcB"/>
                                         <constraint firstItem="Ozg-qD-Pix" firstAttribute="leading" secondItem="r2q-Xe-K6B" secondAttribute="trailing" id="mXw-aG-iuw"/>
                                     </constraints>
@@ -649,6 +682,7 @@
                                     <outlet property="answerButton" destination="6Bl-zo-iuC" id="cyO-fS-iR7"/>
                                     <outlet property="answerToPostButton" destination="r2q-Xe-K6B" id="E3k-0R-Alg"/>
                                     <outlet property="answerToPostWithQuoteButton" destination="Ozg-qD-Pix" id="Eze-1l-96z"/>
+                                    <outlet property="separatorHeight" destination="ZsP-H0-d8t" id="gPz-m4-mY0"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -718,8 +752,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="550"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
-                                <rect key="frame" x="0.0" y="20" width="320" height="530"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh">
+                                <rect key="frame" x="0.0" y="64" width="320" height="486"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="706"/>
