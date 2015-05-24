@@ -8,8 +8,10 @@
 
 #import <UIImageView+AFNetworking.h>
 
-#import "DVBPostTableViewCell.h"
 #import "DVBConstants.h"
+
+#import "DVBPostTableViewCell.h"
+
 
 @interface DVBPostTableViewCell () <UITextViewDelegate>
 
