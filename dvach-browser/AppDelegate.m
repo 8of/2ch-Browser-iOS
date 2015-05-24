@@ -100,6 +100,12 @@
     [UIActivityIndicatorView appearance].color = DVACH_COLOR;
 
     [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
+
+    if (_enableDarkTheme) {
+        UIView *colorView = [[UIView alloc] init];
+        colorView.backgroundColor = CELL_SEPARATOR_COLOR;
+        [UITableViewCell appearance].selectedBackgroundView = colorView;
+    }
 }
 
 #pragma mark - Core Data stack

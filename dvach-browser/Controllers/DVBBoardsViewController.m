@@ -33,6 +33,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [self darkThemeHandler];
     
     if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
@@ -68,6 +70,16 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
                                   atScrollPosition:UITableViewScrollPositionTop
                                           animated:NO];
         }
+    }
+}
+
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        self.tableView.backgroundColor = [UIColor blackColor];
+        [self.tableView setSeparatorColor:CELL_SEPARATOR_COLOR];
+        _searchBar.barStyle = UIBarStyleBlackTranslucent;
     }
 }
 

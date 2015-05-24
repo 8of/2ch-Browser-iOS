@@ -40,6 +40,11 @@
                                               otherButtonTitles:@"OK", nil];
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     UITextField *boardTextField = [alertView textFieldAtIndex:0];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        boardTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+    }
+    
     [boardTextField setKeyboardType:UIKeyboardTypeASCIICapable];
     boardTextField.delegate = self;
     alertView.tag = 1;
