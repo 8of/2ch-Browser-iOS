@@ -65,6 +65,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [self darkThemeHandler];
+
     _viewAlreadyAppeared = NO;
     _alreadyDidTheSizeClassTrick = NO;
     
@@ -108,6 +111,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         }
 
         self.tableView.rowHeight = UITableViewAutomaticDimension;
+    }
+}
+
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.tableView.backgroundColor = [UIColor blackColor];
     }
 }
 

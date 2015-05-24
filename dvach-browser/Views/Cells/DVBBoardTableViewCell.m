@@ -6,12 +6,18 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBConstants.h"
+
 #import "DVBBoardTableViewCell.h"
 
 @interface DVBBoardTableViewCell ()
 
-@property (weak, nonatomic) IBOutlet UILabel *title;
-@property (weak, nonatomic) IBOutlet UILabel *subtitle;
+
+@property (nonatomic, weak) IBOutlet UIView *titleContainerView;
+@property (nonatomic, weak) IBOutlet UIView *subtitleContainerView;
+
+@property (nonatomic, weak) IBOutlet UILabel *title;
+@property (nonatomic, weak) IBOutlet UILabel *subtitle;
 
 @end
 
@@ -23,6 +29,15 @@
 
     _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        _titleContainerView.backgroundColor = CELL_BACKGROUND_COLOR;
+        _subtitleContainerView.backgroundColor = CELL_BACKGROUND_COLOR;
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        [_title setTextColor:CELL_TEXT_COLOR];
+        [_subtitle setTextColor:CELL_TEXT_COLOR];
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

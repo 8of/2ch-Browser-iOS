@@ -14,10 +14,10 @@
 
 @interface DVBThreadTableViewCell ()
 
-@property (nonatomic) IBOutlet UILabel* titleLabel;
-@property (nonatomic) IBOutlet UILabel* commentLabel;
+@property (nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic) IBOutlet UILabel *commentLabel;
 @property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
 // Image for showing OP thumbnail image
 @property (nonatomic) IBOutlet UIImageView *threadThumb;
@@ -71,6 +71,17 @@
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         _commentLabel.numberOfLines = 3;
+    }
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+        [_commentLabel setTextColor:CELL_TEXT_COLOR];
+        [_postsCountLabel setTextColor:CELL_TEXT_COLOR];
+        _postsCountLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_dateLabel setTextColor:CELL_TEXT_COLOR];
+        [_postsCountContainerView setBackgroundColor:CELL_BACKGROUND_COLOR];
+        [_postsCountContainerView.layer setBorderColor:CELL_TEXT_COLOR.CGColor];
     }
 }
 
