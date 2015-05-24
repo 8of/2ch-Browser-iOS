@@ -102,6 +102,7 @@
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.view.backgroundColor = CELL_BACKGROUND_COLOR;
+        _createPostScrollView.backgroundColor = CELL_BACKGROUND_COLOR;
     }
 }
 
