@@ -117,7 +117,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 - (void)darkThemeHandler
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.tableView.backgroundColor = [UIColor blackColor];
     }
 }
