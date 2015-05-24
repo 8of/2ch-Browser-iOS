@@ -33,10 +33,6 @@
 @property (nonatomic, strong) NSString *usercode;
 // Mutable array of UIImage objects we need to attach to post
 @property (nonatomic, strong) NSMutableArray *imagesToUpload;
-/**
- *  Image for sending (1)
- */
-// @property (nonatomic, strong) UIImage *imageToLoad;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
 @property (nonatomic, strong) DVBPost *postToAddToThread;
@@ -66,6 +62,7 @@
 /// All View Controller tuning
 - (void)prepareViewController
 {
+    [self darkThemeHandler];
     _networking = [[DVBNetworking alloc] init];
     
     // If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly.
@@ -98,6 +95,15 @@
     _imagesToUpload = [@[] mutableCopy];
     
     [self changeConstraints];
+}
+
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        self.view.backgroundColor = CELL_BACKGROUND_COLOR;
+        _createPostScrollView.backgroundColor = CELL_BACKGROUND_COLOR;
+    }
 }
 
 #pragma mark - Change constrints
@@ -246,7 +252,7 @@
             // Dismiss View Controller if post was successfull.
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
-                       afterDelay:2.0];
+                       afterDelay:1.0];
         }
         else {
             // Enable Post button back.
@@ -413,6 +419,11 @@
         NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:_containerForPostElementsView.commentTextView.text];
         NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
         [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
+
+        // dark theme
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
+        }
 
         NSString *name = _containerForPostElementsView.nameTextField.text;
 

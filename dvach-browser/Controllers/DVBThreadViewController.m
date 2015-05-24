@@ -77,8 +77,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self darkThemeHandler];
     [self prepareViewController];
     [self reloadThread];
+}
+
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.tableView.backgroundColor = [UIColor blackColor];
+        self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
+    }
 }
 
 - (void)toolbarHandler
