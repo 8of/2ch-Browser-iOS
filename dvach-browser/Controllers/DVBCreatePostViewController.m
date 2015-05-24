@@ -414,6 +414,11 @@
         NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
         [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
 
+        // dark theme
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
+        }
+
         NSString *name = _containerForPostElementsView.nameTextField.text;
 
         DVBPost *post = [[DVBPost alloc] initWithNum:num

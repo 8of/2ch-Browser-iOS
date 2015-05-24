@@ -28,6 +28,10 @@
     [super awakeFromNib];
 
     _separatorHeight.constant = 0.5f;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+    }
 }
 
 - (void)prepareCellWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton

@@ -76,6 +76,11 @@
     // Delete insets
     _commentTextView.textContainer.lineFragmentPadding = 0;
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
+    }
 }
 
 - (void)prepareCellWithCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString  andShowVideoIcon:(BOOL)showVideoIcon

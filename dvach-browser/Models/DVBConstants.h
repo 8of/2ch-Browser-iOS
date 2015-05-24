@@ -26,6 +26,7 @@
 #define CELL_BACKGROUND_COLOR [UIColor colorWithRed:(35.0/255.0) green:(35.0/255.0) blue:(37.0/255.0) alpha:1.0]
 #define CELL_TEXT_COLOR [UIColor colorWithRed:(199.0/255.0) green:(199.0/255.0) blue:(204.0/255.0) alpha:1.0]
 #define CELL_SEPARATOR_COLOR [UIColor colorWithRed:(24.0/255.0) green:(24.0/255.0) blue:(26.0/255.0) alpha:1.0]
+#define CELL_TEXT_SPOILER_COLOR [UIColor colorWithRed:(199.0/255.0) green:(199.0/255.0) blue:(204.0/255.0) alpha:0.3]
 
 // URL schemes
 FOUNDATION_EXPORT NSString *const HTTPS_SCHEME;
