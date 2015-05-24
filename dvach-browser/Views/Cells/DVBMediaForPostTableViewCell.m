@@ -55,6 +55,10 @@
     _postThumb2.clipsToBounds = YES;
     _postThumb3.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb3.clipsToBounds = YES;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+    }
 }
 
 - (void)prepareForReuse

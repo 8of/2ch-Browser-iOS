@@ -29,6 +29,11 @@
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     }
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+    }
 }
 
 - (void)prepareCellWithTitle:(NSString *)title
