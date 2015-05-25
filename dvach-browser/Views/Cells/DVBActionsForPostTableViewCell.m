@@ -27,7 +27,7 @@
 {
     [super awakeFromNib];
 
-    _separatorHeight.constant = 0.5f;
+    _separatorHeight.constant = 1.f / [UIScreen mainScreen].scale;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;

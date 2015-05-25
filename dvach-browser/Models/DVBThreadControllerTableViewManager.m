@@ -18,7 +18,7 @@
 // Default row heights
 static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f; // +5 because of bold font problem
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 43.0f;
+static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 44.0f;
 static CGFloat const ADDITIONAL_HEIGHT_FOR_IPAD = 40.0f;
 
 // thumbnail width in post row
