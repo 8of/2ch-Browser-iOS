@@ -161,7 +161,16 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
                         [self.tableView reloadData];
                     }
 
-                    [NSTimer scheduledTimerWithTimeInterval:0.5
+                    CGFloat timerIntervalBeforeChangeLoadingIconback = 0.5;
+
+                    // For dark theme and iOS 8.0-8.2 - turn off interval before changing animated icon back
+                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
+                            timerIntervalBeforeChangeLoadingIconback = 0.0;
+                        }
+                    }
+
+                    [NSTimer scheduledTimerWithTimeInterval:timerIntervalBeforeChangeLoadingIconback
                                                      target:self
                                                    selector:@selector(stopAnimateLoading)
                                                    userInfo:nil
