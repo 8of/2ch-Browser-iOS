@@ -38,5 +38,6 @@
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString;
 - (void)openPostWithUrlNinja:(UrlNinja *)urlNinja;
+- (void)callShareControllerWithUrlString:(NSString *)urlString;
 
 @end

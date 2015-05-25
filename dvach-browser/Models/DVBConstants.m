@@ -11,8 +11,6 @@
 // URL schemes
 NSString *const HTTPS_SCHEME = @"https://";
 NSString *const HTTP_SCHEME = @"http://";
-NSString *const GOOGLE_CHROME_HTTPS_SCHEME = @"googlechromes://";
-NSString *const GOOGLE_CHROME_HTTP_SCHEME = @"googlechrome://";
 
 // URLs
 NSString *const DVACH_BASE_URL = @"https://2ch.pm/";
@@ -28,7 +26,6 @@ NSString *const URL_TO_GET_USERCODE = @"https://2ch.pm/makaba/makaba.fcgi";
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
-NSString *const OPEN_EXTERNAL_LINKS_IN_CHROME = @"openExternalLinksInChrome";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
 NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";

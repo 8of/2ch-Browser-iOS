@@ -183,31 +183,11 @@
 
             return NO;
         }
-        // there is no need to return something here - because othervise
-        // we couldn't open link in external browser at all
-    }
-    
-    BOOL isExternalLinksShoulBeOpenedInChrome = [[NSUserDefaults standardUserDefaults] boolForKey:OPEN_EXTERNAL_LINKS_IN_CHROME];
 
-    if (isExternalLinksShoulBeOpenedInChrome) {
-        NSString *chromeUrlString = [URL absoluteString];
-        chromeUrlString = [chromeUrlString stringByReplacingOccurrencesOfString:HTTPS_SCHEME
-                                                                     withString:GOOGLE_CHROME_HTTPS_SCHEME];
-        chromeUrlString = [chromeUrlString stringByReplacingOccurrencesOfString:HTTP_SCHEME
-                                                                     withString:GOOGLE_CHROME_HTTP_SCHEME];
-        NSURL *chromeUrl = [NSURL URLWithString:chromeUrlString];
-        BOOL canOpenInChrome = [[UIApplication sharedApplication] canOpenURL:chromeUrl];
-        
-        if (canOpenInChrome) {
-            [[UIApplication sharedApplication] openURL:chromeUrl];
-
-            return NO;
-        }
-        
-        return YES;
+        [_threadViewController callShareControllerWithUrlString:[URL absoluteString]];
     }
-    
-    return YES;
+
+    return NO;
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView
