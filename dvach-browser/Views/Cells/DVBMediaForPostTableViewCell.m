@@ -58,6 +58,10 @@
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postThumb0.superview.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postThumb1.superview.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postThumb2.superview.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postThumb3.superview.backgroundColor = CELL_BACKGROUND_COLOR;
     }
 }
 
