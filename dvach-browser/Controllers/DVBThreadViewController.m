@@ -29,6 +29,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *shareButton;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *refreshButton;
+
 @property (nonatomic, strong) DVBThreadControllerTableViewManager *threadControllerTableViewManager;
 
 /// Model for posts in the thread
@@ -283,7 +285,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 }
 
 /// Reload thread by current thread num
-- (void)reloadThread {
+- (void)reloadThread
+{
+    _refreshButton.enabled = NO;
 
     if (_answersToPost) {
         _threadControllerTableViewManager.postsArray = [_answersToPost mutableCopy];
@@ -599,6 +603,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)stopAnimateLoading
 {
     [self.navigationItem stopAnimating];
+    _refreshButton.enabled = YES;
 }
 
 @end

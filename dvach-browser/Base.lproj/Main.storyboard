@@ -854,6 +854,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </refreshControl>
                     <connections>
+                        <outlet property="refreshButton" destination="OC5-6d-88W" id="X00-YC-Kra"/>
                         <outlet property="shareButton" destination="NrN-BE-Zun" id="dn8-rW-RjN"/>
                         <segue destination="wgF-au-dzt" kind="presentation" identifier="segueToNewPostiOS7" id="yeg-8I-aPr"/>
                     </connections>
