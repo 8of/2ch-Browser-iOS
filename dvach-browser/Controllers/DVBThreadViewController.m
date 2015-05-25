@@ -140,7 +140,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+        
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+        }
+
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
                                          andThreadNum:_threadNum];
@@ -304,7 +308,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reloadThreadAction:(id)sender
 {
-    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    }
     [self reloadThread];
 }
 
