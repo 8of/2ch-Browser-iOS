@@ -747,7 +747,7 @@
                                     <outlet property="videoiconWidthContstraint" destination="heg-3M-hoz" id="fY4-Mq-cHn"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="43" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="actionsForPostCell" rowHeight="44" id="ExV-Kj-e3l" customClass="DVBActionsForPostTableViewCell">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ExV-Kj-e3l" id="SKe-Es-YgT">
@@ -761,7 +761,7 @@
                                             </constraints>
                                         </view>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r2q-Xe-K6B" userLabel="Answer">
-                                            <rect key="frame" x="0.0" y="10" width="42" height="22"/>
+                                            <rect key="frame" x="0.0" y="11" width="42" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="42" id="09C-UW-mbU"/>
                                             </constraints>
@@ -771,14 +771,14 @@
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bl-zo-iuC">
-                                            <rect key="frame" x="288" y="10" width="22" height="22"/>
+                                            <rect key="frame" x="288" y="11" width="22" height="22"/>
                                             <state key="normal" image="ShowAnswersButton"/>
                                             <connections>
                                                 <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="wY1-0v-by2"/>
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozg-qD-Pix" userLabel="Answer Quote">
-                                            <rect key="frame" x="42" y="10" width="42" height="22"/>
+                                            <rect key="frame" x="42" y="11" width="42" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="42" id="rlR-JK-AlF"/>
                                             </constraints>
@@ -792,7 +792,7 @@
                                         <constraint firstItem="r2q-Xe-K6B" firstAttribute="centerY" secondItem="6Bl-zo-iuC" secondAttribute="centerY" id="7j6-ME-Wc8"/>
                                         <constraint firstAttribute="trailing" secondItem="z1f-VR-Rkw" secondAttribute="trailing" id="ESf-vP-9R5"/>
                                         <constraint firstItem="r2q-Xe-K6B" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" id="Ge0-zf-0o0"/>
-                                        <constraint firstAttribute="bottom" secondItem="z1f-VR-Rkw" secondAttribute="bottom" id="HYe-VE-3sg"/>
+                                        <constraint firstAttribute="bottom" secondItem="z1f-VR-Rkw" secondAttribute="bottom" constant="1" id="HYe-VE-3sg"/>
                                         <constraint firstAttribute="centerY" secondItem="r2q-Xe-K6B" secondAttribute="centerY" id="K1g-d0-Jhb"/>
                                         <constraint firstAttribute="trailing" secondItem="6Bl-zo-iuC" secondAttribute="trailing" constant="10" id="TAF-eF-WSa"/>
                                         <constraint firstItem="z1f-VR-Rkw" firstAttribute="leading" secondItem="SKe-Es-YgT" secondAttribute="leading" id="fXZ-up-2JY"/>
@@ -1321,8 +1321,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="XRT-4w-L0S"/>
         <segue reference="Iwy-TH-KYT"/>
+        <segue reference="yeg-8I-aPr"/>
         <segue reference="Xk9-pa-bWO"/>
     </inferredMetricsTieBreakers>
 </document>
