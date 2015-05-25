@@ -91,6 +91,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 11.0f;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
+    
     DVBPost *post = _postsArray[indexPath.section];
     NSUInteger row = indexPath.row;
 
