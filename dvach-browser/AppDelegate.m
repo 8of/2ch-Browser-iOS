@@ -23,7 +23,8 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     [self createDefaultSettings];
     [self appearanceTudeUp];
     [self manageAFNetworking];
@@ -31,7 +32,10 @@
     return YES;
 }
 
-- (void)createDefaultSettings {
+- (void)createDefaultSettings
+{
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+
     NSDictionary* defaults = @{
                                USER_AGREEMENT_ACCEPTED:@NO,
                                SETTING_ENABLE_DARK_THEME:@NO,
@@ -70,28 +74,25 @@
     // Turn off SHake to Undo because of tags
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 }
-/**
- *  Create cookies for later posting with super csecret usercode
- */
-- (void)setUserCodeCookieWithUsercode:(NSString *)usercode {
-
-    NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode_nocaptcha",
-                                               @"value":usercode
-                                               };
+/// Create cookies for later posting with super csecret usercode
+- (void)setUserCodeCookieWithUsercode:(NSString *)usercode
+{
+    NSDictionary *usercodeCookieDictionary = @{
+        @"name":@"usercode_nocaptcha",
+        @"value":usercode
+    };
     NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
 }
-/**
- *  Execute all AFNetworking methods that need to be executed one time for entire app.
- */
-- (void)manageAFNetworking {
+/// Execute all AFNetworking methods that need to be executed one time for entire app.
+- (void)manageAFNetworking
+{
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
-/**
- *  Tuning appearance for entire app.
- */
-- (void)appearanceTudeUp {
+/// Tuning appearance for entire app.
+- (void)appearanceTudeUp
+{
     [UIView appearance].tintColor = DVACH_COLOR;
 
     _enableDarkTheme = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
