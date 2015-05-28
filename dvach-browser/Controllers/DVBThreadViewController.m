@@ -265,12 +265,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                          animated:YES];
 }
 
-/// Clear prompt from any status / error messages.
-- (void)clearPrompt
-{
-    self.navigationItem.prompt = nil;
-}
-
 #pragma mark - Data management and processing
 
 /// Get data from 2ch server
@@ -569,21 +563,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     CGFloat stopAnimateTimerInterval = 0.5;
 
     if (([_previousPostsCount integerValue] > 0) && (additionalPostCount > 0)) {
-        self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)additionalPostCount, @"новых"];
-        [self performSelector:@selector(clearPrompt)
-                   withObject:nil
-                   afterDelay:1.5];
+        NSNumber *newMessagesCount = [NSNumber numberWithInteger:additionalPostCount];
 
-        // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-        CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
-
-        if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-            [NSTimer scheduledTimerWithTimeInterval:2.0
-                                             target:self
-                                           selector:@selector(scrollToBottom)
-                                           userInfo:nil
-                                            repeats:NO];
-        }
+        [self performSelector:@selector(newMessagesPromptWithNewMessagesCount:)
+                   withObject:newMessagesCount
+                   afterDelay:1];
 
         stopAnimateTimerInterval = 2.0;
     }
@@ -604,6 +588,34 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     [self.navigationItem stopAnimating];
     _refreshButton.enabled = YES;
+}
+
+#pragma mark - Prompt
+
+/// Show prompt with cound of new messages
+- (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
+{
+    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, @"новых"];
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:1.5];
+
+    // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+        [NSTimer scheduledTimerWithTimeInterval:2.0
+                                         target:self
+                                       selector:@selector(scrollToBottom)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
+/// Clear prompt from any status / error messages.
+- (void)clearPrompt
+{
+    self.navigationItem.prompt = nil;
 }
 
 @end
