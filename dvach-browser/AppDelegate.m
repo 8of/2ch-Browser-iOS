@@ -96,7 +96,6 @@
 - (void)manageAFNetworking
 {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
 /// Tuning appearance for entire app.
 - (void)appearanceTudeUp
