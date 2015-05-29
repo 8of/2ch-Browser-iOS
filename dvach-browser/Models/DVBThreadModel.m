@@ -75,7 +75,7 @@
                     comment = key[@"comment"];
                 }
                 else {
-                    NSString *brokenStringHere = NSLocalizedString(@"Пост содержит неподдерживаемые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+                    NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
                     comment = brokenStringHere;
                 }
 
