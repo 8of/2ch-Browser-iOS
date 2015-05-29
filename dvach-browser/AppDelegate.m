@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 #import <AFNetworking/AFNetworking.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
@@ -34,7 +35,7 @@
 
 - (void)createDefaultSettings
 {
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    [self clearAllCaches];
 
     NSDictionary* defaults = @{
                                USER_AGREEMENT_ACCEPTED:@NO,
@@ -74,6 +75,13 @@
     // Turn off SHake to Undo because of tags
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 }
+
+- (void)clearAllCaches
+{
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    [[SDImageCache sharedImageCache] clearDisk];
+}
+
 /// Create cookies for later posting with super csecret usercode
 - (void)setUserCodeCookieWithUsercode:(NSString *)usercode
 {

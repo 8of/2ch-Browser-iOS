@@ -7,6 +7,7 @@
 //
 
 #import <UINavigationItem+Loading.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
 #import "DVBConstants.h"
@@ -82,6 +83,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self darkThemeHandler];
     [self prepareViewController];
     [self reloadThread];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    [[SDImageCache sharedImageCache] clearMemory];
 }
 
 - (void)darkThemeHandler
