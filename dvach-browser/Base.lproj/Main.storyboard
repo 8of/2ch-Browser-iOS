@@ -1301,8 +1301,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="XRT-4w-L0S"/>
         <segue reference="xwW-TO-L0b"/>
         <segue reference="Xk9-pa-bWO"/>
-        <segue reference="yeg-8I-aPr"/>
     </inferredMetricsTieBreakers>
 </document>
