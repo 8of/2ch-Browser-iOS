@@ -16,6 +16,6 @@
 
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
 
-- (void)prepareCellWithTitle:(NSString *)title andCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString andShowVideoIcon:(BOOL)showVideoIcon andWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton andThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray;
+- (void)prepareCellWithTitle:(NSString *)title andCommentText:(NSAttributedString *)commentText andWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton andThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray;
 
 @end

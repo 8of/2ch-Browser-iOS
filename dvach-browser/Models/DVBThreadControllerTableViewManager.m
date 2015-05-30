@@ -139,12 +139,8 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
     // Set default difference (if we hve image in the cell).
     CGFloat widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
 
-    // Determine if we really have image in the cell.
-    DVBPost *postObj = _postsArray[indexPath.section];
-    NSString *thumbPath = postObj.thumbPath;
-
     // If not - then set the difference just to two constraints.
-    if (![thumbPath isEqualToString:@""]) {
+    if ([post.thumbPathesArray count] == 1) {
         widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
@@ -160,7 +156,12 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
     CGFloat additionalHeightForActionButtons = ROW_ACTIONS_DEFAULT_HEIGHT; // Row actions include button height and also 2 x 10px constraints height
 
-    CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + additionalHeightForMedia + titleHeight + additionalHeightForActionButtons + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
+    CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + additionalHeightForMedia + titleHeight + additionalHeightForActionButtons);
+
+    BOOL isPostHasCommentText = ![post.comment isEqualToAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+    if (isPostHasCommentText) {
+        heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC;
+    }
 
     CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + ROW_DEFAULT_HEIGHT;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -169,8 +170,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
     // Check if comment is too short compare to thumbnail on the left
     if (heightToReturn < minimumTextRowHeightToCompareTo) {
-
-        if ([thumbPath isEqualToString:@""]) {
+        if (([post.thumbPathesArray count] == 0) || ([post.thumbPathesArray count] > 1)) {
             return heightForReturnWithCorrectionAndCeilf;
         }
 
@@ -198,13 +198,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
         NSInteger postNumToShow = indexPath.section + 1;
         NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
 
-        // Configure media
-
-
         // Configure post itself
-        NSString *thumbUrlString = post.thumbPath;
-        NSString *fullUrlString = post.path;
-        BOOL showVideoIcon = (post.mediaType == webm);
         confCell.threadViewController = _threadViewController;
 
         // Configure action buttons
@@ -216,9 +210,6 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
         [confCell prepareCellWithTitle:title
                         andCommentText:post.comment
-                 andPostThumbUrlString:thumbUrlString
-                  andPostFullUrlString:fullUrlString
-                      andShowVideoIcon:showVideoIcon
                andWithPostRepliesCount:[post.replies count]
                               andIndex:indexForButton
                 andDisableActionButton:shouldDisableActionButton

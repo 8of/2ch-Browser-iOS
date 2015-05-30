@@ -168,8 +168,6 @@
                 DVBPost *post = [[DVBPost alloc]    initWithNum:num
                                                         subject:subject
                                                         comment:attributedComment
-                                                           path:picPath
-                                                      thumbPath:thumbPath
                                                     pathesArray:pathesArray
                                                thumbPathesArray:thumbPathesArray
                                                         date:date
