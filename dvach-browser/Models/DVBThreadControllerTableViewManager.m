@@ -13,28 +13,21 @@
 #import "DVBPostTableViewCell.h"
 
 // Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 75.0f; // +5 because of bold font problem
+static CGFloat const ROW_DEFAULT_HEIGHT = 64.0f;
 static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 74.0f;
 static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
-static CGFloat const ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD = 35.0f;
+static CGFloat const ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD = 36.0f;
 static CGFloat const ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD = 36.0f;
 
-// thumbnail width in post row
-static CGFloat const THUMBNAIL_WIDTH = 65.f;
-// thumbnail contstraints for calculating layout dimentions
+// Thumbnail width in post row
+static CGFloat const THUMBNAIL_WIDTH = 64.f;
+// Thumbnail contstraints for calculating layout dimentions
 static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
-/**
- *  Correction height because of:
- *  constraint from text to top - 10
- *  border - 1 more
- */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
 @interface DVBThreadControllerTableViewManager ()
 
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
-
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
 
 @end
@@ -118,7 +111,7 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
         fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     }
     CGSize size = [post.num sizeWithAttributes:@{NSFontAttributeName:fontFromSettings}];
-    CGFloat titleHeight = size.height + HORISONTAL_CONSTRAINT;
+    CGFloat titleHeight = size.height + HORISONTAL_CONSTRAINT * 2;
 
     // Additional calculations for 4-in-line-media
     CGFloat additionalHeightForMedia = 0;
@@ -158,23 +151,28 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 15.0f;
 
     CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + additionalHeightForMedia + titleHeight + additionalHeightForActionButtons);
 
+    heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf + 1;
+
+    CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + ROW_DEFAULT_HEIGHT + 1;
+
+    // Check if we have 2-4 images on top and no comment text at all - we need to delete one extra horisontal constraint
     BOOL isPostHasCommentText = ![post.comment isEqualToAttributedString:[[NSAttributedString alloc] initWithString:@""]];
-    if (isPostHasCommentText) {
-        heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC;
+    if (!isPostHasCommentText && ([post.thumbPathesArray count] > 1)) {
+        heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
+        minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
     }
 
-    CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + ROW_DEFAULT_HEIGHT;
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
     }
 
     // Check if comment is too short compare to thumbnail on the left
-    if (heightToReturn < minimumTextRowHeightToCompareTo) {
+    if (heightForReturnWithCorrectionAndCeilf < minimumTextRowHeightToCompareTo) {
         if (([post.thumbPathesArray count] == 0) || ([post.thumbPathesArray count] > 1)) {
             return heightForReturnWithCorrectionAndCeilf;
         }
 
-        return (minimumTextRowHeightToCompareTo + 6); // 6 here is additional 'safe' number
+        return (minimumTextRowHeightToCompareTo);
     }
 
     return heightForReturnWithCorrectionAndCeilf;

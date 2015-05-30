@@ -92,7 +92,6 @@
     _commentLabel.text = comment;
 
     if (thumbnailUrlString) {
-        NSLog(@"kek %@", thumbnailUrlString);
         NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
         [_threadThumb setImageWithURL:thumbnailUrl];
     }
