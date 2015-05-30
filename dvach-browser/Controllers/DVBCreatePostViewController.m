@@ -430,8 +430,6 @@
         DVBPost *post = [[DVBPost alloc] initWithNum:num
                                              subject:subject
                                              comment:[maComment copy]
-                                                path:@""
-                                           thumbPath:@""
                                          pathesArray:nil
                                     thumbPathesArray:nil
                                                 date:@""
