@@ -13,8 +13,9 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Mantle/Mantle.h>
 
-@interface DVBThread : NSObject
+@interface DVBThread : MTLModel <MTLJSONSerializing>
 
 /// UID of the open post of the thread.
 @property (nonatomic, strong) NSString *num;
@@ -28,7 +29,5 @@
 @property (nonatomic, strong) NSString *thumbnail;
 
 @property (nonatomic, strong) NSString *timeSinceFirstPost;
-
-- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath andTimeSinceFirstPost:(NSString *)timeSinceFirstPost;
 
 @end
