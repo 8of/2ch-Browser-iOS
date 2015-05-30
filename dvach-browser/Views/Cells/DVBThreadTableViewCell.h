@@ -15,6 +15,6 @@
 
 @interface DVBThreadTableViewCell : UITableViewCell
 
-- (void)prepareCellWithThreadObject: (DVBThread *)threadObject;
+- (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost;
 
 @end

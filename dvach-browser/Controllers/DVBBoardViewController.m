@@ -213,9 +213,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
-    DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.row];
+    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
+    NSString *title = thread.subject;
+    if ([title isEqualToString:@""]) {
+        title = thread.num;
+    }
 
-    [cell prepareCellWithThreadObject:threadTmpObj];
+    [cell prepareCellWithTitle:title andComment:thread.comment andThumbnailUrlString:thread.thumbnail andPostsCount:[thread.postsCount stringValue] andTimeSinceFirstPost:thread.timeSinceFirstPost];
     
     return cell;
 }

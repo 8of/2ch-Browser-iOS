@@ -37,6 +37,7 @@
     [_threadThumb.layer setOpaque:YES];
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
+    [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 
     // _threadThumb.layer.cornerRadius = 14.0f;
     // [_threadThumb.layer setBorderColor: THUMBNAIL_GREY_BORDER];
@@ -85,23 +86,16 @@
     }
 }
 
-- (void)prepareCellWithThreadObject: (DVBThread *)threadObject
+- (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
 {
-    NSString *title = threadObject.subject;
-    if ([title isEqualToString:@""]) {
-        title = threadObject.num;
-    }
-
     _titleLabel.text = title;
+    _commentLabel.text = comment;
 
-    _commentLabel.text = threadObject.comment;
+    NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
+    [_threadThumb setImageWithURL:thumbnailUrl];
 
-    NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
-    [_threadThumb setImageWithURL:thumbUrl];
-
-    _postsCountLabel.text = [threadObject.postsCount stringValue];
-
-    _dateLabel.text = threadObject.timeSinceFirstPost;
+    _postsCountLabel.text = postsCount;
+    _dateLabel.text = timeSinceFirstPost;
 }
 
 - (void)prepareForReuse
@@ -112,6 +106,7 @@
     _commentLabel.text = nil;
     _dateLabel.text = nil;
     _postsCountLabel.text = nil;
+    _threadThumb.image = nil;
 
     [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 }
