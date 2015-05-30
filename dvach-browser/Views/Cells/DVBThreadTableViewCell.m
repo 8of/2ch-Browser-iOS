@@ -91,8 +91,11 @@
     _titleLabel.text = title;
     _commentLabel.text = comment;
 
-    NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
-    [_threadThumb setImageWithURL:thumbnailUrl];
+    if (thumbnailUrlString) {
+        NSLog(@"kek %@", thumbnailUrlString);
+        NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
+        [_threadThumb setImageWithURL:thumbnailUrl];
+    }
 
     _postsCountLabel.text = postsCount;
     _dateLabel.text = timeSinceFirstPost;

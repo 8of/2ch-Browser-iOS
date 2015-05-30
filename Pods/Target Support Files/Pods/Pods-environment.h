@@ -67,6 +67,18 @@
 // Please contact the author.
 // Version: 1.4.1.1.
 
+// Mantle
+#define COCOAPODS_POD_AVAILABLE_Mantle
+#define COCOAPODS_VERSION_MAJOR_Mantle 2
+#define COCOAPODS_VERSION_MINOR_Mantle 0
+#define COCOAPODS_VERSION_PATCH_Mantle 2
+
+// Mantle/extobjc
+#define COCOAPODS_POD_AVAILABLE_Mantle_extobjc
+#define COCOAPODS_VERSION_MAJOR_Mantle_extobjc 2
+#define COCOAPODS_VERSION_MINOR_Mantle_extobjc 0
+#define COCOAPODS_VERSION_PATCH_Mantle_extobjc 2
+
 // PSTCollectionView
 #define COCOAPODS_POD_AVAILABLE_PSTCollectionView
 #define COCOAPODS_VERSION_MAJOR_PSTCollectionView 1
