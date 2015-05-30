@@ -11,6 +11,6 @@
 
 @interface DVBBoardTableViewCell : UITableViewCell
 
-- (void)prepareCellWithBoardObject: (DVBBoard *)boardObject;
+- (void)prepareCellWithId:(NSString *)boardId andBoardName:(NSString *)boardName;
 
 @end

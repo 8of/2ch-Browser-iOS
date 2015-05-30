@@ -69,7 +69,6 @@
             NSString *comment = [opPost objectForKey:@"comment"];
             comment = [comment stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
             comment = [comment stringByConvertingHTMLToPlainText];
-            NSNumber *filesCount = [opPost objectForKey:@"files_count"];
             NSNumber *postsCount = [opPost objectForKey:@"posts_count"];
 
             NSInteger totalPostsCount = [postsCount integerValue] + lastpostsCount;
@@ -91,13 +90,9 @@
             NSInteger timestamp = [[opPost objectForKey:@"timestamp"] integerValue];
             NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
 
-            /**
-             Create thred object for storing all info for later use, and write object to mutable array
-             */
             DVBThread *threadObj = [[DVBThread alloc] initWithNum:num
                                                           Subject:subject
                                                         opComment:comment
-                                                       filesCount:filesCount
                                                        postsCount:postsCount
                                                         thumbPath:thumbPath
                                             andTimeSinceFirstPost:dateAgo];

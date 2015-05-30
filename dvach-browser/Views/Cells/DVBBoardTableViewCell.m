@@ -45,11 +45,8 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)prepareCellWithBoardObject:(DVBBoard *)boardObject
+- (void)prepareCellWithId:(NSString *)boardId andBoardName:(NSString *)boardName
 {
-    NSString *name = boardObject.name;
-    NSString *boardId = boardObject.boardId;
-
     // need additional checkup - or title won't update itself on change
     _title.text = @" ";
     BOOL isBoardIdNotEmpty = ![boardId isEqualToString:@""];
@@ -59,9 +56,9 @@
 
     // need additional checkup - or subtitle won't update itself on change
     _subtitle.text = @" ";
-    BOOL isNameNotEmpty = ![name isEqualToString:@""];
-    if (name && isNameNotEmpty) {
-        _subtitle.text = name;
+    BOOL isNameNotEmpty = ![boardName isEqualToString:@""];
+    if (boardName && isNameNotEmpty) {
+        _subtitle.text = boardName;
     }
 }
 

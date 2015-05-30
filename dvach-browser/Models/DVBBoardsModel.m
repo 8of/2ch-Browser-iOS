@@ -348,9 +348,10 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     
     NSArray *boardsArrayInCategory = [self arrayForCategoryWithIndex:categoryIndex];
     
-    DVBBoard *boardObject = boardsArrayInCategory[indexPath.row];
-    
-    [boardCell prepareCellWithBoardObject:boardObject];
+    DVBBoard *board = boardsArrayInCategory[indexPath.row];
+
+    [boardCell prepareCellWithId:board.boardId
+                    andBoardName:board.name];
     
     return boardCell;
 }

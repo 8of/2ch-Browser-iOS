@@ -10,14 +10,13 @@
 
 @implementation DVBThread
 
-- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
+- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
 {
     self = [super init];
     if (self) {
         _num = threadNum;
         _subject = threadTitle;
         _comment = threadOpComment;
-        _filesCount = threadFilesCount;
         _postsCount = threadPostsCount;
         _thumbnail = threadThumbPath;
         _timeSinceFirstPost = timeSinceFirstPost;
