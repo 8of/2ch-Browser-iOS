@@ -44,7 +44,6 @@
 
 // Actual post
 
-@property BOOL isPostHaveImage;
 // Thumbnail url
 @property (nonatomic, strong) NSString *fullPathUrlString;
 // TextView for post comment
@@ -90,7 +89,12 @@
 {
     [super awakeFromNib];
 
-    [self awakeTitleLabel];
+    _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    _titleLabel.layer.masksToBounds = NO;
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+    }
     
     _commentTextView.delegate = self;
     _imageLeftConstraintStorage = _imageLeftConstraint.constant;
@@ -118,6 +122,8 @@
     // for more tidy images and keep aspect ratio
     _postThumb.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb.clipsToBounds = YES;
+    [self rebuildPostThumbImageWithImagePresence:NO
+                        andWithVideoIconPresence:NO];
 
     // set minimum delay before textView recognize tap on link
     _commentTextView.delaysContentTouches = NO;
@@ -125,11 +131,6 @@
     // Delete insets
     _commentTextView.textContainer.lineFragmentPadding = 0;
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        self.backgroundColor = CELL_BACKGROUND_COLOR;
-        _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
-    }
 
     // Media
 
@@ -152,38 +153,28 @@
     _postThumb3.contentMode = UIViewContentModeScaleAspectFill;
     _postThumb3.clipsToBounds = YES;
 
+    // Dark theme handling
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+
         _postThumb0.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb1.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb2.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb3.superview.backgroundColor = CELL_BACKGROUND_COLOR;
-    }
-}
 
-/// All preparations for title
-- (void)awakeTitleLabel
-{
-    _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-    _titleLabel.layer.masksToBounds = NO;
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-    }
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
-        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+        _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
     }
 }
 
-- (void)prepareCellWithTitle:(NSString *)title andCommentText:(NSAttributedString *)commentText andPostThumbUrlString:(NSString *)postThumbUrlString andPostFullUrlString:(NSString *)postFullUrlString andShowVideoIcon:(BOOL)showVideoIcon andWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton andThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray
+- (void)prepareCellWithTitle:(NSString *)title andCommentText:(NSAttributedString *)commentText andWithPostRepliesCount:(NSUInteger)postRepliesCount andIndex:(NSUInteger)index andDisableActionButton:(BOOL)disableActionButton andThumbPathesArray:(NSArray *)thumbPathesArray andPathesArray:(NSArray *)pathesArray
 {
     _titleLabel.text = title;
 
+    _pathesArray = pathesArray;
+
     // 4 Media images/icons
     if (pathesArray && ([pathesArray count] > 1)) {
-
         _mediaTopConstraint.constant = _imageLeftConstraintStorage;
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -193,7 +184,6 @@
             _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
         }
 
-        _pathesArray = pathesArray;
         NSUInteger currentImageIndex = 0;
 
         for (NSString *postThumbUrlString in thumbPathesArray) {
@@ -214,26 +204,22 @@
             currentImageIndex++;
         }
     }
+    else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
+        // load the image and setting image source depending on presented image or set blank image
+        [_postThumb setImageWithURL:[NSURL URLWithString:thumbPathesArray[0]]
+                   placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+
+        BOOL isThumbForWebm = [self isMediaTypeWebmWithPicPath:pathesArray[0]];
+        [self rebuildPostThumbImageWithImagePresence:YES
+                            andWithVideoIconPresence:isThumbForWebm];
+
+        _fullPathUrlString = pathesArray[0];
+    }
 
 
-    // Actual post
-    
+    // Set comment text
     _commentTextView.attributedText = commentText;
 
-    // load the image and setting image source depending on presented image or set blank image
-    if (![postThumbUrlString isEqualToString:@""]) {
-        [_postThumb setImageWithURL:[NSURL URLWithString:postThumbUrlString]
-                  placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
-
-        [self rebuildPostThumbImageWithImagePresence:YES
-                            andWithVideoIconPresence:showVideoIcon];
-
-        _fullPathUrlString = postFullUrlString;
-    }
-    else {
-        [self rebuildPostThumbImageWithImagePresence:NO
-                            andWithVideoIconPresence:NO];
-    }
 
     // Answers buttons
 
@@ -259,7 +245,19 @@
 
 - (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent andWithVideoIconPresence:(BOOL)videoIconPresentce
 {
-    if (!isImagePresent) {
+    if (isImagePresent) {
+        _imageLeftConstraint.constant = _imageLeftConstraintStorage;
+
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            _imageWidthConstraintIPAD.constant = _imageWidthConstraintStorage;
+            _imageHeightConstraintIPAD.constant = _imageHeightConstraintStorage;
+        }
+        else {
+            _imageWidthConstraint.constant = _imageWidthConstraintStorage;
+            _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+        }
+    }
+    else {
         _imageLeftConstraint.constant = 0;
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -270,10 +268,13 @@
             _imageWidthConstraint.constant = 0;
             _imageHeightConstraint.constant = 0;
         }
-        _isPostHaveImage = NO;
     }
 
-    if (!videoIconPresentce) {
+    if (videoIconPresentce) {
+        _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
+        _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
+    }
+    else {
         _videoiconWidthContstraint.constant = 0;
         _videoiconHeightContstraint.constant = 0;
     }
@@ -302,29 +303,28 @@
     
     _commentTextView.text = nil;
     _commentTextView.attributedText = nil;
-    
+
+
     [_postThumb setImage:nil];
+    [self rebuildPostThumbImageWithImagePresence:NO
+                        andWithVideoIconPresence:NO];
     
-    _imageLeftConstraint.constant = _imageLeftConstraintStorage;
+    _imageLeftConstraint.constant = 0;
 
     _mediaTopConstraint.constant = 0;
 
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _imageWidthConstraintIPAD.constant = _imageWidthConstraintStorage;
-        _imageHeightConstraintIPAD.constant = _imageHeightConstraintStorage;
+        _imageWidthConstraintIPAD.constant = 0;
+        _imageHeightConstraintIPAD.constant = 0;
 
         _mediaHeightIpadConstraint.constant = 0;
     }
     else {
-        _imageWidthConstraint.constant = _imageWidthConstraintStorage;
-        _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+        _imageWidthConstraint.constant = 0;
+        _imageHeightConstraint.constant = 0;
 
         _mediaHeightConstraint.constant = 0;
     }
-
-    _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
-    _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
-    _isPostHaveImage = YES;
 
     _postWebmIcon0.hidden = YES;
     _postWebmIcon1.hidden = YES;
@@ -356,7 +356,6 @@
         BOOL isLocalPostLink = [_threadViewController isLinkInternalWithLink:urlNinja];
 
         if (isLocalPostLink) {
-
             return NO;
         }
 
@@ -431,14 +430,17 @@
 {
     [self openMediaWithMediaIndex:0];
 }
+
 - (IBAction)touchSecondMedia:(id)sender
 {
     [self openMediaWithMediaIndex:1];
 }
+
 - (IBAction)touchThirdMedia:(id)sender
 {
     [self openMediaWithMediaIndex:2];
 }
+
 - (IBAction)touchFourthMedia:(id)sender
 {
     [self openMediaWithMediaIndex:3];
