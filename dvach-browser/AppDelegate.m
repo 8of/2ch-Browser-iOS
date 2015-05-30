@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 #import <AFNetworking/AFNetworking.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
@@ -23,7 +24,8 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     [self createDefaultSettings];
     [self appearanceTudeUp];
     [self manageAFNetworking];
@@ -31,10 +33,12 @@
     return YES;
 }
 
-- (void)createDefaultSettings {
+- (void)createDefaultSettings
+{
+    [self clearAllCaches];
+
     NSDictionary* defaults = @{
                                USER_AGREEMENT_ACCEPTED:@NO,
-                               OPEN_EXTERNAL_LINKS_IN_CHROME:@NO,
                                SETTING_ENABLE_DARK_THEME:@NO,
                                SETTING_ENABLE_LITTLE_BODY_FONT:@NO,
                                PASSCODE:@"",
@@ -71,28 +75,31 @@
     // Turn off SHake to Undo because of tags
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 }
-/**
- *  Create cookies for later posting with super csecret usercode
- */
-- (void)setUserCodeCookieWithUsercode:(NSString *)usercode {
 
-    NSDictionary *usercodeCookieDictionary = @{@"name":@"usercode_nocaptcha",
-                                               @"value":usercode
-                                               };
+- (void)clearAllCaches
+{
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    [[SDImageCache sharedImageCache] clearDisk];
+}
+
+/// Create cookies for later posting with super csecret usercode
+- (void)setUserCodeCookieWithUsercode:(NSString *)usercode
+{
+    NSDictionary *usercodeCookieDictionary = @{
+        @"name":@"usercode_nocaptcha",
+        @"value":usercode
+    };
     NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
 }
-/**
- *  Execute all AFNetworking methods that need to be executed one time for entire app.
- */
-- (void)manageAFNetworking {
+/// Execute all AFNetworking methods that need to be executed one time for entire app.
+- (void)manageAFNetworking
+{
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
-/**
- *  Tuning appearance for entire app.
- */
-- (void)appearanceTudeUp {
+/// Tuning appearance for entire app.
+- (void)appearanceTudeUp
+{
     [UIView appearance].tintColor = DVACH_COLOR;
 
     _enableDarkTheme = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
@@ -100,6 +107,12 @@
     [UIActivityIndicatorView appearance].color = DVACH_COLOR;
 
     [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
+
+    if (_enableDarkTheme) {
+        UIView *colorView = [[UIView alloc] init];
+        colorView.backgroundColor = CELL_SEPARATOR_COLOR;
+        [UITableViewCell appearance].selectedBackgroundView = colorView;
+    }
 }
 
 #pragma mark - Core Data stack

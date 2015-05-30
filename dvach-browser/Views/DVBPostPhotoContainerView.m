@@ -12,12 +12,6 @@
 
 @implementation DVBPostPhotoContainerView
 
-- (void)prepareForInterfaceBuilder
-{
-    [super prepareForInterfaceBuilder];
-    [self setupCustomDesign];
-}
-
 - (void)awakeFromNib
 {
     [super awakeFromNib];

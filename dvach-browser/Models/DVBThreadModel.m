@@ -69,8 +69,21 @@
                 
                 [postNumMutableArray addObject:num];
                 
-                NSString *comment = key[@"comment"];
-                NSString *subject = key[@"subject"];
+                NSString *comment;
+                // Check comment for bad symbols
+                if ([key[@"comment"] rangeOfString:@"ررً"].location == NSNotFound) {
+                    comment = key[@"comment"];
+                }
+                else {
+                    NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+                    comment = brokenStringHere;
+                }
+
+                NSString *subject;
+                // Check subject for bad symbols
+                if ([key[@"subject"] rangeOfString:@"ررً"].location == NSNotFound) {
+                    subject = key[@"subject"];
+                }
                 
                 NSInteger timestamp = [key[@"timestamp"] integerValue];
                 NSString *date = key[@"date"];
@@ -94,7 +107,6 @@
                 NSString *picPath = [[NSMutableString alloc] init];
                 
                 DVBPostMediaType mediaType = noMedia;
-
 
                 NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
                 NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
@@ -133,20 +145,14 @@
                     
                     thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files_first[@"thumbnail"]];
                     
-                    // [_privateThumbImagesArray addObject:thumbPath];
-                    
                     // check webm or not
-                    if (mediaType == webm) // if contains .webm
-                    {
+                    if (mediaType == webm) { // if contains .webm
                         // make VLC webm link
                         picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
                     }
-                    else                    // if regular image
-                    {
+                    else {                   // if regular image
                         picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
                     }
-                    
-                    // [_privateFullImagesArray addObject:picPath];
                 }
 
                 NSArray *pathesArray = [singlePostPathesArrayMutable copy];
@@ -162,8 +168,6 @@
                 DVBPost *post = [[DVBPost alloc]    initWithNum:num
                                                         subject:subject
                                                         comment:attributedComment
-                                                           path:picPath
-                                                      thumbPath:thumbPath
                                                     pathesArray:pathesArray
                                                thumbPathesArray:thumbPathesArray
                                                         date:date
@@ -218,8 +222,7 @@
             completion(resultArray);
         }];
     }
-    else
-    {
+    else {
         NSLog(@"No Board code or Thread number");
         completion(nil);
     }

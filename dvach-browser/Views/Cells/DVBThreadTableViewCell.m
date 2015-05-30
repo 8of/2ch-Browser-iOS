@@ -14,10 +14,10 @@
 
 @interface DVBThreadTableViewCell ()
 
-@property (nonatomic) IBOutlet UILabel* titleLabel;
-@property (nonatomic) IBOutlet UILabel* commentLabel;
+@property (nonatomic) IBOutlet UILabel *titleLabel;
+@property (nonatomic) IBOutlet UILabel *commentLabel;
 @property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
-@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
 // Image for showing OP thumbnail image
 @property (nonatomic) IBOutlet UIImageView *threadThumb;
@@ -37,6 +37,7 @@
     [_threadThumb.layer setOpaque:YES];
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
+    [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 
     // _threadThumb.layer.cornerRadius = 14.0f;
     // [_threadThumb.layer setBorderColor: THUMBNAIL_GREY_BORDER];
@@ -72,25 +73,31 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         _commentLabel.numberOfLines = 3;
     }
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+        [_commentLabel setTextColor:CELL_TEXT_COLOR];
+        [_postsCountLabel setTextColor:CELL_TEXT_COLOR];
+        _postsCountLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        [_dateLabel setTextColor:CELL_TEXT_COLOR];
+        [_postsCountContainerView setBackgroundColor:CELL_BACKGROUND_COLOR];
+        [_postsCountContainerView.layer setBorderColor:CELL_TEXT_COLOR.CGColor];
+    }
 }
 
-- (void)prepareCellWithThreadObject: (DVBThread *)threadObject
+- (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
 {
-    NSString *title = threadObject.subject;
-    if ([title isEqualToString:@""]) {
-        title = threadObject.num;
+    _titleLabel.text = title;
+    _commentLabel.text = comment;
+
+    if (thumbnailUrlString) {
+        NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
+        [_threadThumb setImageWithURL:thumbnailUrl];
     }
 
-    _titleLabel.text = title;
-
-    _commentLabel.text = threadObject.comment;
-
-    NSURL *thumbUrl = [NSURL URLWithString:threadObject.thumbnail];
-    [_threadThumb setImageWithURL:thumbUrl];
-
-    _postsCountLabel.text = [threadObject.postsCount stringValue];
-
-    _dateLabel.text = threadObject.timeSinceFirstPost;
+    _postsCountLabel.text = postsCount;
+    _dateLabel.text = timeSinceFirstPost;
 }
 
 - (void)prepareForReuse
@@ -101,6 +108,7 @@
     _commentLabel.text = nil;
     _dateLabel.text = nil;
     _postsCountLabel.text = nil;
+    _threadThumb.image = nil;
 
     [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 }

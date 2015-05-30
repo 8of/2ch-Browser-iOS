@@ -305,11 +305,24 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 #pragma mark - TableView delegate & DataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return [_boardCategoriesArray count];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+
+        UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+        [header.textLabel setTextColor:[UIColor whiteColor]];
+        header.contentView.backgroundColor = CELL_SEPARATOR_COLOR;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
     NSString *categoryTitle = _boardCategoriesArray[section];
 
     // Do not show category at all if category does not contain boards
@@ -322,25 +335,29 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return categoryTitle;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return [self countOfBoardsInCategoryWithIndex:section];
 }
 
-- (DVBBoardTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (DVBBoardTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     DVBBoardTableViewCell *boardCell = [tableView dequeueReusableCellWithIdentifier:BOARD_CELL_IDENTIFIER];
     
     NSUInteger categoryIndex = indexPath.section;
     
     NSArray *boardsArrayInCategory = [self arrayForCategoryWithIndex:categoryIndex];
     
-    DVBBoard *boardObject = boardsArrayInCategory[indexPath.row];
-    
-    [boardCell prepareCellWithBoardObject:boardObject];
+    DVBBoard *board = boardsArrayInCategory[indexPath.row];
+
+    [boardCell prepareCellWithId:board.boardId
+                    andBoardName:board.name];
     
     return boardCell;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
     // Permit editing only items of the Favourite section
     NSUInteger section = indexPath.section;
     if (section == 0) {

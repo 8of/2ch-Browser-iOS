@@ -20,6 +20,8 @@
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
 #import "DVBContainerForPostElements.h"
+#import "DVBAddPhotoIconImageViewContainer.h"
+#import "DVBPictureToSendPreviewImageView.h"
 
 @interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
@@ -31,10 +33,6 @@
 @property (nonatomic, strong) NSString *usercode;
 // Mutable array of UIImage objects we need to attach to post
 @property (nonatomic, strong) NSMutableArray *imagesToUpload;
-/**
- *  Image for sending (1)
- */
-// @property (nonatomic, strong) UIImage *imageToLoad;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
 @property (nonatomic, strong) DVBPost *postToAddToThread;
@@ -64,6 +62,7 @@
 /// All View Controller tuning
 - (void)prepareViewController
 {
+    [self darkThemeHandler];
     _networking = [[DVBNetworking alloc] init];
     
     // If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly.
@@ -98,13 +97,20 @@
     [self changeConstraints];
 }
 
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        self.view.backgroundColor = CELL_BACKGROUND_COLOR;
+        _createPostScrollView.backgroundColor = CELL_BACKGROUND_COLOR;
+    }
+}
+
 #pragma mark - Change constrints
 
 - (void)changeConstraints
 {
-    /**
-     *  Remove captcha fields if we have passcode
-     */
+    // Remove captcha fields if we have passcode
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
     
     if (isUsercodeNotEmpty) {
@@ -114,9 +120,7 @@
 
 #pragma mark - Captcha
 
-/**
- *  Request captcha image (server key stores in networking.m)
- */
+/// Request captcha image (server key stores in networking.m)
 - (void)requestCaptchaImage
 {
     // Firstly we entirely hide captcha image until we have new image
@@ -131,26 +135,21 @@
 }
 
 #pragma  mark - Actions
-/**
- *  Update captcha image
- */
+
+/// Update captcha image
 - (IBAction)captchaUpdateAction:(id)sender
 {
     [self requestCaptchaImage];
     self.navigationItem.prompt = nil;
 }
-/**
- *  Button action to fire post sending method
- */
+
+/// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
 {
-    /**
-     *  Dismiss keyboard before posting
-     */
+    // Dismiss keyboard before posting
     [self.view endEditing:YES];
-    /**
-     *  Clear any prompt messages
-     */
+
+    // Clear any prompt messages
     self.navigationItem.prompt = nil;
     
     // Get values from fields
@@ -180,7 +179,7 @@
 {
     _addPictureButton = sender;
 
-    UIImageView *imageViewToCheckImage = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+    UIImageView *imageViewToCheckImage = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.subviews];
 
     if (imageViewToCheckImage.image) {
         [self deletePicture];
@@ -198,9 +197,7 @@
     [self goBackToThread];
 }
 
-/**
- *  Send post to thread (or create thread)
- */
+/// Send post to thread (or create thread)
 - (void)postMessageWithTask:(NSString *)task
                    andBoard:(NSString *)board
                andThreadnum:(NSString *)threadNum
@@ -255,7 +252,7 @@
             // Dismiss View Controller if post was successfull.
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
-                       afterDelay:2.0];
+                       afterDelay:1.0];
         }
         else {
             // Enable Post button back.
@@ -280,37 +277,35 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSString *imageReferenceUrl = [info[UIImagePickerControllerReferenceURL] absoluteString];
-    NSArray *imageReferenceUrlArray = [imageReferenceUrl componentsSeparatedByString: @"ext="];
-    NSString *imageExtention = imageReferenceUrlArray.lastObject;
+    [self dismissViewControllerAnimated:YES completion:^{
+        NSString *imageReferenceUrl = [info[UIImagePickerControllerReferenceURL] absoluteString];
+        NSArray *imageReferenceUrlArray = [imageReferenceUrl componentsSeparatedByString: @"ext="];
+        NSString *imageExtention = imageReferenceUrlArray.lastObject;
 
-    UIImage *imageToLoad = info[UIImagePickerControllerOriginalImage];
+        UIImage *imageToLoad = info[UIImagePickerControllerOriginalImage];
 
-    // Set image extention to prepare image the right way before uplaoding
-    imageToLoad.imageExtention = imageExtention.lowercaseString;
+        // Set image extention to prepare image the right way before uplaoding
+        imageToLoad.imageExtention = imageExtention.lowercaseString;
 
-    UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+        UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.subviews];
 
-    // For more tidy images and keep aspect ratio.
-    imageViewToShowIn.contentMode = UIViewContentModeScaleAspectFill;
-    imageViewToShowIn.clipsToBounds = YES;
+        [_imagesToUpload addObject:imageToLoad];
 
-    [imageViewToShowIn setImage:imageToLoad];
+        UIView *plusContainerView = [self viewPlusContainerWithArrayOfViews:_addPictureButton.superview.subviews];
 
-    [_imagesToUpload addObject:imageToLoad];
-    
-    [_containerForPostElementsView changeUploadButtonToDeleteWithButton:_addPictureButton];
-    
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
-    _addPictureButton = nil;
+        [_containerForPostElementsView changeUploadViewToDeleteView:plusContainerView andsetImage:imageToLoad forImageView:imageViewToShowIn];
+
+        _addPictureButton = nil;
+    }];
+
+
 }
 
 /// Delete all pointers/refs to photo.
 - (void)deletePicture
 {
     // _imageToLoad = nil;
-    UIImageView *imageViewToDeleteIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.superview.subviews];
+    UIImageView *imageViewToDeleteIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.subviews];
 
     UIImage *imageToDeleteFromEverywhere = imageViewToDeleteIn.image;
 
@@ -322,20 +317,35 @@
         }
     }
 
-    [imageViewToDeleteIn setImage:nil];
+    UIView *plusContainerView = [self viewPlusContainerWithArrayOfViews:_addPictureButton.superview.subviews];
 
-    [_containerForPostElementsView changeUploadButtonToUploadWithButton:_addPictureButton];
+    [_containerForPostElementsView changeDeleteViewToUploadView:plusContainerView andClearImageView:imageViewToDeleteIn];
     _addPictureButton = nil;
 }
 
-- (UIImageView *)imageViewToShowUploadingImageWithArrayOfViews:(NSArray *)arrayOfViews
+/// Find image view to show image to upload in
+- (DVBPictureToSendPreviewImageView *)imageViewToShowUploadingImageWithArrayOfViews:(NSArray *)arrayOfViews
 {
     for (UIView *view in arrayOfViews) {
-        BOOL isItImageView = [view isMemberOfClass:[UIImageView class]];
+        BOOL isItImageView = [view isMemberOfClass:[DVBPictureToSendPreviewImageView class]];
         if (isItImageView) {
-            UIImageView *imageView = (UIImageView *)view;
+            DVBPictureToSendPreviewImageView *imageView = (DVBPictureToSendPreviewImageView *)view;
 
             return imageView;
+        }
+    }
+
+    return nil;
+}
+
+/// Find image view's with PLUS icon container
+- (UIView *)viewPlusContainerWithArrayOfViews:(NSArray *)arrayOfViews
+{
+    for (UIView *view in arrayOfViews) {
+        BOOL isItImageView = [view isMemberOfClass:[DVBAddPhotoIconImageViewContainer class]];
+        if (isItImageView) {
+
+            return view;
         }
     }
 
@@ -371,9 +381,7 @@
     id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
     
     if (isSegueDismissToThread) {
-        /**
-         *  Update thread in any case (was post successfull or not)
-         */
+        // Update thread in any case (was post successfull or not)
         if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
             [strongDelegate updateThreadAfterPosting];
         }
@@ -412,13 +420,16 @@
         NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
         [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
 
+        // dark theme
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
+        }
+
         NSString *name = _containerForPostElementsView.nameTextField.text;
 
         DVBPost *post = [[DVBPost alloc] initWithNum:num
                                              subject:subject
                                              comment:[maComment copy]
-                                                path:@""
-                                           thumbPath:@""
                                          pathesArray:nil
                                     thumbPathesArray:nil
                                                 date:@""

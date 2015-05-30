@@ -27,7 +27,7 @@ IB_DESIGNABLE
 - (void)setCaptchaImageWithUrlString:(NSString *)urlString;
 
 // Animate upload/delete button
-- (void)changeUploadButtonToDeleteWithButton:(UIButton *)button;
-- (void)changeUploadButtonToUploadWithButton:(UIButton *)button;
+- (void)changeUploadViewToDeleteView:(UIView *)view andsetImage:(UIImage *)image forImageView:(UIImageView *)imageView;
+- (void)changeDeleteViewToUploadView:(UIView *)view andClearImageView:(UIImageView *)imageView;
 
 @end

@@ -19,7 +19,7 @@
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
@@ -65,6 +65,9 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [self darkThemeHandler];
+
     _viewAlreadyAppeared = NO;
     _alreadyDidTheSizeClassTrick = NO;
     
@@ -111,6 +114,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
     }
 }
 
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.tableView.backgroundColor = [UIColor blackColor];
+    }
+}
+
 /**
  *  First time loading thread list
  */
@@ -142,7 +152,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
             }
             else if (!_wrongBoardAlertAlreadyPresentedOnce) {
                 // Update only if we have something to show
-                [self.navigationItem stopAnimating];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
 
@@ -151,6 +160,21 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
                     }
+
+                    CGFloat timerIntervalBeforeChangeLoadingIconback = 0.5;
+
+                    // For dark theme and iOS 8.0-8.2 - turn off interval before changing animated icon back
+                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
+                            timerIntervalBeforeChangeLoadingIconback = 0.0;
+                        }
+                    }
+
+                    [NSTimer scheduledTimerWithTimeInterval:timerIntervalBeforeChangeLoadingIconback
+                                                     target:self
+                                                   selector:@selector(stopAnimateLoading)
+                                                   userInfo:nil
+                                                    repeats:NO];
                 });
             }
         }];
@@ -189,9 +213,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 {
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
-    DVBThread *threadTmpObj = [_threadsArray objectAtIndex:indexPath.row];
+    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
+    NSString *title = thread.subject;
+    if ([title isEqualToString:@""]) {
+        title = thread.num;
+    }
 
-    [cell prepareCellWithThreadObject:threadTmpObj];
+    [cell prepareCellWithTitle:title andComment:thread.comment andThumbnailUrlString:thread.thumbnail andPostsCount:[thread.postsCount stringValue] andTimeSinceFirstPost:thread.timeSinceFirstPost];
     
     return cell;
 }
@@ -206,7 +234,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 
     return heightToReturn;
 }
-
+// Separator insets to zero
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Remove seperator inset
@@ -236,7 +264,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
-            [self.navigationItem stopAnimating];
+
+            [NSTimer scheduledTimerWithTimeInterval:0.5
+                                             target:self
+                                           selector:@selector(stopAnimateLoading)
+                                           userInfo:nil
+                                            repeats:NO];
         });
     }];
 }
@@ -343,6 +376,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
     }
 
     return [super respondsToSelector:selector];
+}
+
+#pragma mark - loading stopper
+
+- (void)stopAnimateLoading
+{
+    [self.navigationItem stopAnimating];
 }
 
 @end

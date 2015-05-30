@@ -10,33 +10,24 @@
 #import "DVBPost.h"
 #import "DVBThreadControllerTableViewManager.h"
 
-#import "DVBMediaForPostTableViewCell.h"
 #import "DVBPostTableViewCell.h"
-#import "DVBActionsForPostTableViewCell.h"
 
 // Default row heights
-static CGFloat const ROW_DEFAULT_HEIGHT = 80.0f; // top up by 5 = 4 - magic number and 1 - border
-static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 75.0f;
-static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 32.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 64.0f;
+static CGFloat const ROW_MEDIA_DEFAULT_HEIGHT = 74.0f;
+static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
+static CGFloat const ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD = 36.0f;
+static CGFloat const ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD = 36.0f;
 
-// thumbnail width in post row
-static CGFloat const THUMBNAIL_WIDTH = 65.f;
-// thumbnail contstraints for calculating layout dimentions
+// Thumbnail width in post row
+static CGFloat const THUMBNAIL_WIDTH = 64.f;
+// Thumbnail contstraints for calculating layout dimentions
 static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
-/**
- *  Correction height because of:
- *  constraint from text to top - 10
- *  border - 1 more
- *  just in case I added 5 more :)
- */
-static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 @interface DVBThreadControllerTableViewManager ()
 
 @property (nonatomic, strong) DVBThreadViewController *threadViewController;
-//@property (nonatomic, strong) UITableView *tableView;
-
 @property (nonatomic, strong) DVBPostTableViewCell *prototypeCell;
 
 @end
@@ -60,6 +51,9 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
         if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
             _threadViewController.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                _threadViewController.tableView.estimatedRowHeight = ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
+            }
         }
     }
 
@@ -68,144 +62,124 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
 #pragma mark - Table view
 
+// Separator insets to zero
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Remove seperator inset
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+    }
+
+    // Prevent the cell from inheriting the Table View's margin settings
+    if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+        [cell setPreservesSuperviewLayoutMargins:NO];
+    }
+
+    // Explictly set your cell's layout margins
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [_postsArray count];
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    DVBPost *postTmpObj = _postsArray[section];
-    NSString *date = postTmpObj.date;
-
-    // we increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
-    NSInteger postNumToShow = section + 1;
-
-    NSString *sectionTitle = [[NSString alloc] initWithFormat:@"#%ld  %@", (long)postNumToShow, date];
-
-    return sectionTitle;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    DVBPost *post = _postsArray[section];
-
-    // If post have more than one thumbnail
-    if ([post.thumbPathesArray count] > 1) {
-        return 3;
-    }
-
-    return 2;
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
-    DVBPost *post = _postsArray[indexPath.section];
-    NSUInteger row = indexPath.row;
-
-    // If post have more than one thumbnail...
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) {
-        cell = (DVBMediaForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_MEDIA_IDENTIFIER
-                                                                                forIndexPath:indexPath];
-        [self configureMediaCell:cell
-               forRowAtIndexPath:indexPath];
-
-    }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one
-        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
-                                                                                  forIndexPath:indexPath];
-        [self configureActionsCell:cell
-                 forRowAtIndexPath:indexPath];
-    }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one
-        cell = (DVBActionsForPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_ACTIONS_IDENTIFIER
-                                                                                  forIndexPath:indexPath];
-        [self configureActionsCell:cell
-                 forRowAtIndexPath:indexPath];
-    }
-    else {
-        cell = (DVBPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
-                                                                        forIndexPath:indexPath];
-        [self configureCell:cell
-          forRowAtIndexPath:indexPath];
-    }
+    UITableViewCell *cell = (DVBPostTableViewCell *) [tableView dequeueReusableCellWithIdentifier:POST_CELL_IDENTIFIER
+                                                                                     forIndexPath:indexPath];
+    [self configureCell:cell
+      forRowAtIndexPath:indexPath];
 
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSUInteger row = indexPath.row;
     DVBPost *post = _postsArray[indexPath.section];
 
-    if (([post.thumbPathesArray count] > 1)&&(row == 0)) { // If post have more than one thumbnail and this is first row
-        return ROW_MEDIA_DEFAULT_HEIGHT;
+    // Additional calculations for title
+    UIFont *fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     }
-    else if (([post.thumbPathesArray count] > 1)&&(row == 2)) { // If post have more than one thumbnail and this is third row
-        return ROW_ACTIONS_DEFAULT_HEIGHT;
+    CGSize size = [post.num sizeWithAttributes:@{NSFontAttributeName:fontFromSettings}];
+    CGFloat titleHeight = size.height + HORISONTAL_CONSTRAINT * 2;
+
+    // Additional calculations for 4-in-line-media
+    CGFloat additionalHeightForMedia = 0;
+    if ([post.thumbPathesArray count] > 1) { // If post have more than one thumbnail and this is first row
+        additionalHeightForMedia = ROW_MEDIA_DEFAULT_HEIGHT;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            additionalHeightForMedia = additionalHeightForMedia + ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD;
+        }
     }
-    else if (([post.thumbPathesArray count] < 2)&&(row == 1)) { // If post have only one thumbnail and this is second row
-        return ROW_ACTIONS_DEFAULT_HEIGHT;
+
+    // Helper method to get the text at a given cell.
+    NSAttributedString *text = [self getTextAtIndex:indexPath];
+
+    // Getting the width/height needed by the dynamic text view.
+    CGSize viewSize = _threadViewController.tableView.bounds.size;
+    NSInteger viewWidth = viewSize.width;
+
+    // Set default difference (if we hve image in the cell).
+    CGFloat widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
+
+    // If not - then set the difference just to two constraints.
+    if ([post.thumbPathesArray count] == 1) {
+        widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
+        }
     }
-    else {
 
-        // Helper method to get the text at a given cell.
-        NSAttributedString *text = [self getTextAtIndex:indexPath];
+    // Decrease window width value by taking off elements and contraints values
+    CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
 
-        // Getting the width/height needed by the dynamic text view.
+    // Return the size of the current row.
+    CGFloat heightToReturn = [self heightForText:text
+                               constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
 
-        CGSize viewSize = _threadViewController.tableView.bounds.size;
-        NSInteger viewWidth = viewSize.width;
+    CGFloat additionalHeightForActionButtons = ROW_ACTIONS_DEFAULT_HEIGHT; // Row actions include button height and also 2 x 10px constraints height
 
-        // Set default difference (if we hve image in the cell).
-        CGFloat widthDifferenceBecauseOfImageAndConstraints = THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT * 3;
+    CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + additionalHeightForMedia + titleHeight + additionalHeightForActionButtons);
 
-        // Determine if we really have image in the cell.
-        DVBPost *postObj = _postsArray[indexPath.section];
-        NSString *thumbPath = postObj.thumbPath;
+    heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf + 1;
 
-        // If not - then set the difference just to two constraints.
-        if ([thumbPath isEqualToString:@""]) {
-            widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
+    CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + ROW_DEFAULT_HEIGHT + 1;
+
+    // Check if we have 2-4 images on top and no comment text at all - we need to delete one extra horisontal constraint
+    BOOL isPostHasCommentText = ![post.comment isEqualToAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+    if (!isPostHasCommentText && ([post.thumbPathesArray count] > 1)) {
+        heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
+        minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
+    }
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
+    }
+
+    // Check if comment is too short compare to thumbnail on the left
+    if (heightForReturnWithCorrectionAndCeilf < minimumTextRowHeightToCompareTo) {
+        if (([post.thumbPathesArray count] == 0) || ([post.thumbPathesArray count] > 1)) {
+            return heightForReturnWithCorrectionAndCeilf;
         }
 
-        // Decrease window width value by taking off elements and contraints values
-        CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
-
-        // Return the size of the current row.
-        CGFloat heightToReturn = [self heightForText:text
-                                   constrainedToSize:CGSizeMake(textViewWidth, CGFLOAT_MAX)];
-
-        CGFloat heightForReturnWithCorrectionAndCeilf = ceilf(heightToReturn + CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC);
-
-        if (heightToReturn < ROW_DEFAULT_HEIGHT) {
-
-            if ([thumbPath isEqualToString:@""]) {
-                return heightForReturnWithCorrectionAndCeilf;
-            }
-
-            return (ROW_DEFAULT_HEIGHT + 1);
-        }
-
-        // Should not return values greater than 2009
-        if (heightForReturnWithCorrectionAndCeilf > 2008) {
-            return 2008;
-        }
-
-        return heightForReturnWithCorrectionAndCeilf;
+        return (minimumTextRowHeightToCompareTo);
     }
+
+    return heightForReturnWithCorrectionAndCeilf;
+
     
     return 0;
 }
-
-// We do not need this because othervise scroll bottom and then to top will be 'jumpy'
-/*
- - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
- {
- return UITableViewAutomaticDimension;
- }
- */
 
 #pragma mark - Cell configuration and calculation
 
@@ -215,49 +189,30 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
         DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
         DVBPost *post = _postsArray[indexPath.section];
 
-        NSString *thumbUrlString = post.thumbPath;
-        NSString *fullUrlString = post.path;
+        // Configure title
+        NSString *dateAgo = post.dateAgo;
+        NSString *num = post.num;
+        // Need to increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
+        NSInteger postNumToShow = indexPath.section + 1;
+        NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
 
-        BOOL showVideoIcon = (post.mediaType == webm);
-
+        // Configure post itself
         confCell.threadViewController = _threadViewController;
 
-        [confCell prepareCellWithCommentText:post.comment
-                       andPostThumbUrlString:thumbUrlString
-                        andPostFullUrlString:fullUrlString
-                            andShowVideoIcon:showVideoIcon];
-    }
-}
-
-- (void)configureMediaCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell isKindOfClass:[DVBMediaForPostTableViewCell class]]) {
-        DVBMediaForPostTableViewCell *confCell = (DVBMediaForPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-
-        confCell.threadViewController = _threadViewController;
-        [confCell prepareCellWithThumbPathesArray:post.thumbPathesArray
-                                   andPathesArray:post.pathesArray];
-    }
-}
-
-- (void)configureActionsCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if ([cell isKindOfClass:[DVBActionsForPostTableViewCell class]]) {
-        DVBActionsForPostTableViewCell *confCell = (DVBActionsForPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-
+        // Configure action buttons
         NSUInteger indexForButton = indexPath.section;
-
         BOOL shouldDisableActionButton = NO;
-
         if (_answersToPost) {
             shouldDisableActionButton = YES;
         }
 
-        [confCell prepareCellWithPostRepliesCount:[post.replies count]
-                                         andIndex:indexForButton
-                           andDisableActionButton:shouldDisableActionButton];
+        [confCell prepareCellWithTitle:title
+                        andCommentText:post.comment
+               andWithPostRepliesCount:[post.replies count]
+                              andIndex:indexForButton
+                andDisableActionButton:shouldDisableActionButton
+                   andThumbPathesArray:post.thumbPathesArray
+                        andPathesArray:post.pathesArray];
     }
 }
 
@@ -284,5 +239,33 @@ static CGFloat const CORRECTION_HEIGHT_FOR_TEXT_VIEW_CALC = 17.0f;
 
     return tmpComment;
 }
+
+#pragma mark - Scroll Delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    // Trying to figure out scroll position to store it for restoring later
+    if (scrollView.contentOffset.y > 100) {
+        // When we go back - table jumps in this values - so the correction is needed here
+        CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+
+        CGFloat topBarDifference = MIN(statusBarSize.width, statusBarSize.height) + _threadViewController.navigationController.navigationBar.frame.size.height;
+
+        if (topBarDifference >= _threadViewController.topBarDifference) {
+            _threadViewController.topBarDifference = topBarDifference;
+        }
+
+        CGFloat scrollPositionToStore = scrollView.contentOffset.y - _threadViewController.topBarDifference;
+
+        NSNumber *scrollPosition = [NSNumber numberWithFloat:scrollPositionToStore];
+
+        [_threadViewController.threadsScrollPositionManager.threads setValue:scrollPosition
+                                                 forKey:_threadViewController.threadNum];
+        
+        _threadViewController.autoScrollTo = [_threadViewController.threadsScrollPositionManager.threads
+                         objectForKey:_threadViewController.threadNum];
+    }
+}
+
 
 @end

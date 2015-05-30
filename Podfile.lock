@@ -1,26 +1,29 @@
 PODS:
-  - AFNetworking (2.5.0):
-    - AFNetworking/NSURLConnection (= 2.5.0)
-    - AFNetworking/NSURLSession (= 2.5.0)
-    - AFNetworking/Reachability (= 2.5.0)
-    - AFNetworking/Security (= 2.5.0)
-    - AFNetworking/Serialization (= 2.5.0)
-    - AFNetworking/UIKit (= 2.5.0)
-  - AFNetworking/NSURLConnection (2.5.0):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.0):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.0)
-  - AFNetworking/Security (2.5.0)
-  - AFNetworking/Serialization (2.5.0)
-  - AFNetworking/UIKit (2.5.0):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - DACircularProgress (2.2.0)
+  - Mantle (2.0.2):
+    - Mantle/extobjc (= 2.0.2)
+  - Mantle/extobjc (2.0.2)
   - MBProgressHUD (0.9.1)
   - MWPhotoBrowser (1.4.1.1):
     - MBProgressHUD (~> 0.8)
@@ -34,11 +37,12 @@ PODS:
   - UINavigationItem+Loading (1.1)
 
 DEPENDENCIES:
-  - AFNetworking (= 2.5.0)
+  - AFNetworking
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
+  - Mantle
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
-  - TUSafariActivity (~> 1.0)
-  - UINavigationItem+Loading (~> 1.1)
+  - TUSafariActivity
+  - UINavigationItem+Loading
 
 EXTERNAL SOURCES:
   DACircularProgress:
@@ -55,8 +59,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/8ofproject/MWPhotoBrowser
 
 SPEC CHECKSUMS:
-  AFNetworking: 96ac9bf3eda33582701cb1fcc5b896aa1e20311e
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
+  Mantle: 967fd31ea0220890b2e76589198996b534bb3fb1
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWPhotoBrowser: 963c6b795e9c8fb62f7b4d3465c4d8cf5bee9869
   PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
@@ -64,4 +69,4 @@ SPEC CHECKSUMS:
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   UINavigationItem+Loading: e61d7963495d8a19b6d3825d867ed60db9b218b6
 
-COCOAPODS: 0.36.4
+COCOAPODS: 0.37.2

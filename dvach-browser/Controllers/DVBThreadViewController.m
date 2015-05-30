@@ -7,6 +7,7 @@
 //
 
 #import <UINavigationItem+Loading.h>
+#import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
 #import "DVBConstants.h"
@@ -15,7 +16,6 @@
 #import "DVBNetworking.h"
 #import "DVBComment.h"
 #import "DVBAlertViewGenerator.h"
-#import "DVBThreadsScrollPositionManager.h"
 #import "DVBMediaOpener.h"
 #import "DVBThreadControllerTableViewManager.h"
 
@@ -30,6 +30,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *shareButton;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *refreshButton;
+
 @property (nonatomic, strong) DVBThreadControllerTableViewManager *threadControllerTableViewManager;
 
 /// Model for posts in the thread
@@ -39,11 +41,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, strong) UIActionSheet *reportSheet;
 @property (nonatomic, assign) NSUInteger updatedTimes;
 @property (nonatomic, assign) BOOL presentedSomething;
-
-// Auto scrolling stuff
-@property (nonatomic, strong) DVBThreadsScrollPositionManager *threadsScrollPositionManager;
-@property (nonatomic, strong) NSNumber *autoScrollTo;
-@property (nonatomic, assign) CGFloat topBarDifference;
+/// New posts count added with last thread update
+@property (nonatomic, strong) NSNumber *previousPostsCount;
 
 @end
 
@@ -81,8 +80,23 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self darkThemeHandler];
     [self prepareViewController];
     [self reloadThread];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    [[SDImageCache sharedImageCache] clearMemory];
+}
+
+- (void)darkThemeHandler
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.tableView.backgroundColor = [UIColor blackColor];
+        self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
+    }
 }
 
 - (void)toolbarHandler
@@ -135,7 +149,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
+        }
+        else {
+            [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+        }
+
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
                                          andThreadNum:_threadNum];
@@ -155,6 +175,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                                      forKey:_threadNum];
         }
 
+        if (_threadsScrollPositionManager.threadPostCounts[_threadNum]) {
+            _previousPostsCount = _threadsScrollPositionManager.threadPostCounts[_threadNum];
+        }
+        else {
+            _previousPostsCount = 0;
+        }
+
         [self makeRefreshAvailable];
     }
 }
@@ -170,32 +197,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
     
     return subject;
-}
-
-#pragma mark - Scroll Delegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    // Trying to figure out scroll position to store it for restoring later
-    if (scrollView.contentOffset.y > 100) {
-        // When we go back - table jumps in this values - so the correction is needed here
-        CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
-
-        CGFloat topBarDifference = MIN(statusBarSize.width, statusBarSize.height) + self.navigationController.navigationBar.frame.size.height;
-
-        if (topBarDifference >= _topBarDifference) {
-            _topBarDifference = topBarDifference;
-        }
-
-        CGFloat scrollPositionToStore = scrollView.contentOffset.y - _topBarDifference;
-
-        NSNumber *scrollPosition = [NSNumber numberWithFloat:scrollPositionToStore];
-
-        [_threadsScrollPositionManager.threads setValue:scrollPosition
-                                                 forKey:_threadNum];
-        _autoScrollTo = [_threadsScrollPositionManager.threads
-                         objectForKey:_threadNum];
-    }
 }
 
 #pragma mark - Refresh
@@ -265,15 +266,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
         threadViewController.allThreadPosts = _threadControllerTableViewManager.postsArray;
     }
+    _presentedSomething = YES;
 
     [self.navigationController pushViewController:threadViewController
                                          animated:YES];
-}
-
-/// Clear prompt from any status / error messages.
-- (void)clearPrompt
-{
-    self.navigationItem.prompt = nil;
 }
 
 #pragma mark - Data management and processing
@@ -290,7 +286,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 }
 
 /// Reload thread by current thread num
-- (void)reloadThread {
+- (void)reloadThread
+{
+    _refreshButton.enabled = NO;
 
     if (_answersToPost) {
         _threadControllerTableViewManager.postsArray = [_answersToPost mutableCopy];
@@ -306,8 +304,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             _threadControllerTableViewManager.postsArray = postsArrayBlock;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
-                [self.navigationItem stopAnimating];
                 [self.refreshControl endRefreshing];
+                [self checkNewPostsCount];
             });
         }];
     }
@@ -317,6 +315,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reloadThreadAction:(id)sender
 {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
+    }
+    else {
+        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    }
+    
     [self reloadThread];
 }
 
@@ -526,8 +530,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
 
         if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-
-            [NSTimer scheduledTimerWithTimeInterval:0.7
+            [NSTimer scheduledTimerWithTimeInterval:1.0
                                              target:self
                                            selector:@selector(scrollToBottom)
                                            userInfo:nil
@@ -555,6 +558,71 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:2.0];
+}
+
+#pragma mark - New posts count handling
+
+/// Check if server have new posts and scroll if user already scrolled to the end
+- (void)checkNewPostsCount
+{
+    NSInteger additionalPostCount = [_threadControllerTableViewManager.postsArray count] - [_previousPostsCount integerValue];
+
+    CGFloat stopAnimateTimerInterval = 0.5;
+
+    if (([_previousPostsCount integerValue] > 0) && (additionalPostCount > 0)) {
+        NSNumber *newMessagesCount = [NSNumber numberWithInteger:additionalPostCount];
+
+        [self performSelector:@selector(newMessagesPromptWithNewMessagesCount:)
+                   withObject:newMessagesCount
+                   afterDelay:1];
+
+        stopAnimateTimerInterval = 2.0;
+    }
+
+    NSNumber *postsCountNewValue = [NSNumber numberWithInteger:[_threadControllerTableViewManager.postsArray count]];
+
+    _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
+    _previousPostsCount = postsCountNewValue;
+
+    [NSTimer scheduledTimerWithTimeInterval:stopAnimateTimerInterval
+                                     target:self
+                                   selector:@selector(stopAnimateLoading)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+- (void)stopAnimateLoading
+{
+    [self.navigationItem stopAnimating];
+    _refreshButton.enabled = YES;
+}
+
+#pragma mark - Prompt
+
+/// Show prompt with cound of new messages
+- (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
+{
+    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, @"новых"];
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:1.5];
+
+    // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
+        [NSTimer scheduledTimerWithTimeInterval:2.0
+                                         target:self
+                                       selector:@selector(scrollToBottom)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
+}
+
+/// Clear prompt from any status / error messages.
+- (void)clearPrompt
+{
+    self.navigationItem.prompt = nil;
 }
 
 @end

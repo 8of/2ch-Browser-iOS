@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import <Mantle/Mantle.h>
+
 #import "DVBBoardModel.h"
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
 #import "DVBThread.h"
-#import "NSString+HTML.h"
-#import "DateFormatter.h"
 
 @interface DVBBoardModel ()
 
@@ -51,58 +51,29 @@
                              andPage:_currentPage
                        andCompletion:^(NSDictionary *resultDict)
     {
+        NSArray *threadsArray = resultDict[@"threads"];
         
-        NSDictionary *threadsDict = [resultDict objectForKey:@"threads"];
-        
-        for (id key in threadsDict)
-        {
-            // Count number of last posts because posts_count isn't accurate - it's not count last posts
-            NSArray *lastPosts = [key objectForKey:@"posts"];
-            NSInteger lastpostsCount = [lastPosts count];
+        for (id thread in threadsArray) {
+            NSError *error;
 
-            NSDictionary *opPost = [[key objectForKey:@"posts"] objectAtIndex:0];
-            
-            // very important note: unlikely in other NUM keys in other JSON answers - here server answers STRING SOMETIMES and NOT ONLY NUMBER
-            NSString *num = [opPost objectForKey:@"num"];
-            
-            NSString *subject = [opPost objectForKey:@"subject"];
-            NSString *comment = [opPost objectForKey:@"comment"];
-            comment = [comment stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
-            comment = [comment stringByConvertingHTMLToPlainText];
-            NSNumber *filesCount = [opPost objectForKey:@"files_count"];
-            NSNumber *postsCount = [opPost objectForKey:@"posts_count"];
+            NSDictionary *threadDict = [thread[@"posts"] firstObject];
 
-            NSInteger totalPostsCount = [postsCount integerValue] + lastpostsCount;
+            DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
+                                      fromJSONDictionary:threadDict
+                                                   error:&error];
 
-            // 'real' all posts count
-            postsCount = [[NSNumber alloc] initWithInteger:totalPostsCount];
-            
-            NSDictionary *files = [[opPost objectForKey:@"files"] objectAtIndex:0];
+            if (!error) {
+                NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
 
-            NSString *tmpThumbnail = [files objectForKey:@"thumbnail"];
-
-            if (!tmpThumbnail) {
-                NSLog(@"Something is not right with the thumbnail or full picture");
-                continue;
+                if (threadDict[@"files"][0][@"thumbnail"]) {
+                    NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
+                    thread.thumbnail = thumbPath;
+                }
+                [_privateThreadsArray addObject:thread];
             }
-            NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
-
-            // time since first post
-            NSInteger timestamp = [[opPost objectForKey:@"timestamp"] integerValue];
-            NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
-
-            /**
-             Create thred object for storing all info for later use, and write object to mutable array
-             */
-            DVBThread *threadObj = [[DVBThread alloc] initWithNum:num
-                                                          Subject:subject
-                                                        opComment:comment
-                                                       filesCount:filesCount
-                                                       postsCount:postsCount
-                                                        thumbPath:thumbPath
-                                            andTimeSinceFirstPost:dateAgo];
-            [_privateThreadsArray addObject:threadObj];
-            threadObj = nil;
+            else {
+                NSLog(@"error: %@", error.localizedDescription);
+            }
         }
         
         NSArray *resultArr = [[NSArray alloc] initWithArray:_privateThreadsArray];
@@ -127,7 +98,6 @@
         completion(threadsCompletion);
     }];
 }
-
 
 
 @end

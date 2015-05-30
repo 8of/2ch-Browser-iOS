@@ -6,23 +6,66 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBConstants.h"
+#import "NSString+HTML.h"
+#import "DateFormatter.h"
+
 #import "DVBThread.h"
+
+@interface DVBThread ()
+
+@property (nonatomic, strong) NSArray *lastPosts;
+@property (nonatomic, strong) NSNumber *postsCountBeforeCheck;
+
+@end
 
 @implementation DVBThread
 
-- (instancetype)initWithNum:(NSString *)threadNum Subject:(NSString *)threadTitle opComment:(NSString *)threadOpComment filesCount:(NSNumber *)threadFilesCount postsCount:(NSNumber *)threadPostsCount thumbPath:(NSString *)threadThumbPath andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
++ (NSDictionary *)JSONKeyPathsByPropertyKey
 {
-    self = [super init];
-    if (self) {
-        _num = threadNum;
-        _subject = threadTitle;
-        _comment = threadOpComment;
-        _filesCount = threadFilesCount;
-        _postsCount = threadPostsCount;
-        _thumbnail = threadThumbPath;
-        _timeSinceFirstPost = timeSinceFirstPost;
-    }
+    return @{
+         @"num" : @"num",
+         @"comment" : @"comment",
+         @"subject" : @"subject",
+         @"postsCountBeforeCheck" : @"posts_count",
+         @"lastPosts" : @"posts",
+         @"timeSinceFirstPost" : @"timestamp"
+     };
+}
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionaryValue error:(NSError **)error
+{
+    self = [super initWithDictionary:dictionaryValue error:error];
+    if (self == nil) return nil;
+
+    _postsCount = [[NSNumber alloc] initWithInteger:([_postsCountBeforeCheck integerValue] + [_lastPosts count])];
+
+    _lastPosts = nil;
+    _postsCountBeforeCheck = nil;
+
     return self;
+}
+
++ (NSValueTransformer *)commentJSONTransformer
+{
+    return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
+
+        NSString *comment = string;
+        comment = [comment stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
+        comment = [comment stringByConvertingHTMLToPlainText];
+
+        return comment;
+    }];
+}
+
++ (NSValueTransformer *)timeSinceFirstPostJSONTransformer
+{
+    return [MTLValueTransformer transformerUsingForwardBlock:^id(NSNumber *timestamp, BOOL *success, NSError *__autoreleasing *error) {
+
+        NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp.integerValue];
+
+        return dateAgo;
+    }];
 }
 
 @end

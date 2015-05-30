@@ -5,11 +5,14 @@
 //  Created by Andrey Konstantinov on 26/04/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
-
-#import <SDWebImage/UIImageView+WebCache.h>
+#import <CoreImage/CoreImage.h>
+#import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
+
 #import "DVBContainerForPostElements.h"
+
+static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 @interface DVBContainerForPostElements () <UITextViewDelegate>
 
@@ -42,6 +45,44 @@
 
 - (void)setupAppearance
 {
+    // Dark theme
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+        _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
+        _nameTextField.backgroundColor = CELL_BACKGROUND_COLOR;
+        _subjectTextField.backgroundColor = CELL_BACKGROUND_COLOR;
+        _emailTextField.backgroundColor = CELL_BACKGROUND_COLOR;
+        _captchaValueTextField.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        NSString *subjectPlaceholder = NSLocalizedString(@"Тема", @"Placeholder для поля Тема");
+        NSString *namePlaceholder = NSLocalizedString(@"Имя", @"Placeholder для поля Имя");
+        NSString *emailPlaceholder = NSLocalizedString(@"Email", @"Placeholder для поля Email");
+        NSString *captchaPlaceholder = NSLocalizedString(@"Капча", @"Placeholder для поля Капча");
+
+        _subjectTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:subjectPlaceholder
+                                                                                  attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+        _subjectTextField.textColor = [UIColor whiteColor];
+        _subjectTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+
+        _nameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:namePlaceholder
+                                                                               attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+        _nameTextField.textColor = [UIColor whiteColor];
+        _nameTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+
+        _emailTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:emailPlaceholder
+                                                                                attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+        _emailTextField.textColor = [UIColor whiteColor];
+        _emailTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+
+        _captchaValueTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:captchaPlaceholder
+                                                                                       attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+        _captchaValueTextField.textColor = [UIColor whiteColor];
+        _captchaValueTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+
+        _commentTextView.keyboardAppearance = UIKeyboardAppearanceDark;
+        _commentTextView.textColor = [UIColor whiteColor];
+    }
+
     // Captcha image will be in front of activity indicator after appearing.
     _captchaImage.layer.zPosition = 2;
 
@@ -121,6 +162,11 @@
     if ([self isCommentPlaceholderNow]) {
         textView.text = @"";
         textView.textColor = [UIColor blackColor];
+
+        // Dark theme
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            textView.textColor = [UIColor whiteColor];
+        }
     }
     [textView becomeFirstResponder];
 }
@@ -148,7 +194,42 @@
 
 - (void)setCaptchaImageWithUrlString:(NSString *)urlString
 {
-    [_captchaImage sd_setImageWithURL:[NSURL URLWithString:urlString]];
+    [_captchaImage.layer removeAllAnimations];
+
+    NSURLRequest *captchaRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]
+                                                    cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                timeoutInterval:60.0];
+
+    [_captchaImage setImageWithURLRequest:captchaRequest
+                         placeholderImage:nil
+                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
+    {
+        // Dark theme
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            CIFilter *filterInvert = [CIFilter filterWithName:@"CIColorInvert"];
+            [filterInvert setDefaults];
+            [filterInvert setValue:[[CIImage alloc] initWithCGImage:image.CGImage]
+                            forKey:@"inputImage"];
+            image = [[UIImage alloc] initWithCIImage:filterInvert.outputImage];
+
+            CIFilter *filterBrightness= [CIFilter filterWithName:@"CIColorControls"];
+            [filterBrightness setDefaults];
+            [filterBrightness setValue:image.CIImage
+                                forKey:@"inputImage"];
+            [filterBrightness setValue:[NSNumber numberWithFloat:0.017]
+                                forKey:@"inputBrightness"];
+            image = [[UIImage alloc] initWithCIImage:filterBrightness.outputImage];
+        }
+
+        [UIView transitionWithView:_captchaImage
+                          duration:0.5f
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _captchaImage.image = image;
+                        } completion:NULL];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+
+    }];
 }
 
 #pragma mark - Keyboard
@@ -224,32 +305,47 @@
 
 #pragma mark - Upload/Delete button Animation
 
-- (void)changeUploadButtonToDeleteWithButton:(UIButton *)button
+- (void)changeUploadViewToDeleteView:(UIView *)view andsetImage:(UIImage *)image forImageView:(UIImageView *)imageView
 {
-    button.layer.cornerRadius = 11.0f;
-
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.3f
+    // animate plus
+    [UIView animateWithDuration:IMAGE_CHANGE_ANIMATE_TIME
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [button setTransform:CGAffineTransformRotate(button.transform, M_PI/4)];
-                         button.backgroundColor = [UIColor redColor];
+                         [view setTransform:CGAffineTransformRotate(view.transform, M_PI/4)];
+                         view.backgroundColor = [UIColor redColor];
                      } completion:nil];
+
+    // animate image change
+    [UIView transitionWithView:imageView
+                      duration:IMAGE_CHANGE_ANIMATE_TIME
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        imageView.image = image;
+                    } completion:NULL];
 }
 
-- (void)changeUploadButtonToUploadWithButton:(UIButton *)button
+- (void)changeDeleteViewToUploadView:(UIView *)view andClearImageView:(UIImageView *)imageView
 {
     [self layoutIfNeeded];
-    [UIView animateWithDuration:0.3f
+    // animate plus
+    [UIView animateWithDuration:IMAGE_CHANGE_ANIMATE_TIME
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.autoresizesSubviews = NO;
-                         [button setTransform:CGAffineTransformRotate(button.transform, -M_PI/4)];
-                         button.backgroundColor = [UIColor clearColor];
+                         [view setTransform:CGAffineTransformRotate(view.transform, -M_PI/4)];
+                         view.backgroundColor = [UIColor clearColor];
                      } completion:nil];
+    // animate image change
+    [UIView transitionWithView:imageView
+                      duration:IMAGE_CHANGE_ANIMATE_TIME
+                       options:UIViewAnimationOptionTransitionCrossDissolve
+                    animations:^{
+                        imageView.image = nil;
+                    } completion:NULL];
 }
 
 @end
