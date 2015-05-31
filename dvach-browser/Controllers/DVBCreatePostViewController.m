@@ -36,7 +36,6 @@
 @property (nonatomic, strong) NSMutableArray *imagesToUpload;
 @property (nonatomic, strong) NSString *createdThreadNum;
 @property (nonatomic, assign) BOOL postSuccessfull;
-@property (nonatomic, strong) DVBPost *postToAddToThread;
 
 // UI elements
 @property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
@@ -242,8 +241,7 @@
                 _createdThreadNum = threadToRedirectTo;
             }
             else {
-                _postToAddToThread = [self postFromViewControllerInfoWithAnswer:messagePostServerAnswer];
-                _sharedComment.createdPost = _postToAddToThread;
+                _sharedComment.createdPostNum = messagePostServerAnswer.num;
             }
 
             // Clear comment text and saved comment if post was successfull.
@@ -405,50 +403,6 @@
     if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
         _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     }
-}
-
-#pragma mark - Create post object to add to previos thread
-
-- (DVBPost *)postFromViewControllerInfoWithAnswer:(DVBMessagePostServerAnswer *)serverAnswer
-{
-    NSString *num = serverAnswer.num;
-    NSString *subject = _containerForPostElementsView.subjectTextField.text;
-
-    UIFontDescriptor *bodyFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-    CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
-
-    NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:_containerForPostElementsView.commentTextView.text];
-    NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
-    [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
-
-    // dark theme
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
-    }
-
-    NSString *name = _containerForPostElementsView.nameTextField.text;
-
-    NSDictionary *newPostDictionary =
-    @{
-        @"num" : num,
-        @"subject" : subject,
-        @"timestamp" : [NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],
-        @"name" : name
-    };
-
-    NSError *error;
-
-    DVBPost *post = [MTLJSONAdapter modelOfClass:DVBPost.class
-                              fromJSONDictionary:newPostDictionary
-                                           error:&error];
-    post.comment = [maComment copy];
-
-    if (error) {
-        NSLog(@"error while creating new post %@", error.localizedDescription);
-        return nil;
-    }
-
-    return post;
 }
 
 @end
