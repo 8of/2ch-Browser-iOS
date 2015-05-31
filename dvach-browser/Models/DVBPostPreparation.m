@@ -256,22 +256,6 @@
         whitespaceDoubleShift += cutRange.length - 2;
     }
     
-    // добавляем заголовок поста, если он есть
-    // сейчас заголовок выводится отдельно в section header - поэтому закомментировано
-    /*
-     if (self.subject && ![self.subject isEqualToString:@""]) {
-     
-     self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#39;" withString:@"'"];
-     self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#44;" withString:@","];
-     
-     NSMutableAttributedString *maSubject = [[NSMutableAttributedString alloc]initWithString:[self.subject stringByAppendingString:@"\n"]];
-     [maSubject addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0] range:NSMakeRange(0, maSubject.length)];
-     [maSubject addAttribute:NSParagraphStyleAttributeName value:commentStyle range:NSMakeRange(0, maSubject.length)];
-     
-     [maComment insertAttributedString:maSubject atIndex:0];
-     }
-     */
-    
     // Заменить хтмл-литералы на нормальные символы (раньше этого делать нельзя, сломается парсинг).
     [[maComment mutableString] replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     [[maComment mutableString] replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
