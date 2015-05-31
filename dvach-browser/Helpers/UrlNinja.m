@@ -99,8 +99,7 @@
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url andThreadNum:(NSString *)threadNum andBoardCode:(NSString *)boardCode
 {
     switch (url.type) {
-        case boardLink: {
-            //открыть борду
+        case boardLink: { //открыть борду
             /*
              BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
              controller.boardId = urlNinja.boardId;
@@ -111,7 +110,7 @@
 
             break;
         }
-        case boardThreadLink: {
+        case boardThreadLink: { //
             // [self openThreadWithUrlNinja:urlNinja];
 
             return NO;
@@ -141,6 +140,9 @@
                  return NO;
                  }
                  */
+            }
+            else { // 
+
             }
             // [self openThreadWithUrlNinja:urlNinja];
         }

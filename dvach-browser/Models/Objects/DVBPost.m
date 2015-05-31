@@ -50,23 +50,6 @@
     }];
 }
 
-+ (NSValueTransformer *)commentJSONTransformer
-{
-    return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
-
-        NSString *comment;
-        if ([string rangeOfString:@"ررً"].location == NSNotFound) {
-            comment = string;
-        }
-        else {
-            NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
-            comment = brokenStringHere;
-        }
-
-        return comment;
-    }];
-}
-
 + (NSValueTransformer *)subjectJSONTransformer
 {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
