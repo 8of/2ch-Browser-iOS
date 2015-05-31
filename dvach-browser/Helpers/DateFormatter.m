@@ -10,7 +10,7 @@
 
 @implementation DateFormatter
 
-+(NSString *)dateFromTimestamp:(NSInteger)timestamp {
++ (NSString *)dateFromTimestamp:(NSInteger)timestamp {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     
     NSCalendarUnit units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;

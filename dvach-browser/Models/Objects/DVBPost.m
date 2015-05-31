@@ -44,7 +44,7 @@
 {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSNumber *num, BOOL *success, NSError *__autoreleasing *error) {
 
-        NSString *numToReturn = [[NSString alloc] initWithFormat:@"%ld", num.integerValue ];
+        NSString *numToReturn = [[NSString alloc] initWithFormat:@"%ld", (long)num.integerValue ];
 
         return numToReturn;
     }];
