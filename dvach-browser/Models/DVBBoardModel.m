@@ -53,16 +53,21 @@
     {
         NSArray *threadsArray = resultDict[@"threads"];
         
-        for (id thread in threadsArray) {
+        for (NSDictionary *thread in threadsArray) {
+            NSArray *threadPosts = thread[@"posts"];
+
             NSError *error;
 
-            NSDictionary *threadDict = [thread[@"posts"] firstObject];
+            NSDictionary *threadDict = [threadPosts firstObject];
 
             DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
                                       fromJSONDictionary:threadDict
                                                    error:&error];
 
             if (!error) {
+
+                thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
+
                 NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
 
                 if (threadDict[@"files"][0][@"thumbnail"]) {

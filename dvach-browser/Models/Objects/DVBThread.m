@@ -12,13 +12,6 @@
 
 #import "DVBThread.h"
 
-@interface DVBThread ()
-
-@property (nonatomic, strong) NSArray *lastPosts;
-@property (nonatomic, strong) NSNumber *postsCountBeforeCheck;
-
-@end
-
 @implementation DVBThread
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
@@ -27,23 +20,9 @@
          @"num" : @"num",
          @"comment" : @"comment",
          @"subject" : @"subject",
-         @"postsCountBeforeCheck" : @"posts_count",
-         @"lastPosts" : @"posts",
+         @"postsCount" : @"posts_count",
          @"timeSinceFirstPost" : @"timestamp"
      };
-}
-
-- (instancetype)initWithDictionary:(NSDictionary *)dictionaryValue error:(NSError **)error
-{
-    self = [super initWithDictionary:dictionaryValue error:error];
-    if (self == nil) return nil;
-
-    _postsCount = [[NSNumber alloc] initWithInteger:([_postsCountBeforeCheck integerValue] + [_lastPosts count])];
-
-    _lastPosts = nil;
-    _postsCountBeforeCheck = nil;
-
-    return self;
 }
 
 + (NSValueTransformer *)commentJSONTransformer
