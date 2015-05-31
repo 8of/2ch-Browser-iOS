@@ -71,7 +71,17 @@
                                                        error:&error];
 
                 if (!error) {
-                    NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:postDictionary[@"comment"]];
+                    NSString *comment = postDictionary[@"comment"];
+
+                    if ([comment rangeOfString:@"ررً"].location == NSNotFound) {
+                    }
+                    else {
+                        NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+                        comment = brokenStringHere;
+                    }
+
+                    NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+
                     post.comment = attributedComment;
 
                     [postNumMutableArray addObject:post.num];
