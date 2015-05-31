@@ -272,6 +272,18 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                          animated:YES];
 }
 
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
+{
+    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+    threadViewControllerToOpen.boardCode = urlNinja.boardId;
+    threadViewControllerToOpen.threadNum = urlNinja.threadId;
+
+    _presentedSomething = YES;
+
+    [self.navigationController pushViewController:threadViewControllerToOpen
+                                         animated:YES];
+}
+
 #pragma mark - Data management and processing
 
 /// Get data from 2ch server

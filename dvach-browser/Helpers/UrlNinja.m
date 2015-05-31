@@ -99,7 +99,7 @@
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url andThreadNum:(NSString *)threadNum andBoardCode:(NSString *)boardCode
 {
     switch (url.type) {
-        case boardLink: { //открыть борду
+        case boardLink: { // Open board
             /*
              BoardViewController *controller = [self.storyboard instantiateViewControllerWithIdentifier:@"BoardTag"];
              controller.boardId = urlNinja.boardId;
@@ -110,8 +110,10 @@
 
             break;
         }
-        case boardThreadLink: { //
-            // [self openThreadWithUrlNinja:urlNinja];
+        case boardThreadLink: { // Open another thread
+            if ([_urlOpener respondsToSelector:@selector(openThreadWithUrlNinja:)]) {
+                [_urlOpener openThreadWithUrlNinja:url];
+            }
 
             return NO;
 
@@ -127,28 +129,22 @@
                 boardCode = url.boardId;
             }
 
-            //если это этот же тред, то он открывается локально, иначе открывается весь тред со скроллом
+            // If its the same thread - open it locally from existing posts
             if ([threadNum isEqualToString:url.threadId] && [boardCode isEqualToString:url.boardId]) {
                 if ([_urlOpener respondsToSelector:@selector(openPostWithUrlNinja:)]) {
                     [_urlOpener openPostWithUrlNinja:url];
                 }
 
                 return YES;
-                /*
-                 if ([self.thread.linksReference containsObject:urlNinja.postId]) {
-                 [self openPostWithUrlNinja:urlNinja];
-                 return NO;
-                 }
-                 */
             }
-            else { // 
-
+            else { // Open another thread
+                if ([_urlOpener respondsToSelector:@selector(openThreadWithUrlNinja:)]) {
+                    [_urlOpener openThreadWithUrlNinja:url];
+                }
             }
-            // [self openThreadWithUrlNinja:urlNinja];
         }
             break;
         default: {
-            // [self makeExternalLinkActionSheetWithUrl:URL];
 
             return NO;
 

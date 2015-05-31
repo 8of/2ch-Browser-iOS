@@ -18,8 +18,6 @@
 @property (strong, nonatomic) NSString *threadNum;
 /// Subject for section title in board View Controller
 @property (strong, nonatomic) NSString *threadSubject;
-/// Index of bad thread in threads' array (needed for just plain deleting element from array).
-@property (nonatomic, assign) NSUInteger threadIndex;
 /// Array of answers for specific post (set it if we need to show answers for post and no entire thread)
 @property (nonatomic, strong) NSArray *answersToPost;
 @property (nonatomic, assign) BOOL isItPostItself;
@@ -37,7 +35,10 @@
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString;
+/// Open single post
 - (void)openPostWithUrlNinja:(UrlNinja *)urlNinja;
+/// Open whole new thread
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja;
 - (void)callShareControllerWithUrlString:(NSString *)urlString;
 
 @end
