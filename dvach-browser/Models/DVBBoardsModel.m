@@ -224,7 +224,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 
                 [boardsFromNetworkMutableArray addObject:board];
                 
-                // we need to delete this temp created object or it will appear in table after realoading
+                // Need to delete this temp created object or it will appear in table after realoading
                 [_context deleteObject:board];
             }
         }
@@ -271,37 +271,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         }];
     }
 }
-
-/*
-
-- (NSString *)getBoardIdWithCategoryName:(NSString *)category
-                                andIndex:(NSUInteger)index
-{
-    if (_boardsDictionaryByCategories)
-    {
-        DVBBoard *boardObject = _boardsDictionaryByCategories[category][index];
-        NSString *boardId = boardObject.boardId;
-        
-        return boardId;
-    }
-    return @"";
-}
-
-- (NSUInteger)getBoardPagesWithBoardId:(NSString *)boardId
-{
-    NSPredicate *predicateByBoardId = [NSPredicate predicateWithFormat:@"boardId == %@", boardId];
-    NSArray *filteredArrayOfBoardsForBoardId = [_boardsArray filteredArrayUsingPredicate:predicateByBoardId];
-    
-    if ([filteredArrayOfBoardsForBoardId count] > 0)
-    {
-        DVBBoard *boardObj = [filteredArrayOfBoardsForBoardId firstObject];
-        NSUInteger pages = boardObj.pages;
-        
-        return pages;
-    }
-    return 0;
-}
- */
 
 #pragma mark - TableView delegate & DataSource
 
