@@ -295,15 +295,4 @@
     return NO;
 }
 
-- (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath {
-    
-    // We already know that there is media in the post - we need to know which type of media we have here.
-    BOOL isContainWebm = ([picPath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
-    if (isContainWebm) {
-        return webm;
-    }
-    
-    return image;
-}
-
 @end

@@ -13,39 +13,27 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Mantle/Mantle.h>
 
-@interface DVBPost : NSObject
-
-typedef NS_ENUM(NSUInteger, DVBPostMediaType) {
-    noMedia,
-    image,
-    webm
-};
+@interface DVBPost : MTLModel <MTLJSONSerializing>
 
 /// Number of the post
-@property (nonatomic, strong, readonly) NSString *num;
+@property (nonatomic, strong) NSString *num;
 /// Subject of the post (for section title in thread View Controller and thread View Controller title)
 @property (nonatomic, strong, readonly) NSString *subject;
 /// Text of post message.
-@property (nonatomic, strong, readonly) NSAttributedString *comment;
-/// Type of the media in the post
-@property (nonatomic, assign, readonly) DVBPostMediaType mediaType;
+@property (nonatomic, strong) NSAttributedString *comment;
 /// Array of pathes for full images attached to post
-@property (nonatomic, strong, readonly) NSArray *pathesArray;
+@property (nonatomic, strong) NSArray *pathesArray;
 /// Array of pathes for thumbnail images attached to post
-@property (nonatomic, strong, readonly) NSArray *thumbPathesArray;
-/// Absolute date
-@property (nonatomic, strong, readonly) NSString *date;
+@property (nonatomic, strong) NSArray *thumbPathesArray;
 /// Relative date to NOW date
 @property (nonatomic, strong, readonly) NSString *dateAgo;
 /// Name of the author of the post
 @property (nonatomic, strong, readonly) NSString *name;
-@property (nonatomic, assign, readonly) BOOL sage;
 /// Replies to this post from other posts in the thread / need to be mutable, as we change it afer creating
 @property (nonatomic, strong) NSMutableArray *replies;
 /// Replies to other posts in this post, children of the same thread / need to be mutable, as we change it afer creating
 @property (nonatomic, strong) NSMutableArray *repliesTo;
-
-- (instancetype)initWithNum:(NSString *)postNum subject:(NSString *)postSubject comment:(NSAttributedString *)postComment pathesArray:(NSArray *)postPathesArray thumbPathesArray:(NSArray *)postThumbPathesArray date:(NSString *)postDate dateAgo:(NSString *)postDateAgo repliesTo:(NSMutableArray *)postRepliesTo mediaType:(DVBPostMediaType)mediaType name:(NSString *)name sage:(BOOL)sage;
 
 @end

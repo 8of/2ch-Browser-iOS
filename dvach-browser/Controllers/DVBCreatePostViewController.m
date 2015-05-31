@@ -7,6 +7,7 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import <Mantle/Mantle.h>
 #import <UINavigationItem+Loading.h>
 #import "UIImage+DVBImageExtention.h"
 
@@ -410,36 +411,44 @@
 
 - (DVBPost *)postFromViewControllerInfoWithAnswer:(DVBMessagePostServerAnswer *)serverAnswer
 {
-        NSString *num = serverAnswer.num;
-        NSString *subject = _containerForPostElementsView.subjectTextField.text;
+    NSString *num = serverAnswer.num;
+    NSString *subject = _containerForPostElementsView.subjectTextField.text;
 
-        UIFontDescriptor *bodyFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-        CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
+    UIFontDescriptor *bodyFontDescriptor = [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+    CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
 
-        NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:_containerForPostElementsView.commentTextView.text];
-        NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
-        [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
+    NSMutableAttributedString *maComment = [[NSMutableAttributedString alloc]initWithString:_containerForPostElementsView.commentTextView.text];
+    NSRange range = NSMakeRange(0, _containerForPostElementsView.commentTextView.text.length);
+    [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
 
-        // dark theme
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-            [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
-        }
+    // dark theme
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
+    }
 
-        NSString *name = _containerForPostElementsView.nameTextField.text;
+    NSString *name = _containerForPostElementsView.nameTextField.text;
 
-        DVBPost *post = [[DVBPost alloc] initWithNum:num
-                                             subject:subject
-                                             comment:[maComment copy]
-                                         pathesArray:nil
-                                    thumbPathesArray:nil
-                                                date:@""
-                                             dateAgo:@"0 с"
-                                           repliesTo:nil
-                                           mediaType:noMedia
-                                                name:name
-                                                sage:NO];
+    NSDictionary *newPostDictionary =
+    @{
+        @"num" : num,
+        @"subject" : subject,
+        @"timestamp" : [NSNumber numberWithInteger:[[NSDate date] timeIntervalSince1970]],
+        @"name" : name
+    };
 
-        return post;
+    NSError *error;
+
+    DVBPost *post = [MTLJSONAdapter modelOfClass:DVBPost.class
+                              fromJSONDictionary:newPostDictionary
+                                           error:&error];
+    post.comment = [maComment copy];
+
+    if (error) {
+        NSLog(@"error while creating new post %@", error.localizedDescription);
+        return nil;
+    }
+
+    return post;
 }
 
 @end

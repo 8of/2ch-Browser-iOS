@@ -41,22 +41,4 @@
  */
 - (NSString *)cleanPosterNameWithHtmlPosterName:(NSString *)name;
 
-/**
- *  Check email field for 'sage' keyword
- *
- *  @param email email-field directly from server
- *
- *  @return sage flag
- */
-- (BOOL)isPostContaintSageWithEmail:(NSString *)email;
-
-/**
- *  Check what type of media presented in post
- *
- *  @param picPath path of 'full' media file
- *
- *  @return type of the media attached to the post
- */
-- (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath;
-
 @end
