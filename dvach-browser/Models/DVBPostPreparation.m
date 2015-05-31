@@ -79,7 +79,7 @@
     [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
     
     NSMutableParagraphStyle *commentStyle = [[NSMutableParagraphStyle alloc]init];
-    //    commentStyle.lineSpacing = kCommentLineSpacing;
+
     [maComment addAttribute:NSParagraphStyleAttributeName value:commentStyle range:range];
 
     // dark theme
@@ -164,7 +164,11 @@
         @throw [NSException exceptionWithName:@"Not enough params" reason:@"Specify threadId and boardId params please" userInfo:nil];
     }
     
-    [link enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop) {
+    [link enumerateMatchesInString:comment
+                           options:0
+                             range:range
+                        usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop)
+    {
         NSString *fullLink = [comment substringWithRange:result.range];
         NSTextCheckingResult *linkLinkResult = [linkLink firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
         NSTextCheckingResult *linkLinkTwoResult = [linkLinkTwo firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
