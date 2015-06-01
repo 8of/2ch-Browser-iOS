@@ -20,7 +20,8 @@
 }
 
 @property (nonatomic, retain) NSString *comment;
-@property (nonatomic, strong) DVBPost *createdPost;
+@property (nonatomic, strong) NSString *createdPostNum;
+// @property (nonatomic, strong) DVBPost *createdPost;
 
 + (id)sharedComment;
 /**

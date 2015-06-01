@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "DVBPost.h"
+
 @interface DVBThreadModel : NSObject
 
 /**
@@ -19,8 +21,7 @@
 // array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 
-- (instancetype)initWithBoardCode:(NSString *)boardCode
-                     andThreadNum:(NSString *)threadNum;
+- (instancetype)initWithBoardCode:(NSString *)boardCode andThreadNum:(NSString *)threadNum;
 
 /**
  *  Entirely reload post list in the thread
@@ -45,5 +46,8 @@
  *  @return array of full images
  */
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray;
+
+/// After posting we trying to get our new post and parse it from the scratch
+- (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(DVBPost *))completion;
 
 @end

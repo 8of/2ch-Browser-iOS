@@ -79,7 +79,7 @@
     [maComment addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue" size:bodyFontSize] range:range];
     
     NSMutableParagraphStyle *commentStyle = [[NSMutableParagraphStyle alloc]init];
-    //    commentStyle.lineSpacing = kCommentLineSpacing;
+
     [maComment addAttribute:NSParagraphStyleAttributeName value:commentStyle range:range];
 
     // dark theme
@@ -164,7 +164,11 @@
         @throw [NSException exceptionWithName:@"Not enough params" reason:@"Specify threadId and boardId params please" userInfo:nil];
     }
     
-    [link enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop) {
+    [link enumerateMatchesInString:comment
+                           options:0
+                             range:range
+                        usingBlock:^(NSTextCheckingResult *result, __unused NSMatchingFlags flags, __unused BOOL *stop)
+    {
         NSString *fullLink = [comment substringWithRange:result.range];
         NSTextCheckingResult *linkLinkResult = [linkLink firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
         NSTextCheckingResult *linkLinkTwoResult = [linkLinkTwo firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
@@ -256,22 +260,6 @@
         whitespaceDoubleShift += cutRange.length - 2;
     }
     
-    // добавляем заголовок поста, если он есть
-    // сейчас заголовок выводится отдельно в section header - поэтому закомментировано
-    /*
-     if (self.subject && ![self.subject isEqualToString:@""]) {
-     
-     self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#39;" withString:@"'"];
-     self.subject = [self.subject stringByReplacingOccurrencesOfString:@"&#44;" withString:@","];
-     
-     NSMutableAttributedString *maSubject = [[NSMutableAttributedString alloc]initWithString:[self.subject stringByAppendingString:@"\n"]];
-     [maSubject addAttribute:NSFontAttributeName value:[UIFont fontWithName:@"HelveticaNeue-Bold" size:16.0] range:NSMakeRange(0, maSubject.length)];
-     [maSubject addAttribute:NSParagraphStyleAttributeName value:commentStyle range:NSMakeRange(0, maSubject.length)];
-     
-     [maComment insertAttributedString:maSubject atIndex:0];
-     }
-     */
-    
     // Заменить хтмл-литералы на нормальные символы (раньше этого делать нельзя, сломается парсинг).
     [[maComment mutableString] replaceOccurrencesOfString:@"&gt;" withString:@">" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     [[maComment mutableString] replaceOccurrencesOfString:@"&lt;" withString:@"<" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
@@ -293,17 +281,6 @@
         return YES;
     }
     return NO;
-}
-
-- (DVBPostMediaType)mediaTypeInsidePostWithPicPath:(NSString *)picPath {
-    
-    // We already know that there is media in the post - we need to know which type of media we have here.
-    BOOL isContainWebm = ([picPath rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
-    if (isContainWebm) {
-        return webm;
-    }
-    
-    return image;
 }
 
 @end

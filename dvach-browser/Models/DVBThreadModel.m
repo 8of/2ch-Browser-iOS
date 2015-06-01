@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import <Mantle/Mantle.h>
+
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBConstants.h"
@@ -32,8 +34,7 @@
                      andThreadNum:(NSString *)threadNum
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         _boardCode = boardCode;
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
@@ -45,8 +46,7 @@
 
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion
 {
-    if (_boardCode && _threadNum)
-    {
+    if (_boardCode && _threadNum) {
         [_networking getPostsWithBoard:_boardCode
                              andThread:_threadNum
                          andCompletion:^(NSDictionary *postsDictionary)
@@ -59,125 +59,79 @@
             NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
             
             NSMutableDictionary *resultDict = [postsDictionary mutableCopy];
+
+            NSArray *posts2Array = resultDict[@"threads"][0][@"posts"];
             
-            NSArray *threadsDict = resultDict[@"threads"];
-            NSDictionary *postsArray = threadsDict[0];
-            NSArray *posts2Array = postsArray[@"posts"];
-            
-            for (id key in posts2Array) {
-                NSString *num = [key[@"num"] stringValue];
-                
-                [postNumMutableArray addObject:num];
-                
-                NSString *comment;
-                // Check comment for bad symbols
-                if ([key[@"comment"] rangeOfString:@"ررً"].location == NSNotFound) {
-                    comment = key[@"comment"];
+            for (NSDictionary *postDictionary in posts2Array) {
+
+                NSError *error;
+
+                DVBPost *post = [MTLJSONAdapter modelOfClass:DVBPost.class
+                                          fromJSONDictionary:postDictionary
+                                                       error:&error];
+
+                if (!error) {
+                    NSString *comment = postDictionary[@"comment"];
+
+                    if ([comment rangeOfString:@"ررً"].location == NSNotFound) {
+                    }
+                    else {
+                        NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+                        comment = brokenStringHere;
+                    }
+
+                    NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+
+                    post.comment = attributedComment;
+
+                    [postNumMutableArray addObject:post.num];
+
+                    NSMutableArray *repliesToArray = [_postPreparation repliesToArrayForPost];
+
+                    NSArray *files = postDictionary[@"files"];
+                    NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
+                    NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
+
+                    if (files) {
+                        for (NSDictionary *fileDictionary in files) {
+                            NSString *fullFileName = fileDictionary[@"path"];
+
+                            NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fileDictionary[@"thumbnail"]];
+
+                            [singlePostThumbPathesArrayMutable addObject:thumbPath];
+                            [_privateThumbImagesArray addObject:thumbPath];
+
+                            NSString *picPath;
+                            BOOL isContainWebm = ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
+
+                            // check webm or not
+                            if (isContainWebm) { // if contains .webm
+                                // make VLC webm link
+                                picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
+                            }
+                            else {               // if regular image
+                                picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
+                            }
+
+                            [singlePostPathesArrayMutable addObject:picPath];
+                            [_privateFullImagesArray addObject:picPath];
+                        }
+                    }
+
+                    post.repliesTo = repliesToArray;
+
+                    post.thumbPathesArray = [singlePostThumbPathesArrayMutable copy];
+                    singlePostThumbPathesArrayMutable = nil;
+
+                    post.pathesArray = [singlePostPathesArrayMutable copy];
+                    singlePostPathesArrayMutable = nil;
+
+                    [_privatePostsArray addObject:post];
                 }
                 else {
-                    NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
-                    comment = brokenStringHere;
+                    NSLog(@"error: %@", error.localizedDescription);
                 }
 
-                NSString *subject;
-                // Check subject for bad symbols
-                if ([key[@"subject"] rangeOfString:@"ررً"].location == NSNotFound) {
-                    subject = key[@"subject"];
-                }
-                
-                NSInteger timestamp = [key[@"timestamp"] integerValue];
-                NSString *date = key[@"date"];
-                NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp];
-                
-                NSString *name = key[@"name"];
-                NSString *nameForPost = [_postPreparation cleanPosterNameWithHtmlPosterName:name];
-                
-                NSString *email = key[@"email"];
-                BOOL isSage = [_postPreparation isPostContaintSageWithEmail:email];
-                
-                NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
-                
-                NSMutableArray *repliesToArray = [_postPreparation repliesToArrayForPost];
-
-                NSArray *files = key[@"files"];
-
-                NSDictionary *files_first = key[@"files"][0];
-                
-                NSString *thumbPath = [[NSMutableString alloc] init];
-                NSString *picPath = [[NSMutableString alloc] init];
-                
-                DVBPostMediaType mediaType = noMedia;
-
-                NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
-                NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
-
-                // new approach
-                if (files) {
-                    for (NSDictionary *fileDictionary in files) {
-                        NSString *fullFileName = fileDictionary[@"path"];
-
-                        mediaType = [_postPreparation mediaTypeInsidePostWithPicPath:fullFileName];
-
-                        thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fileDictionary[@"thumbnail"]];
-
-                        [singlePostThumbPathesArrayMutable addObject:thumbPath];
-                        [_privateThumbImagesArray addObject:thumbPath];
-
-                        // check webm or not
-                        if (mediaType == webm) { // if contains .webm
-                            // make VLC webm link
-                            picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
-                        }
-                        else {                    // if regular image
-                            picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
-                        }
-
-                        [singlePostPathesArrayMutable addObject:picPath];
-                        [_privateFullImagesArray addObject:picPath];
-                    }
-                }
-
-                // old approach
-                if (files_first) {
-                    NSString *fullFileName = files_first[@"path"];
-                    
-                    mediaType = [_postPreparation mediaTypeInsidePostWithPicPath:fullFileName];
-                    
-                    thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, files_first[@"thumbnail"]];
-                    
-                    // check webm or not
-                    if (mediaType == webm) { // if contains .webm
-                        // make VLC webm link
-                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
-                    }
-                    else {                   // if regular image
-                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
-                    }
-                }
-
-                NSArray *pathesArray = [singlePostPathesArrayMutable copy];
-                NSArray *thumbPathesArray = [singlePostThumbPathesArrayMutable copy];
-
-                // If post have multiple media attachments - just drop "old" full-thumb-pathes
-                if ([pathesArray count] > 1) {
-                    picPath = @"";
-                    thumbPath = @"";
-                    mediaType = noMedia;
-                }
-                
-                DVBPost *post = [[DVBPost alloc]    initWithNum:num
-                                                        subject:subject
-                                                        comment:attributedComment
-                                                    pathesArray:pathesArray
-                                               thumbPathesArray:thumbPathesArray
-                                                        date:date
-                                                        dateAgo:dateAgo
-                                                      repliesTo:repliesToArray
-                                                      mediaType:mediaType
-                                                           name:nameForPost
-                                                           sage:isSage];
-
-                [_privatePostsArray addObject:post];
             }
             
             _thumbImagesArray = _privateThumbImagesArray;
@@ -263,6 +217,76 @@
    _fullImagesArray = _privateFullImagesArray;
     
     return _fullImagesArray;
+}
+
+- (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(DVBPost *))completion
+{
+    [_networking getPostWithBoardCode:board andThread:thread andPostNum:postNum andCompletion:^(NSArray *networkCompletion) {
+        if (networkCompletion) {
+
+            NSError *error;
+            if (error) {
+                completion(nil);
+            }
+            if (networkCompletion.count > 0) {
+
+                NSDictionary *postDictionary = [networkCompletion firstObject];
+                DVBPost *post = [MTLJSONAdapter modelOfClass:DVBPost.class
+                                          fromJSONDictionary:postDictionary
+                                                       error:&error];
+
+                NSString *comment = postDictionary[@"comment"];
+
+                NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+
+                post.comment = attributedComment;
+
+                NSArray *files = postDictionary[@"files"];
+                NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
+                NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
+
+                if (files) {
+                    for (NSDictionary *fileDictionary in files) {
+                        NSString *fullFileName = fileDictionary[@"path"];
+
+                        NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fileDictionary[@"thumbnail"]];
+
+                        [singlePostThumbPathesArrayMutable addObject:thumbPath];
+                        [_privateThumbImagesArray addObject:thumbPath];
+
+                        NSString *picPath;
+                        BOOL isContainWebm = ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
+
+                        // check webm or not
+                        if (isContainWebm) { // if contains .webm
+                            // make VLC webm link
+                            picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
+                        }
+                        else {               // if regular image
+                            picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
+                        }
+
+                        [singlePostPathesArrayMutable addObject:picPath];
+                        [_privateFullImagesArray addObject:picPath];
+                    }
+                }
+
+                post.thumbPathesArray = [singlePostThumbPathesArrayMutable copy];
+                singlePostThumbPathesArrayMutable = nil;
+
+                post.pathesArray = [singlePostPathesArrayMutable copy];
+                singlePostPathesArrayMutable = nil;
+
+                completion(post);
+            }
+            else {
+                completion(nil);
+            }
+        }
+        else {
+            completion(nil);
+        }
+    }];
 }
 
 @end

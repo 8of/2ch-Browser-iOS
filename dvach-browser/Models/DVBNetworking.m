@@ -104,8 +104,7 @@
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSDictionary *))completion
 {
     if ([self getNetworkStatus]) {
-        // building URL for getting JSON-thread-answer from mutiple strings
-        
+        // building URL for getting JSON-thread-answer from multiple strings
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", DVACH_BASE_URL, board, threadNum];
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -180,12 +179,13 @@
     
     NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/posting.fcgi"];
     
-    NSDictionary *params = @{
-                             @"task":task,
-                             @"json":json,
-                             @"board":board,
-                             @"thread":threadNum
-                             };
+    NSDictionary *params =
+    @{
+         @"task":task,
+         @"json":json,
+         @"board":board,
+         @"thread":threadNum
+    };
     
     // Convert to mutable to add more parameters, depending on situation
     NSMutableDictionary *mutableParams = [params mutableCopy];
@@ -397,6 +397,42 @@
          {
              NSLog(@"Error: %@", error);
          }];
+    }
+}
+
+#pragma mark - single post
+
+- (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(NSArray *))completion
+{
+    if ([self getNetworkStatus]) {
+
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/mobile.fcgi"];
+
+        NSDictionary *params =
+        @{
+              @"task" : @"get_thread",
+              @"board" : board,
+              @"thread" : thread,
+              @"num" : postNum
+         };
+
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/html", @"application/json",nil]];
+
+        [manager GET:address
+          parameters:params
+             success:^(AFHTTPRequestOperation *operation, id responseObject)
+        {
+            completion(responseObject);
+        }
+             failure:^(AFHTTPRequestOperation *operation, NSError *error)
+        {
+            NSLog(@"error while getting new post in thread: %@", error. localizedDescription);
+            completion(nil);
+        }];
+    }
+    else {
+        completion(nil);
     }
 }
 

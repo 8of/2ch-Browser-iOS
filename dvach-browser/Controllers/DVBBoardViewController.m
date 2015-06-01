@@ -301,8 +301,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
             
             NSString *threadNum = tempThreadObj.num;
             NSString *threadSubject = tempThreadObj.subject;
-
-            threadViewController.threadIndex = selectedCellPath.row;
             
             threadViewController.threadNum = threadNum;
             threadViewController.threadSubject = threadSubject;
