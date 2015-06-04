@@ -101,11 +101,14 @@
 
 #pragma mark - Single thread
 
-- (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSDictionary *))completion
+- (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andPostNum:(NSString *)postNum andCompletion:(void (^)(id))completion
 {
     if ([self getNetworkStatus]) {
         // building URL for getting JSON-thread-answer from multiple strings
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", DVACH_BASE_URL, board, threadNum];
+        if (postNum) {
+            requestAddress = [[NSString alloc] initWithFormat:@"%@makaba/mobile.fcgi?task=get_thread&board=%@&thread=%@&num=%@", DVACH_BASE_URL, board, threadNum, postNum];
+        }
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];

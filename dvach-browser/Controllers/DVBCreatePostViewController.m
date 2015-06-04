@@ -240,9 +240,6 @@
             if (threadToRedirectTo && isThreadToRedirectToNotEmpty) {
                 _createdThreadNum = threadToRedirectTo;
             }
-            else {
-                _sharedComment.createdPostNum = messagePostServerAnswer.num;
-            }
 
             // Clear comment text and saved comment if post was successfull.
             _containerForPostElementsView.commentTextView.text = @"";

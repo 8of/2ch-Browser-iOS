@@ -522,6 +522,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 -(void)updateThreadAfterPosting
 {
+    [self reloadThread];
+    /*
     DVBComment *comment = [DVBComment sharedComment];
 
     if (comment.createdPostNum) {
@@ -562,6 +564,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         }];
 
     }
+     */
 }
 
 - (void)scrollToBottom
