@@ -15,6 +15,8 @@ NSString *const HTTP_SCHEME = @"http://";
 // URLs
 NSString *const DVACH_BASE_URL = @"https://2ch.pm/";
 NSString *const DVACH_BASE_URL_WITHOUT_SCHEME = @"2ch.pm/";
+NSString *const DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA = @"2ch.pm";
+NSString *const DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA_HK = @"2ch.hk";
 NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.pm/makaba/captcha.fcgi";
 NSString *const GET_CAPTCHA_IMAGE_URL = @"http://captcha.yandex.net/image?key=%@";
 NSString *const REPORT_THREAD_URL = @"https://2ch.pm/makaba/makaba.fcgi";
