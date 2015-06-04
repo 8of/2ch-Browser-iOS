@@ -94,7 +94,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     // Delete textView insets.
     _commentTextView.textContainer.lineFragmentPadding = 0;
-    _commentTextView.textContainerInset = UIEdgeInsetsZero;
+    _commentTextView.textContainerInset = UIEdgeInsetsMake(0.f, 15.f, 0., 15.f);
 
     // Setup dynamic font sizes.
 
@@ -111,10 +111,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     _emailTextField.font = defaultFont;
 
     _commentTextView.font = defaultFont;
-
-    // Setup button appearance.
-    _captchaUpdateButton.adjustsImageWhenDisabled = YES;
-    [_captchaUpdateButton sizeToFit];
 
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
