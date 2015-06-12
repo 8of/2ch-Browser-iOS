@@ -54,19 +54,20 @@
                             andPostNum:_lastPostNum
                          andCompletion:^(id postsDictionary)
         {
+            NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
+
             // If it's first load - do not include post
             if (!_lastPostNum) {
                 _privatePostsArray = [NSMutableArray array];
                 _privateThumbImagesArray = [NSMutableArray array];
                 _privateFullImagesArray = [NSMutableArray array];
             } else {
-                // update dates to rlevan values
+                // update dates to relevant values
                 for (DVBPost *earlierPost in _privatePostsArray) {
                     [earlierPost updateDateAgo];
+                    [postNumMutableArray addObject:earlierPost.num];
                 }
             }
-            
-            NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
 
             NSArray *posts2Array;
 
@@ -156,7 +157,6 @@
                 else {
                     NSLog(@"error: %@", error.localizedDescription);
                 }
-
             }
             
             _thumbImagesArray = _privateThumbImagesArray;
@@ -165,7 +165,7 @@
             _postNumArray = postNumMutableArray;
             
             // array with almost all info - BUT without final ANSWERS array for every post
-            NSArray *semiResultArray = [[NSArray alloc] initWithArray:_privatePostsArray];
+            NSArray *semiResultArray = [_privatePostsArray copy];
             
             NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
             
@@ -194,15 +194,12 @@
                 
                 currentPostIndex++;
             }
-            NSArray *resultArray = semiResultMutableArray;
-            
-            _postsArray = resultArray;
 
+            _postsArray = semiResultMutableArray;
             DVBPost *lastPost = (DVBPost *)[_postsArray lastObject];
-
             _lastPostNum = lastPost.num;
             
-            completion(resultArray);
+            completion(_postsArray);
         }];
     }
     else {
