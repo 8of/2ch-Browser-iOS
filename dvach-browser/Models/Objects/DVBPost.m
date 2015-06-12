@@ -77,4 +77,9 @@
     }];
 }
 
+- (void)updateDateAgo
+{
+    _dateAgo = [DateFormatter dateFromTimestamp:_timestamp];
+}
+
 @end

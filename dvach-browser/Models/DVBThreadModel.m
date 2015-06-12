@@ -59,6 +59,11 @@
                 _privatePostsArray = [NSMutableArray array];
                 _privateThumbImagesArray = [NSMutableArray array];
                 _privateFullImagesArray = [NSMutableArray array];
+            } else {
+                // update dates to rlevan values
+                for (DVBPost *earlierPost in _privatePostsArray) {
+                    [earlierPost updateDateAgo];
+                }
             }
             
             NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];

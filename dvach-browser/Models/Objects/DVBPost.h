@@ -36,4 +36,7 @@
 /// Replies to other posts in this post, children of the same thread / need to be mutable, as we change it afer creating
 @property (nonatomic, strong) NSMutableArray *repliesTo;
 
+/// Update dateAgo parameter to relevant value
+- (void)updateDateAgo;
+
 @end
