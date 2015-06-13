@@ -89,6 +89,8 @@
 {
     [super awakeFromNib];
 
+    _showAnswersButton.hidden = YES;
+
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
 

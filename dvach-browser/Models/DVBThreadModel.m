@@ -105,7 +105,7 @@
                         comment = brokenStringHere;
                     }
 
-                    NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+                    NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
 
                     post.comment = attributedComment;
 
@@ -117,7 +117,9 @@
                     NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
                     NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
 
-                    if (files) {
+                    BOOL isTrafficEconomyEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_TRAFFIC_SAVINGS];
+
+                    if (files && !isTrafficEconomyEnabled) {
                         for (NSDictionary *fileDictionary in files) {
                             NSString *fullFileName = fileDictionary[@"path"];
 

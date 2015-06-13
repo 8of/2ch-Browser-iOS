@@ -18,6 +18,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Traffic savings</string>
+			<key>Key</key>
+			<string>enableTrafficSavings</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Little font</string>
 			<key>Key</key>
 			<string>enableLittleBodyFont</string>
