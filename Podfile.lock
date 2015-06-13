@@ -36,11 +36,11 @@ PODS:
   - TUSafariActivity (1.0.4)
 
 DEPENDENCIES:
-  - AFNetworking
+  - AFNetworking (= 2.5.4)
   - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
-  - Mantle
+  - Mantle (= 2.0.2)
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
-  - TUSafariActivity
+  - TUSafariActivity (= 1.0.4)
 
 EXTERNAL SOURCES:
   DACircularProgress:
