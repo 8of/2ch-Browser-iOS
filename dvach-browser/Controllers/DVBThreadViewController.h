@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "UrlNinja.h"
 #import "DVBThreadsScrollPositionManager.h"
 
-@interface DVBThreadViewController : UITableViewController
+#import "DVBCommonTableViewController.h"
+
+@interface DVBThreadViewController : DVBCommonTableViewController
 
 /// Board shortcode
 @property (strong, nonatomic) NSString *boardCode;
