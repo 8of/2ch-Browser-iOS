@@ -1278,6 +1278,7 @@
                     <connections>
                         <outlet property="containerForPostElementsView" destination="RLY-YJ-MBR" id="Hsd-wI-uQL"/>
                         <outlet property="createPostScrollView" destination="ekp-o7-QBh" id="NpC-AA-44V"/>
+                        <outlet property="sendPostButton" destination="bGY-MK-GAa" id="xkw-eH-gcc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="efi-dv-5Xt" userLabel="First Responder" sceneMemberID="firstResponder"/>

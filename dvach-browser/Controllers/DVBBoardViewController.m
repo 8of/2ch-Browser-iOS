@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <UINavigationItem+Loading.h>
-
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
 #import "DVBAlertViewGenerator.h"
@@ -87,9 +85,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
     if (!_wrongBoardAlertAlreadyPresentedOnce) {
-        // Present loading indicator on the right.
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-
         [self loadNextBoardPage];
         [self makeRefreshAvailable];
     }
@@ -160,21 +155,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
                     }
-
-                    CGFloat timerIntervalBeforeChangeLoadingIconback = 0.5;
-
-                    // For dark theme and iOS 8.0-8.2 - turn off interval before changing animated icon back
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-                            timerIntervalBeforeChangeLoadingIconback = 0.0;
-                        }
-                    }
-
-                    [NSTimer scheduledTimerWithTimeInterval:timerIntervalBeforeChangeLoadingIconback
-                                                     target:self
-                                                   selector:@selector(stopAnimateLoading)
-                                                   userInfo:nil
-                                                    repeats:NO];
                 });
             }
         }];
@@ -264,12 +244,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
-
-            [NSTimer scheduledTimerWithTimeInterval:0.5
-                                             target:self
-                                           selector:@selector(stopAnimateLoading)
-                                           userInfo:nil
-                                            repeats:NO];
         });
     }];
 }
@@ -283,14 +257,10 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         threadViewController.boardCode = _boardCode;
         
         if (_createdThreadNum) {
-            /**
-             *  Set thread num the other way (not from threadObjects Array.
-             */
+            // Set thread num the other way (not from threadObjects Array.
             threadViewController.threadNum = _createdThreadNum;
-            
-            /**
-             *  Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
-             */
+
+            // Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
             _createdThreadNum = nil;
         }
         else {
@@ -374,13 +344,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 
     return [super respondsToSelector:selector];
-}
-
-#pragma mark - loading stopper
-
-- (void)stopAnimateLoading
-{
-    [self.navigationItem stopAnimating];
 }
 
 @end

@@ -34,7 +34,6 @@ PODS:
     - SDWebImage/Core (= 3.7.2)
   - SDWebImage/Core (3.7.2)
   - TUSafariActivity (1.0.4)
-  - UINavigationItem+Loading (1.1)
 
 DEPENDENCIES:
   - AFNetworking
@@ -42,7 +41,6 @@ DEPENDENCIES:
   - Mantle
   - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
   - TUSafariActivity
-  - UINavigationItem+Loading
 
 EXTERNAL SOURCES:
   DACircularProgress:
@@ -67,6 +65,5 @@ SPEC CHECKSUMS:
   PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
-  UINavigationItem+Loading: e61d7963495d8a19b6d3825d867ed60db9b218b6
 
 COCOAPODS: 0.37.2

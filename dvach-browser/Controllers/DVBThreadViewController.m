@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <UINavigationItem+Loading.h>
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 
@@ -150,11 +149,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     else {
         [self.navigationController setToolbarHidden:NO animated:NO];
 
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-        }
-        else {
-            [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-        }
+        // Disable refresh button
+        _refreshButton.enabled = NO;
 
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
@@ -327,11 +323,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reloadThreadAction:(id)sender
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-    }
-    else {
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-    }
+    _refreshButton.enabled = NO;
     
     [self reloadThread];
 }
@@ -612,16 +604,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
     _previousPostsCount = postsCountNewValue;
 
-    [NSTimer scheduledTimerWithTimeInterval:stopAnimateTimerInterval
-                                     target:self
-                                   selector:@selector(stopAnimateLoading)
-                                   userInfo:nil
-                                    repeats:NO];
-}
-
-- (void)stopAnimateLoading
-{
-    [self.navigationItem stopAnimating];
     _refreshButton.enabled = YES;
 }
 

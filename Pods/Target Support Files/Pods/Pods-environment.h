@@ -103,9 +103,3 @@
 #define COCOAPODS_VERSION_MINOR_TUSafariActivity 0
 #define COCOAPODS_VERSION_PATCH_TUSafariActivity 4
 
-// UINavigationItem+Loading
-#define COCOAPODS_POD_AVAILABLE_UINavigationItem_Loading
-#define COCOAPODS_VERSION_MAJOR_UINavigationItem_Loading 1
-#define COCOAPODS_VERSION_MINOR_UINavigationItem_Loading 1
-#define COCOAPODS_VERSION_PATCH_UINavigationItem_Loading 0
-
