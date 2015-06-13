@@ -66,6 +66,7 @@
                 for (DVBPost *earlierPost in _privatePostsArray) {
                     [earlierPost updateDateAgo];
                     [postNumMutableArray addObject:earlierPost.num];
+                    earlierPost.replies = [@[] mutableCopy];
                 }
             }
 
