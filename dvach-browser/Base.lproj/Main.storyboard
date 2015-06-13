@@ -392,7 +392,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6d-pD-D5w">
-                                            <rect key="frame" x="10" y="10" width="300" height="21"/>
+                                            <rect key="frame" x="10" y="10" width="300" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -401,7 +401,7 @@
                                             </variation>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3f1-PU-q0D" userLabel="Media container view">
-                                            <rect key="frame" x="10" y="41" width="300" height="64"/>
+                                            <rect key="frame" x="10" y="40" width="300" height="64"/>
                                             <subviews>
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K6E-0u-yCD" userLabel="Media Container View">
                                                     <rect key="frame" x="0.0" y="0.0" width="64" height="64"/>
@@ -636,7 +636,7 @@
                                             </variation>
                                         </view>
                                         <textView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
-                                            <rect key="frame" x="84" y="115" width="226" height="30"/>
+                                            <rect key="frame" x="84" y="114" width="226" height="30"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" id="G05-GT-sq8"/>
@@ -655,7 +655,7 @@
                                             </variation>
                                         </textView>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jQY-pz-yxx">
-                                            <rect key="frame" x="10" y="115" width="64" height="64"/>
+                                            <rect key="frame" x="10" y="114" width="64" height="64"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="64" id="BBN-af-gX6"/>
                                                 <constraint firstAttribute="height" constant="100" id="BSi-1c-XbN"/>
@@ -679,7 +679,7 @@
                                             </variation>
                                         </imageView>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="yH4-O5-Yl8" customClass="DVBWebmIconImageView">
-                                            <rect key="frame" x="27" y="132" width="30" height="30"/>
+                                            <rect key="frame" x="27" y="131" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="0Oy-4z-DNy"/>
                                                 <constraint firstAttribute="width" constant="30" id="heg-3M-hoz"/>
@@ -689,9 +689,8 @@
                                             </variation>
                                         </imageView>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hp6-Iv-teI" userLabel="Answer">
-                                            <rect key="frame" x="0.0" y="187" width="42" height="22"/>
+                                            <rect key="frame" x="10" y="187" width="33" height="22"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="42" id="5dH-d1-SDt"/>
                                                 <constraint firstAttribute="height" constant="22" id="sbL-oq-Xgw"/>
                                             </constraints>
                                             <state key="normal" image="AnswerToPost"/>
@@ -700,17 +699,14 @@
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2c-Q9-olV" userLabel="Answer Quote">
-                                            <rect key="frame" x="42" y="187" width="42" height="22"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="42" id="AKI-d7-lve"/>
-                                            </constraints>
+                                            <rect key="frame" x="53" y="187" width="33" height="22"/>
                                             <state key="normal" image="AnswerToPostWithQuote"/>
                                             <connections>
                                                 <action selector="answerToPostWithQuote:" destination="3hz-5v-Niv" eventType="touchUpInside" id="oGc-Ks-oA6"/>
                                             </connections>
                                         </button>
                                         <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGQ-tC-pT5" userLabel="Show gallery">
-                                            <rect key="frame" x="10" y="115" width="64" height="64"/>
+                                            <rect key="frame" x="10" y="114" width="64" height="64"/>
                                             <state key="normal">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -721,9 +717,10 @@
                                                 <action selector="touchFirstPicture:" destination="BNP-kc-CNb" eventType="touchUpInside" id="b0f-Lg-s4H"/>
                                             </connections>
                                         </button>
-                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ksR-66-B7W" userLabel="Show answer Button">
-                                            <rect key="frame" x="288" y="187" width="22" height="22"/>
-                                            <state key="normal" image="ShowAnswersButton"/>
+                                        <button contentMode="scaleToFill" horizontalHuggingPriority="751" verticalHuggingPriority="751" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="clip" translatesAutoresizingMaskIntoConstraints="NO" id="ksR-66-B7W" userLabel="Show answer Button">
+                                            <rect key="frame" x="277" y="187" width="33" height="22"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <state key="normal" backgroundImage="ShowAnswersButton"/>
                                             <connections>
                                                 <action selector="showAnswers:" destination="3hz-5v-Niv" eventType="touchUpInside" id="gcc-dD-T8A"/>
                                             </connections>
@@ -732,8 +729,8 @@
                                     <constraints>
                                         <constraint firstItem="Y2c-Q9-olV" firstAttribute="centerY" secondItem="Hp6-Iv-teI" secondAttribute="centerY" id="5pv-Z6-WIY"/>
                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="jQY-pz-yxx" secondAttribute="bottom" priority="999" id="94Z-xY-7mB"/>
-                                        <constraint firstItem="Hp6-Iv-teI" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" id="CMa-xZ-3Ho"/>
-                                        <constraint firstItem="Y2c-Q9-olV" firstAttribute="leading" secondItem="Hp6-Iv-teI" secondAttribute="trailing" id="Cse-U2-zgZ"/>
+                                        <constraint firstItem="Hp6-Iv-teI" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="10" id="CMa-xZ-3Ho"/>
+                                        <constraint firstItem="Y2c-Q9-olV" firstAttribute="leading" secondItem="Hp6-Iv-teI" secondAttribute="trailing" constant="10" id="Cse-U2-zgZ"/>
                                         <constraint firstItem="3f1-PU-q0D" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="10" id="HDX-eQ-eTb"/>
                                         <constraint firstItem="Hp6-Iv-teI" firstAttribute="top" relation="greaterThanOrEqual" secondItem="M3z-Su-Ix2" secondAttribute="bottom" id="K1M-0d-SXh"/>
                                         <constraint firstItem="jQY-pz-yxx" firstAttribute="leading" secondItem="lu6-fg-lI3" secondAttribute="leading" constant="10" id="K4S-vg-FxB"/>
@@ -1288,12 +1285,12 @@
     </scenes>
     <resources>
         <image name="AddImage" width="22" height="22"/>
-        <image name="AnswerToPost" width="22" height="22"/>
-        <image name="AnswerToPostWithQuote" width="22" height="22"/>
+        <image name="AnswerToPost" width="33" height="22"/>
+        <image name="AnswerToPostWithQuote" width="33" height="22"/>
         <image name="Bottompage" width="22" height="22"/>
         <image name="ReportFlag" width="26" height="26"/>
         <image name="Settings" width="22" height="22"/>
-        <image name="ShowAnswersButton" width="22" height="22"/>
+        <image name="ShowAnswersButton" width="33" height="22"/>
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
