@@ -23,6 +23,7 @@
 		84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51A19E1526E004D0BB8 /* Images.xcassets */; };
 		84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84E29DC81AE59FA10023EEB6 /* Settings.bundle */; };
 		9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */; };
+		942BE0A81B2C56F9009B3EC4 /* DVBCreatePostScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */; };
 		9432BEF31AC821650015CA9F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9432BEF21AC821650015CA9F /* CoreData.framework */; };
 		9432BEF61AC821B40015CA9F /* dvach-browser.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9432BEF41AC821B40015CA9F /* dvach-browser.xcdatamodeld */; };
 		9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9436ADD51AD1B83B00785710 /* DateFormatter.m */; };
@@ -113,6 +114,8 @@
 		8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		9415B1401AF2BC7700C7EB7B /* UIImage+DVBImageExtention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+DVBImageExtention.h"; path = "Helpers/UIImage+DVBImageExtention.h"; sourceTree = "<group>"; };
 		9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DVBImageExtention.m"; path = "Helpers/UIImage+DVBImageExtention.m"; sourceTree = "<group>"; };
+		942BE0A61B2C56F9009B3EC4 /* DVBCreatePostScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCreatePostScrollView.h; path = Views/DVBCreatePostScrollView.h; sourceTree = "<group>"; };
+		942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCreatePostScrollView.m; path = Views/DVBCreatePostScrollView.m; sourceTree = "<group>"; };
 		9432BEF21AC821650015CA9F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		9432BEF51AC821B40015CA9F /* dvach-browser.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "dvach-browser.xcdatamodel"; sourceTree = "<group>"; };
 		9436ADD41AD1B83B00785710 /* DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateFormatter.h; path = Helpers/DateFormatter.h; sourceTree = "<group>"; };
@@ -451,6 +454,8 @@
 				94A834581B0BB8FE00D7AFC1 /* DVBAddPhotoIconImageView.m */,
 				94A8345A1B0BC96800D7AFC1 /* DVBAddPhotoIconImageViewContainer.h */,
 				94A8345B1B0BC96800D7AFC1 /* DVBAddPhotoIconImageViewContainer.m */,
+				942BE0A61B2C56F9009B3EC4 /* DVBCreatePostScrollView.h */,
+				942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -638,6 +643,7 @@
 				944CC80A1AECFDB900C45F7C /* DVBContainerForPostElements.m in Sources */,
 				948A243B1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m in Sources */,
 				A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */,
+				942BE0A81B2C56F9009B3EC4 /* DVBCreatePostScrollView.m in Sources */,
 				94DDF8481AF540C300AA6F6A /* DVBWebmIconImageView.m in Sources */,
 				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
 				84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */,

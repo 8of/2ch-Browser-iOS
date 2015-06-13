@@ -57,6 +57,7 @@
 {
     [super viewWillDisappear:animated];
     [self saveCommentForLater];
+    [_containerForPostElementsView removeObservers];
 }
 
 /// All View Controller tuning
@@ -90,8 +91,6 @@
     if ([_usercode isEqualToString:@""]) {
         // Ask server for captcha if user code is not presented.
         [self requestCaptchaImage];
-        // Add Done button to the number keyboard for captcha field
-        [self addDoneButtonToField:_containerForPostElementsView.captchaValueTextField];
     }
 
     _imagesToUpload = [@[] mutableCopy];
@@ -197,19 +196,6 @@
     [self.view endEditing:YES];
     // Fire actual dismissing method.
     [self goBackToThread];
-}
-
-- (void)addDoneButtonToField:(UITextField *)field
-{
-    UIToolbar *keyboardDoneButtonView = [[UIToolbar alloc] init];
-    [keyboardDoneButtonView sizeToFit];
-    NSString *doneButtonTitle = NSLocalizedString(@"Отправить", @"Кнопка Отправить над клавиатурой при вводе капчи");
-    UIBarButtonItem * doneButton = [[UIBarButtonItem alloc] initWithTitle:doneButtonTitle
-                                                                    style:UIBarButtonItemStyleBordered
-                                                                   target:self
-                                                                   action:@selector(makePostAction:)];
-    [keyboardDoneButtonView setItems:[NSArray arrayWithObjects:doneButton, nil]];
-    field.inputAccessoryView = keyboardDoneButtonView;
 }
 
 /// Send post to thread (or create thread)

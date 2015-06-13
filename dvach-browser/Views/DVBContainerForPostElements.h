@@ -19,6 +19,7 @@
 
 - (void)changeConstraintsIfUserCodeNotEmpty;
 - (void)clearCaptchaValueField;
+- (void)removeObservers;
 
 // Captcha stuff
 - (void)clearCaptchaImage;
