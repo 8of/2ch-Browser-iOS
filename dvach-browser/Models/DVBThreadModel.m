@@ -40,7 +40,8 @@
         _boardCode = boardCode;
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
-        _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode andThreadId:threadNum];
+        _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode
+                                                           andThreadId:threadNum];
     }
     
     return self;
