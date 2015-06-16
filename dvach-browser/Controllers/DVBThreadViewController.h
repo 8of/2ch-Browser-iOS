@@ -44,4 +44,7 @@
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja;
 - (void)callShareControllerWithUrlString:(NSString *)urlString;
 
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
+
 @end

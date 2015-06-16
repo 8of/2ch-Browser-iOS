@@ -83,7 +83,14 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [_postsArray count];
+    if (_postsArray.count > 0) {
+        return _postsArray.count;
+    }
+    else {
+        [_threadViewController showMessageAboutDataLoading];
+    }
+
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

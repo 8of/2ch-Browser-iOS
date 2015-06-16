@@ -26,6 +26,13 @@
 
 static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
+@interface DVBCommonTableViewController ()
+
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
+
+@end
+
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *shareButton;
@@ -314,6 +321,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
                 [self checkNewPostsCount];
+                self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                self.tableView.backgroundView = nil;
             });
         }];
     }
@@ -633,6 +642,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
+}
+
+- (void)showMessageAboutDataLoading
+{
+    [super showMessageAboutDataLoading];
+}
+- (void)showMessageAboutError
+{
+    [super showMessageAboutError];
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
-#import "DVBAlertViewGenerator.h"
 
 #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
@@ -19,9 +18,15 @@ static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
+@interface DVBCommonTableViewController ()
+
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
+
+@end
+
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
-@property (nonatomic, strong) DVBAlertViewGenerator *alertViewGenerator;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) BOOL alreadyLoadingNextPage;
 /// Array contains all threads' OP posts for one page.
@@ -30,8 +35,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 /// Need property for know if we gonna create new thread or not.
 @property (nonatomic, strong) NSString *createdThreadNum;
 
-// Yes if we already know that board code was wrong and already presented user alert with this info
-@property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
 @property (nonatomic, assign) BOOL viewAlreadyAppeared;
 @property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
 
@@ -51,9 +54,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     [super viewDidAppear: animated];
     _viewAlreadyAppeared = YES;
-    if (_wrongBoardAlertAlreadyPresentedOnce) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
 }
 
 - (void)viewDidLoad
@@ -80,15 +80,8 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    if (!_wrongBoardAlertAlreadyPresentedOnce) {
-        [self loadNextBoardPage];
-        [self makeRefreshAvailable];
-    }
-
-    if (!_alertViewGenerator) {
-        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
-        _alertViewGenerator.alertViewGeneratorDelegate = nil;
-    }
+    [self loadNextBoardPage];
+    [self makeRefreshAvailable];
 
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
@@ -121,29 +114,17 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
             _threadsArray = [completionThreadsArray mutableCopy];
             _currentPage++;
             _alreadyLoadingNextPage = NO;
-            
-            // Show alert if board is not exist and we do not already show user alert
-            if (([_threadsArray count] == 0) && (!_wrongBoardAlertAlreadyPresentedOnce)) {
-                NSString *nonExistingBoardAlertHeader = NSLocalizedString(@"Доска не существует", @"Заголовок alert'a сообщает о том, что доска с таким кодом не существует.");
-                
-                UIAlertView *alertView =  [_alertViewGenerator
-                                           alertViewWithTitle:nonExistingBoardAlertHeader
-                                           description:nil
-                                           buttons:nil];
-                [alertView show];
 
-                _wrongBoardAlertAlreadyPresentedOnce = YES;
-                
-                // Go back if board isn't there
-                if (_viewAlreadyAppeared) {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                }
-            }
-            else if (!_wrongBoardAlertAlreadyPresentedOnce) {
+            if (_threadsArray.count == 0) {
+                [self showMessageAboutError];
+                self.navigationItem.rightBarButtonItem.enabled = NO;
+            } else {
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
-
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
                     if (!_alreadyDidTheSizeClassTrick) {
                         [self.tableView setNeedsLayout];
                         [self.tableView layoutIfNeeded];
@@ -152,9 +133,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
                 });
             }
         }];
-    }
-    else
-    {
+    } else {
         _currentPage = 0;
         [self loadNextBoardPage];
     }
@@ -175,12 +154,19 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    if (_threadsArray.count > 0) {
+        return 1;
+    }
+    else {
+        [self showMessageAboutDataLoading];
+    }
+
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_threadsArray count];
+    return _threadsArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
