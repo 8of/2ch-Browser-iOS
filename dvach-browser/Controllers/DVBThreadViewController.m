@@ -8,6 +8,7 @@
 
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -50,6 +51,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
+@property (nonatomic, strong) UIRefreshControl *bottomRefreshControl;
+
 @end
 
 @implementation DVBThreadViewController
@@ -68,6 +71,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 
     [self toolbarHandler];
+
+    [self makeBottomRefreshAvailable];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -132,8 +137,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
-        }
-        else {
+        } else {
             NSString *answerTitle;
 
             if (_isItPostItself) {
@@ -152,8 +156,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         
         NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
         _threadControllerTableViewManager.fullImagesArray = arrayOfFullImages;
-    }
-    else {
+    } else {
         [self.navigationController setToolbarHidden:NO animated:NO];
 
         // Disable refresh button
@@ -204,7 +207,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Refresh
 
-/// Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
+/// Allocating top refresh controll - for fetching new updated result from server by pulling board table view down.
 - (void)makeRefreshAvailable
 {
     // Top refresh
@@ -212,6 +215,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
+}
+
+/// Allocating bottom refresh controll - for fetching new updated result from server by pulling board table view down.
+- (void)makeBottomRefreshAvailable
+{
+    if (!_answersToPost) {
+        _bottomRefreshControl = [UIRefreshControl new];
+        _bottomRefreshControl.triggerVerticalOffset = 80.;
+        [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
+        self.tableView.bottomRefreshControl = _bottomRefreshControl;
+    }
 }
 
 #pragma mark - Links
@@ -320,6 +334,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
+                [_bottomRefreshControl endRefreshing];
                 [self checkNewPostsCount];
                 self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                 self.tableView.backgroundView = nil;
