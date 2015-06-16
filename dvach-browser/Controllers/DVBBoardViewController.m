@@ -24,15 +24,11 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 @property (nonatomic, strong) DVBAlertViewGenerator *alertViewGenerator;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) BOOL alreadyLoadingNextPage;
-/**
- *  Array contains all threads' OP posts for one page.
- */
+/// Array contains all threads' OP posts for one page.
 @property (nonatomic, strong) NSMutableArray *threadsArray;
 @property (nonatomic, strong) DVBBoardModel *boardModel;
-/**
- *  We need property for know if we gonna create new thread or not.
- */
-@property (strong, nonatomic) NSString *createdThreadNum;
+/// Need property for know if we gonna create new thread or not.
+@property (nonatomic, strong) NSString *createdThreadNum;
 
 // Yes if we already know that board code was wrong and already presented user alert with this info
 @property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
@@ -116,9 +112,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 }
 
-/**
- *  First time loading thread list
- */
+/// First time loading thread list
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
@@ -344,6 +338,14 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 
     return [super respondsToSelector:selector];
+}
+
+#pragma mark - Orientation
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.tableView reloadData];
 }
 
 @end
