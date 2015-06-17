@@ -20,10 +20,15 @@
 
     if (self) {
     
-        NSString *basicUrl = DVACH_BASE_URL_WITHOUT_SCHEME;
+        NSString *basicUrlPm = DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA;
+        NSString *basicUrlHk = DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA_HK;
         
-        //проверить хост, если он существует и левый, то сразу возврат
-        if (!([[url host] isEqualToString:basicUrl] || [[url host] isEqualToString:[@"www." stringByAppendingString:basicUrl]]) && [url host]) {
+        // Check host - if it's not 2ch - just return external type
+        if (!([url.host isEqualToString:basicUrlPm] ||
+              [url.host isEqualToString:basicUrlHk] ||
+              [url.host isEqualToString:[@"www." stringByAppendingString:basicUrlPm]] ||
+              [url.host isEqualToString:[@"www." stringByAppendingString:basicUrlHk]]) &&
+            url.host) {
             self.type = externalLink;
             return self;
         }
@@ -114,8 +119,6 @@
             if ([_urlOpener respondsToSelector:@selector(openThreadWithUrlNinja:)]) {
                 [_urlOpener openThreadWithUrlNinja:url];
             }
-
-            return NO;
 
             break;
         }

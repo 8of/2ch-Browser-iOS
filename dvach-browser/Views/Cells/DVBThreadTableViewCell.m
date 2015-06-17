@@ -39,10 +39,6 @@
     _threadThumb.clipsToBounds = YES;
     [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
 
-    // _threadThumb.layer.cornerRadius = 14.0f;
-    // [_threadThumb.layer setBorderColor: THUMBNAIL_GREY_BORDER];
-    // [_threadThumb.layer setBorderWidth: 1.0];
-
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
 
@@ -68,10 +64,6 @@
 
         _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
         _postsCountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    }
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _commentLabel.numberOfLines = 3;
     }
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
@@ -111,6 +103,23 @@
     _threadThumb.image = nil;
 
     [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self.contentView layoutIfNeeded];
+}
+
+// fix problems with autolayout
+- (void)didMoveToSuperview
+{
+    [self layoutIfNeeded];
+}
+
++ (BOOL)requiresConstraintBasedLayout
+{
+    return YES;
 }
 
 @end

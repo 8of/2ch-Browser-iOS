@@ -25,6 +25,8 @@
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBPostPreparation *postPreparation;
 @property (nonatomic, strong) NSArray *postNumArray;
+/// Id of the last post for loading from it
+@property (nonatomic, strong) NSString *lastPostNum;
 
 @end
 
@@ -38,7 +40,8 @@
         _boardCode = boardCode;
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
-        _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode andThreadId:threadNum];
+        _postPreparation = [[DVBPostPreparation alloc] initWithBoardId:boardCode
+                                                           andThreadId:threadNum];
     }
     
     return self;
@@ -49,20 +52,43 @@
     if (_boardCode && _threadNum) {
         [_networking getPostsWithBoard:_boardCode
                              andThread:_threadNum
-                         andCompletion:^(NSDictionary *postsDictionary)
+                            andPostNum:_lastPostNum
+                         andCompletion:^(id postsDictionary)
         {
-            _privatePostsArray = [NSMutableArray array];
-            _privateThumbImagesArray = [NSMutableArray array];
-            _privateFullImagesArray = [NSMutableArray array];
-            
-            
             NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
-            
-            NSMutableDictionary *resultDict = [postsDictionary mutableCopy];
 
-            NSArray *posts2Array = resultDict[@"threads"][0][@"posts"];
+            // If it's first load - do not include post
+            if (!_lastPostNum) {
+                _privatePostsArray = [NSMutableArray array];
+                _privateThumbImagesArray = [NSMutableArray array];
+                _privateFullImagesArray = [NSMutableArray array];
+            } else {
+                // update dates to relevant values
+                for (DVBPost *earlierPost in _privatePostsArray) {
+                    [earlierPost updateDateAgo];
+                    [postNumMutableArray addObject:earlierPost.num];
+                    earlierPost.replies = [@[] mutableCopy];
+                }
+            }
+
+            NSArray *posts2Array;
+
+            if ([postsDictionary isKindOfClass:[NSDictionary class]]) {
+                posts2Array = postsDictionary[@"threads"][0][@"posts"];
+            }
+            else {
+                posts2Array = (NSArray *)postsDictionary;
+            }
+
+            NSInteger postIndexNumber = 0;
             
             for (NSDictionary *postDictionary in posts2Array) {
+                // Check if currently loading not the entire thread from the sratch but only from specific post
+                // just skip first element because it will be the same as the last element from previous loading
+                if ((postIndexNumber == 0) && (_lastPostNum)) {
+                    postIndexNumber++;
+                    continue;
+                }
 
                 NSError *error;
 
@@ -80,7 +106,7 @@
                         comment = brokenStringHere;
                     }
 
-                    NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
+                    NSAttributedString *attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
 
                     post.comment = attributedComment;
 
@@ -92,7 +118,9 @@
                     NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
                     NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
 
-                    if (files) {
+                    BOOL isTrafficEconomyEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_TRAFFIC_SAVINGS];
+
+                    if (files && !isTrafficEconomyEnabled) {
                         for (NSDictionary *fileDictionary in files) {
                             NSString *fullFileName = fileDictionary[@"path"];
 
@@ -127,11 +155,12 @@
                     singlePostPathesArrayMutable = nil;
 
                     [_privatePostsArray addObject:post];
+
+                    postIndexNumber++;
                 }
                 else {
                     NSLog(@"error: %@", error.localizedDescription);
                 }
-
             }
             
             _thumbImagesArray = _privateThumbImagesArray;
@@ -140,7 +169,7 @@
             _postNumArray = postNumMutableArray;
             
             // array with almost all info - BUT without final ANSWERS array for every post
-            NSArray *semiResultArray = [[NSArray alloc] initWithArray:_privatePostsArray];
+            NSArray *semiResultArray = [_privatePostsArray copy];
             
             NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
             
@@ -169,11 +198,12 @@
                 
                 currentPostIndex++;
             }
-            NSArray *resultArray = semiResultMutableArray;
+
+            _postsArray = semiResultMutableArray;
+            DVBPost *lastPost = (DVBPost *)[_postsArray lastObject];
+            _lastPostNum = lastPost.num;
             
-            _postsArray = resultArray;
-            
-            completion(resultArray);
+            completion(_postsArray);
         }];
     }
     else {
@@ -217,76 +247,6 @@
    _fullImagesArray = _privateFullImagesArray;
     
     return _fullImagesArray;
-}
-
-- (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(DVBPost *))completion
-{
-    [_networking getPostWithBoardCode:board andThread:thread andPostNum:postNum andCompletion:^(NSArray *networkCompletion) {
-        if (networkCompletion) {
-
-            NSError *error;
-            if (error) {
-                completion(nil);
-            }
-            if (networkCompletion.count > 0) {
-
-                NSDictionary *postDictionary = [networkCompletion firstObject];
-                DVBPost *post = [MTLJSONAdapter modelOfClass:DVBPost.class
-                                          fromJSONDictionary:postDictionary
-                                                       error:&error];
-
-                NSString *comment = postDictionary[@"comment"];
-
-                NSAttributedString *attributedComment = attributedComment = [_postPreparation commentWithMarkdownWithComments:comment];
-
-                post.comment = attributedComment;
-
-                NSArray *files = postDictionary[@"files"];
-                NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
-                NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
-
-                if (files) {
-                    for (NSDictionary *fileDictionary in files) {
-                        NSString *fullFileName = fileDictionary[@"path"];
-
-                        NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fileDictionary[@"thumbnail"]];
-
-                        [singlePostThumbPathesArrayMutable addObject:thumbPath];
-                        [_privateThumbImagesArray addObject:thumbPath];
-
-                        NSString *picPath;
-                        BOOL isContainWebm = ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
-
-                        // check webm or not
-                        if (isContainWebm) { // if contains .webm
-                            // make VLC webm link
-                            picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, _boardCode, fullFileName];
-                        }
-                        else {               // if regular image
-                            picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, fullFileName];
-                        }
-
-                        [singlePostPathesArrayMutable addObject:picPath];
-                        [_privateFullImagesArray addObject:picPath];
-                    }
-                }
-
-                post.thumbPathesArray = [singlePostThumbPathesArrayMutable copy];
-                singlePostThumbPathesArrayMutable = nil;
-
-                post.pathesArray = [singlePostPathesArrayMutable copy];
-                singlePostPathesArrayMutable = nil;
-
-                completion(post);
-            }
-            else {
-                completion(nil);
-            }
-        }
-        else {
-            completion(nil);
-        }
-    }];
 }
 
 @end

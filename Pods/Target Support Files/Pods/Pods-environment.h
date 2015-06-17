@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 5
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 4
 
+// CCBottomRefreshControl
+#define COCOAPODS_POD_AVAILABLE_CCBottomRefreshControl
+#define COCOAPODS_VERSION_MAJOR_CCBottomRefreshControl 0
+#define COCOAPODS_VERSION_MINOR_CCBottomRefreshControl 5
+#define COCOAPODS_VERSION_PATCH_CCBottomRefreshControl 0
+
 // DACircularProgress
 #define COCOAPODS_POD_AVAILABLE_DACircularProgress
 #define COCOAPODS_VERSION_MAJOR_DACircularProgress 2
@@ -79,6 +85,12 @@
 #define COCOAPODS_VERSION_MINOR_Mantle_extobjc 0
 #define COCOAPODS_VERSION_PATCH_Mantle_extobjc 2
 
+// Masonry
+#define COCOAPODS_POD_AVAILABLE_Masonry
+#define COCOAPODS_VERSION_MAJOR_Masonry 0
+#define COCOAPODS_VERSION_MINOR_Masonry 6
+#define COCOAPODS_VERSION_PATCH_Masonry 1
+
 // PSTCollectionView
 #define COCOAPODS_POD_AVAILABLE_PSTCollectionView
 #define COCOAPODS_VERSION_MAJOR_PSTCollectionView 1
@@ -102,10 +114,4 @@
 #define COCOAPODS_VERSION_MAJOR_TUSafariActivity 1
 #define COCOAPODS_VERSION_MINOR_TUSafariActivity 0
 #define COCOAPODS_VERSION_PATCH_TUSafariActivity 4
-
-// UINavigationItem+Loading
-#define COCOAPODS_POD_AVAILABLE_UINavigationItem_Loading
-#define COCOAPODS_VERSION_MAJOR_UINavigationItem_Loading 1
-#define COCOAPODS_VERSION_MINOR_UINavigationItem_Loading 1
-#define COCOAPODS_VERSION_PATCH_UINavigationItem_Loading 0
 

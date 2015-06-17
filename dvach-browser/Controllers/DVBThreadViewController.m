@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <UINavigationItem+Loading.h>
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
+#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 #import "DVBConstants.h"
 #import "Reachlibility.h"
@@ -27,6 +27,13 @@
 
 static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
+@interface DVBCommonTableViewController ()
+
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
+
+@end
+
 @interface DVBThreadViewController () <UIActionSheetDelegate, DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *shareButton;
@@ -43,6 +50,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, assign) BOOL presentedSomething;
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
+
+@property (nonatomic, strong) UIRefreshControl *bottomRefreshControl;
 
 @end
 
@@ -62,6 +71,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 
     [self toolbarHandler];
+
+    [self makeBottomRefreshAvailable];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -114,6 +125,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)prepareViewController
 {
     _threadControllerTableViewManager = [[DVBThreadControllerTableViewManager alloc] initWith:self];
+    self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.delegate = _threadControllerTableViewManager;
     self.tableView.dataSource = _threadControllerTableViewManager;
 
@@ -126,8 +138,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
         if (!_postNum) {
             @throw [NSException exceptionWithName:@"No post number specified for answers" reason:@"Please, set postNum to show in title of the VC" userInfo:nil];
-        }
-        else {
+        } else {
             NSString *answerTitle;
 
             if (_isItPostItself) {
@@ -146,15 +157,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         
         NSArray *arrayOfFullImages = [_threadModel fullImagesArrayForPostsArray:_answersToPost];
         _threadControllerTableViewManager.fullImagesArray = arrayOfFullImages;
-    }
-    else {
+    } else {
         [self.navigationController setToolbarHidden:NO animated:NO];
 
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-        }
-        else {
-            [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-        }
+        // Disable refresh button
+        _refreshButton.enabled = NO;
 
         // Set view controller title depending on...
         self.title = [self getSubjectOrNumWithSubject:_threadSubject
@@ -201,7 +208,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Refresh
 
-/// Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
+/// Allocating top refresh controll - for fetching new updated result from server by pulling board table view down.
 - (void)makeRefreshAvailable
 {
     // Top refresh
@@ -209,6 +216,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
+}
+
+/// Allocating bottom refresh controll - for fetching new updated result from server by pulling board table view down.
+- (void)makeBottomRefreshAvailable
+{
+    if (!_answersToPost) {
+        _bottomRefreshControl = [UIRefreshControl new];
+        _bottomRefreshControl.triggerVerticalOffset = 80.;
+        [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
+        self.tableView.bottomRefreshControl = _bottomRefreshControl;
+    }
 }
 
 #pragma mark - Links
@@ -317,7 +335,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.tableView reloadData];
                 [self.refreshControl endRefreshing];
+                [_bottomRefreshControl endRefreshing];
                 [self checkNewPostsCount];
+                self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                self.tableView.backgroundView = nil;
             });
         }];
     }
@@ -327,11 +348,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reloadThreadAction:(id)sender
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] && SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-    }
-    else {
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-    }
+    _refreshButton.enabled = NO;
     
     [self reloadThread];
 }
@@ -522,6 +539,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 -(void)updateThreadAfterPosting
 {
+    [self reloadThread];
+    /*
     DVBComment *comment = [DVBComment sharedComment];
 
     if (comment.createdPostNum) {
@@ -562,6 +581,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         }];
 
     }
+     */
 }
 
 - (void)scrollToBottom
@@ -609,16 +629,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
     _previousPostsCount = postsCountNewValue;
 
-    [NSTimer scheduledTimerWithTimeInterval:stopAnimateTimerInterval
-                                     target:self
-                                   selector:@selector(stopAnimateLoading)
-                                   userInfo:nil
-                                    repeats:NO];
-}
-
-- (void)stopAnimateLoading
-{
-    [self.navigationItem stopAnimating];
     _refreshButton.enabled = YES;
 }
 
@@ -648,6 +658,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
+}
+
+- (void)showMessageAboutDataLoading
+{
+    [super showMessageAboutDataLoading];
+}
+- (void)showMessageAboutError
+{
+    [super showMessageAboutError];
 }
 
 @end

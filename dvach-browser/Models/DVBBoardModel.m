@@ -20,6 +20,8 @@
 @property (nonatomic, assign) NSUInteger maxPage;
 @property (nonatomic, strong) NSMutableArray *privateThreadsArray;
 @property (nonatomic, strong) DVBNetworking *networking;
+/// Dictionary of threads already showed in current cycle
+@property (nonatomic, strong) NSMutableDictionary *threadsAlreadyLoaded;
 
 @end
 
@@ -51,33 +53,39 @@
                              andPage:_currentPage
                        andCompletion:^(NSDictionary *resultDict)
     {
+        if (_currentPage == 0) {
+            _threadsAlreadyLoaded = [@{} mutableCopy];
+        }
         NSArray *threadsArray = resultDict[@"threads"];
         
         for (NSDictionary *thread in threadsArray) {
-            NSArray *threadPosts = thread[@"posts"];
+            if (!_threadsAlreadyLoaded[thread[@"thread_num"]]) {
+                _threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
+                NSArray *threadPosts = thread[@"posts"];
 
-            NSError *error;
+                NSError *error;
 
-            NSDictionary *threadDict = [threadPosts firstObject];
+                NSDictionary *threadDict = [threadPosts firstObject];
 
-            DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
-                                      fromJSONDictionary:threadDict
-                                                   error:&error];
+                DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
+                                          fromJSONDictionary:threadDict
+                                                       error:&error];
 
-            if (!error) {
+                if (!error) {
 
-                thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
+                    thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
 
-                NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
+                    NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
 
-                if (threadDict[@"files"][0][@"thumbnail"]) {
-                    NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
-                    thread.thumbnail = thumbPath;
+                    if (threadDict[@"files"][0][@"thumbnail"]) {
+                        NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
+                        thread.thumbnail = thumbPath;
+                    }
+                    [_privateThreadsArray addObject:thread];
                 }
-                [_privateThreadsArray addObject:thread];
-            }
-            else {
-                NSLog(@"error: %@", error.localizedDescription);
+                else {
+                    NSLog(@"error: %@", error.localizedDescription);
+                }
             }
         }
         

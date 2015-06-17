@@ -6,11 +6,8 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <UINavigationItem+Loading.h>
-
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
-#import "DVBAlertViewGenerator.h"
 
 #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
@@ -21,23 +18,23 @@ static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
+@interface DVBCommonTableViewController ()
+
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
+
+@end
+
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
-@property (nonatomic, strong) DVBAlertViewGenerator *alertViewGenerator;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) BOOL alreadyLoadingNextPage;
-/**
- *  Array contains all threads' OP posts for one page.
- */
+/// Array contains all threads' OP posts for one page.
 @property (nonatomic, strong) NSMutableArray *threadsArray;
 @property (nonatomic, strong) DVBBoardModel *boardModel;
-/**
- *  We need property for know if we gonna create new thread or not.
- */
-@property (strong, nonatomic) NSString *createdThreadNum;
+/// Need property for know if we gonna create new thread or not.
+@property (nonatomic, strong) NSString *createdThreadNum;
 
-// Yes if we already know that board code was wrong and already presented user alert with this info
-@property (nonatomic, assign) BOOL wrongBoardAlertAlreadyPresentedOnce;
 @property (nonatomic, assign) BOOL viewAlreadyAppeared;
 @property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
 
@@ -57,9 +54,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     [super viewDidAppear: animated];
     _viewAlreadyAppeared = YES;
-    if (_wrongBoardAlertAlreadyPresentedOnce) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
-    }
 }
 
 - (void)viewDidLoad
@@ -86,18 +80,8 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    if (!_wrongBoardAlertAlreadyPresentedOnce) {
-        // Present loading indicator on the right.
-        [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
-
-        [self loadNextBoardPage];
-        [self makeRefreshAvailable];
-    }
-
-    if (!_alertViewGenerator) {
-        _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
-        _alertViewGenerator.alertViewGeneratorDelegate = nil;
-    }
+    [self loadNextBoardPage];
+    [self makeRefreshAvailable];
 
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
     if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
@@ -121,9 +105,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 }
 
-/**
- *  First time loading thread list
- */
+/// First time loading thread list
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
@@ -132,55 +114,26 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
             _threadsArray = [completionThreadsArray mutableCopy];
             _currentPage++;
             _alreadyLoadingNextPage = NO;
-            
-            // Show alert if board is not exist and we do not already show user alert
-            if (([_threadsArray count] == 0) && (!_wrongBoardAlertAlreadyPresentedOnce)) {
-                NSString *nonExistingBoardAlertHeader = NSLocalizedString(@"Доска не существует", @"Заголовок alert'a сообщает о том, что доска с таким кодом не существует.");
-                
-                UIAlertView *alertView =  [_alertViewGenerator
-                                           alertViewWithTitle:nonExistingBoardAlertHeader
-                                           description:nil
-                                           buttons:nil];
-                [alertView show];
 
-                _wrongBoardAlertAlreadyPresentedOnce = YES;
-                
-                // Go back if board isn't there
-                if (_viewAlreadyAppeared) {
-                    [self.navigationController popToRootViewControllerAnimated:YES];
-                }
-            }
-            else if (!_wrongBoardAlertAlreadyPresentedOnce) {
+            if (_threadsArray.count == 0) {
+                [self showMessageAboutError];
+                self.navigationItem.rightBarButtonItem.enabled = NO;
+            } else {
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
-
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
                     if (!_alreadyDidTheSizeClassTrick) {
                         [self.tableView setNeedsLayout];
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
                     }
-
-                    CGFloat timerIntervalBeforeChangeLoadingIconback = 0.5;
-
-                    // For dark theme and iOS 8.0-8.2 - turn off interval before changing animated icon back
-                    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-                        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0") && SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"8.2")) {
-                            timerIntervalBeforeChangeLoadingIconback = 0.0;
-                        }
-                    }
-
-                    [NSTimer scheduledTimerWithTimeInterval:timerIntervalBeforeChangeLoadingIconback
-                                                     target:self
-                                                   selector:@selector(stopAnimateLoading)
-                                                   userInfo:nil
-                                                    repeats:NO];
                 });
             }
         }];
-    }
-    else
-    {
+    } else {
         _currentPage = 0;
         [self loadNextBoardPage];
     }
@@ -201,12 +154,19 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    if (_threadsArray.count > 0) {
+        return 1;
+    }
+    else {
+        [self showMessageAboutDataLoading];
+    }
+
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [_threadsArray count];
+    return _threadsArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -264,12 +224,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
-
-            [NSTimer scheduledTimerWithTimeInterval:0.5
-                                             target:self
-                                           selector:@selector(stopAnimateLoading)
-                                           userInfo:nil
-                                            repeats:NO];
         });
     }];
 }
@@ -283,14 +237,10 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         threadViewController.boardCode = _boardCode;
         
         if (_createdThreadNum) {
-            /**
-             *  Set thread num the other way (not from threadObjects Array.
-             */
+            // Set thread num the other way (not from threadObjects Array.
             threadViewController.threadNum = _createdThreadNum;
-            
-            /**
-             *  Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
-             */
+
+            // Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
             _createdThreadNum = nil;
         }
         else {
@@ -376,11 +326,12 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     return [super respondsToSelector:selector];
 }
 
-#pragma mark - loading stopper
+#pragma mark - Orientation
 
-- (void)stopAnimateLoading
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    [self.navigationItem stopAnimating];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.tableView reloadData];
 }
 
 @end

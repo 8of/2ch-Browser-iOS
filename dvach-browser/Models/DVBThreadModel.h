@@ -47,7 +47,4 @@
  */
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray;
 
-/// After posting we trying to get our new post and parse it from the scratch
-- (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(DVBPost *))completion;
-
 @end

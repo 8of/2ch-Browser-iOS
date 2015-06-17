@@ -9,17 +9,15 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "DVBCreatePostViewController.h"
+#import "DVBCommonTableViewController.h"
 
-@interface DVBBoardViewController : UITableViewController
+@interface DVBBoardViewController : DVBCommonTableViewController
 
-/**
- *  Board's shortcode.
- */
+/// Board's shortcode.
 @property (strong, nonatomic) NSString *boardCode;
-/**
- *  MaxPage (i.e. page count) for specific board.
- */
+/// MaxPage (i.e. page count) for specific board.
 @property (assign, nonatomic) NSInteger pages;
 
 @end

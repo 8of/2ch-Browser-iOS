@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "UrlNinja.h"
 #import "DVBThreadsScrollPositionManager.h"
 
-@interface DVBThreadViewController : UITableViewController
+#import "DVBCommonTableViewController.h"
+
+@interface DVBThreadViewController : DVBCommonTableViewController
 
 /// Board shortcode
 @property (strong, nonatomic) NSString *boardCode;
@@ -40,5 +43,8 @@
 /// Open whole new thread
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja;
 - (void)callShareControllerWithUrlString:(NSString *)urlString;
+
+- (void)showMessageAboutDataLoading;
+- (void)showMessageAboutError;
 
 @end
