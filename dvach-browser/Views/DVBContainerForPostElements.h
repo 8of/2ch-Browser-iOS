@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-IB_DESIGNABLE
-
 @interface DVBContainerForPostElements : UIView
 
 // UI elements
@@ -21,6 +19,7 @@ IB_DESIGNABLE
 
 - (void)changeConstraintsIfUserCodeNotEmpty;
 - (void)clearCaptchaValueField;
+- (void)removeObservers;
 
 // Captcha stuff
 - (void)clearCaptchaImage;

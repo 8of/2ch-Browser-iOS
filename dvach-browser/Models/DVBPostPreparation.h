@@ -31,7 +31,6 @@
  *  @return attributed string with 2ch markup
  */
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment;
-
 /**
  *  Strips off tags from poster's name
  *

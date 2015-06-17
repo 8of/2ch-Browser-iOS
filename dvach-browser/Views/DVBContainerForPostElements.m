@@ -11,10 +11,13 @@
 #import "DVBConstants.h"
 
 #import "DVBContainerForPostElements.h"
+#import "DVBCreatePostScrollView.h"
 
 static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 @interface DVBContainerForPostElements () <UITextViewDelegate>
+
+@property (nonatomic, assign) UIEdgeInsets originalInsets;
 
 // UI elements
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -24,7 +27,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 // Constraints
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldContainerHeight;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaFieldContainer;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contstraintFromPhotoToBottomEdge;
 
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
@@ -39,8 +41,13 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 {
     [self setupAppearance];
 
+    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
+    scrollView.canCancelContentTouches = YES;
+
     _commentViewSelectedStartLocation = 0;
     _commentViewSelectedLength = 0;
+
+    [self registerForKeyboardNotifications];
 }
 
 - (void)setupAppearance
@@ -94,7 +101,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     // Delete textView insets.
     _commentTextView.textContainer.lineFragmentPadding = 0;
-    _commentTextView.textContainerInset = UIEdgeInsetsZero;
+    _commentTextView.textContainerInset = UIEdgeInsetsMake(0.f, 15.f, 0., 15.f);
 
     // Setup dynamic font sizes.
 
@@ -112,22 +119,13 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     _commentTextView.font = defaultFont;
 
-    // Setup button appearance.
-    _captchaUpdateButton.adjustsImageWhenDisabled = YES;
-    [_captchaUpdateButton sizeToFit];
-
     UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc]
                                            initWithTarget:self
                                            action:@selector(hideKeyBoard)];
 
     [self addGestureRecognizer:tapGesture];
 
-    // For iPad we set bottom padding less
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _contstraintFromPhotoToBottomEdge.constant = 15.0f;
-    }
-
-    [_commentTextView becomeFirstResponder];
+    // [_commentTextView becomeFirstResponder];
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
@@ -346,6 +344,65 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                     animations:^{
                         imageView.image = nil;
                     } completion:NULL];
+}
+
+#pragma mark - Keyboard
+- (void)registerForKeyboardNotifications
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        
+    } else {
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWasShown:)
+                                                     name:UIKeyboardDidShowNotification
+                                                   object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(keyboardWillBeHidden:)
+                                                     name:UIKeyboardWillHideNotification
+                                                   object:nil];
+    }
+}
+- (void)removeObservers
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+
+    } else {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIKeyboardDidShowNotification
+                                                      object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:UIKeyboardWillHideNotification
+                                                      object:nil];
+    }
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
+    if (!_originalInsets.top) {
+        _originalInsets = scrollView.contentInset;
+    }
+
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGSize keyboardSize = [[[aNotification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight ) {
+        CGSize origKeySize = keyboardSize;
+        keyboardSize.height = origKeySize.width;
+        keyboardSize.width = origKeySize.height;
+    }
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(_originalInsets.top, 0, keyboardSize.height, 0);
+
+    scrollView.contentInset = contentInsets;
+    scrollView.scrollIndicatorInsets = contentInsets;
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
+    scrollView.contentInset = _originalInsets;
+    scrollView.scrollIndicatorInsets = _originalInsets;
 }
 
 @end

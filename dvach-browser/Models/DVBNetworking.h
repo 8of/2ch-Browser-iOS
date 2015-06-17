@@ -19,10 +19,8 @@
 /// Get threads for single page of single board
 - (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion;
 
-/// Get posts for single page of single board
-- (void)getPostsWithBoard:(NSString *)board
-                andThread:(NSString *)threadNum
-            andCompletion:(void (^)(NSDictionary *))completion;
+/// Get posts for single thread
+- (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andPostNum:(NSString *)postNum andCompletion:(void (^)(id))completion;
 
 /// Get usercode cookie in exchange to user's passcode
 - (void)getUserCodeWithPasscode:(NSString *)passcode

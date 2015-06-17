@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DVBBoardsViewController : UITableViewController
+#import "DVBCommonTableViewController.h"
+
+@interface DVBBoardsViewController : DVBCommonTableViewController
 
 @end

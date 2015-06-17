@@ -72,7 +72,9 @@
                      andThumbImagesArray:thumbImagesArray
                       andFullImagesArray:fullImagesArray];
 
-        [_viewController.navigationController pushViewController:galleryBrowser animated:YES];
+        [_viewController.navigationController presentViewController:galleryBrowser
+                                                           animated:YES
+                                                         completion:nil];
     }
 }
 

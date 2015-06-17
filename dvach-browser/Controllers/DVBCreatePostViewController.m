@@ -8,7 +8,6 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <Mantle/Mantle.h>
-#import <UINavigationItem+Loading.h>
 #import "UIImage+DVBImageExtention.h"
 
 #import "DVBConstants.h"
@@ -40,6 +39,7 @@
 // UI elements
 @property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *sendPostButton;
 // Tempopary storage for add/remove picture button we just pressed
 @property (nonatomic, strong) UIButton *addPictureButton;
 
@@ -57,6 +57,7 @@
 {
     [super viewWillDisappear:animated];
     [self saveCommentForLater];
+    [_containerForPostElementsView removeObservers];
 }
 
 /// All View Controller tuning
@@ -210,8 +211,8 @@
           andImagesToUpload:(NSArray *)imagesToUpload
 {
     
-    // Turn off POST button - so we can't tap it the second time before post action completed.
-    [self.navigationItem startAnimatingAt:ANNavBarLoaderPositionRight];
+    // Turn off POST button
+    _sendPostButton.enabled = NO;
     
     [_networking postMessageWithTask:task
                             andBoard:board
@@ -240,9 +241,6 @@
             if (threadToRedirectTo && isThreadToRedirectToNotEmpty) {
                 _createdThreadNum = threadToRedirectTo;
             }
-            else {
-                _sharedComment.createdPostNum = messagePostServerAnswer.num;
-            }
 
             // Clear comment text and saved comment if post was successfull.
             _containerForPostElementsView.commentTextView.text = @"";
@@ -255,7 +253,7 @@
         }
         else {
             // Enable Post button back.
-            [self.navigationItem stopAnimating];
+            _sendPostButton.enabled = YES;
             [self requestCaptchaImage];
         }
     }];

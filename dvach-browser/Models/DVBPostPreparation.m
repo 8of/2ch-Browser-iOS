@@ -8,11 +8,9 @@
 #import <UIKit/UIKit.h>
 
 #import "DVBConstants.h"
-
+#import "UrlNinja.h"
 #import "DVBPostPreparation.h"
 #import "NSString+HTML.h"
-
-#import "UrlNinja.h"
 
 @interface DVBPostPreparation ()
 
@@ -21,6 +19,8 @@
 @property (nonatomic, strong) NSString *boardId;
 // need to know to generate replies
 @property (nonatomic, strong) NSString *threadId;
+
+@property (nonatomic, strong) UIFontDescriptor *bodyFontDescriptor;
 
 @end
 
@@ -38,6 +38,12 @@
     if (self) {
         _boardId = boardId;
         _threadId = threadId;
+
+        _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+            _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleCaption1];
+        }
     }
     
     return self;
@@ -53,14 +59,7 @@
 
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment
 {
-    UIFontDescriptor *bodyFontDescriptor;
-    bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleCaption1];
-    }
-
-    CGFloat bodyFontSize = [bodyFontDescriptor pointSize];
+    CGFloat bodyFontSize = [_bodyFontDescriptor pointSize];
     
     // чистка исходника и посильная замена хтмл-литералов
     comment = [comment stringByReplacingOccurrencesOfString:@"\n" withString:@""];

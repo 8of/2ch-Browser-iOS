@@ -15,18 +15,12 @@
     
     NSCalendarUnit units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:units fromDate:date toDate:[NSDate date] options:0];
-    NSDateComponents *yearComponent = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:date];
-    NSDateComponents *currentYearComponent = [[NSCalendar currentCalendar] components:NSCalendarUnitYear fromDate:[NSDate date]];
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    
-    if (yearComponent.year != currentYearComponent.year) {
+
+    if (components.month > 0) {
         [formatter setTimeZone:[NSTimeZone systemTimeZone]];
         [formatter setDateFormat:@"dd.MM.yy"];
-        return [formatter stringFromDate:date];
-    } else if (components.month > 0) {
-        [formatter setTimeZone:[NSTimeZone systemTimeZone]];
-        [formatter setDateFormat:@"dd.MM"];
         return [formatter stringFromDate:date];
     } else if (components.day > 0) {
         return [NSString stringWithFormat:@"%ld д.", (long)components.day];

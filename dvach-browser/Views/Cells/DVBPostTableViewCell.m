@@ -89,6 +89,8 @@
 {
     [super awakeFromNib];
 
+    _showAnswersButton.hidden = YES;
+
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
 
@@ -226,8 +228,9 @@
     NSString *answerButtonTitle;
 
     if (postRepliesCount > 0) {
-        answerButtonTitle = [NSString stringWithFormat:@" %ld", (unsigned long)postRepliesCount];
-        [_showAnswersButton setEnabled:YES];
+        answerButtonTitle = [NSString stringWithFormat:@"%ld", (unsigned long)postRepliesCount];
+        _showAnswersButton.enabled = YES;
+        _showAnswersButton.hidden = NO;
         [_showAnswersButton setTitle:answerButtonTitle
                        forState:UIControlStateNormal];
         _showAnswersButton.tag = index;
@@ -336,7 +339,8 @@
     _postThumb2.image = nil;
     _postThumb3.image = nil;
 
-    [_showAnswersButton setEnabled:NO];
+    _showAnswersButton.enabled = NO;
+    _showAnswersButton.hidden = YES;
     [_showAnswersButton setTitle:nil
                         forState:UIControlStateNormal];
 
