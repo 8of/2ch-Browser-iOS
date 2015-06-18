@@ -10,13 +10,17 @@
 
 #import "DVBBrowserViewControllerBuilder.h"
 
-@interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate>
+#import "MPTransition.h"
+
+@interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, assign) NSUInteger index;
 // array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
 // array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
+
+@property (nonatomic, strong) MPTransition *transitionManager;
 
 @end
 
@@ -45,11 +49,11 @@
     // Set the current visible photo before displaying
     [self setCurrentPhotoIndex:_index];
 
-    // To swipe off controller
-    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                                          action:@selector(userSwiped:)];
-    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:swipeRecognizer];
+    _transitionManager=[[MPTransition alloc] init];
+    self.transitioningDelegate = _transitionManager;
+
+    _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
+    [self.view addGestureRecognizer:_pan];
 }
 
 - (NSUInteger)numberOfPhotosInPhotoBrowser:(MWPhotoBrowser *)photoBrowser
@@ -106,19 +110,45 @@
     _fullImagesArray = fullImagesMutableArray;
 }
 
-// Action method to swipe off controller
-- (void)userSwiped:(UIGestureRecognizer *)sender
-{
-    [self dismissViewControllerAnimated:YES
-                             completion:nil];
-}
-
-- (UIStatusBarStyle) preferredStatusBarStyle {
+- (UIStatusBarStyle)preferredStatusBarStyle {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         return UIStatusBarStyleLightContent;
     }
 
     return UIStatusBarStyleDefault;
+}
+
+- (void)pan:(UIPanGestureRecognizer *)recognizer{
+
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self dismissViewControllerAnimated:YES completion:NULL];
+        [recognizer setTranslation:CGPointZero inView:self.view.superview];
+        [_transitionManager updateInteractiveTransition:0];
+        return;
+    }
+
+    CGFloat percentage = [recognizer translationInView:self.view.superview].y / self.view.superview.bounds.size.height;
+
+    [_transitionManager updateInteractiveTransition:percentage];
+
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+
+        CGFloat velocityY = [recognizer velocityInView:recognizer.view.superview].y;
+        BOOL cancel = (velocityY < 0) || ((velocityY == 0) && (recognizer.view.frame.origin.y < self.view.superview.bounds.size.height / 2));
+        CGFloat points = cancel ? recognizer.view.frame.origin.y : self.view.superview.bounds.size.height-recognizer.view.frame.origin.y;
+        NSTimeInterval duration = points / velocityY;
+
+        if (duration < .2) {
+            duration = .2;
+        } else if (duration > .6) {
+            duration = .6;
+        }
+
+        cancel ? [_transitionManager cancelInteractiveTransitionWithDuration:duration] : [_transitionManager finishInteractiveTransitionWithDuration:duration];
+
+    } else if (recognizer.state==UIGestureRecognizerStateFailed) {
+        [_transitionManager cancelInteractiveTransitionWithDuration:.35];
+    }
 }
 
 @end
