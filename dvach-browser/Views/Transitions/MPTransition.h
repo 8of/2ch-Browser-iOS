@@ -13,6 +13,6 @@
 @property (nonatomic, readwrite) id <UIViewControllerContextTransitioning> transitionContext;
 
 - (void)cancelInteractiveTransitionWithDuration:(CGFloat)duration;
-- (void)finishInteractiveTransitionWithDuration:(CGFloat)duration;
+- (void)finishInteractiveTransitionWithDuration:(CGFloat)duration andToTop:(BOOL)toTop;
 
 @end

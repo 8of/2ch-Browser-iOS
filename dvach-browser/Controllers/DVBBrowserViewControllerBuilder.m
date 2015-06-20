@@ -26,8 +26,8 @@
 
 @implementation DVBBrowserViewControllerBuilder
 
-- (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray {
-
+- (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
+{
     _index = index;
 
     _thumbImagesArray = thumbImagesArray;
@@ -110,7 +110,8 @@
     _fullImagesArray = fullImagesMutableArray;
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         return UIStatusBarStyleLightContent;
     }
@@ -118,8 +119,10 @@
     return UIStatusBarStyleDefault;
 }
 
-- (void)pan:(UIPanGestureRecognizer *)recognizer{
+#pragma mark - Dismiss Transition
 
+- (void)pan:(UIPanGestureRecognizer *)recognizer
+{
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         [self dismissViewControllerAnimated:YES completion:NULL];
         [recognizer setTranslation:CGPointZero inView:self.view.superview];
@@ -134,7 +137,7 @@
     if (recognizer.state == UIGestureRecognizerStateEnded) {
 
         CGFloat velocityY = [recognizer velocityInView:recognizer.view.superview].y;
-        BOOL cancel = (velocityY < 0) || ((velocityY == 0) && (recognizer.view.frame.origin.y < self.view.superview.bounds.size.height / 2));
+        BOOL cancel = ((velocityY == 0) && (recognizer.view.frame.origin.y < self.view.bounds.size.height / 2));
         CGFloat points = cancel ? recognizer.view.frame.origin.y : self.view.superview.bounds.size.height-recognizer.view.frame.origin.y;
         NSTimeInterval duration = points / velocityY;
 
@@ -144,9 +147,18 @@
             duration = .6;
         }
 
-        cancel ? [_transitionManager cancelInteractiveTransitionWithDuration:duration] : [_transitionManager finishInteractiveTransitionWithDuration:duration];
+        if (cancel) {
+            [_transitionManager cancelInteractiveTransitionWithDuration:duration];
+        } else {
+            BOOL toTop = NO;
+            if (velocityY < 0) {
+                toTop = YES;
+            }
 
-    } else if (recognizer.state==UIGestureRecognizerStateFailed) {
+            [_transitionManager finishInteractiveTransitionWithDuration:duration andToTop:toTop];
+        }
+
+    } else if (recognizer.state == UIGestureRecognizerStateFailed) {
         [_transitionManager cancelInteractiveTransitionWithDuration:.35];
     }
 }

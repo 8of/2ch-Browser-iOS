@@ -72,6 +72,8 @@
                      andThumbImagesArray:thumbImagesArray
                       andFullImagesArray:fullImagesArray];
 
+        galleryBrowser.modalPresentationStyle = UIModalPresentationCurrentContext;
+
         [_viewController.navigationController presentViewController:galleryBrowser
                                                            animated:YES
                                                          completion:nil];
