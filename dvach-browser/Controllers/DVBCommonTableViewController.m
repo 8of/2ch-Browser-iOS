@@ -13,6 +13,8 @@
 
 @interface DVBCommonTableViewController ()
 
+@property (nonatomic, assign) BOOL eulaAgreed;
+
 @end
 
 @implementation DVBCommonTableViewController
@@ -20,6 +22,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    _eulaAgreed = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(defaultsChanged)
@@ -37,7 +41,16 @@
 - (void)defaultsChanged
 {
     UIViewController *vc = [[self.navigationController viewControllers] firstObject];
-    if([vc isEqual: self ]) {
+
+    BOOL isEulaAcceptedNow = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
+
+    BOOL isUserAgreementUserDefaultTheSame = _eulaAgreed == isEulaAcceptedNow;
+
+    _eulaAgreed = isEulaAcceptedNow;
+
+    // Check if current VC is last one in stack - so we will not present the same message over and over
+    // And there is no need to present message when user just accepted EULA
+    if ([vc isEqual:self] && isUserAgreementUserDefaultTheSame) {
         DVBAlertViewGenerator *alertGenerator = [[DVBAlertViewGenerator alloc] init];
         NSString *restartAppAlertTitle = NSLocalizedString(@"Настройки изменены", @"Настройки изменены");
         NSString *restartAppAlertDescription = NSLocalizedString(@"Для правильной работы закройте приложение и запустите его заново.", @"Для правильной работы закройте приложение и запустите его заново.");
