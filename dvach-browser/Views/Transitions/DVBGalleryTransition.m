@@ -1,14 +1,14 @@
 //
-//  MPTransition.m
+//  DVBGalleryTransition.m
 //  VCtransition
 //
-//  Created by Alex Manzella on 29/09/14.
-//  Copyright (c) 2014 mpow. All rights reserved.
+//  Created by Andrey Konstantinov on 09/07/14.
+//  Copyright (c) 2015 8of. All rights reserved.
 //
 
-#import "MPTransition.h"
+#import "DVBGalleryTransition.h"
 
-@implementation MPTransition
+@implementation DVBGalleryTransition
 
 #pragma mark - UIViewControllerTransitioningDelegate
 
@@ -40,6 +40,7 @@
 
 - (void)animationEnded:(BOOL)transitionCompleted
 {
+    // This here is on purpose
 }
 
 #pragma mark - UIViewControllerInteractiveTransitioning
@@ -47,11 +48,6 @@
 - (void)startInteractiveTransition:(id <UIViewControllerContextTransitioning>)transitionContext
 {
     self.transitionContext = transitionContext;
-    
-    UIView *inView = [transitionContext containerView];
-    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    toViewController.view.layer.zPosition = -1;
-    [inView.superview addSubview:toViewController.view];
 }
 
 #pragma mark - UIPercentDrivenInteractiveTransition

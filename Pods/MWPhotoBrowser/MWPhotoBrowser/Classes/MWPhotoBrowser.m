@@ -145,7 +145,6 @@
     if (!_enableGrid) _startOnGrid = NO;
 	
 	// View
-	self.view.backgroundColor = [UIColor blackColor];
     self.view.clipsToBounds = YES;
 	
 	// Setup paging scrolling view
@@ -156,10 +155,6 @@
 	_pagingScrollView.delegate = self;
 	_pagingScrollView.showsHorizontalScrollIndicator = NO;
 	_pagingScrollView.showsVerticalScrollIndicator = NO;
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
-        _pagingScrollView.backgroundColor = [UIColor blackColor];
-    }
 
     _pagingScrollView.contentSize = [self contentSizeForPagingScrollView];
 	[self.view addSubview:_pagingScrollView];

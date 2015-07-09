@@ -10,7 +10,7 @@
 
 #import "DVBBrowserViewControllerBuilder.h"
 
-#import "MPTransition.h"
+#import "DVBGalleryTransition.h"
 
 @interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate, UIViewControllerTransitioningDelegate>
 
@@ -20,7 +20,7 @@
 // array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 
-@property (nonatomic, strong) MPTransition *transitionManager;
+@property (nonatomic, strong) DVBGalleryTransition *transitionManager;
 
 @end
 
@@ -49,7 +49,7 @@
     // Set the current visible photo before displaying
     [self setCurrentPhotoIndex:_index];
 
-    _transitionManager=[[MPTransition alloc] init];
+    _transitionManager=[[DVBGalleryTransition alloc] init];
     self.transitioningDelegate = _transitionManager;
 
     _pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
