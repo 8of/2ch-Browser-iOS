@@ -12,6 +12,10 @@
 
 #import "DVBGalleryTransition.h"
 
+static CGFloat const MIN_DURATION = .2;
+static CGFloat const MAX_DURATION = .6;
+static NSInteger const PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION = 5;
+
 @interface DVBBrowserViewControllerBuilder () <MWPhotoBrowserDelegate, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, assign) NSUInteger index;
@@ -137,14 +141,22 @@
     if (recognizer.state == UIGestureRecognizerStateEnded) {
 
         CGFloat velocityY = [recognizer velocityInView:recognizer.view.superview].y;
-        BOOL cancel = ((velocityY == 0) && (recognizer.view.frame.origin.y < self.view.bounds.size.height / 2));
+
+        // If moved up but not so far
+        BOOL isBadDistanceUp = (velocityY < 0) && (-recognizer.view.frame.origin.y < self.view.bounds.size.height / PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION);
+
+        // If moved down but not so far
+        BOOL isBadDistanceDown = (velocityY > 0) && (recognizer.view.frame.origin.y < self.view.bounds.size.height / PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION);
+
+        BOOL cancel = isBadDistanceUp || isBadDistanceDown;
+
         CGFloat points = cancel ? recognizer.view.frame.origin.y : self.view.superview.bounds.size.height-recognizer.view.frame.origin.y;
         NSTimeInterval duration = points / velocityY;
 
-        if (duration < .2) {
-            duration = .2;
-        } else if (duration > .6) {
-            duration = .6;
+        if (duration < MIN_DURATION) {
+            duration = MIN_DURATION;
+        } else if (duration > MAX_DURATION) {
+            duration = MAX_DURATION;
         }
 
         if (cancel) {
