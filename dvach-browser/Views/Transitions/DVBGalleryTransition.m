@@ -79,7 +79,6 @@
                          CGRect frame = toViewController.view.frame;
                          fromViewController.view.frame = frame;
                      } completion:^(BOOL finished) {
-                         [toViewController.view removeFromSuperview];
                          [self.transitionContext cancelInteractiveTransition];
                          [self.transitionContext completeTransition:NO];
                          self.transitionContext = nil;

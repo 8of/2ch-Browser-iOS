@@ -57,8 +57,8 @@
 // DACircularProgress
 #define COCOAPODS_POD_AVAILABLE_DACircularProgress
 #define COCOAPODS_VERSION_MAJOR_DACircularProgress 2
-#define COCOAPODS_VERSION_MINOR_DACircularProgress 2
-#define COCOAPODS_VERSION_PATCH_DACircularProgress 0
+#define COCOAPODS_VERSION_MINOR_DACircularProgress 3
+#define COCOAPODS_VERSION_PATCH_DACircularProgress 1
 
 // MBProgressHUD
 #define COCOAPODS_POD_AVAILABLE_MBProgressHUD
@@ -68,10 +68,9 @@
 
 // MWPhotoBrowser
 #define COCOAPODS_POD_AVAILABLE_MWPhotoBrowser
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 1.4.1.1.
+#define COCOAPODS_VERSION_MAJOR_MWPhotoBrowser 2
+#define COCOAPODS_VERSION_MINOR_MWPhotoBrowser 1
+#define COCOAPODS_VERSION_PATCH_MWPhotoBrowser 1
 
 // Mantle
 #define COCOAPODS_POD_AVAILABLE_Mantle
@@ -89,25 +88,19 @@
 #define COCOAPODS_POD_AVAILABLE_Masonry
 #define COCOAPODS_VERSION_MAJOR_Masonry 0
 #define COCOAPODS_VERSION_MINOR_Masonry 6
-#define COCOAPODS_VERSION_PATCH_Masonry 1
-
-// PSTCollectionView
-#define COCOAPODS_POD_AVAILABLE_PSTCollectionView
-#define COCOAPODS_VERSION_MAJOR_PSTCollectionView 1
-#define COCOAPODS_VERSION_MINOR_PSTCollectionView 2
-#define COCOAPODS_VERSION_PATCH_PSTCollectionView 3
+#define COCOAPODS_VERSION_PATCH_Masonry 2
 
 // SDWebImage
 #define COCOAPODS_POD_AVAILABLE_SDWebImage
 #define COCOAPODS_VERSION_MAJOR_SDWebImage 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage 7
-#define COCOAPODS_VERSION_PATCH_SDWebImage 2
+#define COCOAPODS_VERSION_PATCH_SDWebImage 3
 
 // SDWebImage/Core
 #define COCOAPODS_POD_AVAILABLE_SDWebImage_Core
 #define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
-#define COCOAPODS_VERSION_PATCH_SDWebImage_Core 2
+#define COCOAPODS_VERSION_PATCH_SDWebImage_Core 3
 
 // TUSafariActivity
 #define COCOAPODS_POD_AVAILABLE_TUSafariActivity
