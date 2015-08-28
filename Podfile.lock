@@ -1,31 +1,31 @@
 PODS:
-  - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection (= 2.5.4)
-    - AFNetworking/NSURLSession (= 2.5.4)
-    - AFNetworking/Reachability (= 2.5.4)
-    - AFNetworking/Security (= 2.5.4)
-    - AFNetworking/Serialization (= 2.5.4)
-    - AFNetworking/UIKit (= 2.5.4)
-  - AFNetworking/NSURLConnection (2.5.4):
+  - AFNetworking (2.6.0):
+    - AFNetworking/NSURLConnection (= 2.6.0)
+    - AFNetworking/NSURLSession (= 2.6.0)
+    - AFNetworking/Reachability (= 2.6.0)
+    - AFNetworking/Security (= 2.6.0)
+    - AFNetworking/Serialization (= 2.6.0)
+    - AFNetworking/UIKit (= 2.6.0)
+  - AFNetworking/NSURLConnection (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.4):
+  - AFNetworking/NSURLSession (2.6.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.4)
-  - AFNetworking/Security (2.5.4)
-  - AFNetworking/Serialization (2.5.4)
-  - AFNetworking/UIKit (2.5.4):
+  - AFNetworking/Reachability (2.6.0)
+  - AFNetworking/Security (2.6.0)
+  - AFNetworking/Serialization (2.6.0)
+  - AFNetworking/UIKit (2.6.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - CCBottomRefreshControl (0.5):
-    - Masonry
+  - CCBottomRefreshControl (0.5.1):
+    - Masonry (~> 0.6.2)
   - DACircularProgress (2.3.1)
-  - Mantle (2.0.2):
-    - Mantle/extobjc (= 2.0.2)
-  - Mantle/extobjc (2.0.2)
+  - Mantle (2.0.4):
+    - Mantle/extobjc (= 2.0.4)
+  - Mantle/extobjc (2.0.4)
   - Masonry (0.6.2)
   - MBProgressHUD (0.9.1)
   - MWPhotoBrowser (2.1.1):
@@ -38,17 +38,17 @@ PODS:
   - TUSafariActivity (1.0.4)
 
 DEPENDENCIES:
-  - AFNetworking (= 2.5.4)
-  - CCBottomRefreshControl (= 0.5)
-  - Mantle (= 2.0.2)
+  - AFNetworking (= 2.6.0)
+  - CCBottomRefreshControl (= 0.5.1)
+  - Mantle (= 2.0.4)
   - MWPhotoBrowser (= 2.1.1)
   - TUSafariActivity (= 1.0.4)
 
 SPEC CHECKSUMS:
-  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
-  CCBottomRefreshControl: 2cfdbd6f5be5181f5f070637605981d5557e8e32
+  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
+  CCBottomRefreshControl: 57a596348855260f627ffc2b311328ed15b94877
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  Mantle: 967fd31ea0220890b2e76589198996b534bb3fb1
+  Mantle: 6bee68168423948be0c0c5924832bf3af188e099
   Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c

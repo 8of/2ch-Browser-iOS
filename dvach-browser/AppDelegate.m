@@ -7,12 +7,12 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 #import <SDWebImage/SDWebImageManager.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
-#import "AFNetworkActivityIndicatorManager.h"
 
 #import "DVBPostPhotoContainerView.h"
 #import "DVBMarkupButton.h"
@@ -99,6 +99,7 @@
 - (void)manageAFNetworking
 {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
 /// Tuning appearance for entire app.
 - (void)appearanceTudeUp
