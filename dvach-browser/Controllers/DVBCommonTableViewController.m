@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBAlertViewGenerator.h"
 
@@ -52,9 +53,11 @@
     // And there is no need to present message when user just accepted EULA
     if ([vc isEqual:self] && isUserAgreementUserDefaultTheSame) {
         DVBAlertViewGenerator *alertGenerator = [[DVBAlertViewGenerator alloc] init];
-        NSString *restartAppAlertTitle = NSLocalizedString(@"Настройки изменены", @"Настройки изменены");
-        NSString *restartAppAlertDescription = NSLocalizedString(@"Для правильной работы закройте приложение и запустите его заново.", @"Для правильной работы закройте приложение и запустите его заново.");
-        UIAlertView *alertView = [alertGenerator alertViewWithTitle:restartAppAlertTitle description:restartAppAlertDescription buttons:@[@"OK"]];
+        NSString *restartAppAlertTitle = NSLS(@"ALERT_SETTINGS_CHANGED_TITLE");
+        NSString *restartAppAlertDescription = NSLS(@"ALERT_SETTINGS_CHANGED_MESSAGE");
+        UIAlertView *alertView = [alertGenerator alertViewWithTitle:restartAppAlertTitle
+                                                        description:restartAppAlertDescription
+                                                            buttons:@[NSLS(@"BUTTON_OK")]];
         [alertView show];
     }
 }
@@ -63,13 +66,13 @@
 
 - (void)showMessageAboutDataLoading
 {
-    NSString *loadingTitle = NSLocalizedString(@"Загрузка", @"Загрузка");
+    NSString *loadingTitle = NSLS(@"STATUS_LOADING");
     [self showUserMessageWithTitle:loadingTitle];
 }
 
 - (void)showMessageAboutError
 {
-    NSString *errorTitle = NSLocalizedString(@"Ошибка загрузки", @"Ошибка загрузки");
+    NSString *errorTitle = NSLS(@"STATUS_LOADING_ERROR");
     [self showUserMessageWithTitle:errorTitle];
 }
 

@@ -5,6 +5,7 @@
 //  Created by Andy on 05/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
+
 #import <AFNetworking/AFNetworking.h>
 #import <SDWebImage/SDWebImageManager.h>
 
@@ -38,13 +39,13 @@
     [self clearAllCaches];
 
     NSDictionary* defaults = @{
-       USER_AGREEMENT_ACCEPTED:@NO,
-       SETTING_ENABLE_DARK_THEME:@NO,
-       SETTING_ENABLE_LITTLE_BODY_FONT:@NO,
-       SETTING_ENABLE_TRAFFIC_SAVINGS:@NO,
-       PASSCODE:@"",
-       USERCODE:@"",
-       BOARDS_LIST_VERSION:@0
+       USER_AGREEMENT_ACCEPTED : @NO,
+       SETTING_ENABLE_DARK_THEME : @NO,
+       SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
+       SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
+       PASSCODE : @"",
+       USERCODE : @"",
+       BOARDS_LIST_VERSION : @0
     };
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];

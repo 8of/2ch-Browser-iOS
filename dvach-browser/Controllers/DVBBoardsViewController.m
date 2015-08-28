@@ -115,7 +115,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     });
 }
 
-
 #pragma mark - user Agreement
 
 /**

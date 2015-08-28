@@ -8,6 +8,7 @@
 #import <CoreImage/CoreImage.h>
 #import <UIImageView+AFNetworking.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 
 #import "DVBContainerForPostElements.h"
@@ -52,39 +53,37 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 - (void)setupAppearance
 {
+    NSArray *arrayOfTextFields = @
+    [
+      _subjectTextField,
+      _nameTextField,
+      _emailTextField,
+      _captchaValueTextField
+    ];
+
+    NSArray *textFieldPlaceholders = @
+    [
+      NSLS(@"FIELD_POST_THEME"),
+      NSLS(@"FIELD_POST_NAME"),
+      NSLS(@"FIELD_POST_EMAIL"),
+      NSLS(@"FIELD_POST_CAPTCHA")
+    ];
+
+    [arrayOfTextFields enumerateObjectsUsingBlock:^(UITextField *textField, NSUInteger idx, BOOL *stop) {
+        textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:textFieldPlaceholders[idx]
+                                                                          attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+    }];
+
     // Dark theme
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
         _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
-        _nameTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _subjectTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _emailTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _captchaValueTextField.backgroundColor = CELL_BACKGROUND_COLOR;
 
-        NSString *subjectPlaceholder = NSLocalizedString(@"Тема", @"Placeholder для поля Тема");
-        NSString *namePlaceholder = NSLocalizedString(@"Имя", @"Placeholder для поля Имя");
-        NSString *emailPlaceholder = NSLocalizedString(@"Email", @"Placeholder для поля Email");
-        NSString *captchaPlaceholder = NSLocalizedString(@"Капча", @"Placeholder для поля Капча");
-
-        _subjectTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:subjectPlaceholder
-                                                                                  attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _subjectTextField.textColor = [UIColor whiteColor];
-        _subjectTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _nameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:namePlaceholder
-                                                                               attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _nameTextField.textColor = [UIColor whiteColor];
-        _nameTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _emailTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:emailPlaceholder
-                                                                                attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _emailTextField.textColor = [UIColor whiteColor];
-        _emailTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _captchaValueTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:captchaPlaceholder
-                                                                                       attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _captchaValueTextField.textColor = [UIColor whiteColor];
-        _captchaValueTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+        for (UITextField *textField in arrayOfTextFields) {
+            textField.backgroundColor = CELL_BACKGROUND_COLOR;
+            textField.textColor = [UIColor whiteColor];
+            textField.keyboardAppearance = UIKeyboardAppearanceDark;
+        }
 
         _commentTextView.keyboardAppearance = UIKeyboardAppearanceDark;
         _commentTextView.textColor = [UIColor whiteColor];
@@ -124,8 +123,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                                            action:@selector(hideKeyBoard)];
 
     [self addGestureRecognizer:tapGesture];
-
-    // [_commentTextView becomeFirstResponder];
 }
 
 - (void)changeConstraintsIfUserCodeNotEmpty
@@ -146,7 +143,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 - (BOOL)isCommentPlaceholderNow
 {
-    NSString *placeholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
+    NSString *placeholder = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
 
     if ([_commentTextView.text isEqualToString:placeholder]) {
         return YES;
@@ -172,7 +169,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if ([textView.text isEqualToString:@""]) {
-        textView.text = PLACEHOLDER_COMMENT_FIELD;
+        textView.text = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
         textView.textColor = [UIColor lightGrayColor];
     }
     [textView resignFirstResponder];

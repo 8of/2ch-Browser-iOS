@@ -5,10 +5,12 @@
 //  Created by Andy on 10/02/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
+
 #import <AFNetworking/AFNetworking.h>
 
-#import "DVBNetworking.h"
+#import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBNetworking.h"
 #import "DVBBoard.h"
 #import "DVBValidation.h"
 #import "Reachlibility.h"
@@ -300,7 +302,7 @@
          
          if (isOKanswer || isRedirectAnswer) {
              // If answer is good - make preparations in current ViewController
-             NSString *successTitle = NSLocalizedString(@"Успешно", @"Title of the createPostVC when post was successfull");
+             NSString *successTitle = NSLS(@"POST_STATUS_SUCCESS");
 
              NSString *postNum = [responseDictionary[@"Num"] stringValue];
              
@@ -337,7 +339,7 @@
      {
          NSLog(@"Error: %@", error);
          
-         NSString *cancelTitle = NSLocalizedString(@"Ошибка", @"Title of the createPostVC when post was NOT successful");
+         NSString *cancelTitle = NSLS(@"ERROR");
          DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:NO
                                                                                                   andStatusMessage:cancelTitle
                                                                                                             andNum:nil
