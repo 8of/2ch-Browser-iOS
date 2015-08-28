@@ -1,9 +1,9 @@
 //
 //  DateFormatter.h
-//  Tabula
+//  dvach-browser
 //
-//  Created by Alexander Tewpin on 02/08/14.
-//  Copyright (c) 2014 Alexander Tewpin. All rights reserved.
+//  Created by Andy on 28/08/14.
+//  Copyright (c) 2015 8of. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

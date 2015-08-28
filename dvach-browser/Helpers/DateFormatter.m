@@ -1,9 +1,9 @@
 //
 //  DateFormatter.m
-//  Tabula
+//  dvach-browser
 //
-//  Created by Alexander Tewpin on 02/08/14.
-//  Copyright (c) 2014 Alexander Tewpin. All rights reserved.
+//  Created by Andy on 28/08/14.
+//  Copyright (c) 2015 8of. All rights reserved.
 //
 
 #import "DVBCommon.h"
@@ -15,12 +15,13 @@
 {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     
-    NSCalendarUnit units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;
+    static NSCalendarUnit units;
+    units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;
     NSDateComponents *components = [[NSCalendar currentCalendar] components:units fromDate:date toDate:[NSDate date] options:0];
-    
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 
     if (components.month > 0) {
+        static NSDateFormatter *formatter;
+        formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone systemTimeZone]];
         [formatter setDateFormat:@"dd.MM.yy"];
         return [formatter stringFromDate:date];
