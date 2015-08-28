@@ -22,54 +22,37 @@ PODS:
     - AFNetworking/NSURLSession
   - CCBottomRefreshControl (0.5):
     - Masonry
-  - DACircularProgress (2.2.0)
+  - DACircularProgress (2.3.1)
   - Mantle (2.0.2):
     - Mantle/extobjc (= 2.0.2)
   - Mantle/extobjc (2.0.2)
-  - Masonry (0.6.1)
+  - Masonry (0.6.2)
   - MBProgressHUD (0.9.1)
-  - MWPhotoBrowser (1.4.1.1):
-    - MBProgressHUD (~> 0.8)
-    - PSTCollectionView (~> 1.2)
-    - SDWebImage (~> 3.7)
-  - PSTCollectionView (1.2.3)
-  - SDWebImage (3.7.2):
-    - SDWebImage/Core (= 3.7.2)
-  - SDWebImage/Core (3.7.2)
+  - MWPhotoBrowser (2.1.1):
+    - DACircularProgress (~> 2.3)
+    - MBProgressHUD (~> 0.9)
+    - SDWebImage (!= 3.7.2, ~> 3.7)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
   - TUSafariActivity (1.0.4)
 
 DEPENDENCIES:
   - AFNetworking (= 2.5.4)
   - CCBottomRefreshControl (= 0.5)
-  - DACircularProgress (from `https://github.com/8ofproject/DACircularProgress`)
   - Mantle (= 2.0.2)
-  - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser`)
+  - MWPhotoBrowser (= 2.1.1)
   - TUSafariActivity (= 1.0.4)
-
-EXTERNAL SOURCES:
-  DACircularProgress:
-    :git: https://github.com/8ofproject/DACircularProgress
-  MWPhotoBrowser:
-    :git: https://github.com/8ofproject/MWPhotoBrowser
-
-CHECKOUT OPTIONS:
-  DACircularProgress:
-    :commit: b6e7199b13e829c98255e91ffbdc687030872ccd
-    :git: https://github.com/8ofproject/DACircularProgress
-  MWPhotoBrowser:
-    :commit: a91944e59e6c6348af4dbd03ffaf9f62e0bb0c89
-    :git: https://github.com/8ofproject/MWPhotoBrowser
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
   CCBottomRefreshControl: 2cfdbd6f5be5181f5f070637605981d5557e8e32
-  DACircularProgress: fb152943b9366c3fbd715a69f04c14b9db91f6c3
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Mantle: 967fd31ea0220890b2e76589198996b534bb3fb1
-  Masonry: 4972309f2f134de9dd312f4dc4a21359b50e6caa
+  Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
-  MWPhotoBrowser: 963c6b795e9c8fb62f7b4d3465c4d8cf5bee9869
-  PSTCollectionView: 6749df92885353521f55279a7ce2b293762e2be4
-  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
 
 COCOAPODS: 0.37.2

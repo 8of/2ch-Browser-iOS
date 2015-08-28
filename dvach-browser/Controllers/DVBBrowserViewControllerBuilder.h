@@ -10,6 +10,8 @@
 
 @interface DVBBrowserViewControllerBuilder : MWPhotoBrowser
 
+@property (nonatomic, strong) UIPanGestureRecognizer *pan;
+
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray;
 
 @end

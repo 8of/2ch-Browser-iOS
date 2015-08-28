@@ -5,6 +5,7 @@
 //  Created by Andrey Konstantinov on 13/05/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
+#import "DVBConstants.h"
 
 #import "DVBMediaOpener.h"
 #import "DVBBrowserViewControllerBuilder.h"
@@ -72,6 +73,14 @@
                      andThumbImagesArray:thumbImagesArray
                       andFullImagesArray:fullImagesArray];
 
+        galleryBrowser.view.backgroundColor = [UIColor whiteColor];
+
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+            galleryBrowser.view.backgroundColor = [UIColor blackColor];
+        }
+
+        _viewController.navigationController.definesPresentationContext = YES;
+        [galleryBrowser setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         [_viewController.navigationController presentViewController:galleryBrowser
                                                            animated:YES
                                                          completion:nil];
