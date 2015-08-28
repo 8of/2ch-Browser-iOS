@@ -169,31 +169,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     return _threadsArray.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
-                                                                   forIndexPath:indexPath];
-    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
-    NSString *title = thread.subject;
-    if ([title isEqualToString:@""]) {
-        title = thread.num;
-    }
-
-    [cell prepareCellWithTitle:title andComment:thread.comment andThumbnailUrlString:thread.thumbnail andPostsCount:[thread.postsCount stringValue] andTimeSinceFirstPost:thread.timeSinceFirstPost];
-    
-    return cell;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
-    }
-
-    return heightToReturn;
-}
 // Separator insets to zero
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -211,6 +186,36 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
+
+    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
+    NSString *title = thread.subject;
+    if ([title isEqualToString:@""]) {
+        title = thread.num;
+    }
+
+    [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
+                    andComment:thread.comment
+         andThumbnailUrlString:thread.thumbnail
+                 andPostsCount:[thread.postsCount stringValue]
+         andTimeSinceFirstPost:thread.timeSinceFirstPost];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
+                                                                   forIndexPath:indexPath];
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    return heightToReturn;
 }
 
 - (void)reloadBoardPage
