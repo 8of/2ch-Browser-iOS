@@ -1,0 +1,49 @@
+/* 
+  Localizable.strings
+  dvach-browser
+
+  Created by Andrey Konstantinov on 28/08/15.
+  Copyright (c) 2015 8of. All rights reserved.
+*/
+
+"BUTTON_OK" = "ОК";
+"BUTTON_CANCEL" = "Cancel";
+"BUTTON_REPORT" = "Report";
+"BUTTON_CLOSE" = "Close";
+"BUTTON_SEND" = "Send";
+
+"ERROR" = "Error";
+
+"STATUS_LOADING" = "Loading";
+"STATUS_LOADING_ERROR" = "Loading error";
+
+"ALERT_BOARD_CODE_TITLE" = "Add to favourites";
+"ALERT_BOARD_CODE_MESSAGE" = "Enter board code without slashes";
+"ALERT_SETTINGS_CHANGED_TITLE" = "Settings changed";
+"ALERT_SETTINGS_CHANGED_MESSAGE" = "New settings will apply after app restart.";
+
+"DATE_FORMATTER_DAYS" = "%ld d";
+"DATE_FORMATTER_HOURS" = "%ld h";
+"DATE_FORMATTER_MINS" = "%ld m";
+"DATE_FORMATTER_SECS" = "%ld s";
+"DATE_FORMATTER_NOW" = "Now";
+
+"PROMPT_INSTALL_VLC" = "Install VLC to play webm";
+"PROMPT_REPORT_SENT" = "Report sent";
+"PROMPT_NEW_MESSAGES" = "new";
+
+"ACTIVITY_OPEN_IN_CHROME" = "Open in Chrome";
+
+"FIELD_POST_THEME" = "Subject";
+"FIELD_POST_NAME" = "Name";
+"FIELD_POST_EMAIL" = "Email";
+"FIELD_POST_CAPTCHA" = "Captcha";
+
+"PLACEHOLDER_COMMENT_FIELD" = "Comment";
+
+"POST_BAD_SYMBOLS_IN_POST" = "Post contains forbidden symbols";
+
+"POST_STATUS_SUCCESS" = "Success";
+
+"TITLE_NEW_THREAD" = "New thread";
+"TITLE_ANSWERS_TO" = "Answers to";

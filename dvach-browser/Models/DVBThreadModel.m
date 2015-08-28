@@ -8,9 +8,10 @@
 
 #import <Mantle/Mantle.h>
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
-#import "DVBConstants.h"
 #import "DVBPost.h"
 #import "DVBPostPreparation.h"
 #import "DateFormatter.h"
@@ -102,7 +103,7 @@
                     if ([comment rangeOfString:@"ررً"].location == NSNotFound) {
                     }
                     else {
-                        NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+                        NSString *brokenStringHere = NSLS(@"POST_BAD_SYMBOLS_IN_POST");
                         comment = brokenStringHere;
                     }
 

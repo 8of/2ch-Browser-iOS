@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBAlertViewGenerator.h"
 #import "DVBValidation.h"
 #import "DVBConstants.h"
@@ -21,7 +22,7 @@
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
                                                             message:description
                                                            delegate:_alertViewGeneratorDelegate
-                                                  cancelButtonTitle:@"OK"
+                                                  cancelButtonTitle:NSLS(@"BUTTON_OK")
                                                   otherButtonTitles:nil];
 
     return alertView;
@@ -29,15 +30,15 @@
 
 - (UIAlertView *)alertViewForBoardCode
 {
-    NSString *enterBoardShortcodeAlertTitle = NSLocalizedString(@"Добавить в избранное", @"Заголовок alert'a с полем ввода кодовых букв Борды");
-    NSString *enterBoardShortcodeAlertMessage = NSLocalizedString(@"Введите код доски, чтобы добавить ее в избранное", @"Текст alert'a с полем ввода кодовых букв Борды");
-    NSString *enterBoardShortcodeAlertCancelButtonText = NSLocalizedString(@"Отмена", @"Кнопка Отмена alert'a с полем ввода кодовых букв Борды");
+    NSString *enterBoardShortcodeAlertTitle = NSLS(@"ALERT_BOARD_CODE_TITLE");
+    NSString *enterBoardShortcodeAlertMessage = NSLS(@"ALERT_BOARD_CODE_MESSAGE");
+    NSString *enterBoardShortcodeAlertCancelButtonText = NSLS(@"BUTTON_CANCEL");
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:enterBoardShortcodeAlertTitle
                                                         message:enterBoardShortcodeAlertMessage
                                                        delegate:self
                                               cancelButtonTitle:enterBoardShortcodeAlertCancelButtonText
-                                              otherButtonTitles:@"OK", nil];
+                                              otherButtonTitles:NSLS(@"BUTTON_OK"), nil];
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
     UITextField *boardTextField = [alertView textFieldAtIndex:0];
 

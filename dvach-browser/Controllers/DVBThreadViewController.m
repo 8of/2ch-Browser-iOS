@@ -10,6 +10,7 @@
 #import <TUSafariActivity/TUSafariActivity.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "Reachlibility.h"
 #import "DVBThreadModel.h"
@@ -145,7 +146,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 answerTitle = @"";
             }
             else {
-                answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+                answerTitle = NSLS(@"TITLE_ANSWERS_TO");
             }
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
@@ -366,8 +367,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reportAction:(id)sender
 {
-    NSString *cancelButtonTitle = NSLocalizedString(@"Отмена", @"Кнопка Отмена");
-    NSString *destructiveButtonTitle = NSLocalizedString(@"Пожаловаться", @"Кнопка Пожаловаться");
+    NSString *cancelButtonTitle = NSLS(@"BUTTON_CANCEL");
+    NSString *destructiveButtonTitle = NSLS(@"BUTTON_REPORT");
     _reportSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                delegate:self
                                       cancelButtonTitle:cancelButtonTitle
@@ -508,7 +509,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
 
-    NSString *openInChromActivityTitle = NSLocalizedString(@"Открыть в Chrome", @"Title of the open in chrome share activity.");
+    NSString *openInChromActivityTitle = NSLS(@"ACTIVITY_OPEN_IN_CHROME");
 
     [chromeActivity setActivityTitle:openInChromActivityTitle];
 
@@ -598,8 +599,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)showPromptAboutReportedPost
 {
-    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
-    self.navigationItem.prompt = complaintSentPrompt;
+    self.navigationItem.prompt = NSLS(@"PROMPT_REPORT_SENT");
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:2.0];
@@ -637,7 +637,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Show prompt with cound of new messages
 - (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
 {
-    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, @"новых"];
+    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, NSLS(@"PROMPT_NEW_MESSAGES")];
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:1.5];

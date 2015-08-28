@@ -10,6 +10,7 @@
 #import <Mantle/Mantle.h>
 #import "UIImage+DVBImageExtention.h"
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "Reachlibility.h"
 #import "DVBNetworking.h"
@@ -40,6 +41,7 @@
 @property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *sendPostButton;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *closeButton;
 // Tempopary storage for add/remove picture button we just pressed
 @property (nonatomic, strong) UIButton *addPictureButton;
 
@@ -65,12 +67,14 @@
 {
     [self darkThemeHandler];
     _networking = [[DVBNetworking alloc] init];
+
+    _closeButton.title = NSLS(@"BUTTON_CLOSE");
+    _sendPostButton.title = NSLS(@"BUTTON_SEND");
     
     // If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly.
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
     if (isThreadNumZero) {
-        NSString *newThreadTitle = NSLocalizedString(@"Новый тред", @"Title of modal view controller if we creating thread");
-        self.title = newThreadTitle;
+        self.title = NSLS(@"TITLE_NEW_THREAD");
     }
     // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
@@ -80,8 +84,7 @@
         _containerForPostElementsView.commentTextView.text = commentText;
     }
     else {
-        NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
-        _containerForPostElementsView.commentTextView.text = commentFieldPlaceholder;
+        _containerForPostElementsView.commentTextView.text = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
         _containerForPostElementsView.commentTextView.textColor = [UIColor lightGrayColor];
     }
     
@@ -397,8 +400,7 @@
 - (void)saveCommentForLater
 {
     // Save comment for later if it is not a placeholder.
-    NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
-    if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
+    if (![_containerForPostElementsView.commentTextView.text isEqualToString:NSLS(@"PLACEHOLDER_COMMENT_FIELD")]) {
         _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     }
 }

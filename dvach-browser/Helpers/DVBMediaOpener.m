@@ -5,6 +5,8 @@
 //  Created by Andrey Konstantinov on 13/05/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
+
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 
 #import "DVBMediaOpener.h"
@@ -90,7 +92,7 @@
 /// NO VLC error prompt
 - (void)problemAboutVlcToPrompt
 {
-    NSString *installVLCPrompt = NSLocalizedString(@"Для просмотра установите VLC", @"Prompt in navigation bar of a thread View Controller - shows after user tap on the video and if user do not have VLC on the device");
+    NSString *installVLCPrompt = NSLS(@"PROMPT_INSTALL_VLC");
     _viewController.navigationItem.prompt = installVLCPrompt;
     [self performSelector:@selector(clearPrompt)
                withObject:nil

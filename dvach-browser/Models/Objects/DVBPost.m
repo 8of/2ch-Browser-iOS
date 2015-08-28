@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DateFormatter.h"
 
@@ -59,7 +60,7 @@
             subject = string;
         }
         else {
-            NSString *brokenStringHere = NSLocalizedString(@"Пост содержит запрещённые символы", @"Вставка в пост о том, что он содержит сломаные символы");
+            NSString *brokenStringHere = NSLS(@"POST_BAD_SYMBOLS_IN_POST");
             subject = brokenStringHere;
         }
 
