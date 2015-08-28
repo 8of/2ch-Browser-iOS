@@ -14,13 +14,13 @@
 
 @interface DVBThreadTableViewCell ()
 
-@property (nonatomic) IBOutlet UILabel *titleLabel;
-@property (nonatomic) IBOutlet UILabel *commentLabel;
+@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
+@property (nonatomic, weak) IBOutlet UILabel *commentLabel;
 @property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
 // Image for showing OP thumbnail image
-@property (nonatomic) IBOutlet UIImageView *threadThumb;
+@property (nonatomic, weak) IBOutlet UIImageView *threadThumb;
 
 @end
 
@@ -33,29 +33,34 @@
     [self.contentView setOpaque:YES];
     [self.backgroundView setOpaque:YES];
 
-    [_threadThumb setOpaque:YES];
-    [_threadThumb.layer setOpaque:YES];
+    _threadThumb.opaque = YES;
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
-    [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
+    _threadThumb.image =[UIImage imageNamed:@"Noimage.png"];
 
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
+    _titleLabel.opaque = YES;
+    _titleLabel.backgroundColor = [UIColor whiteColor];
 
     _dateLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _dateLabel.layer.masksToBounds = NO;
+    _dateLabel.opaque = YES;
+    _dateLabel.backgroundColor = [UIColor whiteColor];
 
     _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     _commentLabel.layer.masksToBounds = NO;
+    _commentLabel.opaque = YES;
+    _commentLabel.backgroundColor = [UIColor whiteColor];
 
-    [_postsCountLabel setOpaque:YES];
-    [_postsCountLabel.layer setOpaque:YES];
+    _postsCountLabel.opaque = YES;
+    _postsCountLabel.layer.opaque = YES;
     _postsCountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     _postsCountLabel.layer.masksToBounds = NO;
 
     _postsCountContainerView.layer.cornerRadius = 6.0f;
-    [_postsCountContainerView.layer setBorderColor: THUMBNAIL_GREY_BORDER];
-    [_postsCountContainerView.layer setBorderWidth: 1.0];
+    _postsCountContainerView.layer.borderColor = THUMBNAIL_GREY_BORDER;
+    _postsCountContainerView.layer.borderWidth = 1.0;
     _postsCountContainerView.layer.masksToBounds = NO;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
@@ -68,13 +73,16 @@
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
-        [_titleLabel setTextColor:CELL_TEXT_COLOR];
-        [_commentLabel setTextColor:CELL_TEXT_COLOR];
-        [_postsCountLabel setTextColor:CELL_TEXT_COLOR];
+        _titleLabel.textColor = CELL_TEXT_COLOR;
+        _titleLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        _commentLabel.textColor = CELL_TEXT_COLOR;
+        _commentLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postsCountLabel.textColor = CELL_TEXT_COLOR;
         _postsCountLabel.backgroundColor = CELL_BACKGROUND_COLOR;
-        [_dateLabel setTextColor:CELL_TEXT_COLOR];
-        [_postsCountContainerView setBackgroundColor:CELL_BACKGROUND_COLOR];
-        [_postsCountContainerView.layer setBorderColor:CELL_TEXT_COLOR.CGColor];
+        _dateLabel.textColor = CELL_TEXT_COLOR;
+        _dateLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postsCountContainerView.backgroundColor = CELL_BACKGROUND_COLOR;
+        _postsCountContainerView.layer.borderColor = CELL_TEXT_COLOR.CGColor;
     }
 }
 
