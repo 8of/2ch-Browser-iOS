@@ -6,15 +6,18 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import "DVBAgreementViewController.h"
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 
-static CGFloat const AGREEMENT_TEXTVIEW_VERTICAL_INSET = 8.0f;
-static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 16.0f;
+#import "DVBAgreementViewController.h"
+
+static CGFloat const AGREEMENT_TEXTVIEW_VERTICAL_INSET = 16.0f;
+static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 12.0f;
 
 @interface DVBAgreementViewController ()
 
-@property (weak, nonatomic) IBOutlet UITextView *agreementTextView;
+@property (nonatomic, weak) IBOutlet UITextView *agreementTextView;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *acceptButton;
 
 @end
 
@@ -23,13 +26,13 @@ static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 16.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = NSLS(@"TITLE_AGREEMENT");
     _agreementTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
     [_agreementTextView setTextContainerInset:UIEdgeInsetsMake(AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET, AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET)];
+    _acceptButton.title = NSLS(@"BUTTON_ACCEPT");
 }
 
-/**
- *  Set user Defaults - user accepted EULA.
- */
+/// Set user Defaults - user accepted EULA.
 - (IBAction)agreeAction:(id)sender
 {
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:USER_AGREEMENT_ACCEPTED];

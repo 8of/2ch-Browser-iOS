@@ -351,6 +351,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="acceptButton" destination="ouW-Gj-1Po" id="QdL-TJ-Rfh"/>
                         <outlet property="agreementTextView" destination="a02-0T-2Xt" id="3A2-Oi-EGp"/>
                     </connections>
                 </viewController>

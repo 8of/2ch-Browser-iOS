@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
@@ -33,6 +34,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.title = NSLS(@"TITLE_BOARDS");
 
     [self darkThemeHandler];
     

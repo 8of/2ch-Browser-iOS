@@ -31,8 +31,8 @@
 		9437FD251B90DFDF004FFB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9437FD271B90DFDF004FFB22 /* Localizable.strings */; };
 		9437FD2B1B90E9FB004FFB22 /* DVBWebmIconImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9437FD2A1B90E9FB004FFB22 /* DVBWebmIconImageView.m */; };
 		943F99CA1AED8E5000A85C61 /* DVBMarkupButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 943F99C91AED8E5000A85C61 /* DVBMarkupButton.m */; };
-		94449B401AD02E9700307AE9 /* BoardCategories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94449B3F1AD02E9700307AE9 /* BoardCategories.plist */; };
 		944CC80A1AECFDB900C45F7C /* DVBContainerForPostElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 944CC8091AECFDB900C45F7C /* DVBContainerForPostElements.m */; };
+		945FB1EF1B90F75800E87D52 /* BoardCategories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 945FB1F11B90F75800E87D52 /* BoardCategories.plist */; };
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
 		948A243B1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */; };
 		94A17DCA1B335CE50009A002 /* DVBGalleryTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A17DC91B335CE50009A002 /* DVBGalleryTransition.m */; };
@@ -132,9 +132,9 @@
 		9437FD2A1B90E9FB004FFB22 /* DVBWebmIconImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBWebmIconImageView.m; path = Views/DVBWebmIconImageView.m; sourceTree = "<group>"; };
 		943F99C81AED8E5000A85C61 /* DVBMarkupButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMarkupButton.h; path = Views/DVBMarkupButton.h; sourceTree = "<group>"; };
 		943F99C91AED8E5000A85C61 /* DVBMarkupButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMarkupButton.m; path = Views/DVBMarkupButton.m; sourceTree = "<group>"; };
-		94449B3F1AD02E9700307AE9 /* BoardCategories.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BoardCategories.plist; sourceTree = "<group>"; };
 		944CC8081AECFDB900C45F7C /* DVBContainerForPostElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBContainerForPostElements.h; path = Views/DVBContainerForPostElements.h; sourceTree = "<group>"; };
 		944CC8091AECFDB900C45F7C /* DVBContainerForPostElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBContainerForPostElements.m; path = Views/DVBContainerForPostElements.m; sourceTree = "<group>"; };
+		945FB1FA1B90F89F00E87D52 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/BoardCategories.plist; sourceTree = "<group>"; };
 		946394151A87A26C004CAB6E /* BadBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BadBoards.plist; sourceTree = "<group>"; };
 		948A24391AF02F0400CDEB52 /* DVBPostPhotoContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostPhotoContainerView.h; path = Views/DVBPostPhotoContainerView.h; sourceTree = "<group>"; };
 		948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPhotoContainerView.m; path = Views/DVBPostPhotoContainerView.m; sourceTree = "<group>"; };
@@ -330,7 +330,7 @@
 				84CFC50F19E1526E004D0BB8 /* main.m */,
 				946394151A87A26C004CAB6E /* BadBoards.plist */,
 				94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */,
-				94449B3F1AD02E9700307AE9 /* BoardCategories.plist */,
+				945FB1F11B90F75800E87D52 /* BoardCategories.plist */,
 				9437FD271B90DFDF004FFB22 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
@@ -605,7 +605,7 @@
 				84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */,
 				9437FD251B90DFDF004FFB22 /* Localizable.strings in Resources */,
 				94A5E4671AF77E4500824347 /* ARChromeActivity@3x.png in Resources */,
-				94449B401AD02E9700307AE9 /* BoardCategories.plist in Resources */,
+				945FB1EF1B90F75800E87D52 /* BoardCategories.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -739,6 +739,14 @@
 				9437FD281B90DFE2004FFB22 /* ru */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		945FB1F11B90F75800E87D52 /* BoardCategories.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				945FB1FA1B90F89F00E87D52 /* Base */,
+			);
+			name = BoardCategories.plist;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

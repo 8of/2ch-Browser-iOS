@@ -8,6 +8,7 @@
 
 #import <CoreData/CoreData.h>
 
+#import "DVBCommon.h"
 #import "DVBBoardsModel.h"
 #import "DVBBoard.h"
 
@@ -292,7 +293,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *categoryTitle = _boardCategoriesArray[section];
+    NSString *categoryTitle = NSLS(_boardCategoriesArray[section]);
 
     // Do not show category at all if category does not contain boards
     BOOL isCategoryEmpty = ([self countOfBoardsInCategoryWithIndex:section] == 0);
