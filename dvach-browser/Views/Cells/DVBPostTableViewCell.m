@@ -19,7 +19,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
 // Media
-
 @property (nonatomic, strong) NSArray *pathesArray;
 
 // Post thumnails
@@ -93,6 +92,8 @@
 
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
+    _titleLabel.opaque = YES;
+    _titleLabel.backgroundColor = [UIColor whiteColor];
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
@@ -133,6 +134,13 @@
     // Delete insets
     _commentTextView.textContainer.lineFragmentPadding = 0;
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
+    _commentTextView.opaque = YES;
+
+    // It'll not become truly opaque otherwise
+    for (UIView *subview in _commentTextView.subviews) {
+        subview.opaque = YES;
+        subview.backgroundColor = [UIColor whiteColor];
+    }
 
     // Media
 
@@ -157,15 +165,22 @@
 
     // Dark theme handling
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        _titleLabel.textColor = CELL_TEXT_COLOR;
+        _titleLabel.backgroundColor = CELL_BACKGROUND_COLOR;
 
         _postThumb0.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb1.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb2.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb3.superview.backgroundColor = CELL_BACKGROUND_COLOR;
 
-        self.backgroundColor = CELL_BACKGROUND_COLOR;
         _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        // Hack to make it truly opaque
+        for (UIView *subview in _commentTextView.subviews) {
+            subview.backgroundColor = CELL_BACKGROUND_COLOR;
+        }
     }
 }
 
