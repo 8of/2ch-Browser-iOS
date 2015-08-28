@@ -11,6 +11,13 @@
 "BUTTON_REPORT" = "Report";
 "BUTTON_CLOSE" = "Close";
 "BUTTON_SEND" = "Send";
+"BUTTON_ACCEPT" = "Accept";
+
+"BOARD_CATEGORY_FAVOURITE" = "Favourite";
+"BOARD_CATEGORY_THEMED" = "Theme-centered";
+"BOARD_CATEGORY_CREATION" = "Creation";
+"BOARD_CATEGORY_TECH" = "Hardware & soft";
+"BOARD_CATEGORY_GAMES" = "Games";
 
 "ERROR" = "Error";
 
@@ -45,5 +52,7 @@
 
 "POST_STATUS_SUCCESS" = "Success";
 
+"TITLE_BOARDS" = "Boards";
 "TITLE_NEW_THREAD" = "New thread";
 "TITLE_ANSWERS_TO" = "Answers to";
+"TITLE_AGREEMENT" = "Agreement";
