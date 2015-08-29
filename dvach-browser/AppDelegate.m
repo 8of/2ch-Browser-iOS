@@ -70,8 +70,9 @@
                 [self setUserCodeCookieWithUsercode:usercode];
             }
         }];
-    }
-    else if (!isUserCodeEmpty) {
+    } else if (!isPassCodeNotEmpty) {
+        [self deleteUsercodeOldData];
+    } else if (!isUserCodeEmpty) {
         [self setUserCodeCookieWithUsercode:usercode];
     }
 
@@ -95,6 +96,18 @@
     NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
 }
+
+- (void)deleteUsercodeOldData
+{
+    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERCODE];
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        if ([cookie.name isEqualToString:@"usercode_nocaptcha"]) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            break;
+        }
+    }
+}
+
 /// Execute all AFNetworking methods that need to be executed one time for entire app.
 - (void)manageAFNetworking
 {
