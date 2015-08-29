@@ -203,6 +203,10 @@
             _postsArray = semiResultMutableArray;
             DVBPost *lastPost = (DVBPost *)[_postsArray lastObject];
             _lastPostNum = lastPost.num;
+
+            if (_postsArray.count == 0) {
+                _postsArray = nil;
+            }
             
             completion(_postsArray);
         }];
