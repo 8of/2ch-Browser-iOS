@@ -332,15 +332,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                       andThread:_threadNum
                   andCompletion:^(NSArray *postsArrayBlock)
         {
-            _threadControllerTableViewManager.postsArray = postsArrayBlock;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-                [self.refreshControl endRefreshing];
-                [_bottomRefreshControl endRefreshing];
-                [self checkNewPostsCount];
-                self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                self.tableView.backgroundView = nil;
-            });
+            if (postsArrayBlock) {
+                _threadControllerTableViewManager.postsArray = postsArrayBlock;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.refreshControl endRefreshing];
+                    [_bottomRefreshControl endRefreshing];
+                    [self checkNewPostsCount];
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
+                });
+            } else {
+                [self showMessageAboutError];
+            }
         }];
     }
 }
