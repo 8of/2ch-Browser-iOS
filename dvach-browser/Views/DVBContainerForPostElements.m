@@ -47,8 +47,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     _commentViewSelectedStartLocation = 0;
     _commentViewSelectedLength = 0;
-
-    [self registerForKeyboardNotifications];
 }
 
 - (void)setupAppearance
@@ -341,65 +339,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                     animations:^{
                         imageView.image = nil;
                     } completion:NULL];
-}
-
-#pragma mark - Keyboard
-- (void)registerForKeyboardNotifications
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        
-    } else {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(keyboardWasShown:)
-                                                     name:UIKeyboardDidShowNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(keyboardWillBeHidden:)
-                                                     name:UIKeyboardWillHideNotification
-                                                   object:nil];
-    }
-}
-- (void)removeObservers
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-
-    } else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIKeyboardDidShowNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIKeyboardWillHideNotification
-                                                      object:nil];
-    }
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
-    if (!_originalInsets.top) {
-        _originalInsets = scrollView.contentInset;
-    }
-
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGSize keyboardSize = [[[aNotification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight ) {
-        CGSize origKeySize = keyboardSize;
-        keyboardSize.height = origKeySize.width;
-        keyboardSize.width = origKeySize.height;
-    }
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(_originalInsets.top, 0, keyboardSize.height, 0);
-
-    scrollView.contentInset = contentInsets;
-    scrollView.scrollIndicatorInsets = contentInsets;
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
-    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
-    scrollView.contentInset = _originalInsets;
-    scrollView.scrollIndicatorInsets = _originalInsets;
 }
 
 @end

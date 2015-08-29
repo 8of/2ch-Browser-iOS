@@ -24,7 +24,7 @@
 #import "DVBAddPhotoIconImageViewContainer.h"
 #import "DVBPictureToSendPreviewImageView.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -59,7 +59,6 @@
 {
     [super viewWillDisappear:animated];
     [self saveCommentForLater];
-    [_containerForPostElementsView removeObservers];
 }
 
 /// All View Controller tuning
@@ -402,6 +401,16 @@
     // Save comment for later if it is not a placeholder.
     if (![_containerForPostElementsView.commentTextView.text isEqualToString:NSLS(@"PLACEHOLDER_COMMENT_FIELD")]) {
         _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    } else {
+        [self.view endEditing:YES];
     }
 }
 
