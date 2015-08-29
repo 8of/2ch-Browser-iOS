@@ -374,11 +374,14 @@
                  NSString *urlOfYandexCaptchaImage = [[NSString alloc] initWithFormat:GET_CAPTCHA_IMAGE_URL, captchaKey];
                  
                  completion(urlOfYandexCaptchaImage);             
+             } else {
+                 completion(nil);
              }
          }
                     failure:^(NSURLSessionDataTask *task, NSError *error)
          {
              NSLog(@"Error: %@", error);
+             completion(nil);
          }];
     }
 }
