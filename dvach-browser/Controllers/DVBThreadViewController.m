@@ -560,48 +560,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 -(void)updateThreadAfterPosting
 {
     [self reloadThread];
-    /*
-    DVBComment *comment = [DVBComment sharedComment];
-
-    if (comment.createdPostNum) {
-
-        [_threadModel getPostWithBoardCode:_boardCode
-                                 andThread:_threadNum
-                                andPostNum:comment.createdPostNum
-                             andCompletion:^(DVBPost *postFromServer)
-        {
-            if (postFromServer) {
-                _previousPostsCount = [NSNumber numberWithInteger:(_previousPostsCount.integerValue + 1)];
-                
-                [self.tableView beginUpdates];
-
-                NSMutableArray *postsArrayMutable = [_threadControllerTableViewManager.postsArray mutableCopy];
-                NSUInteger newSectionIndex = _threadControllerTableViewManager.postsArray.count;
-                [postsArrayMutable addObject:postFromServer];
-                _threadControllerTableViewManager.postsArray = [postsArrayMutable copy];
-                postsArrayMutable = nil;
-
-                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
-
-                [self.tableView endUpdates];
-
-                // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-                CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
-
-                if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-                    [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                     target:self
-                                                   selector:@selector(scrollToBottom)
-                                                   userInfo:nil
-                                                    repeats:NO];
-                }
-            }
-
-            comment.createdPostNum = nil;
-        }];
-
-    }
-     */
 }
 
 - (void)scrollToBottom
