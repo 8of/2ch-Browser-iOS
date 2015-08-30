@@ -98,6 +98,8 @@
             NSLog(@"error: %@", error);
             completion(nil);
         }];
+    } else {
+        completion(nil);
     }
 }
 

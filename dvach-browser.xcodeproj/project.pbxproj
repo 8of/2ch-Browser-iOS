@@ -25,6 +25,8 @@
 		9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */; };
 		942BE0A81B2C56F9009B3EC4 /* DVBCreatePostScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */; };
 		942BE0AB1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 942BE0AA1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m */; };
+		942F1CC01B939DFC00E4018E /* DVBLoadingStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 942F1CBE1B939DFC00E4018E /* DVBLoadingStatusView.m */; };
+		942F1CC11B939DFC00E4018E /* DVBLoadingStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 942F1CBF1B939DFC00E4018E /* DVBLoadingStatusView.xib */; };
 		9432BEF31AC821650015CA9F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9432BEF21AC821650015CA9F /* CoreData.framework */; };
 		9432BEF61AC821B40015CA9F /* dvach-browser.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9432BEF41AC821B40015CA9F /* dvach-browser.xcdatamodeld */; };
 		9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9436ADD51AD1B83B00785710 /* DateFormatter.m */; };
@@ -121,6 +123,9 @@
 		942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCreatePostScrollView.m; path = Views/DVBCreatePostScrollView.m; sourceTree = "<group>"; };
 		942BE0A91B2C5ECB009B3EC4 /* DVBCommonTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCommonTableViewController.h; path = Controllers/DVBCommonTableViewController.h; sourceTree = "<group>"; };
 		942BE0AA1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCommonTableViewController.m; path = Controllers/DVBCommonTableViewController.m; sourceTree = "<group>"; };
+		942F1CBD1B939DFC00E4018E /* DVBLoadingStatusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBLoadingStatusView.h; path = Views/DVBLoadingStatusView.h; sourceTree = "<group>"; };
+		942F1CBE1B939DFC00E4018E /* DVBLoadingStatusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBLoadingStatusView.m; path = Views/DVBLoadingStatusView.m; sourceTree = "<group>"; };
+		942F1CBF1B939DFC00E4018E /* DVBLoadingStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DVBLoadingStatusView.xib; path = Views/DVBLoadingStatusView.xib; sourceTree = "<group>"; };
 		9432BEF21AC821650015CA9F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		9432BEF51AC821B40015CA9F /* dvach-browser.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "dvach-browser.xcdatamodel"; sourceTree = "<group>"; };
 		9436ADD41AD1B83B00785710 /* DateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DateFormatter.h; path = Helpers/DateFormatter.h; sourceTree = "<group>"; };
@@ -460,6 +465,9 @@
 		A1155D1C1A26486400810321 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				942F1CBD1B939DFC00E4018E /* DVBLoadingStatusView.h */,
+				942F1CBE1B939DFC00E4018E /* DVBLoadingStatusView.m */,
+				942F1CBF1B939DFC00E4018E /* DVBLoadingStatusView.xib */,
 				94A17DC71B335CD90009A002 /* Transitions */,
 				94A8345D1B0BCAFD00D7AFC1 /* DVBPictureToSendPreviewImageView.h */,
 				94A8345E1B0BCAFD00D7AFC1 /* DVBPictureToSendPreviewImageView.m */,
@@ -596,6 +604,7 @@
 				94A5E47B1AF7811D00824347 /* ARChromeActivity-7~iPad@2x.png in Resources */,
 				94A5E4791AF7811D00824347 /* ARChromeActivity-7@2x.png in Resources */,
 				94DD37A71ACA7E5100C658EB /* DefaultBoards.plist in Resources */,
+				942F1CC11B939DFC00E4018E /* DVBLoadingStatusView.xib in Resources */,
 				94A5E4661AF77E4500824347 /* ARChromeActivity@2x.png in Resources */,
 				84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */,
 				94A5E4681AF77E4500824347 /* ARChromeActivity~iPad.png in Resources */,
@@ -689,6 +698,7 @@
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
 				A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */,
+				942F1CC01B939DFC00E4018E /* DVBLoadingStatusView.m in Sources */,
 				9437FD2B1B90E9FB004FFB22 /* DVBWebmIconImageView.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,

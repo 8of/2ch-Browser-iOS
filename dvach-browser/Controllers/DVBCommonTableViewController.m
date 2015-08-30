@@ -12,6 +12,8 @@
 
 #import "DVBCommonTableViewController.h"
 
+#import "DVBLoadingStatusView.h"
+
 @interface DVBCommonTableViewController ()
 
 @property (nonatomic, assign) BOOL eulaAgreed;
@@ -78,21 +80,49 @@
 
 - (void)showUserMessageWithTitle:(NSString *)title
 {
-    // Display a message when the table is empty
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-
-    messageLabel.text = title;
-    messageLabel.textColor = [UIColor grayColor];
+    DVBLoadingStatusViewColor loadingStatusViewColor = DVBLoadingStatusViewColorLight;
+    DVBLoadingStatusViewStyle loadingStatusViewStyle = DVBLoadingStatusViewStyleLoading;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        messageLabel.textColor = [UIColor whiteColor];
+        loadingStatusViewColor = DVBLoadingStatusViewColorDark;
     }
-    messageLabel.numberOfLines = 0;
-    messageLabel.textAlignment = NSTextAlignmentCenter;
-    [messageLabel sizeToFit];
 
-    self.tableView.backgroundView = messageLabel;
+    if ([title isEqualToString:NSLS(@"STATUS_LOADING_ERROR")]) {
+        loadingStatusViewStyle = DVBLoadingStatusViewStyleError;
+    }
+
+    DVBLoadingStatusView *loadingStatusView = [[DVBLoadingStatusView alloc] initWithMessage:title
+                                                                                   andStyle:loadingStatusViewStyle
+                                                                                   andColor:loadingStatusViewColor];
+
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-}
+
+    double delayInSeconds = 1.0;
+
+    // Error message sgould be presented instantly
+    if (loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+        delayInSeconds = 0.;
+    }
+
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+
+        // Check if table is OK
+        if (self.tableView) {
+
+            // If no sections showed or if error type of view
+            if (self.tableView.numberOfSections == 0 ||
+                loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
+            {
+                // More specific double-check
+                if ((loadingStatusViewStyle == DVBLoadingStatusViewStyleLoading &&
+                    [self.tableView.backgroundColor isKindOfClass:self.class]) ||
+                    loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
+                {
+                    self.tableView.backgroundView = loadingStatusView;
+                }
+            }
+        }
+    });}
 
 @end
