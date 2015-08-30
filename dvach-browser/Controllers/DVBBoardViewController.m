@@ -69,7 +69,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
     // set loading flag here because othervise
     // scrollViewDidScroll methods will start loading 'next' page (actually the same page) again
-    _alreadyLoadingNextPage = YES;
+    _alreadyLoadingNextPage = NO;
 
     // If no pages setted (or pages is 0 - then set 10 pages).
     if (!_pages) {
@@ -80,7 +80,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    [self loadNextBoardPage];
+    // [self loadNextBoardPage];
     [self makeRefreshAvailable];
 
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
@@ -112,13 +112,14 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray)
         {
             _threadsArray = [completionThreadsArray mutableCopy];
-            _currentPage++;
+
             _alreadyLoadingNextPage = NO;
 
             if (_threadsArray.count == 0) {
                 [self showMessageAboutError];
                 self.navigationItem.rightBarButtonItem.enabled = NO;
             } else {
+                _currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
