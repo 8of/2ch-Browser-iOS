@@ -308,34 +308,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
-    // To prevent retain cycles call back by weak reference
-    __weak typeof(self) weakSelf = self;
-
-    // Heavy work dispatched to a separate thread
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSLog(@"Work Dispatched");
-        // Do heavy or time consuming work
-        // Task 1: Read the data from sqlite
-        // Task 2: Process the data with a flag to stop the process if needed (only if this takes very long and may be cancelled often).
-
-        // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
-        typeof(weakSelf) strongSelf = weakSelf;
-        if (strongSelf) {
-
-            [strongSelf.threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
-                strongSelf.threadControllerTableViewManager.postsArray = _threadModel.postsArray;
-                strongSelf.threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
-                strongSelf.threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    completion(completionsPosts);
-                });
-            }];
-        }
-    });
-
-
-
+    [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
+        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
+        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
+        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
+        completion(completionsPosts);
+    }];
 }
 
 /// Reload thread by current thread num
@@ -345,7 +323,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     if (_answersToPost) {
         _threadControllerTableViewManager.postsArray = [_answersToPost mutableCopy];
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
+        });
     }
     else {
         [self getPostsWithBoard:_boardCode
@@ -354,14 +334,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         {
             if (postsArrayBlock) {
                 _threadControllerTableViewManager.postsArray = postsArrayBlock;
-
+                dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
                     [self.refreshControl endRefreshing];
                     [_bottomRefreshControl endRefreshing];
                     [self checkNewPostsCount];
                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                     self.tableView.backgroundView = nil;
-
+                });
             } else {
                 [self showMessageAboutError];
             }
