@@ -116,7 +116,7 @@
             {
                 // More specific double-check
                 if ((loadingStatusViewStyle == DVBLoadingStatusViewStyleLoading &&
-                    [self.tableView.backgroundColor isKindOfClass:self.class]) ||
+                    ![self.tableView.backgroundColor isKindOfClass:self.class]) ||
                     loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
                 {
                     self.tableView.backgroundView = loadingStatusView;
