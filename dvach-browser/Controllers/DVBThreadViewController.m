@@ -213,10 +213,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)makeRefreshAvailable
 {
     // Top refresh
-    self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
+    self.refreshControl.enabled = YES;
 }
 
 /// Allocating bottom refresh controll - for fetching new updated result from server by pulling board table view down.
@@ -319,6 +319,18 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Reload thread by current thread num
 - (void)reloadThread
 {
+    // Very stupid but necessary check.
+    // So app can't double refresh the same thread at the same time
+    if (self.refreshControl.enabled) {
+        if (self.refreshControl) {
+            self.refreshControl.enabled = NO;
+        }
+        if (_bottomRefreshControl) {
+            _bottomRefreshControl.enabled = NO;
+        }
+    } else {
+        return;
+    }
     _refreshButton.enabled = NO;
 
     if (_answersToPost) {
@@ -345,6 +357,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             } else {
                 [self showMessageAboutError];
             }
+
+            self.refreshControl.enabled = YES;
+            _bottomRefreshControl.enabled = YES;
         }];
     }
 }
