@@ -94,7 +94,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [super viewDidLoad];
     [self darkThemeHandler];
     [self prepareViewController];
-    [self reloadThread];
+
+    if (_answersToPost) {
+        [self reloadThread];
+    } else {
+        [self initialThreadLoad];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -305,6 +310,20 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Data management and processing
 
+/// Get data for thread from Db if any
+- (void)initialThreadLoad
+{
+    [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) {
+        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
+        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
+        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
+
+        [self.tableView reloadData];
+
+        [self reloadThread];
+    }];
+}
+
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
@@ -321,15 +340,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     // Very stupid but necessary check.
     // So app can't double refresh the same thread at the same time
-    if (self.refreshControl.enabled) {
-        if (self.refreshControl) {
-            self.refreshControl.enabled = NO;
+    if (!_answersToPost) {
+        if (self.refreshControl.enabled) {
+            if (self.refreshControl) {
+                self.refreshControl.enabled = NO;
+            }
+            if (_bottomRefreshControl) {
+                _bottomRefreshControl.enabled = NO;
+            }
+        } else {
+            return;
         }
-        if (_bottomRefreshControl) {
-            _bottomRefreshControl.enabled = NO;
-        }
-    } else {
-        return;
     }
     _refreshButton.enabled = NO;
 
