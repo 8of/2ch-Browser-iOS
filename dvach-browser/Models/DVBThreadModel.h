@@ -23,9 +23,10 @@
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode andThreadNum:(NSString *)threadNum;
 
-/**
- *  Entirely reload post list in the thread
- */
+/// Check if there are any posts in DB for thread num (thread num is stored inside DVBThreadModel instance)
+- (void)checkPostsInDbForThisThreadWithCompletion:(void (^)(NSArray *))completion;
+
+/// Entirely reload post list in the thread
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion;
 
 // Report thread
