@@ -318,7 +318,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
         _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
 
-        [self.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
 
         [self reloadThread];
     }];
