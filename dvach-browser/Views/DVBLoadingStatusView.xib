@@ -12,17 +12,17 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tWV-M8-S7f">
-                    <rect key="frame" x="0.0" y="203" width="600" height="194.5"/>
+                    <rect key="frame" x="0.0" y="204" width="600" height="192.5"/>
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WLt-gZ-G8b">
-                            <rect key="frame" x="223" y="0.0" width="154" height="154"/>
+                            <rect key="frame" x="224" y="0.0" width="152" height="152"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="154" id="4l9-eG-uYH"/>
-                                <constraint firstAttribute="width" constant="154" id="7DA-5Z-BKD"/>
+                                <constraint firstAttribute="height" constant="152" id="4l9-eG-uYH"/>
+                                <constraint firstAttribute="width" constant="152" id="7DA-5Z-BKD"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StatusMessage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nkb-eC-4iT">
-                            <rect key="frame" x="10" y="174" width="580" height="20.5"/>
+                            <rect key="frame" x="10" y="172" width="580" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                             <nil key="highlightedColor"/>
