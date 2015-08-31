@@ -22,6 +22,14 @@ PODS:
     - AFNetworking/NSURLSession
   - CCBottomRefreshControl (0.5.1):
     - Masonry (~> 0.6.2)
+  - CocoaLumberjack (2.0.1):
+    - CocoaLumberjack/Default (= 2.0.1)
+    - CocoaLumberjack/Extensions (= 2.0.1)
+  - CocoaLumberjack/Core (2.0.1)
+  - CocoaLumberjack/Default (2.0.1):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.0.1):
+    - CocoaLumberjack/Default
   - DACircularProgress (2.3.1)
   - Mantle (2.0.4):
     - Mantle/extobjc (= 2.0.4)
@@ -36,6 +44,10 @@ PODS:
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
   - TUSafariActivity (1.0.4)
+  - YapDatabase (2.7):
+    - YapDatabase/standard (= 2.7)
+  - YapDatabase/standard (2.7):
+    - CocoaLumberjack (~> 2)
 
 DEPENDENCIES:
   - AFNetworking (= 2.6.0)
@@ -43,10 +55,12 @@ DEPENDENCIES:
   - Mantle (= 2.0.4)
   - MWPhotoBrowser (= 2.1.1)
   - TUSafariActivity (= 1.0.4)
+  - YapDatabase (= 2.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   CCBottomRefreshControl: 57a596348855260f627ffc2b311328ed15b94877
+  CocoaLumberjack: 019d1361244274a6138c788c6cb80baabc13fb8f
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Mantle: 6bee68168423948be0c0c5924832bf3af188e099
   Masonry: 362e8a1cc0beada4a4c4832d5e863da2a51533be
@@ -54,5 +68,6 @@ SPEC CHECKSUMS:
   MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
+  YapDatabase: 9ec61885759a832d41f965e27f7ee08a06d4c441
 
 COCOAPODS: 0.37.2

@@ -11,6 +11,7 @@
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBThreadModel.h"
+#import "DVBDatabaseManager.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
 #import "DVBPostPreparation.h"
@@ -29,6 +30,8 @@
 /// Id of the last post for loading from it
 @property (nonatomic, strong) NSString *lastPostNum;
 
+@property (nonatomic, strong) YapDatabase *database;
+
 @end
 
 @implementation DVBThreadModel
@@ -38,6 +41,9 @@
 {
     self = [super init];
     if (self) {
+        DVBDatabaseManager *dbManager = [DVBDatabaseManager sharedDatabase];
+        _database = dbManager.database;
+
         _boardCode = boardCode;
         _threadNum = threadNum;
         _networking = [[DVBNetworking alloc] init];
@@ -46,6 +52,25 @@
     }
     
     return self;
+}
+
+- (void)checkPostsInDbForThisThreadWithCompletion:(void (^)(NSArray *))completion
+{
+    YapDatabaseConnection *connection = [_database newConnection];
+
+    // Load posts from DB
+    [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+        NSArray *arrayOfPosts = [transaction objectForKey:_threadNum inCollection:DB_COLLECTION_THREADS];
+
+        _privatePostsArray = [arrayOfPosts mutableCopy];
+
+        if (_privatePostsArray.count != 0) {
+            DVBPost *lastPost = (DVBPost *)_privatePostsArray.lastObject;
+            _lastPostNum = lastPost.num;
+        }
+
+        completion([arrayOfPosts mutableCopy]);
+    }];
 }
 
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion
@@ -220,12 +245,22 @@
 
                     if (_postsArray.count == 0) {
                         _postsArray = nil;
+
+                        // back to main
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(strongSelf.postsArray);
+                        });
+                    } else {
+                        [self writeToDbWithPosts:_postsArray andThreadNum:_threadNum andCompletion:^
+                        {
+                            // back to main
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                completion(strongSelf.postsArray);
+                            });
+                        }];
                     }
 
-                    // back to main
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        completion(strongSelf.postsArray);
-                    });
+
                 }
             });
         }];
@@ -271,6 +306,21 @@
    _fullImagesArray = _privateFullImagesArray;
     
     return _fullImagesArray;
+}
+
+#pragma mark - DB
+
+- (void)writeToDbWithPosts:(NSArray *)posts andThreadNum:(NSString *)threadNumb andCompletion:(void (^)(void))callback
+{
+    // Get a connection to the database (can have multiple for concurrency)
+    YapDatabaseConnection *connection = [_database newConnection];
+
+    // Add an object
+    [connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
+        [transaction setObject:posts forKey:threadNumb inCollection:DB_COLLECTION_THREADS];
+
+        callback();
+    }];
 }
 
 @end
