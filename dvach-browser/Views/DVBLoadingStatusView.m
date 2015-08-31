@@ -30,13 +30,13 @@ static NSString * const IMAGE_NAME_ERROR = @"LoadingStatusError";
     switch (style) {
         case DVBLoadingStatusViewStyleLoading:
         {
-            _statusIcon.image = [UIImage imageNamed:IMAGE_NAME_LOAD];
+            _statusIcon.image = [[UIImage imageNamed:IMAGE_NAME_LOAD] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             break;
         }
 
         case DVBLoadingStatusViewStyleError:
         {
-            _statusIcon.image = [UIImage imageNamed:IMAGE_NAME_ERROR];
+            _statusIcon.image = [[UIImage imageNamed:IMAGE_NAME_ERROR]imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             break;
         }
 
