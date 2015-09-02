@@ -8,7 +8,7 @@
 
 #import "DVBLoadingStatusView.h"
 
-static NSString * const IMAGE_NAME_LOAD = @"LoadingStatusLoad";
+static NSString * const IMAGE_NAME_LOAD = @"LoadingStatus_1";
 static NSString * const IMAGE_NAME_ERROR = @"LoadingStatusError";
 
 @interface DVBLoadingStatusView ()
