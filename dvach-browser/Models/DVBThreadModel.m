@@ -63,6 +63,8 @@
         NSArray *arrayOfPosts = [transaction objectForKey:_threadNum inCollection:DB_COLLECTION_THREADS];
 
         _privatePostsArray = [arrayOfPosts mutableCopy];
+        _privateThumbImagesArray = [[self thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+        _privateFullImagesArray = [[self fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
 
         if (_privatePostsArray.count != 0) {
             DVBPost *lastPost = (DVBPost *)_privatePostsArray.lastObject;
