@@ -58,17 +58,24 @@
 {
     YapDatabaseConnection *connection = [_database newConnection];
 
+    // To prevent retain cycles call back by weak reference
+    __weak typeof(self) weakSelf = self;
+
     // Load posts from DB
     [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-        NSArray *arrayOfPosts = [transaction objectForKey:_threadNum inCollection:DB_COLLECTION_THREADS];
 
-        _privatePostsArray = [arrayOfPosts mutableCopy];
-        _privateThumbImagesArray = [[self thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
-        _privateFullImagesArray = [[self fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+        // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
+        typeof(weakSelf) strongSelf = weakSelf;
 
-        if (_privatePostsArray.count != 0) {
-            DVBPost *lastPost = (DVBPost *)_privatePostsArray.lastObject;
-            _lastPostNum = lastPost.num;
+        NSArray *arrayOfPosts = [transaction objectForKey:strongSelf.threadNum inCollection:DB_COLLECTION_THREADS];
+
+        strongSelf.privatePostsArray = [arrayOfPosts mutableCopy];
+        strongSelf.privateThumbImagesArray = [[strongSelf thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+        strongSelf.privateFullImagesArray = [[strongSelf fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+
+        if (strongSelf.privatePostsArray.count != 0) {
+            DVBPost *lastPost = (DVBPost *)strongSelf.privatePostsArray.lastObject;
+            strongSelf.lastPostNum = lastPost.num;
         }
 
         completion([arrayOfPosts mutableCopy]);
