@@ -61,25 +61,31 @@
     // To prevent retain cycles call back by weak reference
     __weak typeof(self) weakSelf = self;
 
-    // Load posts from DB
-    [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
+    // Heavy work dispatched to a separate thread
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
-        typeof(weakSelf) strongSelf = weakSelf;
+        // Load posts from DB
+        [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
 
-        NSArray *arrayOfPosts = [transaction objectForKey:strongSelf.threadNum inCollection:DB_COLLECTION_THREADS];
+            // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
+            typeof(weakSelf) strongSelf = weakSelf;
 
-        strongSelf.privatePostsArray = [arrayOfPosts mutableCopy];
-        strongSelf.privateThumbImagesArray = [[strongSelf thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
-        strongSelf.privateFullImagesArray = [[strongSelf fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+            NSArray *arrayOfPosts = [transaction objectForKey:strongSelf.threadNum inCollection:DB_COLLECTION_THREADS];
 
-        if (strongSelf.privatePostsArray.count != 0) {
-            DVBPost *lastPost = (DVBPost *)strongSelf.privatePostsArray.lastObject;
-            strongSelf.lastPostNum = lastPost.num;
-        }
+            strongSelf.privatePostsArray = [arrayOfPosts mutableCopy];
+            strongSelf.privateThumbImagesArray = [[strongSelf thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+            strongSelf.privateFullImagesArray = [[strongSelf fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
 
-        completion([arrayOfPosts mutableCopy]);
-    }];
+            if (strongSelf.privatePostsArray.count != 0) {
+                DVBPost *lastPost = (DVBPost *)strongSelf.privatePostsArray.lastObject;
+                strongSelf.lastPostNum = lastPost.num;
+            }
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion([arrayOfPosts mutableCopy]);
+            });
+        }];
+    });
 }
 
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion
