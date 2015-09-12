@@ -20,6 +20,8 @@ typedef NS_ENUM(NSUInteger, DVBLoadingStatusViewColor) {
     DVBLoadingStatusViewColorDark
 };
 
+@property (nonatomic, assign, readonly) DVBLoadingStatusViewStyle loadingStatusViewStyle;
+
 - (instancetype)initWithMessage:(NSString *)message andStyle:(DVBLoadingStatusViewStyle)style andColor:(DVBLoadingStatusViewColor)color;
 
 @end
