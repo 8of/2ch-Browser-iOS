@@ -26,6 +26,7 @@ static NSString * const IMAGE_NAME_ERROR = @"LoadingStatusError";
     self = [[[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil] lastObject];
 
     _statusLabel.text = message;
+    _loadingStatusViewStyle = style;
 
     switch (style) {
         case DVBLoadingStatusViewStyleLoading:

@@ -18,6 +18,8 @@
 
 @property (nonatomic, assign) BOOL eulaAgreed;
 
+@property (nonatomic, strong) DVBLoadingStatusView *loadingStatusView;
+
 @end
 
 @implementation DVBCommonTableViewController
@@ -80,49 +82,52 @@
 
 - (void)showUserMessageWithTitle:(NSString *)title
 {
-    DVBLoadingStatusViewColor loadingStatusViewColor = DVBLoadingStatusViewColorLight;
-    DVBLoadingStatusViewStyle loadingStatusViewStyle = DVBLoadingStatusViewStyleLoading;
+    if (!_loadingStatusView.loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+        DVBLoadingStatusViewColor loadingStatusViewColor = DVBLoadingStatusViewColorLight;
+        DVBLoadingStatusViewStyle loadingStatusViewStyle = DVBLoadingStatusViewStyleLoading;
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        loadingStatusViewColor = DVBLoadingStatusViewColorDark;
-    }
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            loadingStatusViewColor = DVBLoadingStatusViewColorDark;
+        }
 
-    if ([title isEqualToString:NSLS(@"STATUS_LOADING_ERROR")]) {
-        loadingStatusViewStyle = DVBLoadingStatusViewStyleError;
-    }
+        if ([title isEqualToString:NSLS(@"STATUS_LOADING_ERROR")]) {
+            loadingStatusViewStyle = DVBLoadingStatusViewStyleError;
+        }
 
-    DVBLoadingStatusView *loadingStatusView = [[DVBLoadingStatusView alloc] initWithMessage:title
-                                                                                   andStyle:loadingStatusViewStyle
-                                                                                   andColor:loadingStatusViewColor];
+        _loadingStatusView = [[DVBLoadingStatusView alloc] initWithMessage:title
+                                                                  andStyle:loadingStatusViewStyle
+                                                                  andColor:loadingStatusViewColor];
 
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
-    double delayInSeconds = 1.0;
+        double delayInSeconds = 1.0;
 
-    // Error message sgould be presented instantly
-    if (loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
-        delayInSeconds = 0.;
-    }
+        // Error message sgould be presented instantly
+        if (loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+            delayInSeconds = 0.;
+        }
 
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
 
-        // Check if table is OK
-        if (self.tableView) {
+            // Check if table is OK
+            if (self.tableView) {
 
-            // If no sections showed or if error type of view
-            if (self.tableView.numberOfSections == 0 ||
-                loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
-            {
-                // More specific double-check
-                if ((loadingStatusViewStyle == DVBLoadingStatusViewStyleLoading &&
-                    ![self.tableView.backgroundColor isKindOfClass:self.class]) ||
+                // If no sections showed or if error type of view
+                if (self.tableView.numberOfSections == 0 ||
                     loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
                 {
-                    self.tableView.backgroundView = loadingStatusView;
+                    // More specific double-check
+                    if ((loadingStatusViewStyle == DVBLoadingStatusViewStyleLoading &&
+                        ![self.tableView.backgroundColor isKindOfClass:self.class]) ||
+                        loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
+                    {
+                        self.tableView.backgroundView = _loadingStatusView;
+                    }
                 }
             }
-        }
-    });}
+        });
+    }
+}
 
 @end
