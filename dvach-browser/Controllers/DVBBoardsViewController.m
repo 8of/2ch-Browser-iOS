@@ -18,9 +18,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 @interface DVBBoardsViewController () <DVBAlertViewGeneratorDelegate, DVBBoardsModelDelegate>
 
-/**
- *  dictionary for storing fetched boards
- */
+/// For storing fetched boards
 @property (strong, nonatomic) NSDictionary *boardsDict;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;

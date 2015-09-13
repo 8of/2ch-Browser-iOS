@@ -15,14 +15,6 @@
 @property (nonatomic, weak) IBOutlet UITextField *nameTextField;
 @property (nonatomic, weak) IBOutlet UITextField *subjectTextField;
 @property (nonatomic, weak) IBOutlet UITextField *emailTextField;
-@property (nonatomic, weak) IBOutlet UITextField *captchaValueTextField;
-
-- (void)changeConstraintsIfUserCodeNotEmpty;
-- (void)clearCaptchaValueField;
-
-// Captcha stuff
-- (void)clearCaptchaImage;
-- (void)setCaptchaImageWithUrlString:(NSString *)urlString;
 
 // Animate upload/delete button
 - (void)changeUploadViewToDeleteView:(UIView *)view andsetImage:(UIImage *)image forImageView:(UIImageView *)imageView;

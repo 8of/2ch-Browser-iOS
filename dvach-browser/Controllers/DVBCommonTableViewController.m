@@ -16,55 +16,11 @@
 
 @interface DVBCommonTableViewController ()
 
-@property (nonatomic, assign) BOOL eulaAgreed;
-
 @property (nonatomic, strong) DVBLoadingStatusView *loadingStatusView;
 
 @end
 
 @implementation DVBCommonTableViewController
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-    _eulaAgreed = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(defaultsChanged)
-                                                 name:NSUserDefaultsDidChangeNotification
-                                               object:nil];
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:NSUserDefaultsDidChangeNotification
-                                                  object:nil];
-}
-
-- (void)defaultsChanged
-{
-    UIViewController *vc = [[self.navigationController viewControllers] firstObject];
-
-    BOOL isEulaAcceptedNow = [[NSUserDefaults standardUserDefaults] boolForKey:USER_AGREEMENT_ACCEPTED];
-
-    BOOL isUserAgreementUserDefaultTheSame = _eulaAgreed == isEulaAcceptedNow;
-
-    _eulaAgreed = isEulaAcceptedNow;
-
-    // Check if current VC is last one in stack - so we will not present the same message over and over
-    // And there is no need to present message when user just accepted EULA
-    if ([vc isEqual:self] && isUserAgreementUserDefaultTheSame) {
-        DVBAlertViewGenerator *alertGenerator = [[DVBAlertViewGenerator alloc] init];
-        NSString *restartAppAlertTitle = NSLS(@"ALERT_SETTINGS_CHANGED_TITLE");
-        NSString *restartAppAlertDescription = NSLS(@"ALERT_SETTINGS_CHANGED_MESSAGE");
-        UIAlertView *alertView = [alertGenerator alertViewWithTitle:restartAppAlertTitle
-                                                        description:restartAppAlertDescription
-                                                            buttons:@[NSLS(@"BUTTON_OK")]];
-        [alertView show];
-    }
-}
 
 #pragma mark - Messages about state
 

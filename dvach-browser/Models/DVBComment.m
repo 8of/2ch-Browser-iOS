@@ -12,6 +12,7 @@
 @implementation DVBComment
 
 @synthesize comment;
+@synthesize captchaKey;
 
 #pragma mark Singleton Methods
 
@@ -30,6 +31,9 @@
     if (self = [super init]) {
         if (!self.comment) {
             self.comment = @"";
+        }
+        if (!self.captchaKey) {
+            self.captchaKey = @"";
         }
     }
     return self;

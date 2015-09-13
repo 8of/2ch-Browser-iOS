@@ -18,17 +18,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 @interface DVBContainerForPostElements () <UITextViewDelegate>
 
-@property (nonatomic, assign) UIEdgeInsets originalInsets;
-
-// UI elements
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
-@property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
-
-// Constraints
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldContainerHeight;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaFieldContainer;
-
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
 @property (nonatomic, assign) NSUInteger commentViewSelectedLength;
@@ -55,16 +44,14 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     [
       _subjectTextField,
       _nameTextField,
-      _emailTextField,
-      _captchaValueTextField
+      _emailTextField
     ];
 
     NSArray *textFieldPlaceholders = @
     [
       NSLS(@"FIELD_POST_THEME"),
       NSLS(@"FIELD_POST_NAME"),
-      NSLS(@"FIELD_POST_EMAIL"),
-      NSLS(@"FIELD_POST_CAPTCHA")
+      NSLS(@"FIELD_POST_EMAIL")
     ];
 
     [arrayOfTextFields enumerateObjectsUsingBlock:^(UITextField *textField, NSUInteger idx, BOOL *stop) {
@@ -87,12 +74,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
         _commentTextView.textColor = [UIColor whiteColor];
     }
 
-    // Captcha image will be in front of activity indicator after appearing.
-    _captchaImage.layer.zPosition = 2;
-
-    // Captch button will be in front of everything
-    _captchaUpdateButton.layer.zPosition = 3;
-
     // Setup commentTextView appearance to look like textField.
     _commentTextView.delegate = self;
 
@@ -103,8 +84,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     // Setup dynamic font sizes.
 
     UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-
-    _captchaValueTextField.font = defaultFont;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
@@ -121,20 +100,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                                            action:@selector(hideKeyBoard)];
 
     [self addGestureRecognizer:tapGesture];
-}
-
-- (void)changeConstraintsIfUserCodeNotEmpty
-{
-    _captchaFieldContainerHeight.constant = 0;
-    _fromThemeToCaptchaFieldContainer.constant = 0;
-
-    [_captchaValueTextField removeConstraints:_captchaValueTextField.constraints];
-    [_captchaValueTextField removeFromSuperview];
-
-    [_captchaUpdateButton removeConstraints:_captchaUpdateButton.constraints];
-    [_captchaUpdateButton removeFromSuperview];
-
-    [_activityIndicator removeFromSuperview];
 }
 
 #pragma mark - UITextViewDelegate
@@ -173,58 +138,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     [textView resignFirstResponder];
 }
 
-#pragma mark - Captcha
-
-- (void)clearCaptchaValueField
-{
-    _captchaValueTextField.text = @"";
-}
-
-- (void)clearCaptchaImage
-{
-    [_captchaImage setImage:nil];
-}
-
-- (void)setCaptchaImageWithUrlString:(NSString *)urlString
-{
-    [_captchaImage.layer removeAllAnimations];
-
-    NSURLRequest *captchaRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]
-                                                    cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                timeoutInterval:60.0];
-
-    [_captchaImage setImageWithURLRequest:captchaRequest
-                         placeholderImage:nil
-                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
-    {
-        // Dark theme
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-            CIFilter *filterInvert = [CIFilter filterWithName:@"CIColorInvert"];
-            [filterInvert setDefaults];
-            [filterInvert setValue:[[CIImage alloc] initWithCGImage:image.CGImage]
-                            forKey:@"inputImage"];
-            image = [[UIImage alloc] initWithCIImage:filterInvert.outputImage];
-
-            CIFilter *filterBrightness= [CIFilter filterWithName:@"CIColorControls"];
-            [filterBrightness setDefaults];
-            [filterBrightness setValue:image.CIImage
-                                forKey:@"inputImage"];
-            [filterBrightness setValue:[NSNumber numberWithFloat:0.017]
-                                forKey:@"inputBrightness"];
-            image = [[UIImage alloc] initWithCIImage:filterBrightness.outputImage];
-        }
-
-        [UIView transitionWithView:_captchaImage
-                          duration:0.5f
-                           options:UIViewAnimationOptionTransitionCrossDissolve
-                        animations:^{
-                            _captchaImage.image = image;
-                        } completion:NULL];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-
-    }];
-}
-
 #pragma mark - Keyboard
 
 - (void)hideKeyBoard
@@ -241,9 +154,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     _commentViewSelectedLength = selectedRange.length;
 }
 
-/**
- *  Wrap comment in commentTextView
- */
+/// Wrap comment in commentTextView
 - (void)wrapTextWithSender:(id)sender andTagToInsert:(NSString *)tagToInsert
 {
     if (![self isCommentPlaceholderNow]) {

@@ -24,6 +24,9 @@ NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
 NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
 NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
 
+// Keys
+NSString *const DVACH_RECAPTCHA_KEY = @"6LcM2P4SAAAAAD97nF449oigatS5hPCIgt8AQanz";
+
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
@@ -35,6 +38,7 @@ NSString *const BOARDS_LIST_VERSION = @"boardsListVersion";
 
 // Storyboard VC ID's
 NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER = @"DVBThreadViewController";
+NSString *const STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER = @"DVBCaptchaViewController";
 
 // Segues
 NSString *const SEGUE_TO_EULA = @"segueToEula";
