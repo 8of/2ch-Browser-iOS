@@ -205,16 +205,10 @@
         [mutableParams setValue:usercode forKey:@"usercode"];
     }
     else {
-        /**
-         *  Otherwise include captcha values
-         */
-        /**
-         *  Captcha key is fetched in requestCaptchaKeyWithCompletion and written in _captchaKey
-         */
-        [mutableParams setValue:_captchaKey
-                         forKey:@"captcha"];
-        [mutableParams setValue:captchaValue
-                         forKey:@"captcha_value"];
+        // New ReCaptcha
+        mutableParams[@"captcha_type"] = @"recaptcha";
+        mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
+        mutableParams[@"g-recaptcha-response"] = captchaValue;
     }
 
     // Back to unmutable dictionary to be safe
@@ -348,44 +342,6 @@
                                                                                              andThreadToRedirectTo:nil];
          completion(messagePostServerAnswer);
      }];
-}
-
-#pragma mark - Captcha
-
-- (void)requestCaptchaKeyWithCompletion:(void (^)(NSString *))completion
-{
-    if ([self getNetworkStatus]) {
-        AFHTTPSessionManager *captchaManager = [AFHTTPSessionManager manager];
-        captchaManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [captchaManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/plain"]];
-        
-        [captchaManager GET:GET_CAPTCHA_KEY_URL
-                 parameters:nil
-                    success:^(NSURLSessionDataTask *task, id responseObject)
-         {
-             NSString *captchaKeyAnswer = [[NSString alloc] initWithData:responseObject
-                                                                encoding:NSUTF8StringEncoding];
-             if ([captchaKeyAnswer hasPrefix:@"CHECK"]) {
-                 NSArray *arrayOfCaptchaKeyAnswers = [captchaKeyAnswer componentsSeparatedByString: @"\n"];
-                 
-                 NSString *captchaKey = [arrayOfCaptchaKeyAnswers lastObject];
-                 
-                 // Set var for requesting Yandex key image now and posting later.
-                 _captchaKey = captchaKey;
-                 
-                 NSString *urlOfYandexCaptchaImage = [[NSString alloc] initWithFormat:GET_CAPTCHA_IMAGE_URL, captchaKey];
-                 
-                 completion(urlOfYandexCaptchaImage);             
-             } else {
-                 completion(nil);
-             }
-         }
-                    failure:^(NSURLSessionDataTask *task, NSError *error)
-         {
-             NSLog(@"Error: %@", error);
-             completion(nil);
-         }];
-    }
 }
 
 #pragma mark - Thread reporting

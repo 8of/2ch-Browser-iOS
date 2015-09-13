@@ -26,9 +26,6 @@
 - (void)getUserCodeWithPasscode:(NSString *)passcode
                   andCompletion:(void (^)(NSString *))completion;
 
-/// Request key from 2ch server to get captcha image
-- (void)requestCaptchaKeyWithCompletion:(void (^)(NSString *))completion;
-
 /// Post user message to server and return server answer
 - (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion;
 

@@ -44,7 +44,6 @@
 "FIELD_POST_THEME" = "Subject";
 "FIELD_POST_NAME" = "Name";
 "FIELD_POST_EMAIL" = "Email";
-"FIELD_POST_CAPTCHA" = "Captcha";
 
 "PLACEHOLDER_COMMENT_FIELD" = "Comment";
 

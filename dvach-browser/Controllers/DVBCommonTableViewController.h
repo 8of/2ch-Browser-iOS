@@ -10,6 +10,4 @@
 
 @interface DVBCommonTableViewController : UITableViewController
 
-- (void)defaultsChanged;
-
 @end

@@ -52,6 +52,16 @@
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Reload app</string>
+			<key>Key</key>
+			<string>descriptionText</string>
+			<key>DefaultValue</key>
+			<string></string>
+		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Root</string>

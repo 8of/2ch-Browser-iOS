@@ -44,7 +44,6 @@
 "FIELD_POST_THEME" = "Тема";
 "FIELD_POST_NAME" = "Имя";
 "FIELD_POST_EMAIL" = "Email";
-"FIELD_POST_CAPTCHA" = "Капча";
 
 "PLACEHOLDER_COMMENT_FIELD" = "Комментарий";
 
