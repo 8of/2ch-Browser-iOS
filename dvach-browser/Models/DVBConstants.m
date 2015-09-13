@@ -31,6 +31,7 @@ NSString *const DVACH_RECAPTCHA_KEY = @"6LcM2P4SAAAAAD97nF449oigatS5hPCIgt8AQanz
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
 NSString *const SETTING_ENABLE_TRAFFIC_SAVINGS = @"enableTrafficSavings";
+NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";

@@ -16,5 +16,7 @@ static NSString * const DB_COLLECTION_THREADS = @"kDbCollectionThreads";
 @property (nonatomic, strong) YapDatabase *database;
 
 + (id)sharedDatabase;
+/// Delete all threads from DB
+- (void)clearAll;
 
 @end

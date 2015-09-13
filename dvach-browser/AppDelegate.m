@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
+#import "DVBDatabaseManager.h"
 
 #import "DVBPostPhotoContainerView.h"
 #import "DVBMarkupButton.h"
@@ -30,6 +31,7 @@
     [self createDefaultSettings];
     [self appearanceTudeUp];
     [self manageAFNetworking];
+    [self manageDb];
 
     return YES;
 }
@@ -43,6 +45,7 @@
        SETTING_ENABLE_DARK_THEME : @NO,
        SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
        SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
+       SETTING_CLEAR_THREADS : @NO,
        PASSCODE : @"",
        USERCODE : @"",
        BOARDS_LIST_VERSION : @0
@@ -129,6 +132,16 @@
         UIView *colorView = [[UIView alloc] init];
         colorView.backgroundColor = CELL_SEPARATOR_COLOR;
         [UITableViewCell appearance].selectedBackgroundView = colorView;
+    }
+}
+
+- (void)manageDb
+{
+    BOOL shouldClearDB = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
+
+    if (shouldClearDB) {
+        DVBDatabaseManager *dbManager = [DVBDatabaseManager sharedDatabase];
+        [dbManager clearAll];
     }
 }
 
