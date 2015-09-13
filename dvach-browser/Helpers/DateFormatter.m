@@ -15,13 +15,14 @@
 {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
     
-    static NSCalendarUnit units;
-    units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:units fromDate:date toDate:[NSDate date] options:0];
+    NSCalendarUnit units = NSCalendarUnitSecond | NSCalendarUnitMinute | NSCalendarUnitHour | NSCalendarUnitDay | NSCalendarUnitMonth;
+    NSDateComponents *components = [[NSCalendar currentCalendar] components:units
+                                                                   fromDate:date
+                                                                     toDate:[NSDate date]
+                                                                    options:0];
 
     if (components.month > 0) {
-        static NSDateFormatter *formatter;
-        formatter = [[NSDateFormatter alloc] init];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setTimeZone:[NSTimeZone systemTimeZone]];
         [formatter setDateFormat:@"dd.MM.yy"];
         return [formatter stringFromDate:date];
