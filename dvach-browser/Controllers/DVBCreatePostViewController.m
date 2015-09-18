@@ -76,6 +76,8 @@
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
     if (isThreadNumZero) {
         self.title = NSLS(@"TITLE_NEW_THREAD");
+    } else {
+        self.title = NSLS(@"");
     }
     // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
