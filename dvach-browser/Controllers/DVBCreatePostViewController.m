@@ -77,7 +77,7 @@
     if (isThreadNumZero) {
         self.title = NSLS(@"TITLE_NEW_THREAD");
     } else {
-        self.title = NSLS(@"");
+        self.title = NSLS(@"TITLE_NEW_POST");
     }
     // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
