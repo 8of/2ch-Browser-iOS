@@ -28,6 +28,7 @@
 "ALERT_BOARD_CODE_MESSAGE" = "Введите код доски без слешей";
 "ALERT_SETTINGS_CHANGED_TITLE" = "Настройки изменены";
 "ALERT_SETTINGS_CHANGED_MESSAGE" = "Для правильной работы закройте приложение и запустите его заново.";
+"ALERT_BAD_BOARD_TITLE" = "Доска временно запрещена к просмотру";
 
 "DATE_FORMATTER_DAYS" = "%ld д.";
 "DATE_FORMATTER_HOURS" = "%ld ч.";
