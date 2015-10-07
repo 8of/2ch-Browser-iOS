@@ -22,10 +22,13 @@
     BOOL isBoardCodeWithoutDoubleQuote = ([boardCode rangeOfString:@"\""].location == NSNotFound);
     BOOL isBoardCodeWithoutSpace = ([boardCode rangeOfString:@" "].location == NSNotFound);
     
-    /**
-     *  Check if all above is good.
-     */
-    if ((!isBoardCodeNullString) && (isBoardCodeWithoutSlash) && (isBoardCodeWithoutQuote) && (isBoardCodeWithoutDoubleQuote) && (isBoardCodeWithoutSpace)) {
+    // Check if all above is good.
+    if (!isBoardCodeNullString &&
+        isBoardCodeWithoutSlash &&
+        isBoardCodeWithoutQuote &&
+        isBoardCodeWithoutDoubleQuote &&
+        isBoardCodeWithoutSpace)
+    {
         return YES;
     }
 

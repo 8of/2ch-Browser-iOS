@@ -12,8 +12,6 @@
 
 @interface DVBNetworking : NSObject
 
-@property (nonatomic, readonly) BOOL filterContent;
-
 - (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion;
 
 /// Get threads for single page of single board
@@ -34,5 +32,8 @@
 
 /// After posting we trying to get our new post and parse it from the scratch
 - (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(NSArray *))completion;
+
+/// Checking my server for review status
+- (void)getReviewStatus:(void (^)(BOOL))completion;
 
 @end

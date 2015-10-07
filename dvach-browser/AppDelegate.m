@@ -29,6 +29,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self createDefaultSettings];
+    [self managePasscode];
+    [self manageReviewStatus];
     [self appearanceTudeUp];
     [self manageAFNetworking];
     [self manageDb];
@@ -48,7 +50,7 @@
        SETTING_CLEAR_THREADS : @NO,
        PASSCODE : @"",
        USERCODE : @"",
-       BOARDS_LIST_VERSION : @0
+       DEFAULTS_REVIEW_STATUS : @YES
     };
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
@@ -57,6 +59,12 @@
         _networking = [[DVBNetworking alloc] init];
     }
 
+    // Turn off Shake to Undo because of tags
+    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+}
+
+- (void)managePasscode
+{
     NSString *passcode = [[NSUserDefaults standardUserDefaults] objectForKey:PASSCODE];
     NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
 
@@ -64,23 +72,29 @@
     BOOL isUserCodeEmpty = [usercode isEqualToString:@""];
 
     if (isPassCodeNotEmpty && isUserCodeEmpty) {
-        [_networking getUserCodeWithPasscode:passcode andCompletion:^(NSString *completion) {
+        [_networking getUserCodeWithPasscode:passcode
+                               andCompletion:^(NSString *completion)
+         {
+             if (completion) {
+                 [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
 
-            if (completion) {
-                [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
-
-                NSString *usercode = completion;
-                [self setUserCodeCookieWithUsercode:usercode];
-            }
-        }];
+                 NSString *usercode = completion;
+                 [self setUserCodeCookieWithUsercode:usercode];
+             }
+         }];
     } else if (!isPassCodeNotEmpty) {
         [self deleteUsercodeOldData];
     } else if (!isUserCodeEmpty) {
         [self setUserCodeCookieWithUsercode:usercode];
     }
+}
 
-    // Turn off SHake to Undo because of tags
-    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+- (void)manageReviewStatus
+{
+    [_networking getReviewStatus:^(BOOL status) {
+        [[NSUserDefaults standardUserDefaults] setBool:status
+                                                forKey:DEFAULTS_REVIEW_STATUS];
+    }];
 }
 
 - (void)clearAllCaches
