@@ -19,21 +19,13 @@
 
 @property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 
-/**
- *  Should we filter content or show it just as is
- */
+/// Should system filter content or show it just as is
 @property (nonatomic, readonly) BOOL filterContent;
-/**
- *  Array of Boards
- */
+/// Array of Boards
 @property (nonatomic, readonly) NSArray *boardsArray;
-/**
- *  Array of board categroies
- */
+/// Array of board categroies
 @property (nonatomic, strong, readonly) NSArray *boardCategoriesArray;
-/**
- *  all in one - cats and their boards
- */
+/// All in one - cats and their boards
 @property (nonatomic, readonly) NSDictionary *boardsDictionaryByCategories;
 
 + (instancetype)sharedBoardsModel;
@@ -54,6 +46,9 @@
  *  @return boardId shortcode
  */
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath;
+
+/// Check if board ID is not forbidden for opening
+- (BOOL)canOpenBoardWithBoardId:(NSString *)boardId;
 
 /**
  *  Get array of boards to show

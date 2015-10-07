@@ -20,9 +20,7 @@
 @interface DVBNetworking ()
 
 @property (nonatomic, strong) Reachability *networkReachability;
-/**
- *  Captcha stuff
- */
+/// Captcha stuff
 @property (nonatomic, strong) NSString *captchaKey;
 
 @end
@@ -400,6 +398,33 @@
     else {
         completion(nil);
     }
+}
+
+#pragma mark - Check my server status for review
+
+- (void)getReviewStatus:(void (^)(BOOL))completion
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
+    [manager GET:URL_TO_CHECK_REVIEW_STATUS
+      parameters:nil
+         success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if ([responseObject objectForKey:@"status"]) {
+             BOOL status = NO;
+             NSNumber *isStatusOkNumber = (NSNumber *)[responseObject objectForKey: @"status"];
+             status = [isStatusOkNumber boolValue] == YES;
+             completion(status);
+         } else {
+             completion(NO);
+         }
+
+     }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"error: %@", error);
+         completion(NO);
+     }];
 }
 
 @end

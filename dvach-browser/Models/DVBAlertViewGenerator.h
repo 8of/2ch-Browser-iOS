@@ -24,5 +24,6 @@
                         description:(NSString *)description
                             buttons:(NSArray *)buttons;
 - (UIAlertView *)alertViewForBoardCode;
+- (UIAlertView *)alertViewForBadBoard;
 
 @end
