@@ -138,15 +138,15 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
 
-        // Clear selection after getting all we need from selected cell.
-        [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                      animated:YES];
-
         // Cancel opening if app isn't allowed to open the board
         if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
             UIAlertView *alertView = [_alertViewGenerator alertViewForBadBoard];
 
             [alertView show];
+
+            // Clear selection after getting all we need from selected cell.
+            [self.tableView deselectRowAtIndexPath:selectedCellPath
+                                          animated:YES];
 
             return NO;
         }
@@ -163,6 +163,10 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
+
+        // Clear selection after getting all we need from selected cell.
+        [self.tableView deselectRowAtIndexPath:selectedCellPath
+                                      animated:YES];
         
         // NSUInteger pages = [_boardsModel getBoardPagesWithBoardId:boardId];
         
