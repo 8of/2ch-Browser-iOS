@@ -53,6 +53,17 @@
     return alertView;
 }
 
+- (UIAlertView *)alertViewForBadBoard
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLS(@"ALERT_BAD_BOARD_TITLE")
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:NSLS(@"BUTTON_OK")
+                                              otherButtonTitles:nil];
+
+    return alertView;
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     NSInteger alertTag = alertView.tag;

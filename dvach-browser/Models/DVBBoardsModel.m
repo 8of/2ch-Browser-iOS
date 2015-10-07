@@ -373,6 +373,25 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return boardId;
 }
 
+- (BOOL)canOpenBoardWithBoardId:(NSString *)boardId
+{
+    BOOL reviewStatus = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+    if (reviewStatus) {
+        return YES;
+    }
+
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BadBoards"
+                                                          ofType:@"plist"];
+
+    NSArray *badBoards = [NSArray arrayWithContentsOfFile:plistPath];
+
+    if (![badBoards containsObject:boardId]) {
+        return YES;
+    }
+
+    return NO;
+}
+
 #pragma mark - Table helpers
 
 - (NSArray *)arrayForCategoryWithIndex:(NSUInteger)index {

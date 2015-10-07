@@ -28,6 +28,7 @@
 "ALERT_BOARD_CODE_MESSAGE" = "Enter board code without slashes";
 "ALERT_SETTINGS_CHANGED_TITLE" = "Settings changed";
 "ALERT_SETTINGS_CHANGED_MESSAGE" = "New settings will apply after app restart.";
+"ALERT_BAD_BOARD_TITLE" = "This board is not permitted in mobile app";
 
 "DATE_FORMATTER_DAYS" = "%ld d";
 "DATE_FORMATTER_HOURS" = "%ld h";
