@@ -137,7 +137,9 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                     self.tableView.backgroundView = nil;
+                    
                     if (!_alreadyDidTheSizeClassTrick) {
+                        _alreadyDidTheSizeClassTrick = YES;
                         [self.tableView setNeedsLayout];
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
@@ -271,8 +273,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
             // Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
             _createdThreadNum = nil;
-        }
-        else {
+        } else {
             NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
             
             DVBThread *tempThreadObj;
@@ -284,8 +285,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
             threadViewController.threadNum = threadNum;
             threadViewController.threadSubject = threadSubject;
         }
-    }
-    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
+    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
