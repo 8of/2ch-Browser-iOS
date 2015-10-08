@@ -41,7 +41,7 @@
         _boardCode = boardCode;
         _maxPage = maxPage;
         _networking = [[DVBNetworking alloc] init];
-       _privateThreadsArray = [NSMutableArray array];
+       _privateThreadsArray = [@[] mutableCopy];
     }
     
     return self;
