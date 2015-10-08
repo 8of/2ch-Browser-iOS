@@ -66,8 +66,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         CGFloat scrollToOffset = [_autoScrollTo floatValue];
         [self.tableView setContentOffset:CGPointMake(0, scrollToOffset)
                                 animated:NO];
-    }
-    else {
+    } else {
         _presentedSomething = NO;
     }
 
@@ -121,8 +120,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (_answersToPost) {
         [self.navigationController setToolbarHidden:YES animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
-    }
-    else {
+    } else {
         [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
