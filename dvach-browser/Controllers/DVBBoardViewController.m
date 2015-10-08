@@ -16,7 +16,8 @@
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
+static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 @interface DVBCommonTableViewController ()
 
@@ -37,6 +38,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 @property (nonatomic, assign) BOOL viewAlreadyAppeared;
 @property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
+@property (nonatomic, strong) NSDate *lastLoadDate;
 
 @end
 
@@ -89,13 +91,14 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
             self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-        }
-        else {
+        } else {
             self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
         }
 
         self.tableView.rowHeight = UITableViewAutomaticDimension;
     }
+
+    _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
 
 - (void)darkThemeHandler
@@ -111,7 +114,15 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray)
         {
+            NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
+            NSInteger threadsCountNow = _threadsArray.count ? _threadsArray.count : 0;
+
+            NSMutableArray *mutableIndexPathes = [@[] mutableCopy];
+
+            for (NSInteger i = threadsCountWas; i < threadsCountNow; i++) {
+                [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
 
             _alreadyLoadingNextPage = NO;
 
@@ -122,7 +133,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
                 _currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView reloadData];
+                    [self updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                     self.tableView.backgroundView = nil;
@@ -140,9 +151,22 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 }
 
-/**
- Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
- */
+- (void)updateTableSmoothlyForIndexPathes:(NSArray *)indexPathes
+{
+    NSUInteger countOfSectionsbefore = self.tableView.numberOfSections;
+    [self.tableView beginUpdates];
+
+    // If this is the first insertions - insert section first
+    if (!countOfSectionsbefore) {
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:0]
+                      withRowAnimation:UITableViewRowAnimationNone];
+    }
+    [self.tableView insertRowsAtIndexPaths:indexPathes
+                          withRowAnimation:UITableViewRowAnimationBottom];
+    [self.tableView endUpdates];
+}
+
+/// Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
 - (void)makeRefreshAvailable
 {
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -157,8 +181,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     if (_threadsArray.count > 0) {
         return 1;
-    }
-    else {
+    } else {
         [self showMessageAboutDataLoading];
     }
 
@@ -306,8 +329,15 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    NSDate *now = [NSDate date];
+    NSTimeInterval intervalSinceLastUpdate = [now timeIntervalSinceDate:_lastLoadDate];
     
-    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) && (!_alreadyLoadingNextPage)) {
+    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) &&
+        !_alreadyLoadingNextPage &&
+        (intervalSinceLastUpdate > MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE))
+    {
+        _lastLoadDate = now;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
