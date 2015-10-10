@@ -93,7 +93,7 @@
         }
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
         {
-            NSLog(@"error: %@", error);
+            NSLog(@"error while threads: %@", error);
             completion(nil);
         }];
     } else {
