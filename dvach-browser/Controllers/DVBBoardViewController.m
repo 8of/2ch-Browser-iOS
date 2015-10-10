@@ -101,6 +101,14 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+
+    // Prevent unnecessary network connections on back / forward controller pushing / popping
+    _alreadyLoadingNextPage = YES;
+}
+
 - (void)darkThemeHandler
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
