@@ -36,7 +36,7 @@
     _threadThumb.opaque = YES;
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
-    _threadThumb.image =[UIImage imageNamed:@"Noimage.png"];
+    _threadThumb.image =[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER];
 
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
@@ -93,7 +93,17 @@
 
     if (thumbnailUrlString) {
         NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
-        [_threadThumb setImageWithURL:thumbnailUrl];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:thumbnailUrl];
+        NSString *userAgent = [[NSUserDefaults standardUserDefaults] objectForKey:DEFAULTS_USERAGENT_KEY];
+
+        [request setValue:userAgent forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+
+        [_threadThumb setImageWithURLRequest:[request copy]
+                            placeholderImage:nil
+                                     success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+        {
+            _threadThumb.image = image;
+        } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
     }
 
     _postsCountLabel.text = postsCount;
@@ -110,7 +120,7 @@
     _postsCountLabel.text = nil;
     _threadThumb.image = nil;
 
-    [_threadThumb setImage:[UIImage imageNamed:@"Noimage.png"]];
+    [_threadThumb setImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]];
 }
 
 - (void)layoutSubviews

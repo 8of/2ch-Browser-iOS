@@ -42,6 +42,12 @@
 {
     [self clearAllCaches];
 
+    if (!_networking) {
+        _networking = [[DVBNetworking alloc] init];
+    }
+
+    NSString *userAgent = [_networking userAgent];
+
     NSDictionary* defaults = @{
        USER_AGREEMENT_ACCEPTED : @NO,
        SETTING_ENABLE_DARK_THEME : @NO,
@@ -50,17 +56,16 @@
        SETTING_CLEAR_THREADS : @NO,
        PASSCODE : @"",
        USERCODE : @"",
-       DEFAULTS_REVIEW_STATUS : @YES
+       DEFAULTS_REVIEW_STATUS : @YES,
+       DEFAULTS_USERAGENT_KEY : userAgent
     };
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 
-    if (!_networking) {
-        _networking = [[DVBNetworking alloc] init];
-    }
-
-    // Turn off Shake to Undo because of tags
+    // Turn off Shake to Undo because of tags on post screen
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+
+    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
 }
 
 - (void)managePasscode
@@ -131,6 +136,7 @@
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
+
 /// Tuning appearance for entire app.
 - (void)appearanceTudeUp
 {
@@ -165,13 +171,13 @@
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-- (NSURL *)applicationDocumentsDirectory {
-    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.8of.dvach-browser" in the application's documents directory.
+- (NSURL *)applicationDocumentsDirectory
+{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (NSManagedObjectModel *)managedObjectModel {
-    // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
+- (NSManagedObjectModel *)managedObjectModel
+{
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
@@ -180,8 +186,8 @@
     return _managedObjectModel;
 }
 
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it.
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+{
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
@@ -198,8 +204,6 @@
         dict[NSLocalizedFailureReasonErrorKey] = failureReason;
         dict[NSUnderlyingErrorKey] = error;
         error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        // Replace this with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
@@ -207,9 +211,8 @@
     return _persistentStoreCoordinator;
 }
 
-- (NSManagedObjectContext *)managedObjectContext {
-
-    // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
+- (NSManagedObjectContext *)managedObjectContext
+{
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
@@ -226,13 +229,12 @@
 
 #pragma mark - Core Data Saving support
 
-- (void)saveContext {
+- (void)saveContext
+{
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
         NSError *error = nil;
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }

@@ -9,6 +9,7 @@
 #import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
+#import "DVBUrlRequestHelper.h"
 
 #import "DVBPostTableViewCell.h"
 #import "DVBWebmIconImageView.h"
@@ -108,8 +109,7 @@
 
         _mediaHeightConstraintStorage = _mediaHeightIpadConstraint.constant;
         _mediaHeightIpadConstraint.constant = 0;
-    }
-    else {
+    } else {
         _imageWidthConstraintStorage = _imageWidthConstraint.constant;
         _imageHeightConstraintStorage = _imageHeightConstraint.constant;
 
@@ -196,8 +196,7 @@
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             _mediaHeightIpadConstraint.constant = _mediaHeightConstraintStorage;
-        }
-        else {
+        } else {
             _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
         }
 
@@ -207,7 +206,13 @@
 
             UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
 
-            [postThumb setImageWithURL:[NSURL URLWithString:postThumbUrlString]];
+            __weak typeof(UIImageView *)weakPostThumb = postThumb;
+            [postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:postThumbUrlString]
+                             placeholderImage:nil
+                                      success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+             {
+                 weakPostThumb.image = image;
+             } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
 
             DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
 
@@ -220,11 +225,15 @@
             
             currentImageIndex++;
         }
-    }
-    else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
+    } else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
         // load the image and setting image source depending on presented image or set blank image
-        [_postThumb setImageWithURL:[NSURL URLWithString:thumbPathesArray[0]]
-                   placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+        __weak typeof(UIImageView *)weakPostThumb = _postThumb;
+        [_postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:thumbPathesArray[0]]
+                          placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]
+                                   success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+         {
+             weakPostThumb.image = image;
+         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
 
         BOOL isThumbForWebm = [self isMediaTypeWebmWithPicPath:pathesArray[0]];
         [self rebuildPostThumbImageWithImagePresence:YES
