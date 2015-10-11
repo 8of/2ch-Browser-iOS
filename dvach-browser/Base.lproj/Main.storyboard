@@ -1239,43 +1239,6 @@
             </objects>
             <point key="canvasLocation" x="1870" y="881"/>
         </scene>
-        <!--Captcha View Controller-->
-        <scene sceneID="n6X-fz-0cB">
-            <objects>
-                <viewController storyboardIdentifier="DVBCaptchaViewController" id="1in-Mc-mci" customClass="DVBCaptchaViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="BZn-fu-Rba"/>
-                        <viewControllerLayoutGuide type="bottom" id="MVV-80-1GS"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="wRs-TO-IlM">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="440"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNZ-IS-dlI">
-                                <rect key="frame" x="0.0" y="20" width="320" height="420"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <dataDetectorType key="dataDetectorTypes"/>
-                            </webView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="gNZ-IS-dlI" secondAttribute="trailing" id="4LX-18-hUb"/>
-                            <constraint firstItem="MVV-80-1GS" firstAttribute="top" secondItem="gNZ-IS-dlI" secondAttribute="bottom" id="AsR-63-fqO"/>
-                            <constraint firstItem="gNZ-IS-dlI" firstAttribute="top" secondItem="BZn-fu-Rba" secondAttribute="bottom" id="a4f-fR-bhH"/>
-                            <constraint firstItem="gNZ-IS-dlI" firstAttribute="leading" secondItem="wRs-TO-IlM" secondAttribute="leading" id="iAl-R8-yye"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="Tbc-5e-eKp"/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="440"/>
-                    <connections>
-                        <outlet property="webView" destination="gNZ-IS-dlI" id="atN-Ns-o4M"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eOb-fe-re0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2010" y="1501"/>
-        </scene>
     </scenes>
     <resources>
         <image name="AddImage" width="22" height="22"/>
