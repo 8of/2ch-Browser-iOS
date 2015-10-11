@@ -75,11 +75,13 @@
 
                     thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
 
-                    NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
-
-                    if (threadDict[@"files"][0][@"thumbnail"]) {
-                        NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
-                        thread.thumbnail = thumbPath;
+                    if (threadDict[@"files"]) {
+                        NSArray *files = threadDict[@"files"];
+                        if (files.count > 0) {
+                            NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
+                            NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
+                            thread.thumbnail = thumbPath;
+                        }
                     }
                     [_privateThreadsArray addObject:thread];
                 }
