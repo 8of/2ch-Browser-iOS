@@ -11,10 +11,11 @@
 #import "DVBAlertViewGenerator.h"
 
 #import "DVBCommonTableViewController.h"
+#import "DVBDvachWebViewViewController.h"
 
 #import "DVBLoadingStatusView.h"
 
-@interface DVBCommonTableViewController ()
+@interface DVBCommonTableViewController () <DVBDvachWebViewViewControllerProtocol>
 
 @property (nonatomic, strong) DVBLoadingStatusView *loadingStatusView;
 
@@ -84,6 +85,37 @@
             }
         });
     }
+}
+
+#pragma mark - Error handling
+
+- (void)handleError:(NSError *)error
+{
+    if (error &&
+        error.userInfo[ERROR_USERINFO_KEY_IS_DDOS_PROTECTION] &&
+        error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] &&
+        ![error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] isEqualToString:@""])
+    {
+        NSString *urlToCheckInBrowser = error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER];
+        [self presentBrowserWithUrlString:urlToCheckInBrowser];
+    }
+}
+
+- (void)presentBrowserWithUrlString:(NSString *)urlString
+{
+    DVBDvachWebViewViewController *webViewController = [[DVBDvachWebViewViewController alloc] initWithUrlString:urlString andDvachWebViewViewControllerDelegate:self];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:webViewController];
+
+    [self.navigationController presentViewController:navigationController
+                                            animated:YES
+                                          completion:nil];
+}
+
+#pragma mark - DVBDvachWebViewViewControllerProtocol
+
+- (void)reloadAfterWebViewDismissing
+{
+    // Owerride
 }
 
 @end

@@ -112,7 +112,8 @@
 
 - (void)showCaptchaController
 {
-    DVBCaptchaViewController *captchaVC = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER];
+    UIStoryboard *webviewsStoryboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_WEBVIEWS bundle:nil];
+    DVBCaptchaViewController *captchaVC = [webviewsStoryboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER];
     captchaVC.captchaViewControllerDelegate = self;
     [self.navigationController pushViewController:captchaVC
                                          animated:YES];

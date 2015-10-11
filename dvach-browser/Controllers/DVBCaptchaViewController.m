@@ -24,7 +24,6 @@ static NSString *const JS_FILE_NAME = @"hideUselessItems";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     _webView.delegate = self;
 }
 

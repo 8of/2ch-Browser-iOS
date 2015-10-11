@@ -15,7 +15,7 @@
 - (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion;
 
 /// Get threads for single page of single board
-- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion;
+- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *, NSError *))completionBlock;
 
 /// Get posts for single thread
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andPostNum:(NSString *)postNum andCompletion:(void (^)(id))completion;
@@ -35,5 +35,7 @@
 
 /// Checking my server for review status
 - (void)getReviewStatus:(void (^)(BOOL))completion;
+
+- (NSString *)userAgent;
 
 @end
