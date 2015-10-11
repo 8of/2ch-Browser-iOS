@@ -120,7 +120,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
-        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray)
+        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
@@ -154,6 +154,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
                     }
                 });
             }
+            [self handleError:error];
         }];
     } else {
         _currentPage = 0;
@@ -271,7 +272,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([[segue identifier] isEqualToString:SEGUE_TO_THREAD]) {
+    if ([[segue identifier] isEqualToString:SEGUE_TO_THREAD]) {
         DVBThreadViewController *threadViewController = segue.destinationViewController;
         threadViewController.boardCode = _boardCode;
         
@@ -376,6 +377,13 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self.tableView reloadData];
+}
+
+#pragma mark - DVBDvachWebViewViewControllerProtocol
+
+- (void)reloadAfterWebViewDismissing
+{
+    [self reloadBoardPage];
 }
 
 @end

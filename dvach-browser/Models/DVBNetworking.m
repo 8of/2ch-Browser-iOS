@@ -70,7 +70,7 @@
 
 #pragma mark - Single Board
 
-- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion
+- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *, NSError *))completion
 {
     if ([self getNetworkStatus]) {
         NSString *pageStringValue;
@@ -83,21 +83,26 @@
         }
         
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/%@.json", DVACH_BASE_URL, board, pageStringValue];
+
+        __weak typeof(self) weakSelf = self;
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];
+        // manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json", nil]];
         
         [manager GET:requestAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
         {
-            completion(responseObject);
+            completion(responseObject, nil);
         }
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
         {
-            NSLog(@"error while threads: %@", error);
-            completion(nil);
+            NSError *finalError = [weakSelf updateErrorWithOperation:operation
+                                                            andError:error];
+            NSLog(@"error while threads: %@", finalError);
+            completion(nil, finalError);
         }];
     } else {
-        completion(nil);
+        completion(nil, nil);
     }
 }
 
@@ -216,7 +221,6 @@
     
     [manager POST:address parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
      {
-         
          /**
           *  Added comment field this way because makaba don't handle it right otherwise
           *  and name
@@ -425,6 +429,55 @@
          NSLog(@"error: %@", error);
          completion(NO);
      }];
+}
+
+- (NSString *)userAgent
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSString *userAgent = [manager.requestSerializer  valueForHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+
+    return userAgent;
+}
+
+#pragma mark - Error handling
+
+- (NSError *)updateErrorWithOperation:(AFHTTPRequestOperation *)operation andError:(NSError *)error
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)operation.response;
+    if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
+        NSDictionary *dictionary = [httpResponse allHeaderFields];
+        if (dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] &&
+            ![dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] isEqualToString:@""])
+        {
+            NSString *refreshUrl = dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH];
+            NSRange range = [refreshUrl rangeOfString:ERROR_OPERATION_REFRESH_VALUE_SEPARATOR];
+            if (range.location != NSNotFound) {
+                NSString *secondpartOfUrl = [refreshUrl substringFromIndex:NSMaxRange(range)];
+                NSString *fullUrlToReturn = [NSString stringWithFormat:@"%@%@", DVACH_BASE_URL, secondpartOfUrl];
+
+                NSDictionary *userInfo = error.userInfo;
+
+                NSMutableDictionary *newErrorDictionary = [@
+                {
+                   ERROR_USERINFO_KEY_IS_DDOS_PROTECTION : @YES,
+                   ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER : fullUrlToReturn
+                } mutableCopy];
+
+                [newErrorDictionary addEntriesFromDictionary:userInfo];
+                userInfo = [newErrorDictionary copy];
+
+
+                
+                NSError *errorToReturn = [[NSError alloc] initWithDomain:ERROR_DOMAIN_APP
+                                                                    code:ERROR_CODE_DDOS_CHECK
+                                                                userInfo:userInfo];
+                
+                return errorToReturn;
+            }
+        }
+    }
+
+    return nil;
 }
 
 @end

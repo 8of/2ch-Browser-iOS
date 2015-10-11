@@ -47,11 +47,11 @@
     return self;
 }
 
-- (void)loadNextPageWithCompletion:(void (^)(NSArray *))completion
+- (void)loadNextPageWithCompletion:(void (^)(NSArray *, NSError *))completion
 {
     [_networking getThreadsWithBoard:_boardCode
                              andPage:_currentPage
-                       andCompletion:^(NSDictionary *resultDict)
+                       andCompletion:^(NSDictionary *resultDict, NSError *error)
     {
         if (_currentPage == 0) {
             _threadsAlreadyLoaded = [@{} mutableCopy];
@@ -63,7 +63,7 @@
                 _threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
                 NSArray *threadPosts = thread[@"posts"];
 
-                NSError *error;
+                NSError *parseError;
 
                 NSDictionary *threadDict = [threadPosts firstObject];
 
@@ -71,7 +71,7 @@
                                           fromJSONDictionary:threadDict
                                                        error:&error];
 
-                if (!error) {
+                if (!parseError) {
 
                     thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
 
@@ -84,7 +84,7 @@
                     [_privateThreadsArray addObject:thread];
                 }
                 else {
-                    NSLog(@"error: %@", error.localizedDescription);
+                    NSLog(@"error while parsing threads: %@", parseError.localizedDescription);
                 }
             }
         }
@@ -99,15 +99,14 @@
             _currentPage = 0;
         }
         
-        completion(resultArr);
-        
+        completion(resultArr, error);
     }];
 }
 
 - (void)reloadBoardWithCompletion:(void (^)(NSArray *))completion {
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
-    [self loadNextPageWithCompletion:^(NSArray *threadsCompletion) {
+    [self loadNextPageWithCompletion:^(NSArray *threadsCompletion, NSError *error) {
         completion(threadsCompletion);
     }];
 }
