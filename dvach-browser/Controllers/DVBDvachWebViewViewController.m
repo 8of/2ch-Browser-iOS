@@ -75,7 +75,7 @@
     NSLog(@"-- %@", currentURL);
 
     // Check if body contains part of Два.ч word
-    if ([html containsString:WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE]) {
+    if ([html rangeOfString:WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE].location != NSNotFound) {
         [self closeController];
     }
 }
