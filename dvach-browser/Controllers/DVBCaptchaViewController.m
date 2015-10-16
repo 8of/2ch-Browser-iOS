@@ -73,7 +73,7 @@ static NSString *const JS_FILE_NAME = @"hideUselessItems";
     [_webView stringByEvaluatingJavaScriptFromString:scriptContent];
 
     // Check if body contains element with captcha response
-    if ([html containsString:@"fbc-verification-token"]) {
+    if ([html rangeOfString:@"fbc-verification-token"].location != NSNotFound) {
 
         // Cut the key
         NSString *key = [webView stringByEvaluatingJavaScriptFromString: @"document.getElementsByTagName('textarea')[0].innerHTML"];
