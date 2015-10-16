@@ -22,6 +22,7 @@
 	<string>85</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>youtube</string>
 		<string>googlechromes</string>
 		<string>googlechrome</string>
 		<string>vlc</string>

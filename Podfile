@@ -9,3 +9,4 @@ inhibit_all_warnings!
 	pod 'TUSafariActivity', '= 1.0.4'
 	pod 'CCBottomRefreshControl', '= 0.5.1'
 	pod 'YapDatabase', '= 2.7'
+	
