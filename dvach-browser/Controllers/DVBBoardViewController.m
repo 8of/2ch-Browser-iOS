@@ -16,7 +16,8 @@
 
 static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
-static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
+static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
+static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 @interface DVBCommonTableViewController ()
 
@@ -37,6 +38,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 @property (nonatomic, assign) BOOL viewAlreadyAppeared;
 @property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
+@property (nonatomic, strong) NSDate *lastLoadDate;
 
 @end
 
@@ -69,7 +71,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
     // set loading flag here because othervise
     // scrollViewDidScroll methods will start loading 'next' page (actually the same page) again
-    _alreadyLoadingNextPage = YES;
+    _alreadyLoadingNextPage = NO;
 
     // If no pages setted (or pages is 0 - then set 10 pages).
     if (!_pages) {
@@ -80,7 +82,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    [self loadNextBoardPage];
+    // [self loadNextBoardPage];
     [self makeRefreshAvailable];
 
     // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
@@ -89,13 +91,14 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
             self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-        }
-        else {
+        } else {
             self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
         }
 
         self.tableView.rowHeight = UITableViewAutomaticDimension;
     }
+
+    _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
 
 - (void)darkThemeHandler
@@ -109,29 +112,41 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
-        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray)
+        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
+            NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
-            _currentPage++;
+            NSInteger threadsCountNow = _threadsArray.count ? _threadsArray.count : 0;
+
+            NSMutableArray *mutableIndexPathes = [@[] mutableCopy];
+
+            for (NSInteger i = threadsCountWas; i < threadsCountNow; i++) {
+                [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+
             _alreadyLoadingNextPage = NO;
 
             if (_threadsArray.count == 0) {
                 [self showMessageAboutError];
                 self.navigationItem.rightBarButtonItem.enabled = NO;
             } else {
+                _currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView reloadData];
+                    [self updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
                     self.navigationItem.rightBarButtonItem.enabled = YES;
                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                     self.tableView.backgroundView = nil;
+                    
                     if (!_alreadyDidTheSizeClassTrick) {
+                        _alreadyDidTheSizeClassTrick = YES;
                         [self.tableView setNeedsLayout];
                         [self.tableView layoutIfNeeded];
                         [self.tableView reloadData];
                     }
                 });
             }
+            [self handleError:error];
         }];
     } else {
         _currentPage = 0;
@@ -139,9 +154,22 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     }
 }
 
-/**
- Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
- */
+- (void)updateTableSmoothlyForIndexPathes:(NSArray *)indexPathes
+{
+    NSUInteger countOfSectionsbefore = self.tableView.numberOfSections;
+    [self.tableView beginUpdates];
+
+    // If this is the first insertions - insert section first
+    if (!countOfSectionsbefore) {
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:0]
+                      withRowAnimation:UITableViewRowAnimationNone];
+    }
+    [self.tableView insertRowsAtIndexPaths:indexPathes
+                          withRowAnimation:UITableViewRowAnimationBottom];
+    [self.tableView endUpdates];
+}
+
+/// Allocating refresh controll - for fetching new updated result from server by pulling board table view down.
 - (void)makeRefreshAvailable
 {
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -156,8 +184,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     if (_threadsArray.count > 0) {
         return 1;
-    }
-    else {
+    } else {
         [self showMessageAboutDataLoading];
     }
 
@@ -169,31 +196,6 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     return _threadsArray.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
-                                                                   forIndexPath:indexPath];
-    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
-    NSString *title = thread.subject;
-    if ([title isEqualToString:@""]) {
-        title = thread.num;
-    }
-
-    [cell prepareCellWithTitle:title andComment:thread.comment andThumbnailUrlString:thread.thumbnail andPostsCount:[thread.postsCount stringValue] andTimeSinceFirstPost:thread.timeSinceFirstPost];
-    
-    return cell;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
-    }
-
-    return heightToReturn;
-}
 // Separator insets to zero
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -211,6 +213,36 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
     if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
         [cell setLayoutMargins:UIEdgeInsetsZero];
     }
+
+    DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
+    NSString *title = thread.subject;
+    if ([title isEqualToString:@""]) {
+        title = thread.num;
+    }
+
+    [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
+                    andComment:thread.comment
+         andThumbnailUrlString:thread.thumbnail
+                 andPostsCount:[thread.postsCount stringValue]
+         andTimeSinceFirstPost:thread.timeSinceFirstPost];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
+                                                                   forIndexPath:indexPath];
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    return heightToReturn;
 }
 
 - (void)reloadBoardPage
@@ -232,7 +264,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if([[segue identifier] isEqualToString:SEGUE_TO_THREAD]) {
+    if ([[segue identifier] isEqualToString:SEGUE_TO_THREAD]) {
         DVBThreadViewController *threadViewController = segue.destinationViewController;
         threadViewController.boardCode = _boardCode;
         
@@ -242,8 +274,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 
             // Set to nil in case we will dismiss this VC later and it'll try the same thead insted of opening the new one.
             _createdThreadNum = nil;
-        }
-        else {
+        } else {
             NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
             
             DVBThread *tempThreadObj;
@@ -255,8 +286,7 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
             threadViewController.threadNum = threadNum;
             threadViewController.threadSubject = threadSubject;
         }
-    }
-    else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
+    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
@@ -300,8 +330,15 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    NSDate *now = [NSDate date];
+    NSTimeInterval intervalSinceLastUpdate = [now timeIntervalSinceDate:_lastLoadDate];
     
-    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) && (!_alreadyLoadingNextPage)) {
+    if ((offsetDifference < DIFFERENCE_BEFORE_ENDLESS_FIRE) &&
+        !_alreadyLoadingNextPage &&
+        (intervalSinceLastUpdate > MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE))
+    {
+        _lastLoadDate = now;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
@@ -332,6 +369,13 @@ static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 50.0f;
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self.tableView reloadData];
+}
+
+#pragma mark - DVBDvachWebViewViewControllerProtocol
+
+- (void)reloadAfterWebViewDismissing
+{
+    [self reloadBoardPage];
 }
 
 @end

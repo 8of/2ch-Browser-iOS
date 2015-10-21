@@ -1,0 +1,60 @@
+/* 
+  Localizable.strings
+  dvach-browser
+
+  Created by Andrey Konstantinov on 28/08/15.
+  Copyright (c) 2015 8of. All rights reserved.
+*/
+
+"BUTTON_OK" = "ОК";
+"BUTTON_CANCEL" = "Отмена";
+"BUTTON_REPORT" = "Пожаловаться";
+"BUTTON_CLOSE" = "Закрыть";
+"BUTTON_SEND" = "Отправить";
+"BUTTON_ACCEPT" = "Принять";
+
+"BOARD_CATEGORY_FAVOURITE" = "Избранное";
+"BOARD_CATEGORY_THEMED" = "Тематика";
+"BOARD_CATEGORY_CREATION" = "Творчество";
+"BOARD_CATEGORY_TECH" = "Техника и софт";
+"BOARD_CATEGORY_GAMES" = "Игры";
+
+"ERROR" = "Ошибка";
+
+"STATUS_LOADING" = "Загрузка";
+"STATUS_LOADING_ERROR" = "Ошибка загрузки";
+
+"ALERT_BOARD_CODE_TITLE" = "Добавить в избранное";
+"ALERT_BOARD_CODE_MESSAGE" = "Введите код доски без слешей";
+"ALERT_SETTINGS_CHANGED_TITLE" = "Настройки изменены";
+"ALERT_SETTINGS_CHANGED_MESSAGE" = "Для правильной работы закройте приложение и запустите его заново.";
+"ALERT_BAD_BOARD_TITLE" = "Доска временно запрещена к просмотру";
+
+"DATE_FORMATTER_DAYS" = "%ld д.";
+"DATE_FORMATTER_HOURS" = "%ld ч.";
+"DATE_FORMATTER_MINS" = "%ld мин.";
+"DATE_FORMATTER_SECS" = "%ld сек.";
+"DATE_FORMATTER_NOW" = "Только что";
+
+"PROMPT_INSTALL_VLC" = "Для просмотра установите VLC";
+"PROMPT_REPORT_SENT" = "Жалоба отправлена";
+"PROMPT_NEW_MESSAGES" = "новых";
+
+"ACTIVITY_OPEN_IN_CHROME" = "Открыть в Chrome";
+
+"FIELD_POST_THEME" = "Тема";
+"FIELD_POST_NAME" = "Имя";
+"FIELD_POST_EMAIL" = "Email";
+
+"PLACEHOLDER_COMMENT_FIELD" = "Комментарий";
+
+"POST_BAD_SYMBOLS_IN_POST" = "Пост содержит запрещённые символы";
+
+"POST_STATUS_SUCCESS" = "Успешно";
+
+"TITLE_BOARDS" = "Доски";
+"TITLE_NEW_THREAD" = "Новый тред";
+"TITLE_NEW_POST" = "Создать пост";
+"TITLE_ANSWERS_TO" = "Ответы к";
+"TITLE_AGREEMENT" = "Соглашение";
+"TITLE_DDOS_CHECK" = "Прохождение проверки";

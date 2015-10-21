@@ -1,7 +1,11 @@
 source 'https://github.com/CocoaPods/Specs.git'
-	pod 'DACircularProgress', :git => 'https://github.com/8ofproject/DACircularProgress'
-	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser'
-	pod 'Mantle', '= 2.0.2'
-	pod 'AFNetworking', '= 2.5.4'
+
+platform :ios, '7.1'
+inhibit_all_warnings!
+
+	pod 'MWPhotoBrowser', '= 2.1.1'
+	pod 'Mantle', '= 2.0.5'
+	pod 'AFNetworking', '= 2.6.0'
 	pod 'TUSafariActivity', '= 1.0.4'
-	pod 'CCBottomRefreshControl', '= 0.5'
+	pod 'CCBottomRefreshControl', '= 0.5.1'
+	pod 'YapDatabase', '= 2.7'

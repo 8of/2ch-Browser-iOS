@@ -11,13 +11,9 @@
 @protocol DVBCreatePostViewControllerDelegate <NSObject>
 
 @optional
-/**
- *  Open thread after creating
- */
+/// Open thread after creating
 - (void)openThredWithCreatedThread:(NSString *)threadNum;
-/**
- *  Update thread after posting
- */
+/// Update thread after posting
 - (void)updateThreadAfterPosting;
 
 @end
@@ -25,13 +21,9 @@
 @interface DVBCreatePostViewController : UIViewController
 
 @property (nonatomic, weak) id<DVBCreatePostViewControllerDelegate> createPostViewControllerDelegate;
-/**
- *  Board's shortcode
- */
+/// Board's shortcode
 @property (nonatomic, strong) NSString *boardCode;
-/**
- *  OP number
- */
+/// OP number
 @property (nonatomic, strong) NSString *threadNum;
 
 @end

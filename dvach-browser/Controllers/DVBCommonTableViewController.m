@@ -6,77 +6,116 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBAlertViewGenerator.h"
 
 #import "DVBCommonTableViewController.h"
+#import "DVBDvachWebViewViewController.h"
 
-@interface DVBCommonTableViewController ()
+#import "DVBLoadingStatusView.h"
+
+@interface DVBCommonTableViewController () <DVBDvachWebViewViewControllerProtocol>
+
+@property (nonatomic, strong) DVBLoadingStatusView *loadingStatusView;
 
 @end
 
 @implementation DVBCommonTableViewController
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(defaultsChanged)
-                                                 name:NSUserDefaultsDidChangeNotification
-                                               object:nil];
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:NSUserDefaultsDidChangeNotification
-                                                  object:nil];
-}
-
-- (void)defaultsChanged
-{
-    UIViewController *vc = [[self.navigationController viewControllers] firstObject];
-    if([vc isEqual: self ]) {
-        DVBAlertViewGenerator *alertGenerator = [[DVBAlertViewGenerator alloc] init];
-        NSString *restartAppAlertTitle = NSLocalizedString(@"Настройки изменены", @"Настройки изменены");
-        NSString *restartAppAlertDescription = NSLocalizedString(@"Для правильной работы закройте приложение и запустите его заново.", @"Для правильной работы закройте приложение и запустите его заново.");
-        UIAlertView *alertView = [alertGenerator alertViewWithTitle:restartAppAlertTitle description:restartAppAlertDescription buttons:@[@"OK"]];
-        [alertView show];
-    }
-}
-
 #pragma mark - Messages about state
 
 - (void)showMessageAboutDataLoading
 {
-    NSString *loadingTitle = NSLocalizedString(@"Загрузка", @"Загрузка");
+    NSString *loadingTitle = NSLS(@"STATUS_LOADING");
     [self showUserMessageWithTitle:loadingTitle];
 }
 
 - (void)showMessageAboutError
 {
-    NSString *errorTitle = NSLocalizedString(@"Ошибка загрузки", @"Ошибка загрузки");
+    NSString *errorTitle = NSLS(@"STATUS_LOADING_ERROR");
     [self showUserMessageWithTitle:errorTitle];
 }
 
 - (void)showUserMessageWithTitle:(NSString *)title
 {
-    // Display a message when the table is empty
-    UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    if (!_loadingStatusView.loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+        DVBLoadingStatusViewColor loadingStatusViewColor = DVBLoadingStatusViewColorLight;
+        DVBLoadingStatusViewStyle loadingStatusViewStyle = DVBLoadingStatusViewStyleLoading;
 
-    messageLabel.text = title;
-    messageLabel.textColor = [UIColor grayColor];
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+            loadingStatusViewColor = DVBLoadingStatusViewColorDark;
+        }
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        messageLabel.textColor = [UIColor whiteColor];
+        if ([title isEqualToString:NSLS(@"STATUS_LOADING_ERROR")]) {
+            loadingStatusViewStyle = DVBLoadingStatusViewStyleError;
+        }
+
+        _loadingStatusView = [[DVBLoadingStatusView alloc] initWithMessage:title
+                                                                  andStyle:loadingStatusViewStyle
+                                                                  andColor:loadingStatusViewColor];
+
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+        double delayInSeconds = 1.0;
+
+        // Error message sgould be presented instantly
+        if (loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+            delayInSeconds = 0.;
+        }
+
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+
+            // Check if table is OK
+            if (self.tableView) {
+
+                // If no sections showed or if error type of view
+                if (self.tableView.numberOfSections == 0 ||
+                    loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
+                {
+                    // More specific double-check
+                    if ((loadingStatusViewStyle == DVBLoadingStatusViewStyleLoading &&
+                        ![self.tableView.backgroundColor isKindOfClass:self.class]) ||
+                        loadingStatusViewStyle == DVBLoadingStatusViewStyleError)
+                    {
+                        self.tableView.backgroundView = _loadingStatusView;
+                    }
+                }
+            }
+        });
     }
-    messageLabel.numberOfLines = 0;
-    messageLabel.textAlignment = NSTextAlignmentCenter;
-    [messageLabel sizeToFit];
+}
 
-    self.tableView.backgroundView = messageLabel;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+#pragma mark - Error handling
+
+- (void)handleError:(NSError *)error
+{
+    if (error &&
+        error.userInfo[ERROR_USERINFO_KEY_IS_DDOS_PROTECTION] &&
+        error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] &&
+        ![error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] isEqualToString:@""])
+    {
+        NSString *urlToCheckInBrowser = error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER];
+        [self presentBrowserWithUrlString:urlToCheckInBrowser];
+    }
+}
+
+- (void)presentBrowserWithUrlString:(NSString *)urlString
+{
+    DVBDvachWebViewViewController *webViewController = [[DVBDvachWebViewViewController alloc] initWithUrlString:urlString andDvachWebViewViewControllerDelegate:self];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:webViewController];
+
+    [self.navigationController presentViewController:navigationController
+                                            animated:YES
+                                          completion:nil];
+}
+
+#pragma mark - DVBDvachWebViewViewControllerProtocol
+
+- (void)reloadAfterWebViewDismissing
+{
+    // Owerride
 }
 
 @end

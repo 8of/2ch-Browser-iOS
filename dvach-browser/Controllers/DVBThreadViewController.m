@@ -10,6 +10,7 @@
 #import <TUSafariActivity/TUSafariActivity.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "Reachlibility.h"
 #import "DVBThreadModel.h"
@@ -65,8 +66,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         CGFloat scrollToOffset = [_autoScrollTo floatValue];
         [self.tableView setContentOffset:CGPointMake(0, scrollToOffset)
                                 animated:NO];
-    }
-    else {
+    } else {
         _presentedSomething = NO;
     }
 
@@ -93,7 +93,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [super viewDidLoad];
     [self darkThemeHandler];
     [self prepareViewController];
-    [self reloadThread];
+
+    if (_answersToPost) {
+        [self reloadThread];
+    } else {
+        [self initialThreadLoad];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -115,8 +120,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (_answersToPost) {
         [self.navigationController setToolbarHidden:YES animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:NO];
-    }
-    else {
+    } else {
         [self.navigationController setToolbarHidden:NO animated:NO];
         [self.navigationItem.rightBarButtonItem setEnabled:YES];
     }
@@ -145,7 +149,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 answerTitle = @"";
             }
             else {
-                answerTitle = NSLocalizedString(@"Ответы к", @"ThreadVC title if we show answers for specific post");
+                answerTitle = NSLS(@"TITLE_ANSWERS_TO");
             }
             self.title = [NSString stringWithFormat:@"%@ %@", answerTitle, _postNum];
         }
@@ -212,10 +216,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)makeRefreshAvailable
 {
     // Top refresh
-    self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
                             action:@selector(reloadThread)
                   forControlEvents:UIControlEventValueChanged];
+    self.refreshControl.enabled = YES;
 }
 
 /// Allocating bottom refresh controll - for fetching new updated result from server by pulling board table view down.
@@ -304,6 +308,22 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Data management and processing
 
+/// Get data for thread from Db if any
+- (void)initialThreadLoad
+{
+    [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) {
+        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
+        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
+        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+
+        [self reloadThread];
+    }];
+}
+
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
@@ -318,6 +338,20 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Reload thread by current thread num
 - (void)reloadThread
 {
+    // Very stupid but necessary check.
+    // So app can't double refresh the same thread at the same time
+    if (!_answersToPost) {
+        if (self.refreshControl.enabled) {
+            if (self.refreshControl) {
+                self.refreshControl.enabled = NO;
+            }
+            if (_bottomRefreshControl) {
+                _bottomRefreshControl.enabled = NO;
+            }
+        } else {
+            return;
+        }
+    }
     _refreshButton.enabled = NO;
 
     if (_answersToPost) {
@@ -331,15 +365,22 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                       andThread:_threadNum
                   andCompletion:^(NSArray *postsArrayBlock)
         {
-            _threadControllerTableViewManager.postsArray = postsArrayBlock;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.tableView reloadData];
-                [self.refreshControl endRefreshing];
-                [_bottomRefreshControl endRefreshing];
-                [self checkNewPostsCount];
-                self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                self.tableView.backgroundView = nil;
-            });
+            if (postsArrayBlock) {
+                _threadControllerTableViewManager.postsArray = postsArrayBlock;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView reloadData];
+                    [self.refreshControl endRefreshing];
+                    [_bottomRefreshControl endRefreshing];
+                    [self checkNewPostsCount];
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
+                });
+            } else {
+                [self showMessageAboutError];
+            }
+
+            self.refreshControl.enabled = YES;
+            _bottomRefreshControl.enabled = YES;
         }];
     }
 }
@@ -366,8 +407,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reportAction:(id)sender
 {
-    NSString *cancelButtonTitle = NSLocalizedString(@"Отмена", @"Кнопка Отмена");
-    NSString *destructiveButtonTitle = NSLocalizedString(@"Пожаловаться", @"Кнопка Пожаловаться");
+    NSString *cancelButtonTitle = NSLS(@"BUTTON_CANCEL");
+    NSString *destructiveButtonTitle = NSLS(@"BUTTON_REPORT");
     _reportSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                delegate:self
                                       cancelButtonTitle:cancelButtonTitle
@@ -508,7 +549,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
 
-    NSString *openInChromActivityTitle = NSLocalizedString(@"Открыть в Chrome", @"Title of the open in chrome share activity.");
+    NSString *openInChromActivityTitle = NSLS(@"ACTIVITY_OPEN_IN_CHROME");
 
     [chromeActivity setActivityTitle:openInChromActivityTitle];
 
@@ -540,48 +581,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 -(void)updateThreadAfterPosting
 {
     [self reloadThread];
-    /*
-    DVBComment *comment = [DVBComment sharedComment];
-
-    if (comment.createdPostNum) {
-
-        [_threadModel getPostWithBoardCode:_boardCode
-                                 andThread:_threadNum
-                                andPostNum:comment.createdPostNum
-                             andCompletion:^(DVBPost *postFromServer)
-        {
-            if (postFromServer) {
-                _previousPostsCount = [NSNumber numberWithInteger:(_previousPostsCount.integerValue + 1)];
-                
-                [self.tableView beginUpdates];
-
-                NSMutableArray *postsArrayMutable = [_threadControllerTableViewManager.postsArray mutableCopy];
-                NSUInteger newSectionIndex = _threadControllerTableViewManager.postsArray.count;
-                [postsArrayMutable addObject:postFromServer];
-                _threadControllerTableViewManager.postsArray = [postsArrayMutable copy];
-                postsArrayMutable = nil;
-
-                [self.tableView insertSections:[NSIndexSet indexSetWithIndex:newSectionIndex] withRowAnimation:UITableViewRowAnimationRight];
-
-                [self.tableView endUpdates];
-
-                // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-                CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
-
-                if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-                    [NSTimer scheduledTimerWithTimeInterval:1.0
-                                                     target:self
-                                                   selector:@selector(scrollToBottom)
-                                                   userInfo:nil
-                                                    repeats:NO];
-                }
-            }
-
-            comment.createdPostNum = nil;
-        }];
-
-    }
-     */
 }
 
 - (void)scrollToBottom
@@ -598,8 +597,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)showPromptAboutReportedPost
 {
-    NSString *complaintSentPrompt = NSLocalizedString(@"Жалоба отправлена", @"Prompt сообщает о том, что жалоба отправлена.");
-    self.navigationItem.prompt = complaintSentPrompt;
+    self.navigationItem.prompt = NSLS(@"PROMPT_REPORT_SENT");
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:2.0];
@@ -637,7 +635,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Show prompt with cound of new messages
 - (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
 {
-    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, @"новых"];
+    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, NSLS(@"PROMPT_NEW_MESSAGES")];
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:1.5];

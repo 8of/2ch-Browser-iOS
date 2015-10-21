@@ -5,10 +5,12 @@
 //  Created by Andy on 10/02/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
+
 #import <AFNetworking/AFNetworking.h>
 
-#import "DVBNetworking.h"
+#import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBNetworking.h"
 #import "DVBBoard.h"
 #import "DVBValidation.h"
 #import "Reachlibility.h"
@@ -18,9 +20,7 @@
 @interface DVBNetworking ()
 
 @property (nonatomic, strong) Reachability *networkReachability;
-/**
- *  Captcha stuff
- */
+/// Captcha stuff
 @property (nonatomic, strong) NSString *captchaKey;
 
 @end
@@ -70,7 +70,7 @@
 
 #pragma mark - Single Board
 
-- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *))completion
+- (void)getThreadsWithBoard:(NSString *)board andPage:(NSUInteger)page andCompletion:(void (^)(NSDictionary *, NSError *))completion
 {
     if ([self getNetworkStatus]) {
         NSString *pageStringValue;
@@ -83,19 +83,26 @@
         }
         
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/%@.json", DVACH_BASE_URL, board, pageStringValue];
+
+        __weak typeof(self) weakSelf = self;
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];
+        // manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json", nil]];
         
         [manager GET:requestAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
         {
-            completion(responseObject);
+            completion(responseObject, nil);
         }
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
         {
-            NSLog(@"error: %@", error);
-            completion(nil);
+            NSError *finalError = [weakSelf updateErrorWithOperation:operation
+                                                            andError:error];
+            NSLog(@"error while threads: %@", finalError);
+            completion(nil, finalError);
         }];
+    } else {
+        completion(nil, nil);
     }
 }
 
@@ -201,16 +208,10 @@
         [mutableParams setValue:usercode forKey:@"usercode"];
     }
     else {
-        /**
-         *  Otherwise include captcha values
-         */
-        /**
-         *  Captcha key is fetched in requestCaptchaKeyWithCompletion and written in _captchaKey
-         */
-        [mutableParams setValue:_captchaKey
-                         forKey:@"captcha"];
-        [mutableParams setValue:captchaValue
-                         forKey:@"captcha_value"];
+        // New ReCaptcha
+        mutableParams[@"captcha_type"] = @"recaptcha";
+        mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
+        mutableParams[@"g-recaptcha-response"] = captchaValue;
     }
 
     // Back to unmutable dictionary to be safe
@@ -220,7 +221,6 @@
     
     [manager POST:address parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData)
      {
-         
          /**
           *  Added comment field this way because makaba don't handle it right otherwise
           *  and name
@@ -300,7 +300,7 @@
          
          if (isOKanswer || isRedirectAnswer) {
              // If answer is good - make preparations in current ViewController
-             NSString *successTitle = NSLocalizedString(@"Успешно", @"Title of the createPostVC when post was successfull");
+             NSString *successTitle = NSLS(@"POST_STATUS_SUCCESS");
 
              NSString *postNum = [responseDictionary[@"Num"] stringValue];
              
@@ -337,48 +337,13 @@
      {
          NSLog(@"Error: %@", error);
          
-         NSString *cancelTitle = NSLocalizedString(@"Ошибка", @"Title of the createPostVC when post was NOT successful");
+         NSString *cancelTitle = NSLS(@"ERROR");
          DVBMessagePostServerAnswer *messagePostServerAnswer = [[DVBMessagePostServerAnswer alloc] initWithSuccess:NO
                                                                                                   andStatusMessage:cancelTitle
                                                                                                             andNum:nil
                                                                                              andThreadToRedirectTo:nil];
          completion(messagePostServerAnswer);
      }];
-}
-
-#pragma mark - Captcha
-
-- (void)requestCaptchaKeyWithCompletion:(void (^)(NSString *))completion
-{
-    if ([self getNetworkStatus]) {
-        AFHTTPSessionManager *captchaManager = [AFHTTPSessionManager manager];
-        captchaManager.responseSerializer = [AFHTTPResponseSerializer serializer];
-        [captchaManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/plain"]];
-        
-        [captchaManager GET:GET_CAPTCHA_KEY_URL
-                 parameters:nil
-                    success:^(NSURLSessionDataTask *task, id responseObject)
-         {
-             NSString *captchaKeyAnswer = [[NSString alloc] initWithData:responseObject
-                                                                encoding:NSUTF8StringEncoding];
-             if ([captchaKeyAnswer hasPrefix:@"CHECK"]) {
-                 NSArray *arrayOfCaptchaKeyAnswers = [captchaKeyAnswer componentsSeparatedByString: @"\n"];
-                 
-                 NSString *captchaKey = [arrayOfCaptchaKeyAnswers lastObject];
-                 
-                 // Set var for requesting Yandex key image now and posting later.
-                 _captchaKey = captchaKey;
-                 
-                 NSString *urlOfYandexCaptchaImage = [[NSString alloc] initWithFormat:GET_CAPTCHA_IMAGE_URL, captchaKey];
-                 
-                 completion(urlOfYandexCaptchaImage);             
-             }
-         }
-                    failure:^(NSURLSessionDataTask *task, NSError *error)
-         {
-             NSLog(@"Error: %@", error);
-         }];
-    }
 }
 
 #pragma mark - Thread reporting
@@ -437,6 +402,82 @@
     else {
         completion(nil);
     }
+}
+
+#pragma mark - Check my server status for review
+
+- (void)getReviewStatus:(void (^)(BOOL))completion
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
+    [manager GET:URL_TO_CHECK_REVIEW_STATUS
+      parameters:nil
+         success:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         if ([responseObject objectForKey:@"status"]) {
+             BOOL status = NO;
+             NSNumber *isStatusOkNumber = (NSNumber *)[responseObject objectForKey: @"status"];
+             status = [isStatusOkNumber boolValue] == YES;
+             completion(status);
+         } else {
+             completion(NO);
+         }
+
+     }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"error: %@", error);
+         completion(NO);
+     }];
+}
+
+- (NSString *)userAgent
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSString *userAgent = [manager.requestSerializer  valueForHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+
+    return userAgent;
+}
+
+#pragma mark - Error handling
+
+- (NSError *)updateErrorWithOperation:(AFHTTPRequestOperation *)operation andError:(NSError *)error
+{
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)operation.response;
+    if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
+        NSDictionary *dictionary = [httpResponse allHeaderFields];
+        if (dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] &&
+            ![dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] isEqualToString:@""])
+        {
+            NSString *refreshUrl = dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH];
+            NSRange range = [refreshUrl rangeOfString:ERROR_OPERATION_REFRESH_VALUE_SEPARATOR];
+            if (range.location != NSNotFound) {
+                NSString *secondpartOfUrl = [refreshUrl substringFromIndex:NSMaxRange(range)];
+                NSString *fullUrlToReturn = [NSString stringWithFormat:@"%@%@", DVACH_BASE_URL, secondpartOfUrl];
+
+                NSDictionary *userInfo = error.userInfo;
+
+                NSMutableDictionary *newErrorDictionary = [@
+                {
+                   ERROR_USERINFO_KEY_IS_DDOS_PROTECTION : @YES,
+                   ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER : fullUrlToReturn
+                } mutableCopy];
+
+                [newErrorDictionary addEntriesFromDictionary:userInfo];
+                userInfo = [newErrorDictionary copy];
+
+
+                
+                NSError *errorToReturn = [[NSError alloc] initWithDomain:ERROR_DOMAIN_APP
+                                                                    code:ERROR_CODE_DDOS_CHECK
+                                                                userInfo:userInfo];
+                
+                return errorToReturn;
+            }
+        }
+    }
+
+    return nil;
 }
 
 @end

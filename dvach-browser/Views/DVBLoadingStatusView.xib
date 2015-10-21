@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view opaque="NO" contentMode="scaleToFill" id="iN0-l3-epB" customClass="DVBLoadingStatusView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tWV-M8-S7f">
+                    <rect key="frame" x="0.0" y="204" width="600" height="192.5"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WLt-gZ-G8b">
+                            <rect key="frame" x="224" y="0.0" width="152" height="152"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="152" id="4l9-eG-uYH"/>
+                                <constraint firstAttribute="width" constant="152" id="7DA-5Z-BKD"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StatusMessage" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nkb-eC-4iT">
+                            <rect key="frame" x="10" y="172" width="580" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Nkb-eC-4iT" secondAttribute="trailing" constant="10" id="6us-DR-nuE"/>
+                        <constraint firstItem="Nkb-eC-4iT" firstAttribute="top" secondItem="WLt-gZ-G8b" secondAttribute="bottom" constant="20" id="FKg-b0-lmJ"/>
+                        <constraint firstItem="WLt-gZ-G8b" firstAttribute="top" secondItem="tWV-M8-S7f" secondAttribute="top" id="Ogt-h6-OnF"/>
+                        <constraint firstAttribute="centerX" secondItem="WLt-gZ-G8b" secondAttribute="centerX" id="Y2J-DP-mkm"/>
+                        <constraint firstAttribute="bottom" secondItem="Nkb-eC-4iT" secondAttribute="bottom" id="ow8-UG-UEg"/>
+                        <constraint firstItem="Nkb-eC-4iT" firstAttribute="leading" secondItem="tWV-M8-S7f" secondAttribute="leading" constant="10" id="tYr-bB-ySF"/>
+                        <constraint firstAttribute="centerX" secondItem="Nkb-eC-4iT" secondAttribute="centerX" id="yeh-c6-8ax"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="centerY" secondItem="tWV-M8-S7f" secondAttribute="centerY" id="ARI-oR-bHM"/>
+                <constraint firstAttribute="trailing" secondItem="tWV-M8-S7f" secondAttribute="trailing" id="cRf-CV-Dfa"/>
+                <constraint firstItem="tWV-M8-S7f" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="wf0-h9-FNt"/>
+            </constraints>
+            <connections>
+                <outlet property="statusIcon" destination="WLt-gZ-G8b" id="31v-Lh-hn1"/>
+                <outlet property="statusLabel" destination="Nkb-eC-4iT" id="Ny4-ro-qcP"/>
+            </connections>
+        </view>
+    </objects>
+</document>

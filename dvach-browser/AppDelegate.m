@@ -5,13 +5,15 @@
 //  Created by Andy on 05/10/14.
 //  Copyright (c) 2014 8of. All rights reserved.
 //
+
 #import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 #import <SDWebImage/SDWebImageManager.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
-#import "AFNetworkActivityIndicatorManager.h"
+#import "DVBDatabaseManager.h"
 
 #import "DVBPostPhotoContainerView.h"
 #import "DVBMarkupButton.h"
@@ -27,8 +29,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [self createDefaultSettings];
+    [self managePasscode];
+    [self manageReviewStatus];
     [self appearanceTudeUp];
     [self manageAFNetworking];
+    [self manageDb];
 
     return YES;
 }
@@ -37,22 +42,34 @@
 {
     [self clearAllCaches];
 
-    NSDictionary* defaults = @{
-       USER_AGREEMENT_ACCEPTED:@NO,
-       SETTING_ENABLE_DARK_THEME:@NO,
-       SETTING_ENABLE_LITTLE_BODY_FONT:@NO,
-       SETTING_ENABLE_TRAFFIC_SAVINGS:@NO,
-       PASSCODE:@"",
-       USERCODE:@"",
-       BOARDS_LIST_VERSION:@0
-    };
-
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-
     if (!_networking) {
         _networking = [[DVBNetworking alloc] init];
     }
 
+    NSString *userAgent = [_networking userAgent];
+
+    NSDictionary* defaults = @{
+       USER_AGREEMENT_ACCEPTED : @NO,
+       SETTING_ENABLE_DARK_THEME : @NO,
+       SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
+       SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
+       SETTING_CLEAR_THREADS : @NO,
+       PASSCODE : @"",
+       USERCODE : @"",
+       DEFAULTS_REVIEW_STATUS : @YES,
+       DEFAULTS_USERAGENT_KEY : userAgent
+    };
+
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+
+    // Turn off Shake to Undo because of tags on post screen
+    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+
+    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+}
+
+- (void)managePasscode
+{
     NSString *passcode = [[NSUserDefaults standardUserDefaults] objectForKey:PASSCODE];
     NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
 
@@ -60,22 +77,29 @@
     BOOL isUserCodeEmpty = [usercode isEqualToString:@""];
 
     if (isPassCodeNotEmpty && isUserCodeEmpty) {
-        [_networking getUserCodeWithPasscode:passcode andCompletion:^(NSString *completion) {
+        [_networking getUserCodeWithPasscode:passcode
+                               andCompletion:^(NSString *completion)
+         {
+             if (completion) {
+                 [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
 
-            if (completion) {
-                [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
-
-                NSString *usercode = completion;
-                [self setUserCodeCookieWithUsercode:usercode];
-            }
-        }];
-    }
-    else if (!isUserCodeEmpty) {
+                 NSString *usercode = completion;
+                 [self setUserCodeCookieWithUsercode:usercode];
+             }
+         }];
+    } else if (!isPassCodeNotEmpty) {
+        [self deleteUsercodeOldData];
+    } else if (!isUserCodeEmpty) {
         [self setUserCodeCookieWithUsercode:usercode];
     }
+}
 
-    // Turn off SHake to Undo because of tags
-    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+- (void)manageReviewStatus
+{
+    [_networking getReviewStatus:^(BOOL status) {
+        [[NSUserDefaults standardUserDefaults] setBool:status
+                                                forKey:DEFAULTS_REVIEW_STATUS];
+    }];
 }
 
 - (void)clearAllCaches
@@ -94,11 +118,25 @@
     NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
 }
+
+- (void)deleteUsercodeOldData
+{
+    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERCODE];
+    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        if ([cookie.name isEqualToString:@"usercode_nocaptcha"]) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            break;
+        }
+    }
+}
+
 /// Execute all AFNetworking methods that need to be executed one time for entire app.
 - (void)manageAFNetworking
 {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 }
+
 /// Tuning appearance for entire app.
 - (void)appearanceTudeUp
 {
@@ -117,19 +155,29 @@
     }
 }
 
+- (void)manageDb
+{
+    BOOL shouldClearDB = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
+
+    if (shouldClearDB) {
+        DVBDatabaseManager *dbManager = [DVBDatabaseManager sharedDatabase];
+        [dbManager clearAll];
+    }
+}
+
 #pragma mark - Core Data stack
 
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
-- (NSURL *)applicationDocumentsDirectory {
-    // The directory the application uses to store the Core Data store file. This code uses a directory named "com.8of.dvach-browser" in the application's documents directory.
+- (NSURL *)applicationDocumentsDirectory
+{
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-- (NSManagedObjectModel *)managedObjectModel {
-    // The managed object model for the application. It is a fatal error for the application not to be able to find and load its model.
+- (NSManagedObjectModel *)managedObjectModel
+{
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
@@ -138,8 +186,8 @@
     return _managedObjectModel;
 }
 
-- (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    // The persistent store coordinator for the application. This implementation creates and return a coordinator, having added the store for the application to it.
+- (NSPersistentStoreCoordinator *)persistentStoreCoordinator
+{
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
@@ -156,8 +204,6 @@
         dict[NSLocalizedFailureReasonErrorKey] = failureReason;
         dict[NSUnderlyingErrorKey] = error;
         error = [NSError errorWithDomain:@"YOUR_ERROR_DOMAIN" code:9999 userInfo:dict];
-        // Replace this with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }
@@ -165,9 +211,8 @@
     return _persistentStoreCoordinator;
 }
 
-- (NSManagedObjectContext *)managedObjectContext {
-
-    // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.)
+- (NSManagedObjectContext *)managedObjectContext
+{
     if (_managedObjectContext != nil) {
         return _managedObjectContext;
     }
@@ -184,13 +229,12 @@
 
 #pragma mark - Core Data Saving support
 
-- (void)saveContext {
+- (void)saveContext
+{
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
     if (managedObjectContext != nil) {
         NSError *error = nil;
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }

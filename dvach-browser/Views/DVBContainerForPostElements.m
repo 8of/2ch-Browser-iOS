@@ -8,6 +8,7 @@
 #import <CoreImage/CoreImage.h>
 #import <UIImageView+AFNetworking.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 
 #import "DVBContainerForPostElements.h"
@@ -16,17 +17,6 @@
 static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 @interface DVBContainerForPostElements () <UITextViewDelegate>
-
-@property (nonatomic, assign) UIEdgeInsets originalInsets;
-
-// UI elements
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, weak) IBOutlet UIImageView *captchaImage;
-@property (nonatomic, weak) IBOutlet UIButton *captchaUpdateButton;
-
-// Constraints
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *captchaFieldContainerHeight;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *fromThemeToCaptchaFieldContainer;
 
 // Values for  markup
 @property (nonatomic, assign) NSUInteger commentViewSelectedStartLocation;
@@ -46,55 +36,43 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     _commentViewSelectedStartLocation = 0;
     _commentViewSelectedLength = 0;
-
-    [self registerForKeyboardNotifications];
 }
 
 - (void)setupAppearance
 {
+    NSArray *arrayOfTextFields = @
+    [
+      _subjectTextField,
+      _nameTextField,
+      _emailTextField
+    ];
+
+    NSArray *textFieldPlaceholders = @
+    [
+      NSLS(@"FIELD_POST_THEME"),
+      NSLS(@"FIELD_POST_NAME"),
+      NSLS(@"FIELD_POST_EMAIL")
+    ];
+
+    [arrayOfTextFields enumerateObjectsUsingBlock:^(UITextField *textField, NSUInteger idx, BOOL *stop) {
+        textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:textFieldPlaceholders[idx]
+                                                                          attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
+    }];
+
     // Dark theme
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
         _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
-        _nameTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _subjectTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _emailTextField.backgroundColor = CELL_BACKGROUND_COLOR;
-        _captchaValueTextField.backgroundColor = CELL_BACKGROUND_COLOR;
 
-        NSString *subjectPlaceholder = NSLocalizedString(@"Тема", @"Placeholder для поля Тема");
-        NSString *namePlaceholder = NSLocalizedString(@"Имя", @"Placeholder для поля Имя");
-        NSString *emailPlaceholder = NSLocalizedString(@"Email", @"Placeholder для поля Email");
-        NSString *captchaPlaceholder = NSLocalizedString(@"Капча", @"Placeholder для поля Капча");
-
-        _subjectTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:subjectPlaceholder
-                                                                                  attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _subjectTextField.textColor = [UIColor whiteColor];
-        _subjectTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _nameTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:namePlaceholder
-                                                                               attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _nameTextField.textColor = [UIColor whiteColor];
-        _nameTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _emailTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:emailPlaceholder
-                                                                                attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _emailTextField.textColor = [UIColor whiteColor];
-        _emailTextField.keyboardAppearance = UIKeyboardAppearanceDark;
-
-        _captchaValueTextField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:captchaPlaceholder
-                                                                                       attributes:@{NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-        _captchaValueTextField.textColor = [UIColor whiteColor];
-        _captchaValueTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+        for (UITextField *textField in arrayOfTextFields) {
+            textField.backgroundColor = CELL_BACKGROUND_COLOR;
+            textField.textColor = [UIColor whiteColor];
+            textField.keyboardAppearance = UIKeyboardAppearanceDark;
+        }
 
         _commentTextView.keyboardAppearance = UIKeyboardAppearanceDark;
         _commentTextView.textColor = [UIColor whiteColor];
     }
-
-    // Captcha image will be in front of activity indicator after appearing.
-    _captchaImage.layer.zPosition = 2;
-
-    // Captch button will be in front of everything
-    _captchaUpdateButton.layer.zPosition = 3;
 
     // Setup commentTextView appearance to look like textField.
     _commentTextView.delegate = self;
@@ -106,8 +84,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     // Setup dynamic font sizes.
 
     UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-
-    _captchaValueTextField.font = defaultFont;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
@@ -124,29 +100,13 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                                            action:@selector(hideKeyBoard)];
 
     [self addGestureRecognizer:tapGesture];
-
-    // [_commentTextView becomeFirstResponder];
-}
-
-- (void)changeConstraintsIfUserCodeNotEmpty
-{
-    _captchaFieldContainerHeight.constant = 0;
-    _fromThemeToCaptchaFieldContainer.constant = 0;
-
-    [_captchaValueTextField removeConstraints:_captchaValueTextField.constraints];
-    [_captchaValueTextField removeFromSuperview];
-
-    [_captchaUpdateButton removeConstraints:_captchaUpdateButton.constraints];
-    [_captchaUpdateButton removeFromSuperview];
-
-    [_activityIndicator removeFromSuperview];
 }
 
 #pragma mark - UITextViewDelegate
 
 - (BOOL)isCommentPlaceholderNow
 {
-    NSString *placeholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
+    NSString *placeholder = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
 
     if ([_commentTextView.text isEqualToString:placeholder]) {
         return YES;
@@ -172,62 +132,10 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if ([textView.text isEqualToString:@""]) {
-        textView.text = PLACEHOLDER_COMMENT_FIELD;
+        textView.text = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
         textView.textColor = [UIColor lightGrayColor];
     }
     [textView resignFirstResponder];
-}
-
-#pragma mark - Captcha
-
-- (void)clearCaptchaValueField
-{
-    _captchaValueTextField.text = @"";
-}
-
-- (void)clearCaptchaImage
-{
-    [_captchaImage setImage:nil];
-}
-
-- (void)setCaptchaImageWithUrlString:(NSString *)urlString
-{
-    [_captchaImage.layer removeAllAnimations];
-
-    NSURLRequest *captchaRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]
-                                                    cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                timeoutInterval:60.0];
-
-    [_captchaImage setImageWithURLRequest:captchaRequest
-                         placeholderImage:nil
-                                  success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image)
-    {
-        // Dark theme
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-            CIFilter *filterInvert = [CIFilter filterWithName:@"CIColorInvert"];
-            [filterInvert setDefaults];
-            [filterInvert setValue:[[CIImage alloc] initWithCGImage:image.CGImage]
-                            forKey:@"inputImage"];
-            image = [[UIImage alloc] initWithCIImage:filterInvert.outputImage];
-
-            CIFilter *filterBrightness= [CIFilter filterWithName:@"CIColorControls"];
-            [filterBrightness setDefaults];
-            [filterBrightness setValue:image.CIImage
-                                forKey:@"inputImage"];
-            [filterBrightness setValue:[NSNumber numberWithFloat:0.017]
-                                forKey:@"inputBrightness"];
-            image = [[UIImage alloc] initWithCIImage:filterBrightness.outputImage];
-        }
-
-        [UIView transitionWithView:_captchaImage
-                          duration:0.5f
-                           options:UIViewAnimationOptionTransitionCrossDissolve
-                        animations:^{
-                            _captchaImage.image = image;
-                        } completion:NULL];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-
-    }];
 }
 
 #pragma mark - Keyboard
@@ -246,9 +154,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     _commentViewSelectedLength = selectedRange.length;
 }
 
-/**
- *  Wrap comment in commentTextView
- */
+/// Wrap comment in commentTextView
 - (void)wrapTextWithSender:(id)sender andTagToInsert:(NSString *)tagToInsert
 {
     if (![self isCommentPlaceholderNow]) {
@@ -344,65 +250,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
                     animations:^{
                         imageView.image = nil;
                     } completion:NULL];
-}
-
-#pragma mark - Keyboard
-- (void)registerForKeyboardNotifications
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        
-    } else {
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(keyboardWasShown:)
-                                                     name:UIKeyboardDidShowNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(keyboardWillBeHidden:)
-                                                     name:UIKeyboardWillHideNotification
-                                                   object:nil];
-    }
-}
-- (void)removeObservers
-{
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-
-    } else {
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIKeyboardDidShowNotification
-                                                      object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                        name:UIKeyboardWillHideNotification
-                                                      object:nil];
-    }
-}
-
-// Called when the UIKeyboardDidShowNotification is sent.
-- (void)keyboardWasShown:(NSNotification*)aNotification
-{
-    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
-    if (!_originalInsets.top) {
-        _originalInsets = scrollView.contentInset;
-    }
-
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGSize keyboardSize = [[[aNotification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    if (orientation == UIDeviceOrientationLandscapeLeft || orientation == UIDeviceOrientationLandscapeRight ) {
-        CGSize origKeySize = keyboardSize;
-        keyboardSize.height = origKeySize.width;
-        keyboardSize.width = origKeySize.height;
-    }
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(_originalInsets.top, 0, keyboardSize.height, 0);
-
-    scrollView.contentInset = contentInsets;
-    scrollView.scrollIndicatorInsets = contentInsets;
-}
-
-// Called when the UIKeyboardWillHideNotification is sent
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
-{
-    DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;
-    scrollView.contentInset = _originalInsets;
-    scrollView.scrollIndicatorInsets = _originalInsets;
 }
 
 @end

@@ -10,6 +10,7 @@
 #import <Mantle/Mantle.h>
 #import "UIImage+DVBImageExtention.h"
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "Reachlibility.h"
 #import "DVBNetworking.h"
@@ -19,11 +20,13 @@
 
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
+#import "DVBCaptchaViewController.h"
+
 #import "DVBContainerForPostElements.h"
 #import "DVBAddPhotoIconImageViewContainer.h"
 #import "DVBPictureToSendPreviewImageView.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate, DVBCaptchaViewControllerDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -40,6 +43,7 @@
 @property (nonatomic, weak) IBOutlet DVBContainerForPostElements *containerForPostElementsView;
 @property (nonatomic, weak) IBOutlet UIScrollView *createPostScrollView;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *sendPostButton;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *closeButton;
 // Tempopary storage for add/remove picture button we just pressed
 @property (nonatomic, strong) UIButton *addPictureButton;
 
@@ -57,7 +61,6 @@
 {
     [super viewWillDisappear:animated];
     [self saveCommentForLater];
-    [_containerForPostElementsView removeObservers];
 }
 
 /// All View Controller tuning
@@ -65,12 +68,16 @@
 {
     [self darkThemeHandler];
     _networking = [[DVBNetworking alloc] init];
+
+    _closeButton.title = NSLS(@"BUTTON_CLOSE");
+    _sendPostButton.title = NSLS(@"BUTTON_SEND");
     
     // If threadNum is 0 - then we creating new thread and need to set View Controller's Title accordingly.
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
     if (isThreadNumZero) {
-        NSString *newThreadTitle = NSLocalizedString(@"Новый тред", @"Title of modal view controller if we creating thread");
-        self.title = newThreadTitle;
+        self.title = NSLS(@"TITLE_NEW_THREAD");
+    } else {
+        self.title = NSLS(@"TITLE_NEW_POST");
     }
     // Set comment field text from sharedComment.
     _sharedComment = [DVBComment sharedComment];
@@ -80,22 +87,16 @@
         _containerForPostElementsView.commentTextView.text = commentText;
     }
     else {
-        NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
-        _containerForPostElementsView.commentTextView.text = commentFieldPlaceholder;
+        _containerForPostElementsView.commentTextView.text = NSLS(@"PLACEHOLDER_COMMENT_FIELD");
         _containerForPostElementsView.commentTextView.textColor = [UIColor lightGrayColor];
     }
     
     // Prepare usercode (aka passcode) from default.
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
-    
-    if ([_usercode isEqualToString:@""]) {
-        // Ask server for captcha if user code is not presented.
-        [self requestCaptchaImage];
-    }
 
     _imagesToUpload = [@[] mutableCopy];
     
-    [self changeConstraints];
+    // [self changeConstraints];
 }
 
 - (void)darkThemeHandler
@@ -107,42 +108,18 @@
     }
 }
 
-#pragma mark - Change constrints
-
-- (void)changeConstraints
-{
-    // Remove captcha fields if we have passcode
-    BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
-    
-    if (isUsercodeNotEmpty) {
-        [_containerForPostElementsView changeConstraintsIfUserCodeNotEmpty];
-    }
-}
-
 #pragma mark - Captcha
 
-/// Request captcha image (server key stores in networking.m)
-- (void)requestCaptchaImage
+- (void)showCaptchaController
 {
-    // Firstly we entirely hide captcha image until we have new image
-    [_containerForPostElementsView clearCaptchaImage];
-    
-    [_networking requestCaptchaKeyWithCompletion:^(NSString *completion)
-    {
-        // Present yandex captcha image to VC
-        [_containerForPostElementsView setCaptchaImageWithUrlString:completion];
-        [_containerForPostElementsView clearCaptchaValueField];
-    }];
+    UIStoryboard *webviewsStoryboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_WEBVIEWS bundle:nil];
+    DVBCaptchaViewController *captchaVC = [webviewsStoryboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER];
+    captchaVC.captchaViewControllerDelegate = self;
+    [self.navigationController pushViewController:captchaVC
+                                         animated:YES];
 }
 
 #pragma  mark - Actions
-
-/// Update captcha image
-- (IBAction)captchaUpdateAction:(id)sender
-{
-    [self requestCaptchaImage];
-    self.navigationItem.prompt = nil;
-}
 
 /// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
@@ -152,28 +129,15 @@
 
     // Clear any prompt messages
     self.navigationItem.prompt = nil;
-    
-    // Get values from fields
-    NSString *name = _containerForPostElementsView.nameTextField.text;
-    NSString *subject = _containerForPostElementsView.subjectTextField.text;
-    NSString *email = _containerForPostElementsView.emailTextField.text;
-    NSString *comment = _containerForPostElementsView.commentTextView.text;
-    NSString *captchaValue = _containerForPostElementsView.captchaValueTextField.text;
 
-    NSArray *imagesToUpload = [_imagesToUpload copy];
-    // Fire actual method
-    [self postMessageWithTask:@"post"
-                     andBoard:_boardCode
-                 andThreadnum:_threadNum
-                      andName:name
-                     andEmail:email
-                   andSubject:subject
-                   andComment:comment
-              andcaptchaValue:captchaValue
-                  andUsercode:_usercode
-            andImagesToUpload:imagesToUpload
-     ];
+    // Check usercode - send post if needed
+    BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
+    if (isUsercodeNotEmpty) {
+        [self sendPost];
+    } else { // Show captcha Controller othervise
+        [self showCaptchaController];
+    }
 }
 
 - (IBAction)pickPhotoAction:(id)sender
@@ -196,6 +160,30 @@
     [self.view endEditing:YES];
     // Fire actual dismissing method.
     [self goBackToThread];
+}
+
+- (void)sendPost
+{
+    // Get values from fields
+    NSString *name = _containerForPostElementsView.nameTextField.text;
+    NSString *subject = _containerForPostElementsView.subjectTextField.text;
+    NSString *email = _containerForPostElementsView.emailTextField.text;
+    NSString *comment = _containerForPostElementsView.commentTextView.text;
+    NSString *captchaValue = _sharedComment.captchaKey;
+
+    NSArray *imagesToUpload = [_imagesToUpload copy];
+    // Fire actual method
+    [self postMessageWithTask:@"post"
+                     andBoard:_boardCode
+                 andThreadnum:_threadNum
+                      andName:name
+                     andEmail:email
+                   andSubject:subject
+                   andComment:comment
+              andcaptchaValue:captchaValue
+                  andUsercode:_usercode
+            andImagesToUpload:imagesToUpload
+     ];
 }
 
 /// Send post to thread (or create thread)
@@ -254,8 +242,9 @@
         else {
             // Enable Post button back.
             _sendPostButton.enabled = YES;
-            [self requestCaptchaImage];
         }
+
+        _sharedComment.captchaKey = @"";
     }];
 }
 
@@ -294,14 +283,11 @@
 
         _addPictureButton = nil;
     }];
-
-
 }
 
 /// Delete all pointers/refs to photo.
 - (void)deletePicture
 {
-    // _imageToLoad = nil;
     UIImageView *imageViewToDeleteIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.subviews];
 
     UIImage *imageToDeleteFromEverywhere = imageViewToDeleteIn.image;
@@ -397,10 +383,26 @@
 - (void)saveCommentForLater
 {
     // Save comment for later if it is not a placeholder.
-    NSString *commentFieldPlaceholder = NSLocalizedString(PLACEHOLDER_COMMENT_FIELD, @"Placeholder для поля комментария при отправке ответа на пост");
-    if (![_containerForPostElementsView.commentTextView.text isEqualToString:commentFieldPlaceholder]) {
+    if (![_containerForPostElementsView.commentTextView.text isEqualToString:NSLS(@"PLACEHOLDER_COMMENT_FIELD")]) {
         _sharedComment.comment = _containerForPostElementsView.commentTextView.text;
     }
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    } else {
+        [self.view endEditing:YES];
+    }
+}
+
+#pragma mark - DVBCaptchaViewControllerDelegate
+
+- (void)captchaBeenChecked
+{
+    [self sendPost];
 }
 
 @end

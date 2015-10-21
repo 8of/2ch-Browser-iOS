@@ -10,7 +10,7 @@
 
 @implementation DVBDismissSegue
 
-// dismiss segue back to the thread
+// Dismiss segue back to the thread
 - (void)perform {
     UIViewController *sourceViewController = self.sourceViewController;
     [sourceViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];

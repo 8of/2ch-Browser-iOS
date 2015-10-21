@@ -8,6 +8,7 @@
 
 #import <CoreData/CoreData.h>
 
+#import "DVBCommon.h"
 #import "DVBBoardsModel.h"
 #import "DVBBoard.h"
 
@@ -292,7 +293,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *categoryTitle = _boardCategoriesArray[section];
+    NSString *categoryTitle = NSLS(_boardCategoriesArray[section]);
 
     // Do not show category at all if category does not contain boards
     BOOL isCategoryEmpty = ([self countOfBoardsInCategoryWithIndex:section] == 0);
@@ -370,6 +371,25 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     NSString *boardId = board.boardId;
     
     return boardId;
+}
+
+- (BOOL)canOpenBoardWithBoardId:(NSString *)boardId
+{
+    BOOL reviewStatus = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+    if (reviewStatus) {
+        return YES;
+    }
+
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BadBoards"
+                                                          ofType:@"plist"];
+
+    NSArray *badBoards = [NSArray arrayWithContentsOfFile:plistPath];
+
+    if (![badBoards containsObject:boardId]) {
+        return YES;
+    }
+
+    return NO;
 }
 
 #pragma mark - Table helpers

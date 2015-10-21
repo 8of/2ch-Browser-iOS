@@ -9,6 +9,7 @@
 #import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
+#import "DVBUrlRequestHelper.h"
 
 #import "DVBPostTableViewCell.h"
 #import "DVBWebmIconImageView.h"
@@ -19,7 +20,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *titleLabel;
 
 // Media
-
 @property (nonatomic, strong) NSArray *pathesArray;
 
 // Post thumnails
@@ -93,6 +93,8 @@
 
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
+    _titleLabel.opaque = YES;
+    _titleLabel.backgroundColor = [UIColor whiteColor];
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
@@ -107,8 +109,7 @@
 
         _mediaHeightConstraintStorage = _mediaHeightIpadConstraint.constant;
         _mediaHeightIpadConstraint.constant = 0;
-    }
-    else {
+    } else {
         _imageWidthConstraintStorage = _imageWidthConstraint.constant;
         _imageHeightConstraintStorage = _imageHeightConstraint.constant;
 
@@ -133,6 +134,13 @@
     // Delete insets
     _commentTextView.textContainer.lineFragmentPadding = 0;
     _commentTextView.textContainerInset = UIEdgeInsetsZero;
+    _commentTextView.opaque = YES;
+
+    // It'll not become truly opaque otherwise
+    for (UIView *subview in _commentTextView.subviews) {
+        subview.opaque = YES;
+        subview.backgroundColor = [UIColor whiteColor];
+    }
 
     // Media
 
@@ -157,15 +165,22 @@
 
     // Dark theme handling
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        [_titleLabel setTextColor:CELL_TEXT_COLOR];
+        self.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        _titleLabel.textColor = CELL_TEXT_COLOR;
+        _titleLabel.backgroundColor = CELL_BACKGROUND_COLOR;
 
         _postThumb0.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb1.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb2.superview.backgroundColor = CELL_BACKGROUND_COLOR;
         _postThumb3.superview.backgroundColor = CELL_BACKGROUND_COLOR;
 
-        self.backgroundColor = CELL_BACKGROUND_COLOR;
         _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
+
+        // Hack to make it truly opaque
+        for (UIView *subview in _commentTextView.subviews) {
+            subview.backgroundColor = CELL_BACKGROUND_COLOR;
+        }
     }
 }
 
@@ -181,8 +196,7 @@
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             _mediaHeightIpadConstraint.constant = _mediaHeightConstraintStorage;
-        }
-        else {
+        } else {
             _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
         }
 
@@ -192,7 +206,13 @@
 
             UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
 
-            [postThumb setImageWithURL:[NSURL URLWithString:postThumbUrlString]];
+            __weak typeof(UIImageView *)weakPostThumb = postThumb;
+            [postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:postThumbUrlString]
+                             placeholderImage:nil
+                                      success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+             {
+                 weakPostThumb.image = image;
+             } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
 
             DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
 
@@ -205,11 +225,15 @@
             
             currentImageIndex++;
         }
-    }
-    else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
+    } else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
         // load the image and setting image source depending on presented image or set blank image
-        [_postThumb setImageWithURL:[NSURL URLWithString:thumbPathesArray[0]]
-                   placeholderImage:[UIImage imageNamed:@"Noimage.png"]];
+        __weak typeof(UIImageView *)weakPostThumb = _postThumb;
+        [_postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:thumbPathesArray[0]]
+                          placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]
+                                   success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+         {
+             weakPostThumb.image = image;
+         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
 
         BOOL isThumbForWebm = [self isMediaTypeWebmWithPicPath:pathesArray[0]];
         [self rebuildPostThumbImageWithImagePresence:YES
