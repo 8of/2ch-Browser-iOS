@@ -22,7 +22,7 @@ NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
 
 NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
 NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
-NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status.json";
+NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status2.json";
 
 // Network
 NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";

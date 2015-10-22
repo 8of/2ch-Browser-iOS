@@ -412,15 +412,29 @@
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
     [manager GET:URL_TO_CHECK_REVIEW_STATUS
       parameters:nil
-         success:^(AFHTTPRequestOperation *operation, id responseObject)
+         success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject)
      {
-         if ([responseObject objectForKey:@"status"]) {
+         if (responseObject[@"status"]) {
              BOOL status = NO;
-             NSNumber *isStatusOkNumber = (NSNumber *)[responseObject objectForKey: @"status"];
-             status = [isStatusOkNumber boolValue] == YES;
-             completion(status);
+             if (responseObject[@"version"]) {
+                 NSNumber *minVersionToFilter = (NSNumber *)responseObject[@"version"];
+
+                 NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
+                 NSString *build = infoDictionary[(NSString*)kCFBundleVersionKey];
+                 NSNumber *currentAppVersion = [NSNumber numberWithInteger:build.integerValue];
+
+                 if (minVersionToFilter.integerValue <= currentAppVersion.integerValue) {
+                     NSNumber *isStatusOkNumber = (NSNumber *)responseObject[@"status"];
+                     status = [isStatusOkNumber boolValue] == YES;
+                     completion(status);
+                 } else {
+                     completion(YES);
+                 }
+             } else {
+                 completion(YES);
+             }
          } else {
-             completion(NO);
+             completion(YES);
          }
 
      }
