@@ -4,6 +4,14 @@
 <array>
 	<dict>
 		<key>boardId</key>
+		<string>v</string>
+		<key>name</key>
+		<string>Video Games</string>
+		<key>categoryId</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>boardId</key>
 		<string>au</string>
 		<key>name</key>
 		<string>Автомобили</string>
@@ -462,7 +470,7 @@
 		<key>boardId</key>
 		<string>vg</string>
 		<key>name</key>
-		<string>Видеоигры</string>
+		<string>Video Games General</string>
 		<key>categoryId</key>
 		<integer>4</integer>
 	</dict>
