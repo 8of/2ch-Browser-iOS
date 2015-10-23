@@ -23,6 +23,13 @@
 
 @implementation DVBCommonTableViewController
 
+- (void)dealloc
+{
+    // Before iOS 9 we need to do this to prevent retain circles
+    self.tableView.delegate = nil;
+    self.tableView.dataSource = nil;
+}
+
 #pragma mark - Messages about state
 
 - (void)showMessageAboutDataLoading
