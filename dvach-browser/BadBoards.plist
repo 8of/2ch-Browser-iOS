@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
+	<string>pa</string>
+	<string>br</string>
+	<string>bo</string>
+	<string>mov</string>
 	<string>c</string>
 	<string>ra</string>
 	<string>ew</string>
