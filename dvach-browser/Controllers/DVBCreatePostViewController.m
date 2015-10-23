@@ -134,9 +134,18 @@
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
     if (isUsercodeNotEmpty) {
-        [self sendPost];
-    } else { // Show captcha Controller othervise
-        [self showCaptchaController];
+        [self sendPostWithoutCaptcha:YES];
+    } else {
+        __weak typeof(self) weakSelf = self;
+        [_networking canPostWithoutCaptcha:^(BOOL canPost) {
+            typeof(weakSelf) strongSelf = weakSelf;
+            if (canPost) {
+                [strongSelf sendPostWithoutCaptcha:YES];
+            } else {
+                // Show captcha Controller othervise
+                [strongSelf showCaptchaController];
+            }
+        }];
     }
 }
 
@@ -148,8 +157,7 @@
 
     if (imageViewToCheckImage.image) {
         [self deletePicture];
-    }
-    else {
+    } else {
         [self pickPicture];
     }
 }
@@ -162,7 +170,7 @@
     [self goBackToThread];
 }
 
-- (void)sendPost
+- (void)sendPostWithoutCaptcha:(BOOL)noCaptcha
 {
     // Get values from fields
     NSString *name = _containerForPostElementsView.nameTextField.text;
@@ -183,6 +191,7 @@
               andcaptchaValue:captchaValue
                   andUsercode:_usercode
             andImagesToUpload:imagesToUpload
+            andWithoutCaptcha:noCaptcha
      ];
 }
 
@@ -197,6 +206,7 @@
             andcaptchaValue:(NSString *)captchaValue
                 andUsercode:(NSString *)usercode
           andImagesToUpload:(NSArray *)imagesToUpload
+          andWithoutCaptcha:(BOOL)withoutCaptcha
 {
     
     // Turn off POST button
@@ -212,6 +222,7 @@
                      andcaptchaValue:captchaValue
                          andUsercode:usercode
                    andImagesToUpload:imagesToUpload
+                   andWithoutCaptcha:(BOOL)withoutCaptcha
                        andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
 
     {
@@ -345,8 +356,7 @@
     if (isThreadNumZero) {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_NEW_THREAD
                                   sender:self];
-    }
-    else  {
+    } else  {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
     }
@@ -368,8 +378,7 @@
         if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
             [strongDelegate updateThreadAfterPosting];
         }
-    }
-    else if (isSegueDismissToNewThread) {
+    } else if (isSegueDismissToNewThread) {
 
         if (_createdThreadNum) {
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
@@ -402,7 +411,7 @@
 
 - (void)captchaBeenChecked
 {
-    [self sendPost];
+    [self sendPostWithoutCaptcha:NO];
 }
 
 @end
