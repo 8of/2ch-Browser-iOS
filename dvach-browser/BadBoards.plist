@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
+	<string>di</string>
+	<string>diy</string>
+	<string>izd</string>
+	<string>td</string>
+	<string>w</string>
+	<string>wm</string>
+	<string>spc</string>
+	<string>dom</string>
+	<string>mus</string>
 	<string>un</string>
 	<string>wr</string>
 	<string>de</string>
