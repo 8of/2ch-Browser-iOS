@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
+	<string>bg</string>
+	<string>mc</string>
+	<string>mmo</string>
+	<string>moba</string>
 	<string>gd</string>
 	<string>trv</string>
 	<string>hw</string>
@@ -10,7 +14,6 @@
 	<string>wrk</string>
 	<string>web</string>
 	<string>s</string>
-	<string></string>
 	<string>di</string>
 	<string>diy</string>
 	<string>izd</string>
