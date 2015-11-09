@@ -12,6 +12,7 @@
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
 		84653B6B1ABB61C800F0BD19 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */; };
+		846D12A11BF0AE7C00BC523B /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 846D12A01BF0AE7C00BC523B /* Launch Screen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		8497BF2C1AD3F978001616C2 /* UrlNinja.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF2B1AD3F978001616C2 /* UrlNinja.m */; };
 		8497BF341AD3F98F001616C2 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */; };
 		8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF311AD3F98F001616C2 /* NSString+HTML.m */; };
@@ -103,6 +104,7 @@
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		84653B691ABB61C800F0BD19 /* DVBPostPreparation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostPreparation.h; path = Models/DVBPostPreparation.h; sourceTree = "<group>"; };
 		84653B6A1ABB61C800F0BD19 /* DVBPostPreparation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPreparation.m; path = Models/DVBPostPreparation.m; sourceTree = "<group>"; };
+		846D12A01BF0AE7C00BC523B /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		8497BF2A1AD3F978001616C2 /* UrlNinja.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UrlNinja.h; path = Helpers/UrlNinja.h; sourceTree = "<group>"; };
 		8497BF2B1AD3F978001616C2 /* UrlNinja.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UrlNinja.m; path = Helpers/UrlNinja.m; sourceTree = "<group>"; };
 		8497BF2E1AD3F98F001616C2 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GTMNSString+HTML.h"; path = "Helpers/Third party/GTMNSString+HTML.h"; sourceTree = "<group>"; };
@@ -470,6 +472,7 @@
 			children = (
 				84CFC51719E1526E004D0BB8 /* Main.storyboard */,
 				94C42CE71BC9D733001F6840 /* WebViews.storyboard */,
+				846D12A01BF0AE7C00BC523B /* Launch Screen.storyboard */,
 			);
 			name = Storyboards;
 			sourceTree = "<group>";
@@ -650,6 +653,7 @@
 				84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */,
 				9437FD251B90DFDF004FFB22 /* Localizable.strings in Resources */,
 				94A5E4671AF77E4500824347 /* ARChromeActivity@3x.png in Resources */,
+				846D12A11BF0AE7C00BC523B /* Launch Screen.storyboard in Resources */,
 				945FB1EF1B90F75800E87D52 /* BoardCategories.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
