@@ -8,6 +8,7 @@
 
 #import <UIImageView+AFNetworking.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBUrlRequestHelper.h"
 
@@ -37,7 +38,6 @@
 // Media constraints
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *mediaTopConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *mediaHeightConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *mediaHeightIpadConstraint;
 
 // Media - constraint storages of initial values
 @property (nonatomic, assign) CGFloat mediaHeightConstraintStorage;
@@ -56,10 +56,6 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageWidthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageHeightConstraint;
 
-// Constraints - image - additional for iPad
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageWidthConstraintIPAD;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageHeightConstraintIPAD;
-
 // Constraints - video-icon
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
@@ -70,7 +66,6 @@
 @property (nonatomic, assign) CGFloat imageHeightConstraintStorage;
 @property (nonatomic, assign) CGFloat videoiconWidthContstraintStorage;
 @property (nonatomic, assign) CGFloat videoiconHeightContstraintStorage;
-
 
 // Action buttons
 
@@ -103,19 +98,18 @@
     _commentTextView.delegate = self;
     _imageLeftConstraintStorage = _imageLeftConstraint.constant;
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _imageWidthConstraintStorage = _imageWidthConstraintIPAD.constant;
-        _imageHeightConstraintStorage = _imageHeightConstraintIPAD.constant;
+    if (IS_IPAD) {
+        _imageWidthConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
+        _imageHeightConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
 
-        _mediaHeightConstraintStorage = _mediaHeightIpadConstraint.constant;
-        _mediaHeightIpadConstraint.constant = 0;
+        _mediaHeightConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
     } else {
         _imageWidthConstraintStorage = _imageWidthConstraint.constant;
         _imageHeightConstraintStorage = _imageHeightConstraint.constant;
 
         _mediaHeightConstraintStorage = _mediaHeightConstraint.constant;
-        _mediaHeightConstraint.constant = 0;
     }
+    _mediaHeightConstraint.constant = 0;
 
     _mediaTopConstraint.constant = 0;
 
@@ -194,11 +188,7 @@
     if (pathesArray && ([pathesArray count] > 1)) {
         _mediaTopConstraint.constant = _imageLeftConstraintStorage;
 
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            _mediaHeightIpadConstraint.constant = _mediaHeightConstraintStorage;
-        } else {
-            _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
-        }
+        _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
 
         NSUInteger currentImageIndex = 0;
 
@@ -246,7 +236,6 @@
     // Set comment text
     _commentTextView.attributedText = commentText;
 
-
     // Answers buttons
 
     NSString *answerButtonTitle;
@@ -263,8 +252,7 @@
     if (disableActionButton) {
         [_answerToPostButton setEnabled:NO];
         [_answerToPostWithQuoteButton setEnabled:NO];
-    }
-    else {
+    } else {
         _answerToPostButton.tag = index;
         _answerToPostWithQuoteButton.tag = index;
     }
@@ -274,34 +262,18 @@
 {
     if (isImagePresent) {
         _imageLeftConstraint.constant = _imageLeftConstraintStorage;
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            _imageWidthConstraintIPAD.constant = _imageWidthConstraintStorage;
-            _imageHeightConstraintIPAD.constant = _imageHeightConstraintStorage;
-        }
-        else {
-            _imageWidthConstraint.constant = _imageWidthConstraintStorage;
-            _imageHeightConstraint.constant = _imageWidthConstraintStorage;
-        }
-    }
-    else {
+        _imageWidthConstraint.constant = _imageWidthConstraintStorage;
+        _imageHeightConstraint.constant = _imageWidthConstraintStorage;
+    } else {
         _imageLeftConstraint.constant = 0;
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            _imageWidthConstraintIPAD.constant = 0;
-            _imageHeightConstraintIPAD.constant = 0;
-        }
-        else {
-            _imageWidthConstraint.constant = 0;
-            _imageHeightConstraint.constant = 0;
-        }
+        _imageWidthConstraint.constant = 0;
+        _imageHeightConstraint.constant = 0;
     }
 
     if (videoIconPresentce) {
         _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
         _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
-    }
-    else {
+    } else {
         _videoiconWidthContstraint.constant = 0;
         _videoiconHeightContstraint.constant = 0;
     }
@@ -313,7 +285,7 @@
     [self.contentView layoutIfNeeded];
 }
 
-// fix problems with autolayout
+// Fix problems with autolayout
 -(void)didMoveToSuperview
 {
     [self layoutIfNeeded];
@@ -340,18 +312,10 @@
 
     _mediaTopConstraint.constant = 0;
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        _imageWidthConstraintIPAD.constant = 0;
-        _imageHeightConstraintIPAD.constant = 0;
+    _imageWidthConstraint.constant = 0;
+    _imageHeightConstraint.constant = 0;
 
-        _mediaHeightIpadConstraint.constant = 0;
-    }
-    else {
-        _imageWidthConstraint.constant = 0;
-        _imageHeightConstraint.constant = 0;
-
-        _mediaHeightConstraint.constant = 0;
-    }
+    _mediaHeightConstraint.constant = 0;
 
     _postWebmIcon0.hidden = YES;
     _postWebmIcon1.hidden = YES;

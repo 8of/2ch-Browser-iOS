@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBPost.h"
 #import "DVBThreadControllerTableViewManager.h"
@@ -51,7 +52,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
         // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
         if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
             _threadViewController.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT;
-            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            if (IS_IPAD) {
                 _threadViewController.tableView.estimatedRowHeight = ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
             }
         }
@@ -66,8 +67,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 {
     if (_postsArray.count > 0) {
         return _postsArray.count;
-    }
-    else {
+    } else {
         [_threadViewController showMessageAboutDataLoading];
     }
 
@@ -126,7 +126,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
     CGFloat additionalHeightForMedia = 0;
     if ([post.thumbPathesArray count] > 1) { // If post have more than one thumbnail and this is first row
         additionalHeightForMedia = ROW_MEDIA_DEFAULT_HEIGHT;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        if (IS_IPAD) {
             additionalHeightForMedia = additionalHeightForMedia + ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD;
         }
     }
@@ -144,7 +144,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
     // If not - then set the difference just to two constraints.
     if ([post.thumbPathesArray count] == 1) {
         widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT;
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        if (IS_IPAD) {
             widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
         }
     }
@@ -171,7 +171,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
         minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
     }
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (IS_IPAD) {
         minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
     }
 
@@ -271,8 +271,7 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
         [_threadViewController.threadsScrollPositionManager.threads setValue:scrollPosition
                                                  forKey:_threadViewController.threadNum];
         
-        _threadViewController.autoScrollTo = [_threadViewController.threadsScrollPositionManager.threads
-                         objectForKey:_threadViewController.threadNum];
+        _threadViewController.autoScrollTo = [_threadViewController.threadsScrollPositionManager.threads objectForKey:_threadViewController.threadNum];
     }
 }
 

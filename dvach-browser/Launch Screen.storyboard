@@ -14,11 +14,11 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenIcon" translatesAutoresizingMaskIntoConstraints="NO" id="uSn-po-WDN">
-                                <rect key="frame" x="94" y="124" width="172" height="232"/>
+                                <rect key="frame" x="234" y="184" width="172" height="232"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="344" id="hao-Mf-ync"/>
                                     <constraint firstAttribute="height" constant="232" id="i2T-Am-OWt"/>
@@ -47,7 +47,6 @@
                             <constraint firstItem="uSn-po-WDN" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="7jk-SG-2K2"/>
                         </constraints>
                     </view>
-                    <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
