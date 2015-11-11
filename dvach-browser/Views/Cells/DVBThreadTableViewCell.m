@@ -9,8 +9,11 @@
 #import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
+#import "UIImage+DVBOpaqueImage.h"
 
 #import "DVBThreadTableViewCell.h"
+
+static UIImage *kPlaceholderImage;
 
 @interface DVBThreadTableViewCell ()
 
@@ -19,7 +22,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
-// Image for showing OP thumbnail image
+/// Image for showing OP thumbnail image
 @property (nonatomic, weak) IBOutlet UIImageView *threadThumb;
 
 @end
@@ -30,13 +33,24 @@
 {
     [super awakeFromNib];
 
-    [self.contentView setOpaque:YES];
-    [self.backgroundView setOpaque:YES];
+    self.contentView.opaque = YES;
+    self.backgroundView.opaque = YES;
+
+    for (UIView *view in self.contentView.subviews) {
+        view.layer.drawsAsynchronously = YES;
+    }
+
+    self.contentView.layer.shouldRasterize = YES;
+    self.contentView.layer.rasterizationScale = [UIScreen mainScreen].scale;
+
+    if (!kPlaceholderImage) {
+        kPlaceholderImage = [UIImage optimizedImageFromImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]];
+    }
 
     _threadThumb.opaque = YES;
     _threadThumb.contentMode = UIViewContentModeScaleAspectFill;
     _threadThumb.clipsToBounds = YES;
-    _threadThumb.image =[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER];
+    _threadThumb.image = kPlaceholderImage;
 
     _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _titleLabel.layer.masksToBounds = NO;
@@ -62,6 +76,8 @@
     _postsCountContainerView.layer.borderColor = THUMBNAIL_GREY_BORDER;
     _postsCountContainerView.layer.borderWidth = 1.0;
     _postsCountContainerView.layer.masksToBounds = NO;
+    _postsCountContainerView.layer.shouldRasterize = YES;
+    _postsCountContainerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
         _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
@@ -120,24 +136,7 @@
     _postsCountLabel.text = nil;
     _threadThumb.image = nil;
 
-    [_threadThumb setImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]];
-}
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    [self.contentView layoutIfNeeded];
-}
-
-// fix problems with autolayout
-- (void)didMoveToSuperview
-{
-    [self layoutIfNeeded];
-}
-
-+ (BOOL)requiresConstraintBasedLayout
-{
-    return YES;
+    _threadThumb.image = kPlaceholderImage;
 }
 
 @end

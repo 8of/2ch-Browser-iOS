@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
 
@@ -14,7 +15,7 @@
 
 #import "DVBThreadTableViewCell.h"
 
-static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 84.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
@@ -82,21 +83,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    // [self loadNextBoardPage];
     [self makeRefreshAvailable];
-
-    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
-    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-            self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-        } else {
-            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
-        }
-
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
-    }
 
     _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
@@ -238,7 +225,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 {
     CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+    if (IS_IPAD) {
         heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
     }
 
@@ -342,25 +329,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
-}
-
-#pragma mark - Selector checking
-
-#pragma mark - Respoder rewrite
-
-- (BOOL)respondsToSelector:(SEL)selector
-{
-    static BOOL useSelector;
-    static dispatch_once_t predicate = 0;
-    dispatch_once(&predicate, ^{
-        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
-    });
-
-    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
-        return useSelector;
-    }
-
-    return [super respondsToSelector:selector];
 }
 
 #pragma mark - Orientation
