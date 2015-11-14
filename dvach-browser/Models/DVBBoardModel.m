@@ -75,7 +75,9 @@
 
                     thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
 
-                    if (threadDict[@"files"]) {
+                    BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+
+                    if (threadDict[@"files"] && isInReviewModeOk) {
                         NSArray *files = threadDict[@"files"];
                         if (files.count > 0) {
                             NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];

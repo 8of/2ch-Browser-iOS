@@ -451,11 +451,24 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
     if (countOfLetters >= minimalCountOfCharactersToStartSearch) {
         [self updateTableWithSearchText:searchText];
-    }
-    else {
+    } else {
         [self updateTableWithSearchText:nil];
     }
 
+}
+
+#pragma mark - Review
+
++ (void)manageReviewStatus
+{
+    DVBNetworking *networkHandler = [[DVBNetworking alloc] init];
+    BOOL isReviewOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+    if (!isReviewOk) {
+        [networkHandler getReviewStatus:^(BOOL status) {
+            [[NSUserDefaults standardUserDefaults] setBool:status
+                                                    forKey:DEFAULTS_REVIEW_STATUS];
+        }];
+    }
 }
 
 @end

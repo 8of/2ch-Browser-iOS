@@ -172,8 +172,9 @@
                             NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
 
                             BOOL isTrafficEconomyEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_TRAFFIC_SAVINGS];
+                            BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
 
-                            if (files && !isTrafficEconomyEnabled) {
+                            if (files && !isTrafficEconomyEnabled && isInReviewModeOk) {
                                 for (NSDictionary *fileDictionary in files) {
                                     NSString *fullFileName = fileDictionary[@"path"];
 

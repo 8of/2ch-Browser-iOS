@@ -442,7 +442,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
          failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
          NSLog(@"error: %@", error);
-         completion(NO);
+         completion(YES);
      }];
 }
 

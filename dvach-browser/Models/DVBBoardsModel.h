@@ -50,23 +50,7 @@
 /// Check if board ID is not forbidden for opening
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId;
 
-/**
- *  Get array of boards to show
- */
-// - (void)getBoardsWithCompletion:(void (^)(NSDictionary *))completion;
-
-/**
- *  Get shortcode UID for board from array
- */
-// - (NSString *)getBoardIdWithCategoryName:(NSString *)category
-//                                 andIndex:(NSUInteger)index;
-/**
- *  Get board max page
- *
- *  @param board shortcode UID
- *
- *  @return board UI
- */
-// - (NSUInteger)getBoardPagesWithBoardId:(NSString *)boardId;
+/// Check review status if needed
++ (void)manageReviewStatus;
 
 @end
