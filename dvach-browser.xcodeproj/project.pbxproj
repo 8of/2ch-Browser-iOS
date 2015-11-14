@@ -608,7 +608,6 @@
 				TargetAttributes = {
 					84CFC50919E1526E004D0BB8 = {
 						CreatedOnToolsVersion = 6.0.1;
-						DevelopmentTeam = Q9324QX3V7;
 					};
 					84CFC52219E1526E004D0BB8 = {
 						CreatedOnToolsVersion = 6.0.1;
