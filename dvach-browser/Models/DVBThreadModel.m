@@ -110,13 +110,13 @@
                 typeof(weakSelf) strongSelf = weakSelf;
                 if (strongSelf) {
 
-                    NSMutableArray *postNumMutableArray = [[NSMutableArray alloc] init];
+                    NSMutableArray *postNumMutableArray = [@[] mutableCopy];
 
                     // If it's first load - do not include post
                     if (!strongSelf.lastPostNum) {
-                        strongSelf.privatePostsArray = [NSMutableArray array];
-                        strongSelf.privateThumbImagesArray = [NSMutableArray array];
-                        strongSelf.privateFullImagesArray = [NSMutableArray array];
+                        strongSelf.privatePostsArray = [@[] mutableCopy];
+                        strongSelf.privateThumbImagesArray = [@[] mutableCopy];
+                        strongSelf.privateFullImagesArray = [@[] mutableCopy];
                     } else {
                         // update dates to relevant values
                         for (DVBPost *earlierPost in strongSelf.privatePostsArray) {
@@ -130,8 +130,7 @@
 
                     if ([postsDictionary isKindOfClass:[NSDictionary class]]) {
                         posts2Array = postsDictionary[@"threads"][0][@"posts"];
-                    }
-                    else {
+                    } else {
                         posts2Array = (NSArray *)postsDictionary;
                     }
 
@@ -154,9 +153,8 @@
                         if (!error) {
                             NSString *comment = postDictionary[@"comment"];
 
-                            if ([comment rangeOfString:@"ررً"].location == NSNotFound) {
-                            }
-                            else {
+                            // Fix bug with crash
+                            if ([comment rangeOfString:@"ررً"].location != NSNotFound) {
                                 NSString *brokenStringHere = NSLS(@"POST_BAD_SYMBOLS_IN_POST");
                                 comment = brokenStringHere;
                             }
@@ -212,8 +210,7 @@
                             [strongSelf.privatePostsArray addObject:post];
 
                             postIndexNumber++;
-                        }
-                        else {
+                        } else {
                             NSLog(@"error: %@", error.localizedDescription);
                         }
                     }
@@ -238,8 +235,7 @@
                             if (index != NSNotFound) {
                                 DVBPost *replyPost = semiResultMutableArray[index];
                                 [replyPost.replies addObject:post];
-                            }
-                            else {
+                            } else {
                                 [delete addObject:replyTo];
                             }
                         }
