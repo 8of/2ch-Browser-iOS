@@ -629,7 +629,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
         [self performSelector:@selector(newMessagesPromptWithNewMessagesCount:)
                    withObject:newMessagesCount
-                   afterDelay:1];
+                   afterDelay:0.5];
     }
 
     NSNumber *postsCountNewValue = @(_threadControllerTableViewManager.postsArray.count);
@@ -668,7 +668,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING &&
         _threadControllerTableViewManager.postsArray.count > 10) // Prevent scrolling when posts count isn't high enough
     {
-        [NSTimer scheduledTimerWithTimeInterval:1.0
+        [NSTimer scheduledTimerWithTimeInterval:2.0
                                          target:self
                                        selector:@selector(scrollToBottom)
                                        userInfo:nil
