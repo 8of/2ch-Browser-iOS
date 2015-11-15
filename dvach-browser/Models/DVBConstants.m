@@ -82,3 +82,6 @@ NSString *const WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE = @".ч";
 // Sizes
 NSInteger const PREVIEW_IMAGE_SIZE = 64;
 NSInteger const PREVIEW_IMAGE_SIZE_IPAD = 100;
+
+// Notifications
+NSString  *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";

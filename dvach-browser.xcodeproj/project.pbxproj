@@ -62,6 +62,7 @@
 		94BECE991B111C2A002C3132 /* DVBThreadTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 94BECE951B111C2A002C3132 /* DVBThreadTableViewCell.m */; };
 		94C42CE81BC9D733001F6840 /* WebViews.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94C42CE71BC9D733001F6840 /* WebViews.storyboard */; };
 		94C42CEB1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */; };
+		94C7272C1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */; };
 		94DAFF641AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DAFF631AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m */; };
 		94DD37A71ACA7E5100C658EB /* DefaultBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */; };
 		94E0B9EA1BA4DADA007CBA55 /* DVBCaptchaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E0B9E81BA4DADA007CBA55 /* DVBCaptchaViewController.m */; };
@@ -189,6 +190,8 @@
 		94C42CE71BC9D733001F6840 /* WebViews.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WebViews.storyboard; sourceTree = "<group>"; };
 		94C42CE91BC9D9CB001F6840 /* DVBDvachWebViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDvachWebViewViewController.h; path = Controllers/DVBDvachWebViewViewController.h; sourceTree = "<group>"; };
 		94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDvachWebViewViewController.m; path = Controllers/DVBDvachWebViewViewController.m; sourceTree = "<group>"; };
+		94C7272A1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotification+DVBBookmarkThreadNotification.h"; path = "Helpers/NSNotification+DVBBookmarkThreadNotification.h"; sourceTree = "<group>"; };
+		94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotification+DVBBookmarkThreadNotification.m"; path = "Helpers/NSNotification+DVBBookmarkThreadNotification.m"; sourceTree = "<group>"; };
 		94DAFF621AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadsScrollPositionManager.h; path = Models/DVBThreadsScrollPositionManager.h; sourceTree = "<group>"; };
 		94DAFF631AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadsScrollPositionManager.m; path = Models/DVBThreadsScrollPositionManager.m; sourceTree = "<group>"; };
 		94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultBoards.plist; sourceTree = "<group>"; };
@@ -433,6 +436,8 @@
 				945A53A21BCA472500AA5EAE /* DVBUrlRequestHelper.m */,
 				94F454F61BF3E368001B8091 /* UIImage+DVBOpaqueImage.h */,
 				94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */,
+				94C7272A1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.h */,
+				94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -710,6 +715,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94C7272C1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m in Sources */,
 				A155FEF11AB7355600BE31F4 /* DVBBoardViewController.m in Sources */,
 				A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */,
 				9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */,

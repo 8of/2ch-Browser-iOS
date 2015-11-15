@@ -103,5 +103,8 @@ FOUNDATION_EXPORT NSString *const WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE;
 FOUNDATION_EXPORT NSInteger const PREVIEW_IMAGE_SIZE;
 FOUNDATION_EXPORT NSInteger const PREVIEW_IMAGE_SIZE_IPAD;
 
+// Notifications
+FOUNDATION_EXPORT NSString  *const NOTIFICATION_NAME_BOOKMARK_THREAD;
+
 // Etc
 #define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)

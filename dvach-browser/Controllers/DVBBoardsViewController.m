@@ -10,9 +10,11 @@
 #import "DVBConstants.h"
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
+#import "UrlNinja.h"
 
 #import "DVBBoardsViewController.h"
 #import "DVBBoardViewController.h"
+#import "DVBThreadViewController.h"
 
 static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
@@ -57,6 +59,9 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+    [self.navigationController setToolbarHidden:YES
+                                       animated:NO];
 
     // Check if table have section 0.
     // Table View always have this 0 section - but it's hidden if user not added favourites.
@@ -103,13 +108,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     [self updateTable];
 }
 
-- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
-    // Cancel focus on Search field - or app can crash.
-    [self.view endEditing:YES];
-    UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
-    [boardCodeAlertView show];
-}
-
 - (void)updateTable {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
@@ -134,9 +132,21 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     if ([self userAgreementAccepted]) {
-
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
+
+        // Check if deal with thread bookmark and not board
+        UrlNinja *urlNinja = [[UrlNinja alloc] initWithUrl:[NSURL URLWithString:boardId]];
+        if (urlNinja.type == boardThreadLink) {
+            urlNinja.threadTitle = [_boardsModel threadTitleByIndexPath:selectedCellPath];
+            [self openThreadWithUrlNinja:urlNinja];
+
+            // Clear selection after getting all we need from selected cell.
+            [self.tableView deselectRowAtIndexPath:selectedCellPath
+                                          animated:YES];
+
+            return NO;
+        }
 
         // Cancel opening if app isn't allowed to open the board
         if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
@@ -177,11 +187,33 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     }
 }
 
-#pragma mark - Settings
+#pragma mark - Actions
+
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+    // Cancel focus on Search field - or app can crash.
+    [self.view endEditing:YES];
+    UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
+    [boardCodeAlertView show];
+}
 
 - (IBAction)openSettingsApp:(id)sender
 {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+}
+
+#pragma mark - Thread opener
+
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
+{
+    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+    threadViewControllerToOpen.boardCode = urlNinja.boardId;
+    threadViewControllerToOpen.threadNum = urlNinja.threadId;
+    if (urlNinja.threadTitle) {
+        threadViewControllerToOpen.threadSubject = urlNinja.threadTitle;
+    }
+
+    [self.navigationController pushViewController:threadViewControllerToOpen
+                                         animated:YES];
 }
 
 @end

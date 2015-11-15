@@ -39,6 +39,7 @@
 "PROMPT_INSTALL_VLC" = "Для просмотра установите VLC";
 "PROMPT_REPORT_SENT" = "Жалоба отправлена";
 "PROMPT_NEW_MESSAGES" = "новых";
+"PROMPT_THREAD_BOOKMARKED" = "Тред добавлен на главный экран приложения";
 
 "ACTIVITY_OPEN_IN_CHROME" = "Открыть в Chrome";
 

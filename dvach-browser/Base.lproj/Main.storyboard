@@ -775,6 +775,12 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="qgc-r4-CjR"/>
+                        <barButtonItem systemItem="bookmarks" id="Lei-Lb-uqz">
+                            <connections>
+                                <action selector="bookmarkAction:" destination="3hz-5v-Niv" id="JTb-jx-A8e"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Lcz-su-k2Q"/>
                         <barButtonItem systemItem="action" id="NrN-BE-Zun">
                             <connections>
                                 <action selector="shareAction:" destination="3hz-5v-Niv" id="ZYW-hM-CLD"/>
@@ -830,7 +836,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="365"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh" customClass="DVBCreatePostScrollView">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh" customClass="DVBCreatePostScrollView">
                                 <rect key="frame" x="0.0" y="20" width="320" height="345"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
@@ -1223,8 +1229,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Iwy-TH-KYT"/>
-        <segue reference="XRT-4w-L0S"/>
+        <segue reference="yeg-8I-aPr"/>
         <segue reference="Xk9-pa-bWO"/>
+        <segue reference="Iwy-TH-KYT"/>
     </inferredMetricsTieBreakers>
 </document>

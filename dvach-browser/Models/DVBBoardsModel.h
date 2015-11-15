@@ -19,8 +19,6 @@
 
 @property (nonatomic, weak) id<DVBBoardsModelDelegate> boardsModelDelegate;
 
-/// Should system filter content or show it just as is
-@property (nonatomic, readonly) BOOL filterContent;
 /// Array of Boards
 @property (nonatomic, readonly) NSArray *boardsArray;
 /// Array of board categroies
@@ -36,6 +34,9 @@
  */
 - (void)addBoardWithBoardId:(NSString *)boardId;
 
+/// Adding favourite THREADS
+- (void)addThreadWithUrl:(NSString *)url andThreadTitle:(NSString *)title;
+
 - (BOOL)saveChanges;
 
 /**
@@ -46,6 +47,9 @@
  *  @return boardId shortcode
  */
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath;
+
+/// Get thread title from model
+- (NSString *)threadTitleByIndexPath:(NSIndexPath *)indexPath;
 
 /// Check if board ID is not forbidden for opening
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId;

@@ -9,13 +9,15 @@
 #import <CoreData/CoreData.h>
 
 #import "DVBCommon.h"
-#import "DVBBoardsModel.h"
+#import "DVBConstants.h"
+#import "NSNotification+DVBBookmarkThreadNotification.h"
 #import "DVBBoard.h"
-
 #import "DVBNetworking.h"
 #import "DVBValidation.h"
+#import "DVBBoardsModel.h"
+#import "UrlNinja.h"
+
 #import "DVBBoardTableViewCell.h"
-#import "DVBConstants.h"
 
 static NSString *const BOARD_STORAGE_FILE_PATH = @"store.data";
 static NSString *const DVBBOARD_ENTITY_NAME = @"DVBBoard";
@@ -90,9 +92,19 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         [self loadAllboards];
 
         _allBoardsPrivate = _boardsPrivate;
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(processBookmarkThreadNotification:)
+                                                     name:NOTIFICATION_NAME_BOOKMARK_THREAD
+                                                   object:nil];
     }
     
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 /**
@@ -148,12 +160,11 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     
     if (boardsCount) {
         // load from file
-        _boardsPrivate = [[NSMutableArray alloc] initWithArray:result];
+        _boardsPrivate = [result mutableCopy];
         [self checkBoardNames];
-    }
-    else {
+    } else {
         // create first time
-        _boardsPrivate = [NSMutableArray array];
+        _boardsPrivate = [@[] mutableCopy];
         [self loadBoardsFromPlist];
     }
 }
@@ -174,13 +185,32 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     board.boardId = boardId;
     board.name = @"";
     
-    // because 0 - categoryId for favourite category
-    NSNumber *favouriteCategoryId = [NSNumber numberWithInt:0];
+    // 0 - categoryId for favourite category
+    NSNumber *favouriteCategoryId = @(0);
     board.categoryId = favouriteCategoryId;
     [_boardsPrivate addObject:board];
     
     [self saveChanges];
     [self loadAllboards];
+}
+
+- (void)addThreadWithUrl:(NSString *)url andThreadTitle:(NSString *)title {
+    // Constructing DVBBoard with Core Data
+    DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
+    board.boardId = url;
+    board.name = title;
+
+    // 0 - categoryId for favourite category
+    NSNumber *favouriteCategoryId = @(0);
+    board.categoryId = favouriteCategoryId;
+    [_boardsPrivate addObject:board];
+
+    // Sort new array
+    NSSortDescriptor *sortDescriptorByOrderKey = [NSSortDescriptor sortDescriptorWithKey:@"boardId" ascending:YES];
+    _boardsPrivate = [[[_boardsPrivate copy] sortedArrayUsingDescriptors:@[sortDescriptorByOrderKey]] mutableCopy];
+
+    [self saveChanges];
+    [_boardsModelDelegate updateTable];
 }
 
 - (void)loadBoardsFromPlist {
@@ -313,14 +343,21 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (DVBBoardTableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBBoardTableViewCell *boardCell = [tableView dequeueReusableCellWithIdentifier:BOARD_CELL_IDENTIFIER];
-    
     NSUInteger categoryIndex = indexPath.section;
-    
     NSArray *boardsArrayInCategory = [self arrayForCategoryWithIndex:categoryIndex];
-    
     DVBBoard *board = boardsArrayInCategory[indexPath.row];
 
-    [boardCell prepareCellWithId:board.boardId
+    NSString *boardId = board.boardId;
+
+    // Cunstruct different title for threads in list (if any)
+    if (indexPath.section == 0) {
+        UrlNinja *urlNinja = [[UrlNinja alloc] initWithUrl:[NSURL URLWithString:boardId]];
+        if (urlNinja.type == boardThreadLink) {
+            boardId = [NSString stringWithFormat:@"/%@/%@",urlNinja.boardId, urlNinja.threadId];
+        }
+    }
+
+    [boardCell prepareCellWithId:boardId
                     andBoardName:board.name];
     
     return boardCell;
@@ -373,6 +410,15 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return boardId;
 }
 
+- (NSString *)threadTitleByIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *boardsInThecategoryArray = [self arrayForCategoryWithIndex:indexPath.section];
+    DVBBoard *board = boardsInThecategoryArray[indexPath.row];
+    NSString *threadTitle = board.name;
+
+    return threadTitle;
+}
+
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId
 {
     BOOL reviewStatus = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
@@ -412,8 +458,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
     if (!searchText) {
         _boardsPrivate = _allBoardsPrivate;
-    }
-    else {
+    } else {
         _boardsPrivate = [[self getArrayOfBoardsWithSearchText:searchText] mutableCopy];
     }
     [_boardsModelDelegate updateTable];
@@ -455,6 +500,14 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         [self updateTableWithSearchText:nil];
     }
 
+}
+
+#pragma mark - Notifications
+
+- (void)processBookmarkThreadNotification:(NSNotification *)notification
+{
+    [self addThreadWithUrl:notification.url
+            andThreadTitle:notification.title];
 }
 
 #pragma mark - Review
