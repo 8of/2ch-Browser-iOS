@@ -30,7 +30,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, assign) NSInteger currentPage;
-@property (nonatomic, assign) BOOL alreadyLoadingNextPage;
+@property (atomic, assign) BOOL alreadyLoadingNextPage;
 /// Array contains all threads' OP posts for one page.
 @property (nonatomic, strong) NSMutableArray *threadsArray;
 @property (nonatomic, strong) DVBBoardModel *boardModel;
@@ -64,6 +64,14 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     [super viewDidLoad];
 
     [self darkThemeHandler];
+
+    CGFloat cellHeight = ROW_DEFAULT_HEIGHT + 1;
+
+    if (IS_IPAD) {
+        cellHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    self.tableView.rowHeight = cellHeight;
 
     _viewAlreadyAppeared = NO;
     _alreadyDidTheSizeClassTrick = NO;
@@ -219,17 +227,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     DVBThreadTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:THREAD_CELL_IDENTIFIER
                                                                    forIndexPath:indexPath];
     return cell;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
-
-    if (IS_IPAD) {
-        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
-    }
-
-    return heightToReturn;
 }
 
 - (void)reloadBoardPage
