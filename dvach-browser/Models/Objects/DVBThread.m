@@ -12,7 +12,7 @@
 
 #import "DVBThread.h"
 
-static NSInteger MAX_CHARACTERS_COUNT = 300;
+static NSInteger MAX_CHARACTERS_COUNT = 450;
 
 @implementation DVBThread
 
