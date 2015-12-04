@@ -22,7 +22,7 @@ NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
 
 NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
 NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
-NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status.json";
+NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status2.json";
 
 // Network
 NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
@@ -78,3 +78,10 @@ NSInteger const ERROR_CODE_DDOS_CHECK = 1001;
 NSString *const ERROR_OPERATION_HEADER_KEY_REFRESH = @"refresh";
 NSString *const ERROR_OPERATION_REFRESH_VALUE_SEPARATOR = @"URL=/";
 NSString *const WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE = @".ч";
+
+// Sizes
+NSInteger const PREVIEW_IMAGE_SIZE = 64;
+NSInteger const PREVIEW_IMAGE_SIZE_IPAD = 100;
+
+// Notifications
+NSString  *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";

@@ -56,7 +56,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Clear threads</string>
+			<string>Clear cache</string>
 			<key>Key</key>
 			<string>clearThreads</string>
 			<key>DefaultValue</key>

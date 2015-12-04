@@ -12,6 +12,8 @@
 
 #import "DVBThread.h"
 
+static NSInteger MAX_CHARACTERS_COUNT = 450;
+
 @implementation DVBThread
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey
@@ -32,6 +34,10 @@
         NSString *comment = string;
         comment = [comment stringByReplacingOccurrencesOfString:@"<br>" withString:@"\n"];
         comment = [comment stringByConvertingHTMLToPlainText];
+
+        if (comment.length > MAX_CHARACTERS_COUNT) {
+            comment = [comment substringWithRange:NSMakeRange(0, MAX_CHARACTERS_COUNT - 1)];
+        }
 
         return comment;
     }];

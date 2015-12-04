@@ -21,6 +21,7 @@ typedef NS_ENUM(NSUInteger, linkType) {
 @property (nonatomic, strong) NSString *boardId;
 @property (nonatomic, strong) NSString *threadId;
 @property (nonatomic, strong) NSString *postId;
+@property (nonatomic, strong) NSString *threadTitle;
 @property (nonatomic, strong) id urlOpener;
 
 - (id) initWithUrl:(NSURL *)url;

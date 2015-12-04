@@ -17,6 +17,8 @@
 
 #import "UIImage+DVBImageExtention.h"
 
+static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
+
 @interface DVBNetworking ()
 
 @property (nonatomic, strong) Reachability *networkReachability;
@@ -180,7 +182,7 @@
 
 #pragma mark - Posting
 
-- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
+- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -206,9 +208,8 @@
         // If usercode presented then use as part of the message
         // NSLog(@"usercode way: %@", usercode);
         [mutableParams setValue:usercode forKey:@"usercode"];
-    }
-    else {
-        // New ReCaptcha
+    } else if (!withoutCaptcha) {
+        // New ReCaptcha if server not permit us to post without captcha
         mutableParams[@"captcha_type"] = @"recaptcha";
         mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
         mutableParams[@"g-recaptcha-response"] = captchaValue;
@@ -412,23 +413,65 @@
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
     [manager GET:URL_TO_CHECK_REVIEW_STATUS
       parameters:nil
-         success:^(AFHTTPRequestOperation *operation, id responseObject)
+         success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject)
      {
-         if ([responseObject objectForKey:@"status"]) {
+         if (responseObject[@"status"]) {
              BOOL status = NO;
-             NSNumber *isStatusOkNumber = (NSNumber *)[responseObject objectForKey: @"status"];
-             status = [isStatusOkNumber boolValue] == YES;
-             completion(status);
+             if (responseObject[@"version"]) {
+                 NSNumber *minVersionToFilter = (NSNumber *)responseObject[@"version"];
+
+                 NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
+                 NSString *build = infoDictionary[(NSString*)kCFBundleVersionKey];
+                 NSNumber *currentAppVersion = [NSNumber numberWithInteger:build.integerValue];
+
+                 if (minVersionToFilter.integerValue <= currentAppVersion.integerValue) {
+                     NSNumber *isStatusOkNumber = (NSNumber *)responseObject[@"status"];
+                     status = [isStatusOkNumber boolValue] == YES;
+                     completion(status);
+                 } else {
+                     completion(YES);
+                 }
+             } else {
+                 completion(YES);
+             }
          } else {
-             completion(NO);
+             completion(YES);
          }
 
      }
          failure:^(AFHTTPRequestOperation *operation, NSError *error)
      {
          NSLog(@"error: %@", error);
-         completion(NO);
+         completion(YES);
      }];
+}
+
+- (void)canPostWithoutCaptcha:(void (^)(BOOL))completion
+{
+    if ([self getNetworkStatus]) {
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha&action=thread"];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/plain", nil]];
+
+        [manager GET:address
+          parameters:nil
+             success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             completion(NO);
+         }
+             failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSString *reponseString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+             NSLog(@"RESPO: %@", reponseString);
+             if ([reponseString.lowercaseString rangeOfString:NO_CAPTCHA_ANSWER_CODE].location == NSNotFound ) {
+                 completion(NO);
+             } else {
+                 completion(YES);
+             }
+         }];
+    } else {
+        completion(NO);
+    }
 }
 
 - (NSString *)userAgent

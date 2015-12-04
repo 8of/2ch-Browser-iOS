@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -148,32 +148,32 @@
         <scene sceneID="7uI-NE-kWa">
             <objects>
                 <tableViewController storyboardIdentifier="DVBBoardViewController" id="js8-qz-HcM" customClass="DVBBoardViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="87" sectionHeaderHeight="22" sectionFooterHeight="22" id="f0r-jZ-ed2">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="84" sectionHeaderHeight="22" sectionFooterHeight="22" id="f0r-jZ-ed2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="threadCell" rowHeight="86" id="d1t-fu-pVs" customClass="DVBThreadTableViewCell">
-                                <rect key="frame" x="0.0" y="86" width="320" height="86"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationWidth="0.0" reuseIdentifier="threadCell" rowHeight="84" id="d1t-fu-pVs" customClass="DVBThreadTableViewCell">
+                                <rect key="frame" x="0.0" y="86" width="320" height="84"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d1t-fu-pVs" id="vxw-Jc-Fk2">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="85.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="83.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggV-qV-ALA">
-                                            <rect key="frame" x="85" y="8" width="63" height="17"/>
+                                            <rect key="frame" x="84" y="8" width="185" height="17"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="udf-rB-IcA">
-                                            <rect key="frame" x="10" y="10" width="65" height="65"/>
+                                            <rect key="frame" x="10" y="10" width="64" height="64"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="65" id="TYI-DK-cMv"/>
+                                                <constraint firstAttribute="width" constant="64" id="TYI-DK-cMv"/>
                                                 <constraint firstAttribute="width" constant="100" id="i2i-Q9-RiO"/>
                                                 <constraint firstAttribute="height" constant="100" id="kuN-9u-B2g"/>
-                                                <constraint firstAttribute="height" constant="65" id="yqL-xu-zkE"/>
+                                                <constraint firstAttribute="height" constant="64" id="yqL-xu-zkE"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -190,14 +190,14 @@
                                                 </mask>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="zj3-lK-H6n">
-                                            <rect key="frame" x="85" y="27" width="63" height="17"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="249" text="Comment" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="zj3-lK-H6n">
+                                            <rect key="frame" x="84" y="26.5" width="186" height="46.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="ihu-z9-QYM" userLabel="Count container">
-                                            <rect key="frame" x="280" y="49" width="30" height="26.5"/>
+                                            <rect key="frame" x="280" y="47" width="30" height="26.5"/>
                                             <subviews>
                                                 <label userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="310" horizontalCompressionResistancePriority="752" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lu7-uw-ZhU" userLabel="Count">
                                                     <rect key="frame" x="5" y="3" width="20" height="20.5"/>
@@ -217,25 +217,24 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4n-GN-jp4">
-                                            <rect key="frame" x="278.5" y="8" width="31" height="17"/>
+                                            <rect key="frame" x="279" y="7.5" width="31" height="17"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="ggV-qV-ALA" firstAttribute="trailing" secondItem="zj3-lK-H6n" secondAttribute="trailing" id="FAl-4E-Kue"/>
-                                        <constraint firstItem="ihu-z9-QYM" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="Qp2-7S-2My"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="8" id="S5z-oc-RLj"/>
+                                        <constraint firstItem="ihu-z9-QYM" firstAttribute="leading" secondItem="zj3-lK-H6n" secondAttribute="trailing" constant="10" id="SVM-GQ-RQp"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="udf-rB-IcA" secondAttribute="trailing" constant="10" id="Syd-5F-2Xw"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="zj3-lK-H6n" secondAttribute="leading" id="TaP-IS-3WE"/>
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="10" id="YX7-8C-adV"/>
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="leading" secondItem="vxw-Jc-Fk2" secondAttribute="leading" constant="10" id="Zyk-3H-Nwn"/>
-                                        <constraint firstAttribute="bottom" secondItem="udf-rB-IcA" secondAttribute="bottom" constant="10" id="aXM-u5-MFg"/>
+                                        <constraint firstAttribute="bottom" secondItem="udf-rB-IcA" secondAttribute="bottom" priority="999" constant="10" id="aXM-u5-MFg"/>
                                         <constraint firstItem="zj3-lK-H6n" firstAttribute="top" secondItem="ggV-qV-ALA" secondAttribute="bottom" constant="2" id="jqp-G5-S8f"/>
-                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="lbw-zD-RQ9"/>
+                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="leading" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="lbw-zD-RQ9"/>
                                         <constraint firstAttribute="trailing" secondItem="ihu-z9-QYM" secondAttribute="trailing" constant="10" id="otJ-LA-2B7"/>
-                                        <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="zj3-lK-H6n" secondAttribute="bottom" constant="10" id="w0K-ku-Uky"/>
+                                        <constraint firstAttribute="bottom" secondItem="zj3-lK-H6n" secondAttribute="bottom" constant="10" id="w0K-ku-Uky"/>
                                         <constraint firstAttribute="trailing" secondItem="d4n-GN-jp4" secondAttribute="trailing" constant="10" id="wQ1-fj-kHB"/>
                                         <constraint firstAttribute="bottom" secondItem="ihu-z9-QYM" secondAttribute="bottom" constant="10" id="xXa-re-a1g"/>
                                         <constraint firstItem="ggV-qV-ALA" firstAttribute="bottom" secondItem="d4n-GN-jp4" secondAttribute="bottom" id="yjX-sN-WWn"/>
@@ -399,7 +398,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c6d-pD-D5w">
-                                            <rect key="frame" x="10" y="10" width="300" height="20.5"/>
+                                            <rect key="frame" x="10" y="10" width="300" height="21"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
@@ -611,7 +610,6 @@
                                             <constraints>
                                                 <constraint firstItem="GLl-Xo-1KH" firstAttribute="leading" secondItem="gRg-Qq-7MH" secondAttribute="trailing" constant="10" id="0YO-2g-jQ7"/>
                                                 <constraint firstAttribute="bottom" secondItem="K6E-0u-yCD" secondAttribute="bottom" id="56q-hd-ZrN"/>
-                                                <constraint firstAttribute="height" constant="100" id="79l-Oh-Yjb"/>
                                                 <constraint firstItem="K6E-0u-yCD" firstAttribute="centerY" secondItem="t2P-yt-wec" secondAttribute="centerY" id="Moh-2K-4ys"/>
                                                 <constraint firstItem="K6E-0u-yCD" firstAttribute="centerY" secondItem="gRg-Qq-7MH" secondAttribute="centerY" id="Nrg-Bc-7jw"/>
                                                 <constraint firstItem="K6E-0u-yCD" firstAttribute="width" secondItem="gRg-Qq-7MH" secondAttribute="width" id="OYt-Ai-zzY"/>
@@ -629,17 +627,8 @@
                                                 <constraint firstItem="K6E-0u-yCD" firstAttribute="top" secondItem="3f1-PU-q0D" secondAttribute="top" id="wMc-2K-rzA"/>
                                                 <constraint firstItem="K6E-0u-yCD" firstAttribute="height" secondItem="gRg-Qq-7MH" secondAttribute="height" id="y4E-ec-ohp"/>
                                             </constraints>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="79l-Oh-Yjb"/>
-                                                </mask>
-                                            </variation>
                                             <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
                                                 <rect key="frame" x="10" y="41" width="460" height="64"/>
-                                                <mask key="constraints">
-                                                    <include reference="79l-Oh-Yjb"/>
-                                                    <exclude reference="v8r-9F-wsd"/>
-                                                </mask>
                                             </variation>
                                         </view>
                                         <textView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M3z-Su-Ix2">
@@ -665,24 +654,10 @@
                                             <rect key="frame" x="10" y="114" width="64" height="64"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="64" id="BBN-af-gX6"/>
-                                                <constraint firstAttribute="height" constant="100" id="BSi-1c-XbN"/>
-                                                <constraint firstAttribute="width" constant="100" id="C8I-EZ-43G"/>
                                                 <constraint firstAttribute="height" constant="64" id="OGr-6H-kGh"/>
                                             </constraints>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="BSi-1c-XbN"/>
-                                                    <exclude reference="C8I-EZ-43G"/>
-                                                </mask>
-                                            </variation>
                                             <variation key="heightClass=regular-widthClass=regular" misplaced="YES">
                                                 <rect key="frame" x="10" y="10" width="100" height="65"/>
-                                                <mask key="constraints">
-                                                    <exclude reference="BBN-af-gX6"/>
-                                                    <include reference="BSi-1c-XbN"/>
-                                                    <include reference="C8I-EZ-43G"/>
-                                                    <exclude reference="OGr-6H-kGh"/>
-                                                </mask>
                                             </variation>
                                         </imageView>
                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Video" translatesAutoresizingMaskIntoConstraints="NO" id="yH4-O5-Yl8" customClass="DVBWebmIconImageView">
@@ -768,12 +743,9 @@
                                     <outlet property="answerToPostWithQuoteButton" destination="Y2c-Q9-olV" id="nPe-Bb-svR"/>
                                     <outlet property="commentTextView" destination="M3z-Su-Ix2" id="Ure-zX-opp"/>
                                     <outlet property="imageHeightConstraint" destination="OGr-6H-kGh" id="uwZ-CL-OoB"/>
-                                    <outlet property="imageHeightConstraintIPAD" destination="BSi-1c-XbN" id="80z-vO-y6a"/>
                                     <outlet property="imageLeftConstraint" destination="K4S-vg-FxB" id="05S-Pw-2tT"/>
                                     <outlet property="imageWidthConstraint" destination="BBN-af-gX6" id="DBX-GP-T2i"/>
-                                    <outlet property="imageWidthConstraintIPAD" destination="C8I-EZ-43G" id="W9C-Zb-IPc"/>
                                     <outlet property="mediaHeightConstraint" destination="v8r-9F-wsd" id="0rR-mJ-zg8"/>
-                                    <outlet property="mediaHeightIpadConstraint" destination="79l-Oh-Yjb" id="i9D-DK-b5k"/>
                                     <outlet property="mediaTopConstraint" destination="aeK-M5-7XI" id="0s8-K0-7h8"/>
                                     <outlet property="postThumb" destination="jQY-pz-yxx" id="4OM-rw-ETE"/>
                                     <outlet property="postThumb0" destination="dLj-bY-2wT" id="Hbl-1f-Aim"/>
@@ -803,6 +775,12 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="qgc-r4-CjR"/>
+                        <barButtonItem systemItem="bookmarks" id="Lei-Lb-uqz">
+                            <connections>
+                                <action selector="bookmarkAction:" destination="3hz-5v-Niv" id="JTb-jx-A8e"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="Lcz-su-k2Q"/>
                         <barButtonItem systemItem="action" id="NrN-BE-Zun">
                             <connections>
                                 <action selector="shareAction:" destination="3hz-5v-Niv" id="ZYW-hM-CLD"/>
@@ -858,14 +836,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="365"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh" customClass="DVBCreatePostScrollView">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh" customClass="DVBCreatePostScrollView">
                                 <rect key="frame" x="0.0" y="20" width="320" height="345"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="366.5"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
+                                        <rect key="frame" x="0.0" y="-1" width="320" height="367"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfq-Cv-IWZ" userLabel="Markup Container">
-                                                <rect key="frame" x="29.5" y="130" width="261" height="30"/>
+                                                <rect key="frame" x="30" y="130" width="261" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaU-q9-XAI" customClass="DVBMarkupButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -963,10 +941,10 @@
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="yes" spellCheckingType="yes"/>
                                             </textView>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1y-7G-FSY" customClass="DVBPostPhotoContainerView">
-                                                <rect key="frame" x="15" y="290" width="61.5" height="61.5"/>
+                                                <rect key="frame" x="15" y="290" width="62" height="62"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XbM-Kz-D8k" customClass="DVBPictureToSendPreviewImageView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sby-Ye-Jpl" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="20" y="20" width="22" height="22"/>
@@ -985,7 +963,7 @@
                                                         </constraints>
                                                     </view>
                                                     <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nvk-ge-8dV">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="V5j-q0-zXo"/>
                                                         </connections>
@@ -1048,10 +1026,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WY1-1O-Tb7" customClass="DVBPostPhotoContainerView">
-                                                <rect key="frame" x="167" y="290" width="61.5" height="61.5"/>
+                                                <rect key="frame" x="167" y="290" width="62" height="62"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="nJq-yt-HiK" customClass="DVBPictureToSendPreviewImageView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVK-jY-Wue" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="19" y="20" width="22" height="22"/>
@@ -1070,7 +1048,7 @@
                                                         </constraints>
                                                     </view>
                                                     <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="98S-fQ-zan">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="62" height="62"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="OgD-qp-kHZ"/>
                                                         </connections>
@@ -1090,10 +1068,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lmU-VB-eLY" customClass="DVBPostPhotoContainerView">
-                                                <rect key="frame" x="244" y="290" width="61" height="61.5"/>
+                                                <rect key="frame" x="244" y="290" width="61" height="62"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6z5-Oj-JM8" customClass="DVBPictureToSendPreviewImageView">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="62"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q4K-gM-aAF" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
                                                         <rect key="frame" x="19" y="20" width="22" height="22"/>
@@ -1112,7 +1090,7 @@
                                                         </constraints>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="815-m3-Nve">
-                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="61.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="61" height="62"/>
                                                         <connections>
                                                             <action selector="pickPhotoAction:" destination="Bhq-1W-f9J" eventType="touchUpInside" id="DrP-14-EKX"/>
                                                         </connections>
@@ -1251,8 +1229,8 @@
         <image name="Video" width="30" height="30"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="XRT-4w-L0S"/>
+        <segue reference="yeg-8I-aPr"/>
+        <segue reference="Xk9-pa-bWO"/>
         <segue reference="Iwy-TH-KYT"/>
-        <segue reference="o55-Sb-BOJ"/>
     </inferredMetricsTieBreakers>
 </document>

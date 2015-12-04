@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
 
@@ -14,7 +15,7 @@
 
 #import "DVBThreadTableViewCell.h"
 
-static CGFloat const ROW_DEFAULT_HEIGHT = 86.0f;
+static CGFloat const ROW_DEFAULT_HEIGHT = 84.0f;
 static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
@@ -29,7 +30,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 @interface DVBBoardViewController () <DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, assign) NSInteger currentPage;
-@property (nonatomic, assign) BOOL alreadyLoadingNextPage;
+@property (atomic, assign) BOOL alreadyLoadingNextPage;
 /// Array contains all threads' OP posts for one page.
 @property (nonatomic, strong) NSMutableArray *threadsArray;
 @property (nonatomic, strong) DVBBoardModel *boardModel;
@@ -64,6 +65,14 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
     [self darkThemeHandler];
 
+    CGFloat cellHeight = ROW_DEFAULT_HEIGHT + 1;
+
+    if (IS_IPAD) {
+        cellHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+    }
+
+    self.tableView.rowHeight = cellHeight;
+
     _viewAlreadyAppeared = NO;
     _alreadyDidTheSizeClassTrick = NO;
     
@@ -82,21 +91,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
-    // [self loadNextBoardPage];
     [self makeRefreshAvailable];
-
-    // System do not spend resources on calculating row heights via heightForRowAtIndexPath.
-    if (![self respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-            self.tableView.rowHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
-        } else {
-            self.tableView.estimatedRowHeight = ROW_DEFAULT_HEIGHT + 1;
-        }
-
-        self.tableView.rowHeight = UITableViewAutomaticDimension;
-    }
 
     _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
@@ -234,17 +229,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     return cell;
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    CGFloat heightToReturn = ROW_DEFAULT_HEIGHT + 1;
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        heightToReturn = ROW_DEFAULT_HEIGHT_IPAD + 1;
-    }
-
-    return heightToReturn;
-}
-
 - (void)reloadBoardPage
 {
     _alreadyLoadingNextPage = YES;
@@ -342,25 +326,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         _alreadyLoadingNextPage = YES;
         [self loadNextBoardPage];
     }
-}
-
-#pragma mark - Selector checking
-
-#pragma mark - Respoder rewrite
-
-- (BOOL)respondsToSelector:(SEL)selector
-{
-    static BOOL useSelector;
-    static dispatch_once_t predicate = 0;
-    dispatch_once(&predicate, ^{
-        useSelector = [[UIDevice currentDevice].systemVersion floatValue] < 8.0 ? YES : NO;
-    });
-
-    if (selector == @selector(tableView:heightForRowAtIndexPath:)) {
-        return useSelector;
-    }
-
-    return [super respondsToSelector:selector];
 }
 
 #pragma mark - Orientation

@@ -14,6 +14,7 @@
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
 #import "DVBDatabaseManager.h"
+#import "DVBBoardsModel.h"
 
 #import "DVBPostPhotoContainerView.h"
 #import "DVBMarkupButton.h"
@@ -30,7 +31,6 @@
 {
     [self createDefaultSettings];
     [self managePasscode];
-    [self manageReviewStatus];
     [self appearanceTudeUp];
     [self manageAFNetworking];
     [self manageDb];
@@ -38,10 +38,13 @@
     return YES;
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [DVBBoardsModel manageReviewStatus];
+}
+
 - (void)createDefaultSettings
 {
-    [self clearAllCaches];
-
     if (!_networking) {
         _networking = [[DVBNetworking alloc] init];
     }
@@ -56,7 +59,7 @@
        SETTING_CLEAR_THREADS : @NO,
        PASSCODE : @"",
        USERCODE : @"",
-       DEFAULTS_REVIEW_STATUS : @YES,
+       DEFAULTS_REVIEW_STATUS : @NO,
        DEFAULTS_USERAGENT_KEY : userAgent
     };
 
@@ -65,7 +68,8 @@
     // Turn off Shake to Undo because of tags on post screen
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 
-    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
+                                             forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
 }
 
 - (void)managePasscode
@@ -94,14 +98,6 @@
     }
 }
 
-- (void)manageReviewStatus
-{
-    [_networking getReviewStatus:^(BOOL status) {
-        [[NSUserDefaults standardUserDefaults] setBool:status
-                                                forKey:DEFAULTS_REVIEW_STATUS];
-    }];
-}
-
 - (void)clearAllCaches
 {
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -112,8 +108,8 @@
 - (void)setUserCodeCookieWithUsercode:(NSString *)usercode
 {
     NSDictionary *usercodeCookieDictionary = @{
-        @"name":@"usercode_nocaptcha",
-        @"value":usercode
+        @"name" : @"usercode_nocaptcha",
+        @"value" : usercode
     };
     NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
     [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
@@ -160,8 +156,12 @@
     BOOL shouldClearDB = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
 
     if (shouldClearDB) {
+        [self clearAllCaches];
         DVBDatabaseManager *dbManager = [DVBDatabaseManager sharedDatabase];
         [dbManager clearAll];
+
+        [[NSUserDefaults standardUserDefaults] setBool:NO
+                                                forKey:SETTING_CLEAR_THREADS];
     }
 }
 

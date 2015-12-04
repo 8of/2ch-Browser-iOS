@@ -9,3 +9,4 @@
 #import <Foundation/Foundation.h>
 
 #define NSLS(__KEY__) NSLocalizedString(__KEY__, __KEY__)
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)

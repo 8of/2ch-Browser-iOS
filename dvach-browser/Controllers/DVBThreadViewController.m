@@ -399,6 +399,21 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self scrollToBottom];
 }
 
+- (IBAction)bookmarkAction:(id)sender
+{
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"/%@/res/%@.html", _boardCode, _threadNum];
+    NSDictionary *userInfo = @
+    {
+        @"url" : urlToShare,
+        @"title" : self.title
+    };
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_NAME_BOOKMARK_THREAD
+                                                        object:self
+                                                      userInfo:userInfo];
+    [self showPromptWithMessage:NSLS(@"PROMPT_THREAD_BOOKMARKED")];
+}
+
 - (IBAction)shareAction:(id)sender
 {
     NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
@@ -407,12 +422,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)reportAction:(id)sender
 {
-    NSString *cancelButtonTitle = NSLS(@"BUTTON_CANCEL");
-    NSString *destructiveButtonTitle = NSLS(@"BUTTON_REPORT");
     _reportSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                delegate:self
-                                      cancelButtonTitle:cancelButtonTitle
-                                 destructiveButtonTitle:destructiveButtonTitle
+                                      cancelButtonTitle:NSLS(@"BUTTON_CANCEL")
+                                 destructiveButtonTitle:NSLS(@"BUTTON_REPORT")
                                       otherButtonTitles:nil];
 
     [_reportSheet showInView:self.tableView];
@@ -425,7 +438,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     DVBComment *sharedComment = [DVBComment sharedComment];
 
-    DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:indexForObject];
+    DVBPost *post = _threadControllerTableViewManager.postsArray[indexForObject];
     NSString *postNum = post.num;
 
     [sharedComment topUpCommentWithPostNum:postNum];
@@ -433,8 +446,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                   sender:self];
-    }
-    else {
+    } else {
         [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
                                   sender:self];
     }
@@ -447,7 +459,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     DVBComment *sharedComment = [DVBComment sharedComment];
 
-    DVBPost *post = [_threadControllerTableViewManager.postsArray objectAtIndex:indexForObject];
+    DVBPost *post = _threadControllerTableViewManager.postsArray[indexForObject];
     NSString *postNum = post.num;
     NSAttributedString *postComment = post.comment;
 
@@ -459,8 +471,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
         [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
                                   sender:self];
-    }
-    else {
+    } else {
         [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
                                   sender:self];
     }
@@ -479,8 +490,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     // check if we have full array of posts
     if (_allThreadPosts) { // if we have - then just pass it further
         threadViewController.allThreadPosts = _allThreadPosts;
-    }
-    else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
+    } else { // if we haven't - create it from current posts array (because postsArray is fullPostsArray in this iteration)
         threadViewController.allThreadPosts = _threadControllerTableViewManager.postsArray;
     }
 
@@ -495,7 +505,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     _presentedSomething = YES;
-    if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_POST_IOS_7]) {
+    if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] ||
+        [[segue identifier] isEqualToString:SEGUE_TO_NEW_POST_IOS_7])
+    {
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         
         createPostViewController.threadNum = _threadNum;
@@ -608,21 +620,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Check if server have new posts and scroll if user already scrolled to the end
 - (void)checkNewPostsCount
 {
-    NSInteger additionalPostCount = [_threadControllerTableViewManager.postsArray count] - [_previousPostsCount integerValue];
+    NSInteger additionalPostCount = _threadControllerTableViewManager.postsArray.count - _previousPostsCount.integerValue;
 
-    CGFloat stopAnimateTimerInterval = 0.5;
-
-    if (([_previousPostsCount integerValue] > 0) && (additionalPostCount > 0)) {
-        NSNumber *newMessagesCount = [NSNumber numberWithInteger:additionalPostCount];
+    if (([_previousPostsCount integerValue] > 0) &&
+        (additionalPostCount > 0))
+    {
+        NSNumber *newMessagesCount = @(additionalPostCount);
 
         [self performSelector:@selector(newMessagesPromptWithNewMessagesCount:)
                    withObject:newMessagesCount
-                   afterDelay:1];
-
-        stopAnimateTimerInterval = 2.0;
+                   afterDelay:0.5];
     }
 
-    NSNumber *postsCountNewValue = [NSNumber numberWithInteger:[_threadControllerTableViewManager.postsArray count]];
+    NSNumber *postsCountNewValue = @(_threadControllerTableViewManager.postsArray.count);
 
     _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
     _previousPostsCount = postsCountNewValue;
@@ -632,30 +642,38 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 #pragma mark - Prompt
 
-/// Show prompt with cound of new messages
-- (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
+/// Show and hide message after delay
+- (void)showPromptWithMessage:(NSString *)message
 {
-    self.navigationItem.prompt = [NSString stringWithFormat:@"%ld %@", (long)newMessagesCount.integerValue, NSLS(@"PROMPT_NEW_MESSAGES")];
+    self.navigationItem.prompt = message;
     [self performSelector:@selector(clearPrompt)
                withObject:nil
                afterDelay:1.5];
-
-    // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
-
-    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING) {
-        [NSTimer scheduledTimerWithTimeInterval:2.0
-                                         target:self
-                                       selector:@selector(scrollToBottom)
-                                       userInfo:nil
-                                        repeats:NO];
-    }
 }
 
 /// Clear prompt from any status / error messages.
 - (void)clearPrompt
 {
     self.navigationItem.prompt = nil;
+}
+
+/// Show prompt with cound of new messages
+- (void)newMessagesPromptWithNewMessagesCount:(NSNumber *)newMessagesCount
+{
+    [self showPromptWithMessage:[NSString stringWithFormat:@"%@ %@", @(newMessagesCount.integerValue), NSLS(@"PROMPT_NEW_MESSAGES")]];
+
+    // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
+    CGFloat offsetDifference = self.tableView.contentSize.height - self.tableView.contentOffset.y - self.tableView.bounds.size.height;
+
+    if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING &&
+        _threadControllerTableViewManager.postsArray.count > 10) // Prevent scrolling when posts count isn't high enough
+    {
+        [NSTimer scheduledTimerWithTimeInterval:2.0
+                                         target:self
+                                       selector:@selector(scrollToBottom)
+                                       userInfo:nil
+                                        repeats:NO];
+    }
 }
 
 - (void)showMessageAboutDataLoading
