@@ -9,11 +9,13 @@
 #import <UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
+#import "DVBCommon.h"
 #import "UIImage+DVBOpaqueImage.h"
 
 #import "DVBThreadTableViewCell.h"
 
 static UIImage *kPlaceholderImage;
+static CGFloat const kMargin = 10;
 
 @interface DVBThreadTableViewCell ()
 
@@ -28,6 +30,53 @@ static UIImage *kPlaceholderImage;
 @end
 
 @implementation DVBThreadTableViewCell
+
++ (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string
+{
+
+    CGFloat widthLeftForText = viewWidth - 3 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE);
+    CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - 3 * kMargin - [self titleLabelHeight];
+
+    NSMutableDictionary *commentAttributes = [@
+    {
+        NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleBody]
+    } mutableCopy];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        commentAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+
+    // Rectangle need for comment
+    CGRect rect = [string boundingRectWithSize:CGSizeMake(widthLeftForText, CGFLOAT_MAX)
+                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                    attributes:commentAttributes
+                                       context:nil];
+    if (heightLeftForText > rect.size.height) {
+        return YES;
+    }
+
+    return NO;
+}
+
++ (CGFloat)titleLabelHeight
+{
+    NSMutableDictionary *titleAttributes = [@
+      {
+          NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]
+      } mutableCopy];
+
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
+        titleAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+    }
+
+    // Rectangle need for title label (just a short test phrase
+    CGRect rect = [@"kek" boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
+                                       options:NSStringDrawingUsesLineFragmentOrigin
+                                    attributes:titleAttributes
+                                       context:nil];
+
+    return rect.size.height;
+}
 
 - (void)awakeFromNib
 {

@@ -15,8 +15,6 @@
 
 #import "DVBThreadTableViewCell.h"
 
-static CGFloat const ROW_DEFAULT_HEIGHT = 84.0f;
-static CGFloat const ROW_DEFAULT_HEIGHT_IPAD = 120.0f;
 static NSInteger const DIFFERENCE_BEFORE_ENDLESS_FIRE = 200.0f;
 static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
@@ -65,10 +63,10 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
     [self darkThemeHandler];
 
-    CGFloat cellHeight = ROW_DEFAULT_HEIGHT + 1;
+    CGFloat cellHeight = PREVIEW_ROW_DEFAULT_HEIGHT + 1;
 
     if (IS_IPAD) {
-        cellHeight = ROW_DEFAULT_HEIGHT_IPAD + 1;
+        cellHeight = PREVIEW_ROW_DEFAULT_HEIGHT_IPAD + 1;
     }
 
     self.tableView.rowHeight = cellHeight;
@@ -216,10 +214,25 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         title = thread.num;
     }
 
+    NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
+    NSString *preparedComment = thread.comment;
+    if (commentArray.count > 0) {
+        preparedComment = commentArray[0];
+
+        for (NSString *nextPart in commentArray) {
+            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@" %@", nextPart];
+            if ([DVBThreadTableViewCell goodFitWithViewWidth:self.view.bounds.size.width andString:newCommentLike]) {
+                preparedComment = newCommentLike;
+            } else {
+                break;
+            }
+        }
+    }
+
     [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
                     andComment:thread.comment
          andThumbnailUrlString:thread.thumbnail
-                 andPostsCount:[thread.postsCount stringValue]
+                 andPostsCount:thread.postsCount.stringValue
          andTimeSinceFirstPost:thread.timeSinceFirstPost];
 }
 

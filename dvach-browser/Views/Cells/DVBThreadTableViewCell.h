@@ -15,6 +15,9 @@
 
 @interface DVBThreadTableViewCell : UITableViewCell
 
+/// Check if string fits
++ (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string;
+
 - (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost;
 
 @end
