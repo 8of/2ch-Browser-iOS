@@ -71,8 +71,6 @@
     _webView.scrollView.contentOffset = CGPointMake(0, 0);
     // Read body of html page
     NSString *html = [webView stringByEvaluatingJavaScriptFromString: @"document.body.outerHTML"];
-    NSString *currentURL = webView.request.URL.absoluteString;
-    NSLog(@"-- %@", currentURL);
 
     // Check if body contains part of Два.ч word
     if ([html rangeOfString:WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE].location != NSNotFound) {
