@@ -173,17 +173,17 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
+        NSNumber *pages = [_boardsModel boardMaxPageByIndexPath:selectedCellPath];
 
         // Clear selection after getting all we need from selected cell.
         [self.tableView deselectRowAtIndexPath:selectedCellPath
                                       animated:YES];
         
-        // NSUInteger pages = [_boardsModel getBoardPagesWithBoardId:boardId];
-        
         DVBBoardViewController *boardViewController = segue.destinationViewController;        
         
         // Set board id and pages count for future board/thread requests.
         boardViewController.boardCode = boardId;
+        boardViewController.pages = pages.integerValue;
     }
 }
 
