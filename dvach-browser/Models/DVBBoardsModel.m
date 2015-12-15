@@ -291,7 +291,9 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                     if (matchedBoardsCount > 0) {
                         DVBBoard *boardFromNetwork = matchedBoardsFromNetwork[0];
                         NSString *nameOfTheMatchedBoard = boardFromNetwork.name;
+                        NSNumber *pages = boardFromNetwork.pages;
                         board.name = nameOfTheMatchedBoard;
+                        board.pages = pages;
                         [_boardsPrivate setObject:board atIndexedSubscript:indexOfCurrentBoard];
                     }
                 }
@@ -417,6 +419,13 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     NSString *threadTitle = board.name;
 
     return threadTitle;
+}
+
+- (NSNumber *)boardMaxPageByIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *boardsInThecategoryArray = [self arrayForCategoryWithIndex:indexPath.section];
+    DVBBoard *board = boardsInThecategoryArray[indexPath.row];
+    return board.pages;
 }
 
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId

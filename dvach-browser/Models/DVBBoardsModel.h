@@ -27,11 +27,8 @@
 @property (nonatomic, readonly) NSDictionary *boardsDictionaryByCategories;
 
 + (instancetype)sharedBoardsModel;
-/**
- *  Add new board to user list of boards, directly to the Favourite section
- *
- *  @param boardId 's shortCode
- */
+
+/// Add new board to user list of boards, directly to the Favourite section
 - (void)addBoardWithBoardId:(NSString *)boardId;
 
 /// Adding favourite THREADS
@@ -39,17 +36,14 @@
 
 - (BOOL)saveChanges;
 
-/**
- *  Get board id by providing index of board in array of boards
- *
- *  @param indexPath - indexPath in table to help model give the right board
- *
- *  @return boardId shortcode
- */
+/// Get board id by providing index of board in array of boards
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath;
 
 /// Get thread title from model
 - (NSString *)threadTitleByIndexPath:(NSIndexPath *)indexPath;
+
+/// Max pages count for board
+- (NSNumber *)boardMaxPageByIndexPath:(NSIndexPath *)indexPath;
 
 /// Check if board ID is not forbidden for opening
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId;

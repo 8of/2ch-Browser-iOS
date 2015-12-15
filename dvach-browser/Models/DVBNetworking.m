@@ -489,8 +489,15 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)operation.response;
     if ([httpResponse respondsToSelector:@selector(allHeaderFields)]) {
         NSDictionary *dictionary = [httpResponse allHeaderFields];
-        if (dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] &&
-            ![dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] isEqualToString:@""])
+
+        BOOL isServerHeaderCloudflareOne = [dictionary[@"Server"] rangeOfString:@"cloudflare"].location != NSNotFound;
+
+        // Two checks:
+        // Have refresh header and it's empty
+        // Or have cloudflare ref in Server header
+        if ((dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] &&
+            ![dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH] isEqualToString:@""]) ||
+            isServerHeaderCloudflareOne)
         {
             NSString *refreshUrl = dictionary[ERROR_OPERATION_HEADER_KEY_REFRESH];
             NSRange range = [refreshUrl rangeOfString:ERROR_OPERATION_REFRESH_VALUE_SEPARATOR];
