@@ -106,7 +106,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
-        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray, NSError *error)
+        [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
+                                 andCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
@@ -214,20 +215,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         title = thread.num;
     }
 
-    NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
-    NSString *preparedComment = thread.comment;
-    if (commentArray.count > 0) {
-        preparedComment = commentArray[0];
 
-        for (NSString *nextPart in commentArray) {
-            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@" %@", nextPart];
-            if ([DVBThreadTableViewCell goodFitWithViewWidth:self.view.bounds.size.width andString:newCommentLike]) {
-                preparedComment = newCommentLike;
-            } else {
-                break;
-            }
-        }
-    }
 
     [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
                     andComment:thread.comment
@@ -246,7 +234,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)reloadBoardPage
 {
     _alreadyLoadingNextPage = YES;
-    [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
+    [_boardModel reloadBoardWithViewWidth:self.view.bounds.size.width
+                        andCompletion:^(NSArray *completionThreadsArray)
     {
         _currentPage = 0;
         _alreadyLoadingNextPage = NO;

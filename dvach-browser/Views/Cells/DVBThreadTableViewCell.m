@@ -34,7 +34,7 @@ static CGFloat const kMargin = 10;
 + (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string
 {
 
-    CGFloat widthLeftForText = viewWidth - 3 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE);
+    CGFloat widthLeftForText = viewWidth - 3 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 50;
     CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - 3 * kMargin - [self titleLabelHeight];
 
     NSMutableDictionary *commentAttributes = [@

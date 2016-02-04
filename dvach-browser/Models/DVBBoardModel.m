@@ -13,6 +13,8 @@
 #import "DVBConstants.h"
 #import "DVBThread.h"
 
+#import "DVBThreadTableViewCell.h"
+
 @interface DVBBoardModel ()
 
 @property (nonatomic, strong) NSString *boardCode;
@@ -47,7 +49,7 @@
     return self;
 }
 
-- (void)loadNextPageWithCompletion:(void (^)(NSArray *, NSError *))completion
+- (void)loadNextPageWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *, NSError *))completion
 {
     [_networking getThreadsWithBoard:_boardCode
                              andPage:_currentPage
@@ -85,6 +87,24 @@
                             thread.thumbnail = thumbPath;
                         }
                     }
+
+                    // Strip comment from useless words that we'll not see anyway
+                    NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
+                    NSString *preparedComment = thread.comment;
+                    if (commentArray.count > 0) {
+                        preparedComment = @"";
+
+                        for (NSString *nextPart in commentArray) {
+                            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
+                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
+                                preparedComment = newCommentLike;
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                    thread.comment = preparedComment;
+
                     [_privateThreadsArray addObject:thread];
                 }
                 else {
@@ -107,10 +127,12 @@
     }];
 }
 
-- (void)reloadBoardWithCompletion:(void (^)(NSArray *))completion {
+- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion {
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
-    [self loadNextPageWithCompletion:^(NSArray *threadsCompletion, NSError *error) {
+    [self loadNextPageWithViewWidth:width
+                      andCompletion:^(NSArray *threadsCompletion, NSError *error)
+    {
         completion(threadsCompletion);
     }];
 }
