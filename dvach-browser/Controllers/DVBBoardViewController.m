@@ -313,6 +313,29 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 #pragma mark - Scroll Delegate
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING]) {
+        self.view.layer.shouldRasterize = true;
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate &&
+        [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING])
+    {
+        self.view.layer.shouldRasterize = false;
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING]) {
+        self.view.layer.shouldRasterize = false;
+    }
+}
+
 // Check scroll position - we need it to load additional pages
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
