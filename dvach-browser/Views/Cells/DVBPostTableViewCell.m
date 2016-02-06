@@ -249,13 +249,8 @@
         _showAnswersButton.tag = index;
     }
 
-    if (disableActionButton) {
-        [_answerToPostButton setEnabled:NO];
-        [_answerToPostWithQuoteButton setEnabled:NO];
-    } else {
-        _answerToPostButton.tag = index;
-        _answerToPostWithQuoteButton.tag = index;
-    }
+    _answerToPostButton.tag = index;
+    _answerToPostWithQuoteButton.tag = index;
 }
 
 - (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent andWithVideoIconPresence:(BOOL)videoIconPresentce
@@ -332,9 +327,6 @@
     [_showAnswersButton setTitle:nil
                         forState:UIControlStateNormal];
 
-    [_answerToPostButton setEnabled:YES];
-    [_answerToPostWithQuoteButton setEnabled:YES];
-    
     [self setNeedsUpdateConstraints];
     [self.layer removeAllAnimations];
 }

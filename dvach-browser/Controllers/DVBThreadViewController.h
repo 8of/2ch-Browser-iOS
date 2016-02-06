@@ -47,4 +47,7 @@
 - (void)showMessageAboutDataLoading;
 - (void)showMessageAboutError;
 
+/// Only for simple redirecting Answer View Controller opening - nothing more!
+- (void)openPostingControllerFromThisOne;
+
 @end

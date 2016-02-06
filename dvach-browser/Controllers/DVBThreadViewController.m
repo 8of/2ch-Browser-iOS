@@ -385,6 +385,87 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 }
 
+#pragma mark - Post 'n' shit
+
+- (void)openPostingControllerFromThisOne
+{
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                                  sender:self];
+    } else {
+        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
+                                  sender:self];
+    }
+}
+
+- (void)attachAnswerToCommentSingletonWithPostIndex:(NSInteger)postIndex andTextToo:(BOOL)textToo
+{
+    DVBPost *post = _threadControllerTableViewManager.postsArray[postIndex];
+    NSString *postNum = post.num;
+
+    DVBComment *sharedComment = [DVBComment sharedComment];
+
+    if (textToo) {
+        NSAttributedString *postComment = post.comment;
+        [sharedComment topUpCommentWithPostNum:postNum
+                           andOriginalPostText:postComment
+                                andQuoteString:_quoteString];
+        _quoteString = @"";
+    } else {
+        [sharedComment topUpCommentWithPostNum:postNum];
+    }
+}
+
+#pragma mark - Helpers for posting from another copy of the controller
+
+/// Plain post id reply
+- (BOOL)shouldStopReplyAndRedirectWithSender:(id)sender
+{
+    if ([self shouldPopToPreviousControllerBeforeAnsweringWithSender:sender]) {
+        DVBThreadViewController *firstThreadVC = self.navigationController.viewControllers[2];
+        [self.navigationController popToViewController:firstThreadVC
+                                              animated:YES];
+        [firstThreadVC openPostingControllerFromThisOne];
+        return true;
+    }
+
+    return false;
+}
+
+/// Quote with text
+- (BOOL)shouldStopReplyQuotingAndRedirectWithSender:(id)sender
+{
+    if ([self shouldPopToPreviousControllerBeforeAnsweringWithSender:sender]) {
+        DVBThreadViewController *firstThreadVC = self.navigationController.viewControllers[2];
+        [self.navigationController popToViewController:firstThreadVC
+                                              animated:YES];
+        [firstThreadVC openPostingControllerFromThisOne];
+        return true;
+    }
+
+    return false;
+}
+
+/// Helper to determine if current controller is the original one or just 'Answers' controller
+- (BOOL)shouldPopToPreviousControllerBeforeAnsweringWithSender:(id)sender
+{
+    NSArray *arrayOfControllers = self.navigationController.viewControllers;
+
+    NSInteger countOfThreadControllersInStack = 0;
+    for (UIViewController *vc in arrayOfControllers) {
+        if ([vc isKindOfClass:self.class]) {
+            countOfThreadControllersInStack++;
+
+            if ((countOfThreadControllersInStack >= 2)&&
+                (self.navigationController.viewControllers.count >= 3))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 #pragma mark - Actions from Storyboard
 
 - (IBAction)reloadThreadAction:(id)sender
@@ -436,20 +517,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     UIButton *pressedButton = (UIButton *)sender;
     NSUInteger indexForObject = pressedButton.tag;
 
-    DVBComment *sharedComment = [DVBComment sharedComment];
+    [self attachAnswerToCommentSingletonWithPostIndex:indexForObject
+                                           andTextToo:NO];
 
-    DVBPost *post = _threadControllerTableViewManager.postsArray[indexForObject];
-    NSString *postNum = post.num;
-
-    [sharedComment topUpCommentWithPostNum:postNum];
-
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                  sender:self];
-    } else {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                  sender:self];
+    if ([self shouldStopReplyAndRedirectWithSender:sender]) {
+        return;
     }
+
+    [self openPostingControllerFromThisOne];
 }
 
 - (IBAction)answerToPostWithQuote:(id)sender
@@ -457,24 +532,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     UIButton *pressedButton = (UIButton *)sender;
     NSUInteger indexForObject = pressedButton.tag;
 
-    DVBComment *sharedComment = [DVBComment sharedComment];
+    [self attachAnswerToCommentSingletonWithPostIndex:indexForObject
+                                           andTextToo:YES];
 
-    DVBPost *post = _threadControllerTableViewManager.postsArray[indexForObject];
-    NSString *postNum = post.num;
-    NSAttributedString *postComment = post.comment;
-
-    [sharedComment topUpCommentWithPostNum:postNum
-                       andOriginalPostText:postComment
-                            andQuoteString:_quoteString];
-    _quoteString = @"";
-
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                  sender:self];
-    } else {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                  sender:self];
+    //
+    if ([self shouldStopReplyAndRedirectWithSender:sender]) {
+        return;
     }
+
+    [self openPostingControllerFromThisOne];
 }
 
 - (IBAction)showAnswers:(id)sender
@@ -513,6 +579,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         createPostViewController.threadNum = _threadNum;
         createPostViewController.boardCode = _boardCode;
         createPostViewController.createPostViewControllerDelegate = self;
+
+        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] &&
+            [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
+        {
+            [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
+        }
     }
 }
 

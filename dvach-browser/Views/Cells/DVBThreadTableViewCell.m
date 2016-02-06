@@ -16,11 +16,11 @@
 
 static UIImage *kPlaceholderImage;
 static CGFloat const kMargin = 10;
+static CGFloat const kTopMargin = 8;
 
 @interface DVBThreadTableViewCell ()
 
-@property (nonatomic, weak) IBOutlet UILabel *titleLabel;
-@property (nonatomic, weak) IBOutlet UILabel *commentLabel;
+@property (nonatomic, weak) IBOutlet UITextView *commentTextView;
 @property (nonatomic, weak) IBOutlet UILabel *postsCountLabel;
 @property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIView *postsCountContainerView;
@@ -33,9 +33,8 @@ static CGFloat const kMargin = 10;
 
 + (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string
 {
-
-    CGFloat widthLeftForText = viewWidth - 3 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE);
-    CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - 3 * kMargin - [self titleLabelHeight];
+    CGFloat widthLeftForText = viewWidth - 4 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 50; // 50 - counter size
+    CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - kMargin - kTopMargin;
 
     NSMutableDictionary *commentAttributes = [@
     {
@@ -43,7 +42,7 @@ static CGFloat const kMargin = 10;
     } mutableCopy];
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        commentAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        commentAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     }
 
     // Rectangle need for comment
@@ -56,26 +55,6 @@ static CGFloat const kMargin = 10;
     }
 
     return NO;
-}
-
-+ (CGFloat)titleLabelHeight
-{
-    NSMutableDictionary *titleAttributes = [@
-      {
-          NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]
-      } mutableCopy];
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        titleAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-    }
-
-    // Rectangle need for title label (just a short test phrase
-    CGRect rect = [@"kek" boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
-                                       options:NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:titleAttributes
-                                       context:nil];
-
-    return rect.size.height;
 }
 
 - (void)awakeFromNib
@@ -101,20 +80,23 @@ static CGFloat const kMargin = 10;
     _threadThumb.clipsToBounds = YES;
     _threadThumb.image = kPlaceholderImage;
 
-    _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-    _titleLabel.layer.masksToBounds = NO;
-    _titleLabel.opaque = YES;
-    _titleLabel.backgroundColor = [UIColor whiteColor];
+    _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _commentTextView.layer.masksToBounds = NO;
+    _commentTextView.opaque = YES;
+    _commentTextView.backgroundColor = [UIColor whiteColor];
+    // It'll not become truly opaque otherwise
+    for (UIView *subview in _commentTextView.subviews) {
+        subview.opaque = YES;
+        subview.backgroundColor = [UIColor whiteColor];
+    }
+    // Delete insets
+    _commentTextView.textContainer.lineFragmentPadding = 0;
+    _commentTextView.textContainerInset = UIEdgeInsetsZero;
 
     _dateLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _dateLabel.layer.masksToBounds = NO;
     _dateLabel.opaque = YES;
     _dateLabel.backgroundColor = [UIColor whiteColor];
-
-    _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
-    _commentLabel.layer.masksToBounds = NO;
-    _commentLabel.opaque = YES;
-    _commentLabel.backgroundColor = [UIColor whiteColor];
 
     _postsCountLabel.opaque = YES;
     _postsCountLabel.layer.opaque = YES;
@@ -129,19 +111,19 @@ static CGFloat const kMargin = 10;
     _postsCountContainerView.layer.rasterizationScale = [UIScreen mainScreen].scale;
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
+        _commentTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
         _dateLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-
-        _commentLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
         _postsCountLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
     }
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
-        _titleLabel.textColor = CELL_TEXT_COLOR;
-        _titleLabel.backgroundColor = CELL_BACKGROUND_COLOR;
-        _commentLabel.textColor = CELL_TEXT_COLOR;
-        _commentLabel.backgroundColor = CELL_BACKGROUND_COLOR;
+        _commentTextView.textColor = CELL_TEXT_COLOR;
+        _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
+        // Hack to make it truly opaque
+        for (UIView *subview in _commentTextView.subviews) {
+            subview.backgroundColor = CELL_BACKGROUND_COLOR;
+        }
         _postsCountLabel.textColor = CELL_TEXT_COLOR;
         _postsCountLabel.backgroundColor = CELL_BACKGROUND_COLOR;
         _dateLabel.textColor = CELL_TEXT_COLOR;
@@ -151,10 +133,9 @@ static CGFloat const kMargin = 10;
     }
 }
 
-- (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
+- (void)prepareCellWithComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
 {
-    _titleLabel.text = title;
-    _commentLabel.text = comment;
+    _commentTextView.text = comment;
 
     if (thumbnailUrlString) {
         NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];
@@ -179,12 +160,9 @@ static CGFloat const kMargin = 10;
 {
     [super prepareForReuse];
 
-    _titleLabel.text = nil;
-    _commentLabel.text = nil;
+    _commentTextView.text = nil;
     _dateLabel.text = nil;
     _postsCountLabel.text = nil;
-    _threadThumb.image = nil;
-
     _threadThumb.image = kPlaceholderImage;
 }
 

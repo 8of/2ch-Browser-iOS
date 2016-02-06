@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -161,12 +161,12 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="83.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggV-qV-ALA">
-                                            <rect key="frame" x="84" y="8" width="185" height="17"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
-                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
+                                        <textView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" editable="NO" text="Comment" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="m5N-Vs-OnD">
+                                            <rect key="frame" x="84" y="8.5" width="185" height="65.5"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                        </textView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="udf-rB-IcA">
                                             <rect key="frame" x="10" y="10" width="64" height="64"/>
                                             <constraints>
@@ -190,12 +190,6 @@
                                                 </mask>
                                             </variation>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="249" text="Comment" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="zj3-lK-H6n">
-                                            <rect key="frame" x="84" y="26.5" width="186" height="46.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <view contentMode="scaleToFill" horizontalHuggingPriority="500" horizontalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="ihu-z9-QYM" userLabel="Count container">
                                             <rect key="frame" x="280" y="47" width="30" height="26.5"/>
                                             <subviews>
@@ -217,37 +211,33 @@
                                             </constraints>
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d4n-GN-jp4">
-                                            <rect key="frame" x="279" y="7.5" width="31" height="17"/>
+                                            <rect key="frame" x="279" y="10" width="31" height="17"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="ggV-qV-ALA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="8" id="S5z-oc-RLj"/>
-                                        <constraint firstItem="ihu-z9-QYM" firstAttribute="leading" secondItem="zj3-lK-H6n" secondAttribute="trailing" constant="10" id="SVM-GQ-RQp"/>
-                                        <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="udf-rB-IcA" secondAttribute="trailing" constant="10" id="Syd-5F-2Xw"/>
-                                        <constraint firstItem="ggV-qV-ALA" firstAttribute="leading" secondItem="zj3-lK-H6n" secondAttribute="leading" id="TaP-IS-3WE"/>
+                                        <constraint firstItem="m5N-Vs-OnD" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="8" id="210-yh-IJr"/>
+                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="top" secondItem="udf-rB-IcA" secondAttribute="top" id="CSe-p9-Xei"/>
+                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="leading" secondItem="m5N-Vs-OnD" secondAttribute="trailing" constant="10" id="XRh-KN-0kO"/>
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="top" secondItem="vxw-Jc-Fk2" secondAttribute="top" constant="10" id="YX7-8C-adV"/>
                                         <constraint firstItem="udf-rB-IcA" firstAttribute="leading" secondItem="vxw-Jc-Fk2" secondAttribute="leading" constant="10" id="Zyk-3H-Nwn"/>
                                         <constraint firstAttribute="bottom" secondItem="udf-rB-IcA" secondAttribute="bottom" priority="999" constant="10" id="aXM-u5-MFg"/>
-                                        <constraint firstItem="zj3-lK-H6n" firstAttribute="top" secondItem="ggV-qV-ALA" secondAttribute="bottom" constant="2" id="jqp-G5-S8f"/>
-                                        <constraint firstItem="d4n-GN-jp4" firstAttribute="leading" secondItem="ggV-qV-ALA" secondAttribute="trailing" constant="10" id="lbw-zD-RQ9"/>
+                                        <constraint firstAttribute="bottom" secondItem="m5N-Vs-OnD" secondAttribute="bottom" constant="10" id="cAN-Ix-ji8"/>
+                                        <constraint firstItem="m5N-Vs-OnD" firstAttribute="leading" secondItem="udf-rB-IcA" secondAttribute="trailing" constant="10" id="cGs-0Y-R6D"/>
                                         <constraint firstAttribute="trailing" secondItem="ihu-z9-QYM" secondAttribute="trailing" constant="10" id="otJ-LA-2B7"/>
-                                        <constraint firstAttribute="bottom" secondItem="zj3-lK-H6n" secondAttribute="bottom" constant="10" id="w0K-ku-Uky"/>
                                         <constraint firstAttribute="trailing" secondItem="d4n-GN-jp4" secondAttribute="trailing" constant="10" id="wQ1-fj-kHB"/>
                                         <constraint firstAttribute="bottom" secondItem="ihu-z9-QYM" secondAttribute="bottom" constant="10" id="xXa-re-a1g"/>
-                                        <constraint firstItem="ggV-qV-ALA" firstAttribute="bottom" secondItem="d4n-GN-jp4" secondAttribute="bottom" id="yjX-sN-WWn"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
-                                    <outlet property="commentLabel" destination="zj3-lK-H6n" id="0Dd-ad-jJd"/>
+                                    <outlet property="commentTextView" destination="m5N-Vs-OnD" id="hU4-aV-D7W"/>
                                     <outlet property="dateLabel" destination="d4n-GN-jp4" id="RIi-KA-pGb"/>
                                     <outlet property="postsCountContainerView" destination="ihu-z9-QYM" id="ypE-Pe-Vem"/>
                                     <outlet property="postsCountLabel" destination="lu7-uw-ZhU" id="qRB-yg-9PR"/>
                                     <outlet property="threadThumb" destination="udf-rB-IcA" id="2qF-Kl-zGA"/>
-                                    <outlet property="titleLabel" destination="ggV-qV-ALA" id="dlQ-W0-xGO"/>
                                     <segue destination="3hz-5v-Niv" kind="show" identifier="segueToThread" id="Xk9-pa-bWO"/>
                                 </connections>
                             </tableViewCell>
@@ -259,7 +249,7 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Треды" id="MEn-bw-bzK">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="NQO-nl-fZ8">
+                        <barButtonItem key="rightBarButtonItem" image="Compose" id="NQO-nl-fZ8">
                             <connections>
                                 <segue destination="wgF-au-dzt" kind="popoverPresentation" identifier="segueToNewThread" popoverAnchorBarButtonItem="NQO-nl-fZ8" id="XRT-4w-L0S">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -800,7 +790,7 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Тред" id="iaG-NT-yBd">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="tpv-GH-b3T">
+                        <barButtonItem key="rightBarButtonItem" image="Compose" id="tpv-GH-b3T">
                             <connections>
                                 <segue destination="wgF-au-dzt" kind="popoverPresentation" identifier="segueToNewPost" popoverAnchorBarButtonItem="tpv-GH-b3T" id="fFt-k5-qt1">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -1223,6 +1213,7 @@
         <image name="AnswerToPost" width="33" height="22"/>
         <image name="AnswerToPostWithQuote" width="33" height="22"/>
         <image name="Bottompage" width="22" height="22"/>
+        <image name="Compose" width="23" height="23"/>
         <image name="ReportFlag" width="26" height="26"/>
         <image name="Settings" width="22" height="22"/>
         <image name="ShowAnswersButton" width="33" height="22"/>
@@ -1230,7 +1221,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="XRT-4w-L0S"/>
-        <segue reference="Iwy-TH-KYT"/>
+        <segue reference="xwW-TO-L0b"/>
         <segue reference="Xk9-pa-bWO"/>
     </inferredMetricsTieBreakers>
 </document>

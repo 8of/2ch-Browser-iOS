@@ -106,7 +106,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)loadNextBoardPage
 {
     if (_pages > _currentPage)  {
-        [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray, NSError *error)
+        [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
+                                 andCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
@@ -209,31 +210,11 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     }
 
     DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
-    NSString *title = thread.subject;
-    if ([title isEqualToString:@""]) {
-        title = thread.num;
-    }
 
-    NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
-    NSString *preparedComment = thread.comment;
-    if (commentArray.count > 0) {
-        preparedComment = commentArray[0];
-
-        for (NSString *nextPart in commentArray) {
-            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@" %@", nextPart];
-            if ([DVBThreadTableViewCell goodFitWithViewWidth:self.view.bounds.size.width andString:newCommentLike]) {
-                preparedComment = newCommentLike;
-            } else {
-                break;
-            }
-        }
-    }
-
-    [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
-                    andComment:thread.comment
-         andThumbnailUrlString:thread.thumbnail
-                 andPostsCount:thread.postsCount.stringValue
-         andTimeSinceFirstPost:thread.timeSinceFirstPost];
+    [(DVBThreadTableViewCell *)cell prepareCellWithComment:thread.comment
+                                     andThumbnailUrlString:thread.thumbnail
+                                             andPostsCount:thread.postsCount.stringValue
+                                     andTimeSinceFirstPost:thread.timeSinceFirstPost];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -246,7 +227,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)reloadBoardPage
 {
     _alreadyLoadingNextPage = YES;
-    [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
+    [_boardModel reloadBoardWithViewWidth:self.view.bounds.size.width
+                        andCompletion:^(NSArray *completionThreadsArray)
     {
         _currentPage = 0;
         _alreadyLoadingNextPage = NO;
@@ -290,6 +272,13 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         createPostViewController.createPostViewControllerDelegate = self;
         createPostViewController.threadNum = @"0";
         createPostViewController.boardCode = _boardCode;
+
+        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] &&
+            [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
+        {
+            [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
+        }
     }
 }
 
@@ -323,6 +312,29 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 }
 
 #pragma mark - Scroll Delegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING]) {
+        self.view.layer.shouldRasterize = true;
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate &&
+        [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING])
+    {
+        self.view.layer.shouldRasterize = false;
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_SMOOTH_SCROLLING]) {
+        self.view.layer.shouldRasterize = false;
+    }
+}
 
 // Check scroll position - we need it to load additional pages
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

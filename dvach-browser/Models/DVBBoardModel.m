@@ -13,6 +13,8 @@
 #import "DVBConstants.h"
 #import "DVBThread.h"
 
+#import "DVBThreadTableViewCell.h"
+
 @interface DVBBoardModel ()
 
 @property (nonatomic, strong) NSString *boardCode;
@@ -47,70 +49,98 @@
     return self;
 }
 
-- (void)loadNextPageWithCompletion:(void (^)(NSArray *, NSError *))completion
+- (void)loadNextPageWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *, NSError *))completion
 {
     [_networking getThreadsWithBoard:_boardCode
                              andPage:_currentPage
                        andCompletion:^(NSDictionary *resultDict, NSError *error)
     {
-        if (_currentPage == 0) {
-            _threadsAlreadyLoaded = [@{} mutableCopy];
-        }
-        NSArray *threadsArray = resultDict[@"threads"];
-        
-        for (NSDictionary *thread in threadsArray) {
-            if (!_threadsAlreadyLoaded[thread[@"thread_num"]]) {
-                _threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
-                NSArray *threadPosts = thread[@"posts"];
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-                NSError *parseError;
+            if (_currentPage == 0) {
+                _threadsAlreadyLoaded = [@{} mutableCopy];
+            }
+            NSArray *threadsArray = resultDict[@"threads"];
+            
+            for (NSDictionary *thread in threadsArray) {
+                if (!_threadsAlreadyLoaded[thread[@"thread_num"]]) {
+                    _threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
+                    NSArray *threadPosts = thread[@"posts"];
 
-                NSDictionary *threadDict = [threadPosts firstObject];
+                    NSError *parseError;
 
-                DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
-                                          fromJSONDictionary:threadDict
-                                                       error:&error];
+                    NSDictionary *threadDict = [threadPosts firstObject];
 
-                if (!parseError) {
+                    DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
+                                              fromJSONDictionary:threadDict
+                                                           error:&parseError];
 
-                    thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
+                    if (!parseError) {
 
-                    BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+                        thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
 
-                    if (threadDict[@"files"] && isInReviewModeOk) {
-                        NSArray *files = threadDict[@"files"];
-                        if (files.count > 0) {
-                            NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
-                            NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
-                            thread.thumbnail = thumbPath;
+                        BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+
+                        if (threadDict[@"files"] && isInReviewModeOk) {
+                            NSArray *files = threadDict[@"files"];
+                            if (files.count > 0) {
+                                NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
+                                NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
+                                thread.thumbnail = thumbPath;
+                            }
                         }
+
+                        // Strip comment from useless words that we'll not see anyway
+                        NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
+
+                        NSString *title = thread.subject;
+                        if ([title isEqualToString:@""]) {
+                            title = thread.num;
+                        }
+
+                        NSString *preparedComment = [NSString stringWithFormat:@"%@ • ", title];
+
+                        if (commentArray.count > 0) {
+                            for (NSString *nextPart in commentArray) {
+                                NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
+                                if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
+                                    preparedComment = newCommentLike;
+                                } else {
+                                    break;
+                                }
+                            }
+                        }
+                        thread.comment = preparedComment;
+
+                        [_privateThreadsArray addObject:thread];
                     }
-                    [_privateThreadsArray addObject:thread];
-                }
-                else {
-                    NSLog(@"error while parsing threads: %@", parseError.localizedDescription);
+                    else {
+                        NSLog(@"error while parsing threads: %@", parseError.localizedDescription);
+                    }
                 }
             }
-        }
-        
-        NSArray *resultArr = [[NSArray alloc] initWithArray:_privateThreadsArray];
-        
-        _threadsArray = resultArr;
-        
-        _currentPage++;
-        
-        if (_currentPage == _maxPage) {
-            _currentPage = 0;
-        }
-        
-        completion(resultArr, error);
+            
+            NSArray *resultArr = [[NSArray alloc] initWithArray:_privateThreadsArray];
+            
+            _threadsArray = resultArr;
+            
+            _currentPage++;
+            
+            if (_currentPage == _maxPage) {
+                _currentPage = 0;
+            }
+            
+            completion(resultArr, error);
+        });
     }];
 }
 
-- (void)reloadBoardWithCompletion:(void (^)(NSArray *))completion {
+- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion {
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
-    [self loadNextPageWithCompletion:^(NSArray *threadsCompletion, NSError *error) {
+    [self loadNextPageWithViewWidth:width
+                      andCompletion:^(NSArray *threadsCompletion, NSError *error)
+    {
         completion(threadsCompletion);
     }];
 }
