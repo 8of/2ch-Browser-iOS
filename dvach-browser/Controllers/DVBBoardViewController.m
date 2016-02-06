@@ -279,6 +279,13 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         createPostViewController.createPostViewControllerDelegate = self;
         createPostViewController.threadNum = @"0";
         createPostViewController.boardCode = _boardCode;
+
+        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] &&
+            [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
+        {
+            [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
+        }
     }
 }
 

@@ -579,6 +579,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         createPostViewController.threadNum = _threadNum;
         createPostViewController.boardCode = _boardCode;
         createPostViewController.createPostViewControllerDelegate = self;
+
+        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_POST] &&
+            [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
+        {
+            [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
+        }
     }
 }
 
