@@ -210,18 +210,11 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     }
 
     DVBThread *thread = [_threadsArray objectAtIndex:indexPath.row];
-    NSString *title = thread.subject;
-    if ([title isEqualToString:@""]) {
-        title = thread.num;
-    }
 
-
-
-    [(DVBThreadTableViewCell *)cell prepareCellWithTitle:title
-                    andComment:thread.comment
-         andThumbnailUrlString:thread.thumbnail
-                 andPostsCount:thread.postsCount.stringValue
-         andTimeSinceFirstPost:thread.timeSinceFirstPost];
+    [(DVBThreadTableViewCell *)cell prepareCellWithComment:thread.comment
+                                     andThumbnailUrlString:thread.thumbnail
+                                             andPostsCount:thread.postsCount.stringValue
+                                     andTimeSinceFirstPost:thread.timeSinceFirstPost];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

@@ -16,6 +16,7 @@
 
 static UIImage *kPlaceholderImage;
 static CGFloat const kMargin = 10;
+static CGFloat const kTopMargin = 8;
 
 @interface DVBThreadTableViewCell ()
 
@@ -32,9 +33,8 @@ static CGFloat const kMargin = 10;
 
 + (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string
 {
-
-    CGFloat widthLeftForText = viewWidth - 3 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 50;
-    CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - 3 * kMargin - [self titleLabelHeight];
+    CGFloat widthLeftForText = viewWidth - 4 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 50; // 50 - counter size
+    CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - kMargin - kTopMargin;
 
     NSMutableDictionary *commentAttributes = [@
     {
@@ -42,7 +42,7 @@ static CGFloat const kMargin = 10;
     } mutableCopy];
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        commentAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+        commentAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     }
 
     // Rectangle need for comment
@@ -55,26 +55,6 @@ static CGFloat const kMargin = 10;
     }
 
     return NO;
-}
-
-+ (CGFloat)titleLabelHeight
-{
-    NSMutableDictionary *titleAttributes = [@
-      {
-          NSFontAttributeName : [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline]
-      } mutableCopy];
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        titleAttributes[NSFontAttributeName] = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-    }
-
-    // Rectangle need for title label (just a short test phrase
-    CGRect rect = [@"kek" boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)
-                                       options:NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:titleAttributes
-                                       context:nil];
-
-    return rect.size.height;
 }
 
 - (void)awakeFromNib
@@ -153,9 +133,9 @@ static CGFloat const kMargin = 10;
     }
 }
 
-- (void)prepareCellWithTitle:(NSString *)title andComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
+- (void)prepareCellWithComment:(NSString *)comment andThumbnailUrlString:(NSString *)thumbnailUrlString andPostsCount:(NSString *)postsCount andTimeSinceFirstPost:(NSString *)timeSinceFirstPost
 {
-    _commentTextView.text = [NSString stringWithFormat:@"%@ · %@", title, comment];
+    _commentTextView.text = comment;
 
     if (thumbnailUrlString) {
         NSURL *thumbnailUrl = [NSURL URLWithString:thumbnailUrlString];

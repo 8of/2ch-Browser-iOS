@@ -90,10 +90,15 @@
 
                     // Strip comment from useless words that we'll not see anyway
                     NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
-                    NSString *preparedComment = thread.comment;
-                    if (commentArray.count > 0) {
-                        preparedComment = @"";
 
+                    NSString *title = thread.subject;
+                    if ([title isEqualToString:@""]) {
+                        title = thread.num;
+                    }
+
+                    NSString *preparedComment = [NSString stringWithFormat:@"%@ • ", title];
+
+                    if (commentArray.count > 0) {
                         for (NSString *nextPart in commentArray) {
                             NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
                             if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
