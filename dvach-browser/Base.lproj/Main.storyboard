@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="wI0-Z4-0OB">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -259,7 +259,7 @@
                     </tableView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="Треды" id="MEn-bw-bzK">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="NQO-nl-fZ8">
+                        <barButtonItem key="rightBarButtonItem" image="Compose" id="NQO-nl-fZ8">
                             <connections>
                                 <segue destination="wgF-au-dzt" kind="popoverPresentation" identifier="segueToNewThread" popoverAnchorBarButtonItem="NQO-nl-fZ8" id="XRT-4w-L0S">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -800,7 +800,7 @@
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="Тред" id="iaG-NT-yBd">
-                        <barButtonItem key="rightBarButtonItem" systemItem="compose" id="tpv-GH-b3T">
+                        <barButtonItem key="rightBarButtonItem" image="Compose" id="tpv-GH-b3T">
                             <connections>
                                 <segue destination="wgF-au-dzt" kind="popoverPresentation" identifier="segueToNewPost" popoverAnchorBarButtonItem="tpv-GH-b3T" id="fFt-k5-qt1">
                                     <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -1223,6 +1223,7 @@
         <image name="AnswerToPost" width="33" height="22"/>
         <image name="AnswerToPostWithQuote" width="33" height="22"/>
         <image name="Bottompage" width="22" height="22"/>
+        <image name="Compose" width="23" height="23"/>
         <image name="ReportFlag" width="26" height="26"/>
         <image name="Settings" width="22" height="22"/>
         <image name="ShowAnswersButton" width="33" height="22"/>
@@ -1230,7 +1231,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="XRT-4w-L0S"/>
-        <segue reference="Iwy-TH-KYT"/>
+        <segue reference="xwW-TO-L0b"/>
         <segue reference="Xk9-pa-bWO"/>
     </inferredMetricsTieBreakers>
 </document>
