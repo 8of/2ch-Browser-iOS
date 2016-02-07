@@ -55,6 +55,7 @@
        USER_AGREEMENT_ACCEPTED : @NO,
        SETTING_ENABLE_DARK_THEME : @NO,
        SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
+       SETTING_ENABLE_INTERNAL_WEBM_PLAYER : @YES,
        SETTING_ENABLE_SMOOTH_SCROLLING : @NO,
        SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
        SETTING_CLEAR_THREADS : @NO,
@@ -65,6 +66,7 @@
     };
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 
     // Turn off Shake to Undo because of tags on post screen
     [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
@@ -87,6 +89,7 @@
          {
              if (completion) {
                  [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
+                 [[NSUserDefaults standardUserDefaults] synchronize];
 
                  NSString *usercode = completion;
                  [self setUserCodeCookieWithUsercode:usercode];
@@ -119,6 +122,7 @@
 - (void)deleteUsercodeOldData
 {
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERCODE];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
         if ([cookie.name isEqualToString:@"usercode_nocaptcha"]) {
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
@@ -163,6 +167,7 @@
 
         [[NSUserDefaults standardUserDefaults] setBool:NO
                                                 forKey:SETTING_CLEAR_THREADS];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 

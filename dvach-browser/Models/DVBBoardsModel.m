@@ -529,6 +529,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         [networkHandler getReviewStatus:^(BOOL status) {
             [[NSUserDefaults standardUserDefaults] setBool:status
                                                     forKey:DEFAULTS_REVIEW_STATUS];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }];
     }
 }
