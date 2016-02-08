@@ -207,7 +207,6 @@
 		94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DVBOpaqueImage.m"; path = "Helpers/UIImage+DVBOpaqueImage.m"; sourceTree = "<group>"; };
 		94F5BCFE1B05294D0037C8C0 /* DVBThreadControllerTableViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadControllerTableViewManager.h; path = Models/DVBThreadControllerTableViewManager.h; sourceTree = "<group>"; };
 		94F5BCFF1B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadControllerTableViewManager.m; path = Models/DVBThreadControllerTableViewManager.m; sourceTree = "<group>"; };
-		94FC069E1C674D6600813A68 /* dvach-browser */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "dvach-browser"; sourceTree = "<group>"; };
 		94FC06A01C674D7B00813A68 /* MobileVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileVLCKit.framework; path = "dvach-browser/Frameworks/MobileVLCKit.framework"; sourceTree = "<group>"; };
 		94FC06A21C674E8D00813A68 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		94FC06A41C674ED600813A68 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
@@ -579,7 +578,6 @@
 				94FC06A41C674ED600813A68 /* VideoToolbox.framework */,
 				94FC06A21C674E8D00813A68 /* libiconv.tbd */,
 				94FC06A01C674D7B00813A68 /* MobileVLCKit.framework */,
-				94FC069E1C674D6600813A68 /* dvach-browser */,
 				9432BEF21AC821650015CA9F /* CoreData.framework */,
 				840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */,
 				8428B63919EDAC74007973A8 /* UIKit.framework */,

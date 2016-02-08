@@ -95,8 +95,6 @@
     _usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
 
     _imagesToUpload = [@[] mutableCopy];
-    
-    // [self changeConstraints];
 }
 
 - (void)darkThemeHandler
@@ -139,7 +137,8 @@
         __weak typeof(self) weakSelf = self;
         [_networking canPostWithoutCaptcha:^(BOOL canPost) {
             typeof(weakSelf) strongSelf = weakSelf;
-            if (canPost) {
+            // Check if captcha isn't needed and that it's answer - and not a new thread
+            if (canPost && ![strongSelf.threadNum isEqualToString:@"0"]) {
                 [strongSelf sendPostWithoutCaptcha:YES];
             } else {
                 // Show captcha Controller othervise
