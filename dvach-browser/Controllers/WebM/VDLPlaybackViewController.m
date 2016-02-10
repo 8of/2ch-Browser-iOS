@@ -67,6 +67,8 @@
     _timeDisplay.action = @selector(toggleTimeDisplay:);
     _timeDisplay.title = @"--:--";
 
+    [_playPauseButton setTitle:@"" forState:UIControlStateNormal];
+
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     self.navigationItem.titleView = _navigationItemView;
     self.navigationItem.leftBarButtonItem = _doneButton;
@@ -197,7 +199,8 @@
     if (currentState == VLCMediaPlayerStateEnded || currentState == VLCMediaPlayerStateStopped)
         [self performSelector:@selector(closeAfterEnd:) withObject:nil afterDelay:2.];
 
-    [self.playPauseButton setTitle:[_mediaplayer isPlaying]? NSLS(@"BUTTON_PAUSE") : NSLS(@"BUTTON_PLAY") forState:UIControlStateNormal];
+    UIImage *playButtonImage = [UIImage imageNamed:[_mediaplayer isPlaying]? @"PlayerPause" : @"PlayerPlay"];
+    [_playPauseButton setBackgroundImage:playButtonImage forState:UIControlStateNormal];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

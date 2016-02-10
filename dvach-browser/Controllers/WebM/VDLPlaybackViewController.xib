@@ -24,10 +24,13 @@
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="50">
-                    <rect key="frame" x="267" y="542" width="66" height="58"/>
+                    <rect key="frame" x="285" y="550" width="30" height="30"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="MTK-KH-ARh"/>
+                        <constraint firstAttribute="width" constant="30" id="vtO-sx-Gnk"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                    <inset key="contentEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                     <state key="normal" title="|&gt;||">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -45,7 +48,7 @@
                 <constraint firstItem="14" firstAttribute="top" secondItem="6" secondAttribute="top" id="5aK-XU-XVI"/>
                 <constraint firstAttribute="bottom" secondItem="14" secondAttribute="bottom" id="QAL-rq-7Az"/>
                 <constraint firstAttribute="trailing" secondItem="14" secondAttribute="trailing" id="YYW-vO-9Kz"/>
-                <constraint firstAttribute="bottom" secondItem="50" secondAttribute="bottom" id="tba-cj-j4c"/>
+                <constraint firstAttribute="bottom" secondItem="50" secondAttribute="bottom" constant="20" id="avz-JP-Y9E"/>
             </constraints>
             <point key="canvasLocation" x="291" y="-544"/>
         </view>
