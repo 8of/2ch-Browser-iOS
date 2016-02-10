@@ -6,6 +6,8 @@
 //  Copyright © 2016 8of. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import <UIImageView+AFNetworking.h>
 
 #import "DVBCommon.h"
@@ -34,9 +36,22 @@
     _captchaManager = [[DVBCaptchaManager alloc] init];
     [_reloadButton setTitle:@"" forState:UIControlStateNormal];
 
+    if (_newThread != YES) {
+        _newThread = NO;
+    }
+
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.view.backgroundColor = CELL_BACKGROUND_COLOR;
+        _textField.backgroundColor = CELL_BACKGROUND_COLOR;
+        _textField.textColor = [UIColor whiteColor];
+        _textField.keyboardAppearance = UIKeyboardAppearanceDark;
+
+        _textField.layer.cornerRadius = 8.;
+        _textField.layer.masksToBounds = YES;
+        _textField.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+        _textField.layer.borderWidth = 1.;
     }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -50,7 +65,7 @@
 {
     _imageView.image = nil;
     _textField.text = @"";
-    [_captchaManager getCaptchaImageUrl:YES
+    [_captchaManager getCaptchaImageUrl:_newThread
                           andCompletion:^(NSString *captchaImageUrl, NSString *captchaId)
     {
         _captchaId = captchaId;

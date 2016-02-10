@@ -17,5 +17,6 @@
 @interface DVBDvachCaptchaViewController : UIViewController
 
 @property (nonatomic, weak) id<DVBDvachCaptchaViewControllerDelegate> dvachCaptchaViewControllerDelegate;
+@property (nonatomic, assign) BOOL newThread;
 
 @end

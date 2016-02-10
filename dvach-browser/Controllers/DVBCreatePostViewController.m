@@ -126,7 +126,9 @@
 {
     DVBDvachCaptchaViewController *captchaVC = [[DVBDvachCaptchaViewController alloc] initWithNibName:nil bundle:nil];
     captchaVC.dvachCaptchaViewControllerDelegate = self;
-
+    if ([_threadNum isEqualToString:@"0"]) {
+        captchaVC.newThread = YES;
+    }
     [self.navigationController pushViewController:captchaVC
                                          animated:YES];
 }
@@ -146,7 +148,7 @@
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
     if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
-        [self sendPostWithoutCaptcha:YES]; // Need to test
+        [self sendPostWithoutCaptcha:YES];
     } else {
         if ([_threadNum isEqualToString:@"0"]) {
             [self showDvachCaptchaController];
@@ -160,7 +162,7 @@
                 [strongSelf sendPostWithoutCaptcha:YES];
             } else {
                 // Show captcha Controller othervise
-                [strongSelf showCaptchaController];
+                [strongSelf showDvachCaptchaController];
             }
         }];
     }

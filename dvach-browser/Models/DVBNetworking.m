@@ -483,6 +483,9 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 {
     if ([self getNetworkStatus]) {
         NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha"];
+        if (!thread) {
+            address = [NSString stringWithFormat:@"%@&action=thread", address];
+        }
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/plain", nil]];
 

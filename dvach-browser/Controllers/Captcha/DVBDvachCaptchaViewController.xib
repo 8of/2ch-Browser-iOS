@@ -35,13 +35,13 @@
                         <action selector="submitButtonAction:" destination="-1" eventType="touchUpInside" id="UJE-x3-3tL"/>
                     </connections>
                 </button>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWj-WJ-OzN">
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWj-WJ-OzN">
                     <rect key="frame" x="190" y="80" width="220" height="80"/>
                     <subviews>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="j3G-9f-kVM">
                             <rect key="frame" x="100" y="30" width="20" height="20"/>
                         </activityIndicatorView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NjF-HK-aHB">
+                        <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NjF-HK-aHB">
                             <rect key="frame" x="0.0" y="0.0" width="220" height="80"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grI-hk-wBQ">
@@ -52,7 +52,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="grI-hk-wBQ" firstAttribute="top" secondItem="UWj-WJ-OzN" secondAttribute="top" id="0tk-TV-1X8"/>
                         <constraint firstAttribute="bottom" secondItem="grI-hk-wBQ" secondAttribute="bottom" id="6N8-nL-UtX"/>
@@ -77,6 +77,7 @@
                 <constraint firstItem="Og0-le-AgK" firstAttribute="top" secondItem="hkO-hh-9Ak" secondAttribute="bottom" constant="5" id="X3c-c4-5dC"/>
                 <constraint firstItem="hkO-hh-9Ak" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="isb-DT-Wsa"/>
                 <constraint firstItem="UWj-WJ-OzN" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="lSC-NF-9IN"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Og0-le-AgK" secondAttribute="bottom" constant="5" id="u7y-km-M91"/>
             </constraints>
         </view>
     </objects>
