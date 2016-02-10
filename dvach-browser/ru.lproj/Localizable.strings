@@ -12,6 +12,8 @@
 "BUTTON_CLOSE" = "Закрыть";
 "BUTTON_SEND" = "Отправить";
 "BUTTON_ACCEPT" = "Принять";
+"BUTTON_PLAY" = "Пуск";
+"BUTTON_PAUSE" = "Пауза";
 
 "BOARD_CATEGORY_FAVOURITE" = "Избранное";
 "BOARD_CATEGORY_THEMED" = "Тематика";

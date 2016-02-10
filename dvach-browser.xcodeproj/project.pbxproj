@@ -69,6 +69,11 @@
 		94E8E06D1B20CF88008761C6 /* DVBUrlNinjaTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E8E06C1B20CF88008761C6 /* DVBUrlNinjaTest.m */; };
 		94F454F81BF3E368001B8091 /* UIImage+DVBOpaqueImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */; };
 		94F5BD001B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94F5BCFF1B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m */; };
+		94FC06A11C674D7B00813A68 /* MobileVLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FC06A01C674D7B00813A68 /* MobileVLCKit.framework */; };
+		94FC06A31C674E8D00813A68 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FC06A21C674E8D00813A68 /* libiconv.tbd */; };
+		94FC06A51C674ED600813A68 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FC06A41C674ED600813A68 /* VideoToolbox.framework */; };
+		94FC06AA1C675D5300813A68 /* VDLPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC06A81C675D5300813A68 /* VDLPlaybackViewController.m */; };
+		94FC06AB1C675D5300813A68 /* VDLPlaybackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FC06A91C675D5300813A68 /* VDLPlaybackViewController.xib */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
 		A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */; };
 		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
@@ -202,6 +207,12 @@
 		94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DVBOpaqueImage.m"; path = "Helpers/UIImage+DVBOpaqueImage.m"; sourceTree = "<group>"; };
 		94F5BCFE1B05294D0037C8C0 /* DVBThreadControllerTableViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadControllerTableViewManager.h; path = Models/DVBThreadControllerTableViewManager.h; sourceTree = "<group>"; };
 		94F5BCFF1B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadControllerTableViewManager.m; path = Models/DVBThreadControllerTableViewManager.m; sourceTree = "<group>"; };
+		94FC06A01C674D7B00813A68 /* MobileVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileVLCKit.framework; path = "dvach-browser/Frameworks/MobileVLCKit.framework"; sourceTree = "<group>"; };
+		94FC06A21C674E8D00813A68 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		94FC06A41C674ED600813A68 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		94FC06A71C675D5300813A68 /* VDLPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VDLPlaybackViewController.h; path = Controllers/WebM/VDLPlaybackViewController.h; sourceTree = "<group>"; };
+		94FC06A81C675D5300813A68 /* VDLPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VDLPlaybackViewController.m; path = Controllers/WebM/VDLPlaybackViewController.m; sourceTree = "<group>"; };
+		94FC06A91C675D5300813A68 /* VDLPlaybackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VDLPlaybackViewController.xib; path = Controllers/WebM/VDLPlaybackViewController.xib; sourceTree = "<group>"; };
 		A100A4501AAEF56F0027F917 /* DVBBoardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardModel.h; path = Models/DVBBoardModel.h; sourceTree = "<group>"; };
 		A100A4511AAEF56F0027F917 /* DVBBoardModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardModel.m; path = Models/DVBBoardModel.m; sourceTree = "<group>"; };
 		A15552331ABC06EF00E7DB1D /* DVBThreadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadModel.h; path = Models/DVBThreadModel.h; sourceTree = "<group>"; };
@@ -246,6 +257,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94FC06A51C674ED600813A68 /* VideoToolbox.framework in Frameworks */,
+				94FC06A31C674E8D00813A68 /* libiconv.tbd in Frameworks */,
+				94FC06A11C674D7B00813A68 /* MobileVLCKit.framework in Frameworks */,
 				9432BEF31AC821650015CA9F /* CoreData.framework in Frameworks */,
 				840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */,
 				8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */,
@@ -296,6 +310,7 @@
 		84CF8C871A0E558700585D88 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				94FC06A61C675D0F00813A68 /* WebM */,
 				A155FEE31AB7355600BE31F4 /* DVBAgreementViewController.h */,
 				A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */,
 				A155FEE51AB7355600BE31F4 /* DVBBoardsViewController.h */,
@@ -500,6 +515,16 @@
 			name = Cells;
 			sourceTree = "<group>";
 		};
+		94FC06A61C675D0F00813A68 /* WebM */ = {
+			isa = PBXGroup;
+			children = (
+				94FC06A71C675D5300813A68 /* VDLPlaybackViewController.h */,
+				94FC06A81C675D5300813A68 /* VDLPlaybackViewController.m */,
+				94FC06A91C675D5300813A68 /* VDLPlaybackViewController.xib */,
+			);
+			name = WebM;
+			sourceTree = "<group>";
+		};
 		9DEEB8F279E1E1CC7340EF72 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -550,6 +575,9 @@
 		A1ADDCC419E7B7C2009E47EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94FC06A41C674ED600813A68 /* VideoToolbox.framework */,
+				94FC06A21C674E8D00813A68 /* libiconv.tbd */,
+				94FC06A01C674D7B00813A68 /* MobileVLCKit.framework */,
 				9432BEF21AC821650015CA9F /* CoreData.framework */,
 				840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */,
 				8428B63919EDAC74007973A8 /* UIKit.framework */,
@@ -659,6 +687,7 @@
 				84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */,
 				94A5E4681AF77E4500824347 /* ARChromeActivity~iPad.png in Resources */,
 				94A5E4651AF77E4500824347 /* ARChromeActivity.png in Resources */,
+				94FC06AB1C675D5300813A68 /* VDLPlaybackViewController.xib in Resources */,
 				94A5E4781AF7811D00824347 /* ARChromeActivity-7.png in Resources */,
 				946394161A87A26C004CAB6E /* BadBoards.plist in Resources */,
 				84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */,
@@ -767,6 +796,7 @@
 				94BECE981B111C2A002C3132 /* DVBPostTableViewCell.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				94F5BD001B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m in Sources */,
+				94FC06AA1C675D5300813A68 /* VDLPlaybackViewController.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
 				A155FEF41AB7355600BE31F4 /* DVBThreadViewController.m in Sources */,
@@ -923,6 +953,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dvach-browser/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";
@@ -945,6 +979,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/dvach-browser/Frameworks",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";

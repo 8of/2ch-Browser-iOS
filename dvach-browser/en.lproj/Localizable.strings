@@ -12,6 +12,8 @@
 "BUTTON_CLOSE" = "Close";
 "BUTTON_SEND" = "Send";
 "BUTTON_ACCEPT" = "Accept";
+"BUTTON_PLAY" = "Play";
+"BUTTON_PAUSE" = "Pause";
 
 "BOARD_CATEGORY_FAVOURITE" = "Favourite";
 "BOARD_CATEGORY_THEMED" = "Theme-centered";

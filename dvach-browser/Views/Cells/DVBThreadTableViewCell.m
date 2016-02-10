@@ -33,7 +33,7 @@ static CGFloat const kTopMargin = 8;
 
 + (BOOL)goodFitWithViewWidth:(CGFloat)viewWidth andString:(NSString *)string
 {
-    CGFloat widthLeftForText = viewWidth - 4 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 50; // 50 - counter size
+    CGFloat widthLeftForText = viewWidth - 4 * kMargin - (IS_IPAD ? PREVIEW_IMAGE_SIZE_IPAD : PREVIEW_IMAGE_SIZE) - 70; // 70 - time label size
     CGFloat heightLeftForText = (IS_IPAD ? PREVIEW_ROW_DEFAULT_HEIGHT_IPAD : PREVIEW_ROW_DEFAULT_HEIGHT) - kMargin - kTopMargin;
 
     NSMutableDictionary *commentAttributes = [@
