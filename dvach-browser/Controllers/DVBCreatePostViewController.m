@@ -21,12 +21,13 @@
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
 #import "DVBCaptchaViewController.h"
+#import "DVBDvachCaptchaViewController.h"
 
 #import "DVBContainerForPostElements.h"
 #import "DVBAddPhotoIconImageViewContainer.h"
 #import "DVBPictureToSendPreviewImageView.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate, DVBCaptchaViewControllerDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate, DVBCaptchaViewControllerDelegate, DVBDvachCaptchaViewControllerDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -46,6 +47,10 @@
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *closeButton;
 // Tempopary storage for add/remove picture button we just pressed
 @property (nonatomic, strong) UIButton *addPictureButton;
+
+// New captcha
+@property (nonatomic, strong) NSString *captchaId;
+@property (nonatomic, strong) NSString *captchaCode;
 
 @end
 
@@ -117,6 +122,15 @@
                                          animated:YES];
 }
 
+- (void)showDvachCaptchaController
+{
+    DVBDvachCaptchaViewController *captchaVC = [[DVBDvachCaptchaViewController alloc] initWithNibName:nil bundle:nil];
+    captchaVC.dvachCaptchaViewControllerDelegate = self;
+
+    [self.navigationController pushViewController:captchaVC
+                                         animated:YES];
+}
+
 #pragma  mark - Actions
 
 /// Button action to fire post sending method
@@ -131,14 +145,18 @@
     // Check usercode - send post if needed
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
-    if (isUsercodeNotEmpty) {
-        [self sendPostWithoutCaptcha:YES];
+    if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
+        [self sendPostWithoutCaptcha:YES]; // Need to test
     } else {
+        if ([_threadNum isEqualToString:@"0"]) {
+            [self showDvachCaptchaController];
+            return;
+        }
         __weak typeof(self) weakSelf = self;
         [_networking canPostWithoutCaptcha:^(BOOL canPost) {
             typeof(weakSelf) strongSelf = weakSelf;
             // Check if captcha isn't needed and that it's answer - and not a new thread
-            if (canPost && ![strongSelf.threadNum isEqualToString:@"0"]) {
+            if (canPost) {
                 [strongSelf sendPostWithoutCaptcha:YES];
             } else {
                 // Show captcha Controller othervise
@@ -191,6 +209,8 @@
                   andUsercode:_usercode
             andImagesToUpload:imagesToUpload
             andWithoutCaptcha:noCaptcha
+                  andCaptchId:_captchaId
+               andCaptchaCode:_captchaCode
      ];
 }
 
@@ -206,6 +226,8 @@
                 andUsercode:(NSString *)usercode
           andImagesToUpload:(NSArray *)imagesToUpload
           andWithoutCaptcha:(BOOL)withoutCaptcha
+                andCaptchId:(NSString *)captchaId
+             andCaptchaCode:(NSString *)captchaCode
 {
     
     // Turn off POST button
@@ -222,6 +244,8 @@
                          andUsercode:usercode
                    andImagesToUpload:imagesToUpload
                    andWithoutCaptcha:(BOOL)withoutCaptcha
+                         andCaptchId:captchaId
+                      andCaptchaCode:captchaCode
                        andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
 
     {
@@ -410,6 +434,15 @@
 
 - (void)captchaBeenChecked
 {
+    [self sendPostWithoutCaptcha:NO];
+}
+
+#pragma mark - DVBDvachCaptchaViewControllerDelegate
+
+- (void)captchaBeenCheckedWithCode:(NSString *)code andWithId:(NSString *)captchaId
+{
+    _captchaId = captchaId;
+    _captchaCode = code;
     [self sendPostWithoutCaptcha:NO];
 }
 
