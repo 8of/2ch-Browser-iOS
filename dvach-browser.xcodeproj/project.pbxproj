@@ -41,6 +41,9 @@
 		945FB1EF1B90F75800E87D52 /* BoardCategories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 945FB1F11B90F75800E87D52 /* BoardCategories.plist */; };
 		946394161A87A26C004CAB6E /* BadBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 946394151A87A26C004CAB6E /* BadBoards.plist */; };
 		948A243B1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */; };
+		948B34CF1C693749003D3BB4 /* DVBDvachCaptchaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 948B34CD1C693749003D3BB4 /* DVBDvachCaptchaViewController.m */; };
+		948B34D01C693749003D3BB4 /* DVBDvachCaptchaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 948B34CE1C693749003D3BB4 /* DVBDvachCaptchaViewController.xib */; };
+		948B34D31C6939C0003D3BB4 /* DVBCaptchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */; };
 		94A17DCA1B335CE50009A002 /* DVBGalleryTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A17DC91B335CE50009A002 /* DVBGalleryTransition.m */; };
 		94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A2564E1AB60C2600A31230 /* DVBMessagePostServerAnswer.m */; };
 		94A5E4591AF76E0C00824347 /* ARChromeActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A5E4521AF76E0C00824347 /* ARChromeActivity.m */; };
@@ -163,6 +166,11 @@
 		946394151A87A26C004CAB6E /* BadBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BadBoards.plist; sourceTree = "<group>"; };
 		948A24391AF02F0400CDEB52 /* DVBPostPhotoContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostPhotoContainerView.h; path = Views/DVBPostPhotoContainerView.h; sourceTree = "<group>"; };
 		948A243A1AF02F0400CDEB52 /* DVBPostPhotoContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostPhotoContainerView.m; path = Views/DVBPostPhotoContainerView.m; sourceTree = "<group>"; };
+		948B34CC1C693749003D3BB4 /* DVBDvachCaptchaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDvachCaptchaViewController.h; path = Controllers/Captcha/DVBDvachCaptchaViewController.h; sourceTree = "<group>"; };
+		948B34CD1C693749003D3BB4 /* DVBDvachCaptchaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDvachCaptchaViewController.m; path = Controllers/Captcha/DVBDvachCaptchaViewController.m; sourceTree = "<group>"; };
+		948B34CE1C693749003D3BB4 /* DVBDvachCaptchaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DVBDvachCaptchaViewController.xib; path = Controllers/Captcha/DVBDvachCaptchaViewController.xib; sourceTree = "<group>"; };
+		948B34D11C6939C0003D3BB4 /* DVBCaptchaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCaptchaManager.h; path = Models/DVBCaptchaManager.h; sourceTree = "<group>"; };
+		948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCaptchaManager.m; path = Models/DVBCaptchaManager.m; sourceTree = "<group>"; };
 		94A17DC81B335CE50009A002 /* DVBGalleryTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBGalleryTransition.h; path = Views/Transitions/DVBGalleryTransition.h; sourceTree = "<group>"; };
 		94A17DC91B335CE50009A002 /* DVBGalleryTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBGalleryTransition.m; path = Views/Transitions/DVBGalleryTransition.m; sourceTree = "<group>"; };
 		94A2564D1AB60C2600A31230 /* DVBMessagePostServerAnswer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBMessagePostServerAnswer.h; path = Models/Objects/DVBMessagePostServerAnswer.h; sourceTree = "<group>"; };
@@ -310,6 +318,7 @@
 		84CF8C871A0E558700585D88 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				948B34CB1C69362D003D3BB4 /* Captcha */,
 				94FC06A61C675D0F00813A68 /* WebM */,
 				A155FEE31AB7355600BE31F4 /* DVBAgreementViewController.h */,
 				A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */,
@@ -325,8 +334,6 @@
 				A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */,
 				942BE0A91B2C5ECB009B3EC4 /* DVBCommonTableViewController.h */,
 				942BE0AA1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m */,
-				94E0B9E71BA4DADA007CBA55 /* DVBCaptchaViewController.h */,
-				94E0B9E81BA4DADA007CBA55 /* DVBCaptchaViewController.m */,
 				94C42CE91BC9D9CB001F6840 /* DVBDvachWebViewViewController.h */,
 				94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */,
 			);
@@ -431,6 +438,8 @@
 				9437FD131B90DDB8004FFB22 /* DVBCommon.h */,
 				94452CB11B94D54E001D521E /* DVBDatabaseManager.h */,
 				94452CB21B94D54E001D521E /* DVBDatabaseManager.m */,
+				948B34D11C6939C0003D3BB4 /* DVBCaptchaManager.h */,
+				948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -455,6 +464,18 @@
 				94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */,
 			);
 			name = Helpers;
+			sourceTree = "<group>";
+		};
+		948B34CB1C69362D003D3BB4 /* Captcha */ = {
+			isa = PBXGroup;
+			children = (
+				94E0B9E71BA4DADA007CBA55 /* DVBCaptchaViewController.h */,
+				94E0B9E81BA4DADA007CBA55 /* DVBCaptchaViewController.m */,
+				948B34CC1C693749003D3BB4 /* DVBDvachCaptchaViewController.h */,
+				948B34CD1C693749003D3BB4 /* DVBDvachCaptchaViewController.m */,
+				948B34CE1C693749003D3BB4 /* DVBDvachCaptchaViewController.xib */,
+			);
+			name = Captcha;
 			sourceTree = "<group>";
 		};
 		949B76281AF766EF00DDA65F /* Activities */ = {
@@ -685,6 +706,7 @@
 				942F1CC11B939DFC00E4018E /* DVBLoadingStatusView.xib in Resources */,
 				94A5E4661AF77E4500824347 /* ARChromeActivity@2x.png in Resources */,
 				84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */,
+				948B34D01C693749003D3BB4 /* DVBDvachCaptchaViewController.xib in Resources */,
 				94A5E4681AF77E4500824347 /* ARChromeActivity~iPad.png in Resources */,
 				94A5E4651AF77E4500824347 /* ARChromeActivity.png in Resources */,
 				94FC06AB1C675D5300813A68 /* VDLPlaybackViewController.xib in Resources */,
@@ -761,6 +783,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				94C7272C1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m in Sources */,
+				948B34CF1C693749003D3BB4 /* DVBDvachCaptchaViewController.m in Sources */,
 				A155FEF11AB7355600BE31F4 /* DVBBoardViewController.m in Sources */,
 				A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */,
 				9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */,
@@ -784,6 +807,7 @@
 				94A17DCA1B335CE50009A002 /* DVBGalleryTransition.m in Sources */,
 				8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */,
 				942BE0AB1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m in Sources */,
+				948B34D31C6939C0003D3BB4 /* DVBCaptchaManager.m in Sources */,
 				8497BF2C1AD3F978001616C2 /* UrlNinja.m in Sources */,
 				945A53A31BCA472500AA5EAE /* DVBUrlRequestHelper.m in Sources */,
 				94A8345C1B0BC96800D7AFC1 /* DVBAddPhotoIconImageViewContainer.m in Sources */,

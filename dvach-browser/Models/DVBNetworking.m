@@ -182,7 +182,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 
 #pragma mark - Posting
 
-- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
+- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCaptchId:(NSString *)captchaId andCaptchaCode:(NSString *)captchaCode andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
@@ -202,17 +202,23 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     // Convert to mutable to add more parameters, depending on situation
     NSMutableDictionary *mutableParams = [params mutableCopy];
 
-    // Check userCode
-    BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
-    if (isUsercodeNotEmpty) {
-        // If usercode presented then use as part of the message
-        // NSLog(@"usercode way: %@", usercode);
-        [mutableParams setValue:usercode forKey:@"usercode"];
-    } else if (!withoutCaptcha) {
-        // New ReCaptcha if server not permit us to post without captcha
-        mutableParams[@"captcha_type"] = @"recaptcha";
-        mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
-        mutableParams[@"g-recaptcha-response"] = captchaValue;
+    // if new captcha
+    if (captchaId && captchaCode) {
+        mutableParams[@"2chaptcha_id"] = captchaId;
+        mutableParams[@"2chaptcha_value"] = captchaCode;
+    } else {
+        // Check userCode
+        BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
+        if (isUsercodeNotEmpty) {
+            // If usercode presented then use as part of the message
+            // NSLog(@"usercode way: %@", usercode);
+            [mutableParams setValue:usercode forKey:@"usercode"];
+        } else if (!withoutCaptcha) {
+            // New ReCaptcha if server not permit us to post without captcha
+            mutableParams[@"captcha_type"] = @"recaptcha";
+            mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
+            mutableParams[@"g-recaptcha-response"] = captchaValue;
+        }
     }
 
     // Back to unmutable dictionary to be safe
@@ -462,7 +468,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              NSString *reponseString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
-             NSLog(@"RESPO: %@", reponseString);
              if ([reponseString.lowercaseString rangeOfString:NO_CAPTCHA_ANSWER_CODE].location == NSNotFound ) {
                  completion(NO);
              } else {
@@ -471,6 +476,36 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
          }];
     } else {
         completion(NO);
+    }
+}
+
+- (void)getCaptchaImageUrl:(BOOL)thread andCompletion:(void (^)(NSString *))completion
+{
+    if ([self getNetworkStatus]) {
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha"];
+        if (!thread) {
+            address = [NSString stringWithFormat:@"%@&action=thread", address];
+        }
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/plain", nil]];
+
+        [manager GET:address
+          parameters:nil
+             success:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             completion(nil);
+         }
+             failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSString *reponseString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+             if ([reponseString hasPrefix:DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD]) {
+                 completion(reponseString);
+             } else {
+                 completion(nil);
+             }
+         }];
+    } else {
+        completion(nil);
     }
 }
 
