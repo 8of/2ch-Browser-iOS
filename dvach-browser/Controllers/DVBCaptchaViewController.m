@@ -24,6 +24,9 @@ static NSString *const JS_FILE_NAME = @"hideUselessItems";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    }
     _webView.delegate = self;
 }
 

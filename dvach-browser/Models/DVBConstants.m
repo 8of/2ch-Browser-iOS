@@ -29,6 +29,7 @@ NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
 
 // Keys
 NSString *const DVACH_RECAPTCHA_KEY = @"6LcM2P4SAAAAAD97nF449oigatS5hPCIgt8AQanz";
+NSString *const DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD = @"CHECK";
 
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
