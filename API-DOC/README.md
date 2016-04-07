@@ -70,7 +70,7 @@ https://2ch.hk/makaba/mobile.fcgi
 + thread - *id треда*
 + num - *id поста*
 
-## Работа с Google ReCaptcha
+## Работа с 2ch Captcha
 
 *наполняется*
 
