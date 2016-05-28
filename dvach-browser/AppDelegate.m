@@ -9,6 +9,8 @@
 #import <AFNetworking/AFNetworking.h>
 #import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 #import <SDWebImage/SDWebImageManager.h>
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
@@ -45,6 +47,8 @@
 
 - (void)createDefaultSettings
 {
+    [Fabric with:@[[Crashlytics class]]];
+
     if (!_networking) {
         _networking = [[DVBNetworking alloc] init];
     }

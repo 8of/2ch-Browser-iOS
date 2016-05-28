@@ -22,15 +22,18 @@ PODS:
     - AFNetworking/NSURLSession
   - CCBottomRefreshControl (0.5.1):
     - Masonry (~> 0.6.2)
-  - CocoaLumberjack (2.2.0):
-    - CocoaLumberjack/Default (= 2.2.0)
-    - CocoaLumberjack/Extensions (= 2.2.0)
-  - CocoaLumberjack/Core (2.2.0)
-  - CocoaLumberjack/Default (2.2.0):
+  - CocoaLumberjack (2.3.0):
+    - CocoaLumberjack/Default (= 2.3.0)
+    - CocoaLumberjack/Extensions (= 2.3.0)
+  - CocoaLumberjack/Core (2.3.0)
+  - CocoaLumberjack/Default (2.3.0):
     - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.2.0):
+  - CocoaLumberjack/Extensions (2.3.0):
     - CocoaLumberjack/Default
+  - Crashlytics (3.7.0):
+    - Fabric (~> 1.6.3)
   - DACircularProgress (2.3.1)
+  - Fabric (1.6.7)
   - Mantle (2.0.6):
     - Mantle/extobjc (= 2.0.6)
   - Mantle/extobjc (2.0.6)
@@ -40,9 +43,9 @@ PODS:
     - DACircularProgress (~> 2.3)
     - MBProgressHUD (~> 0.9)
     - SDWebImage (!= 3.7.2, ~> 3.7)
-  - SDWebImage (3.7.5):
-    - SDWebImage/Core (= 3.7.5)
-  - SDWebImage/Core (3.7.5)
+  - SDWebImage (3.7.6):
+    - SDWebImage/Core (= 3.7.6)
+  - SDWebImage/Core (3.7.6)
   - TUSafariActivity (1.0.4)
   - YapDatabase (2.8.2):
     - YapDatabase/Standard (= 2.8.2)
@@ -91,6 +94,8 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (= 2.6.0)
   - CCBottomRefreshControl (= 0.5.1)
+  - Crashlytics (= 3.7.0)
+  - Fabric (= 1.6.7)
   - Mantle (= 2.0.6)
   - MWPhotoBrowser (= 2.1.1)
   - TUSafariActivity (= 1.0.4)
@@ -99,13 +104,15 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   CCBottomRefreshControl: 57a596348855260f627ffc2b311328ed15b94877
-  CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
+  Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  Fabric: caf7580c725e64db144f610ac65cd60956911dc7
   Mantle: 299966b00759634931699f69cb6a30b9239b944d
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWPhotoBrowser: ba0d0c09ffda3a7ea10093518738c502c1c7141c
-  SDWebImage: 69c6303e3348fba97e03f65d65d4fbc26740f461
+  SDWebImage: c325cf02c30337336b95beff20a13df489ec0ec9
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
   YapDatabase: d97b1a0bfd6856745a7a398045f3ca32cf248fda
 
