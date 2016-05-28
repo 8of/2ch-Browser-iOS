@@ -31,6 +31,20 @@
 @class VLCMediaList;
 @class VLCMediaDiscoverer;
 
+
+typedef NS_ENUM(unsigned, VLCMediaDiscovererCategoryType)
+{
+    VLCMediaDiscovererCategoryTypeDevices = 0,
+    VLCMediaDiscovererCategoryTypeLAN,
+    VLCMediaDiscovererCategoryTypePodcasts,
+    VLCMediaDiscovererCategoryTypeLocalDirectories
+};
+
+/* discoverer keys */
+extern NSString *const VLCMediaDiscovererName;
+extern NSString *const VLCMediaDiscovererLongName;
+extern NSString *const VLCMediaDiscovererCategory;
+
 /**
  * VLCMediaDiscoverer
  */
@@ -44,6 +58,12 @@
  */
 + (NSArray *)availableMediaDiscoverer __attribute__((deprecated));
 
+/**
+ * \param The VLCMediaDiscovererCategory you are looking for
+ * \return returns an array of dictionaries describing the available discoverers for the requested type
+ */
++ (NSArray *)availableMediaDiscovererForCategoryType:(VLCMediaDiscovererCategoryType)categoryType;
+
 /* Initializers */
 /**
  * Initializes new object with specified name.
@@ -52,6 +72,12 @@
  * \note with VLCKit 3.0 and above, you need to start the discoverer explicitly after creation
  */
 - (instancetype)initWithName:(NSString *)aServiceName;
+
+/**
+ * same as above but with a custom VLCLibrary instance
+ * \note Using this mode can lead to a significant performance impact - use only if you know what you are doing
+ */
+- (instancetype)initWithName:(NSString *)aServiceName libraryInstance:(VLCLibrary *)libraryInstance;
 
 /**
  * start media discovery

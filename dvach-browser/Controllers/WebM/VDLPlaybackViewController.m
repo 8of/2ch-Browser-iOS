@@ -100,22 +100,6 @@
 {
     [super viewDidAppear:animated];
     [_mediaplayer play];
-
-    // Fixing ugly broken pictures of webm's...
-    double delayInSecondsPause = 1;
-    dispatch_time_t popTimePause = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSecondsPause * NSEC_PER_SEC)); // 1
-    dispatch_after(popTimePause, dispatch_get_main_queue(), ^(void){
-        [_mediaplayer pause];
-    });
-
-    double delayInSeconds = 4;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)); // 1
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        if (!_mediaplayer.isPlaying) {
-            [_mediaplayer shortJumpBackward];
-            [_mediaplayer play];
-        }
-    });
 }
 
 - (void)viewWillDisappear:(BOOL)animated

@@ -231,8 +231,21 @@ typedef NS_ENUM(NSUInteger, VLCMediaType) {
 
 /**
  * Determines if the media has already been preparsed.
+ * \note: deprecated: use parseStatus instead
  */
-@property (nonatomic, readonly) BOOL isParsed;
+@property (nonatomic, readonly) BOOL isParsed __attribute__((deprecated));
+
+typedef NS_ENUM(unsigned, VLCMediaParseStatus)
+{
+    VLCMediaParseStatusInit = 0,
+    VLCMediaParseStatusSkipped,
+    VLCMediaParseStatusFailed,
+    VLCMediaParseStatusDone
+};
+/**
+ * \return Returns the parse status of the media
+ */
+@property (nonatomic, readonly) VLCMediaParseStatus parseStatus;
 
 /**
  * The URL for the receiver's media resource.
@@ -417,8 +430,9 @@ extern NSString *const VLCMediaTracksInformationTypeUnknown;
  * is called.
  *
  * \see -[VLCMediaDelegate mediaDidFinishParsing:]
+ * \note Use parseWithOptions: instead
  */
-- (void)parse;
+- (void)parse __attribute__((deprecated));
 
 /**
  * Trigger a synchronous parsing of the media
