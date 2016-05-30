@@ -23,12 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE. */
 
-#import "VDLPlaybackViewController.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import <CoreText/CoreText.h>
 #import <MobileVLCKit/MobileVLCKit.h>
 
 #import "DVBCommon.h"
+#import "VDLPlaybackViewController.h"
 
 @interface VDLPlaybackViewController () <UIGestureRecognizerDelegate, VLCMediaPlayerDelegate>
 {
@@ -63,6 +63,15 @@
     _doneButton.title = NSLS(@"BUTTON_CLOSE");
 
     _timeDisplay = [[UIBarButtonItem alloc] init];
+
+    // Change font to monospace version
+    NSArray *monospacedSetting = @[@{UIFontFeatureTypeIdentifierKey: @(kNumberSpacingType),
+                                     UIFontFeatureSelectorIdentifierKey: @(kMonospacedNumbersSelector)}];
+    UIFontDescriptor *newDescriptor = [[[UIFont systemFontOfSize:17.0] fontDescriptor] fontDescriptorByAddingAttributes:@{UIFontDescriptorFeatureSettingsAttribute: monospacedSetting}];
+    [_timeDisplay setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithDescriptor:newDescriptor size:0], NSFontAttributeName, nil]
+                                forState:UIControlStateNormal];
+
     _timeDisplay.target = self;
     _timeDisplay.action = @selector(toggleTimeDisplay:);
     _timeDisplay.title = @"--:--";
