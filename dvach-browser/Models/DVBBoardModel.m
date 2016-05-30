@@ -89,25 +89,38 @@
                                 thread.thumbnail = thumbPath;
                             }
                         }
+                        
+                        NSString *preparedComment = @"";
 
                         // Strip comment from useless words that we'll not see anyway
                         NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
 
+                        // Need to rethink, doesn't look very good
                         NSString *title = thread.subject;
+                        NSArray *titleArray = [title componentsSeparatedByString:@" "];
                         if ([title isEqualToString:@""]) {
-                            title = thread.num;
-                        }
-
-                        NSString *preparedComment = [NSString stringWithFormat:@"%@ • ", title];
-
-                        if (commentArray.count > 0) {
-                            for (NSString *nextPart in commentArray) {
+                            preparedComment = [NSString stringWithFormat:@"%@ • ", thread.num];
+                        } else {
+                            for (NSString *nextPart in titleArray) {
                                 NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
                                 if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
                                     preparedComment = newCommentLike;
                                 } else {
                                     break;
                                 }
+                            }
+                            NSString *withDotPart = [NSString stringWithFormat:@"%@ • ", preparedComment];
+                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:withDotPart]) {
+                                preparedComment = withDotPart;
+                            }
+                        }
+
+                        for (NSString *nextPart in commentArray) {
+                            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
+                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
+                                preparedComment = newCommentLike;
+                            } else {
+                                break;
                             }
                         }
                         thread.comment = preparedComment;
