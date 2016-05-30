@@ -34,7 +34,7 @@ NSString *const DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD = @"CHECK";
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
-NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"enableInternalWebmPlayer";
+NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"internalWebmPlayer";
 NSString *const SETTING_ENABLE_SMOOTH_SCROLLING = @"enableSmoothScrolling";
 NSString *const SETTING_ENABLE_TRAFFIC_SAVINGS = @"enableTrafficSavings";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
