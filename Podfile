@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '7.1'
+platform :ios, '8.4'
 inhibit_all_warnings!
 
 	pod 'MWPhotoBrowser', '= 2.1.1'
@@ -9,4 +9,6 @@ inhibit_all_warnings!
 	pod 'TUSafariActivity', '= 1.0.4'
 	pod 'CCBottomRefreshControl', '= 0.5.1'
 	pod 'YapDatabase', '= 2.8.2'
+	pod 'Fabric', '= 1.6.7'
+	pod 'Crashlytics', '= 3.7.0'
 	

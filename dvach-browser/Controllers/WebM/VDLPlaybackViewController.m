@@ -23,12 +23,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE. */
 
-#import "VDLPlaybackViewController.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import <CoreText/CoreText.h>
 #import <MobileVLCKit/MobileVLCKit.h>
 
 #import "DVBCommon.h"
+#import "VDLPlaybackViewController.h"
 
 @interface VDLPlaybackViewController () <UIGestureRecognizerDelegate, VLCMediaPlayerDelegate>
 {
@@ -44,7 +44,7 @@
 @property (nonatomic, weak) IBOutlet UISlider *positionSlider;
 @property (nonatomic, strong) UIBarButtonItem *timeDisplay;
 
-@property (nonatomic, weak) IBOutlet UIButton *playPauseButton;
+@property (nonatomic, strong) UIButton *playPauseButton;
 
 @property (nonatomic, assign) BOOL controlsHidden;
 
@@ -63,16 +63,35 @@
     _doneButton.title = NSLS(@"BUTTON_CLOSE");
 
     _timeDisplay = [[UIBarButtonItem alloc] init];
+
+    // Change font to monospace version
+    NSArray *monospacedSetting = @[@{UIFontFeatureTypeIdentifierKey: @(kNumberSpacingType),
+                                     UIFontFeatureSelectorIdentifierKey: @(kMonospacedNumbersSelector)}];
+    UIFontDescriptor *newDescriptor = [[[UIFont systemFontOfSize:17.0] fontDescriptor] fontDescriptorByAddingAttributes:@{UIFontDescriptorFeatureSettingsAttribute: monospacedSetting}];
+    [_timeDisplay setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithDescriptor:newDescriptor size:0], NSFontAttributeName, nil]
+                                forState:UIControlStateNormal];
+
     _timeDisplay.target = self;
     _timeDisplay.action = @selector(toggleTimeDisplay:);
     _timeDisplay.title = @"--:--";
-
+    
+    CGRect buttonRect = CGRectMake(0, 0, 30., 30.);
+    
+    _playPauseButton = [[UIButton alloc] initWithFrame:buttonRect];
     [_playPauseButton setTitle:@"" forState:UIControlStateNormal];
+    [_playPauseButton addTarget:self action:@selector(playAndPause:) forControlEvents:UIControlEventTouchUpInside];
 
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     self.navigationItem.titleView = _navigationItemView;
     self.navigationItem.leftBarButtonItem = _doneButton;
     self.navigationItem.rightBarButtonItem = _timeDisplay;
+    
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    UIBarButtonItem *playPauseItem = [[UIBarButtonItem alloc] initWithCustomView:_playPauseButton];
+
+    [self setToolbarItems:@[flexibleItem, playPauseItem, flexibleItem] animated:NO];
+    self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
 
     UITapGestureRecognizer *tapOnVideoRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControlsVisible)];
     tapOnVideoRecognizer.delegate = self;
@@ -82,6 +101,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.navigationController setToolbarHidden:NO animated:NO];
 
     /* setup the media player instance, give it a delegate and something to draw into */
     _mediaplayer = [[VLCMediaPlayer alloc] init];
@@ -94,28 +114,15 @@
 
     /* create a media object and give it to the player */
     _mediaplayer.media = [VLCMedia mediaWithURL:_url];
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [_mediaplayer play];
-
-    // Fixing ugly broken pictures of webm's...
-    double delayInSecondsPause = 1;
-    dispatch_time_t popTimePause = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSecondsPause * NSEC_PER_SEC)); // 1
-    dispatch_after(popTimePause, dispatch_get_main_queue(), ^(void){
-        [_mediaplayer pause];
-    });
-
-    double delayInSeconds = 4;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC)); // 1
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        if (!_mediaplayer.isPlaying) {
-            [_mediaplayer shortJumpBackward];
-            [_mediaplayer play];
-        }
-    });
+    [self changeBottomButtonStateForSize:self.view.bounds.size];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -139,7 +146,22 @@
     }
 
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [self changeBottomButtonStateForSize:size];
+}
+
+- (void)changeBottomButtonStateForSize:(CGSize)viewSize {
+    if (viewSize.width > viewSize.height) {
+        // Position elements for Landscape
+        _playPauseButton.frame = CGRectMake(0, 0, 22., 22.);
+    } else {
+        // Position elements for Portrait
+        _playPauseButton.frame = CGRectMake(0, 0, 30., 30.);
+    }
 }
 
 - (void)playMediaFromURL:(NSURL*)theURL
@@ -147,7 +169,7 @@
     _url = theURL;
 }
 
-- (IBAction)playandPause:(id)sender
+- (IBAction)playAndPause:(id)sender
 {
     if (_mediaplayer.isPlaying) {
         [_mediaplayer pause];
@@ -163,7 +185,7 @@
     }
 }
 
-- (IBAction)closePlayback:(id)sender
+- (void)closePlayback:(id)sender
 {
     [_mediaplayer stop];
     [[AVAudioSession sharedInstance] setActive:NO error:nil];
@@ -224,9 +246,9 @@
 - (void)toggleControlsVisible
 {
     _controlsHidden = !_controlsHidden;
-    _playPauseButton.hidden = _controlsHidden;
-    self.navigationController.navigationBarHidden = _controlsHidden;
-    [[UIApplication sharedApplication] setStatusBarHidden:_controlsHidden withAnimation:UIStatusBarAnimationFade];
+    [self.navigationController setNavigationBarHidden:_controlsHidden animated:@YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:_controlsHidden withAnimation:UIStatusBarAnimationSlide];
+    [self.navigationController setToolbarHidden:_controlsHidden animated:@YES];
 }
 
 @end
