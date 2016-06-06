@@ -104,7 +104,10 @@
 - (void)presentBrowserWithUrlString:(NSString *)urlString
 {
     DVBDvachWebViewViewController *webViewController = [[DVBDvachWebViewViewController alloc] initWithUrlString:urlString andDvachWebViewViewControllerDelegate:self];
+    if (webViewController == nil) { return; }
+
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:webViewController];
+    if (navigationController == nil) { return; }
 
     [self.navigationController presentViewController:navigationController
                                             animated:YES
