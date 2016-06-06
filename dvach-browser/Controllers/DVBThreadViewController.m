@@ -727,6 +727,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Clear prompt from any status / error messages.
 - (void)clearPrompt
 {
+    // Prevent crashes
+    if (self == nil || self.navigationItem == nil || self.navigationItem.prompt) { return; }
     self.navigationItem.prompt = nil;
 }
 
