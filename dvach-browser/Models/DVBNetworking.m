@@ -237,7 +237,11 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
           *  and subject
           *  and e-mail
           */
-         [formData appendPartWithFormData:[comment dataUsingEncoding:NSUTF8StringEncoding]
+         NSString *commentToSend = comment;
+         if ([comment isEqualToString:NSLS(@"PLACEHOLDER_COMMENT_FIELD")]) {
+             commentToSend = @"";
+         }
+         [formData appendPartWithFormData:[commentToSend dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"comment"];
          [formData appendPartWithFormData:[name dataUsingEncoding:NSUTF8StringEncoding]
                                      name:@"name"];
