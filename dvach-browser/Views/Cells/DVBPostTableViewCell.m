@@ -194,26 +194,31 @@
 
         for (NSString *postThumbUrlString in thumbPathesArray) {
 
-            UIImageView *postThumb = [self valueForKey:[@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]]];
+            NSString *kvcKey = [@"postThumb" stringByAppendingString:[NSString stringWithFormat:@"%ld", (unsigned long)currentImageIndex]];
 
-            __weak typeof(UIImageView *)weakPostThumb = postThumb;
-            [postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:postThumbUrlString]
-                             placeholderImage:nil
-                                      success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
-             {
-                 weakPostThumb.image = image;
-             } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
+            // Check to prevent crashes
+            if ([self respondsToSelector:NSSelectorFromString(kvcKey)]) {
+                UIImageView *postThumb = [self valueForKey:kvcKey];
 
-            DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
+                __weak typeof(UIImageView *)weakPostThumb = postThumb;
+                [postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:postThumbUrlString]
+                                 placeholderImage:nil
+                                          success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
+                 {
+                     weakPostThumb.image = image;
+                 } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
 
-            if (webmIconImageView) {
-                NSString *pathString = pathesArray[currentImageIndex];
-                if ([self isMediaTypeWebmWithPicPath:pathString]) {
-                    webmIconImageView.hidden = NO;
+                DVBWebmIconImageView *webmIconImageView = [self imageViewToShowWebmIconWithArrayOfViews:postThumb.superview.subviews];
+
+                if (webmIconImageView) {
+                    NSString *pathString = pathesArray[currentImageIndex];
+                    if ([self isMediaTypeWebmWithPicPath:pathString]) {
+                        webmIconImageView.hidden = NO;
+                    }
                 }
+                
+                currentImageIndex++;
             }
-            
-            currentImageIndex++;
         }
     } else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
         // load the image and setting image source depending on presented image or set blank image
