@@ -184,19 +184,22 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 
 - (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCaptchId:(NSString *)captchaId andCaptchaCode:(NSString *)captchaCode andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
+    // Prevent crashing
+    if (board == nil || threadNum == nil || task == nil) {
+        return;
+    }
+
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
-    
-    NSString *json = @"1";
     
     NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/posting.fcgi"];
     
     NSDictionary *params =
     @{
-         @"task":task,
-         @"json":json,
-         @"board":board,
-         @"thread":threadNum
+         @"task" : task,
+         @"json" : @"1",
+         @"board" : board,
+         @"thread" : threadNum
     };
     
     // Convert to mutable to add more parameters, depending on situation
@@ -212,7 +215,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
         if (isUsercodeNotEmpty) {
             // If usercode presented then use as part of the message
             // NSLog(@"usercode way: %@", usercode);
-            [mutableParams setValue:usercode forKey:@"usercode"];
+            mutableParams[@"usercode"] = usercode;
         } else if (!withoutCaptcha) {
             // New ReCaptcha if server not permit us to post without captcha
             mutableParams[@"captcha_type"] = @"recaptcha";
