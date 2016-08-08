@@ -39,7 +39,7 @@
 
 - (void)showUserMessageWithTitle:(NSString *)title
 {
-    if (!_loadingStatusView.loadingStatusViewStyle == DVBLoadingStatusViewStyleError) {
+    if (!(_loadingStatusView.loadingStatusViewStyle == DVBLoadingStatusViewStyleError)) {
         DVBLoadingStatusViewColor loadingStatusViewColor = DVBLoadingStatusViewColorLight;
         DVBLoadingStatusViewStyle loadingStatusViewStyle = DVBLoadingStatusViewStyleLoading;
 
