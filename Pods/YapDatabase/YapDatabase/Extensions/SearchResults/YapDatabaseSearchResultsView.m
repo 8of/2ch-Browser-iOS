@@ -88,8 +88,8 @@
 
 - (id)initWithFullTextSearchName:(NSString *)inFullTextSearchName
                   parentViewName:(NSString *)inParentViewName
-					  versionTag:(NSString *)inVersionTag
-						 options:(YapDatabaseSearchResultsViewOptions *)inOptions
+                      versionTag:(NSString *)inVersionTag
+                         options:(YapDatabaseSearchResultsViewOptions *)inOptions
 {
 	NSAssert(inFullTextSearchName != nil, @"Invalid fullTextSearchName");
 	NSAssert(inParentViewName != nil, @"Invalid parentViewName");
@@ -114,8 +114,8 @@
 {
 	NSAssert(inFullTextSearchName != nil, @"Invalid parameter: fullTextSearchName == nil");
 	
-	NSAssert(inGrouping != NULL, @"Invalid parameter: grouping == nil");
-	NSAssert(inSorting != NULL, @"Invalid parameter: sorting == nil");
+	NSAssert([inGrouping isKindOfClass:[YapDatabaseViewGrouping class]], @"Invalid parameter: grouping");
+	NSAssert([inSorting isKindOfClass:[YapDatabaseViewSorting class]], @"Invalid parameter: sorting");
 	
 	if ((self = [super init]))
 	{
@@ -135,9 +135,27 @@
 #pragma mark Registration
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (BOOL)supportsDatabase:(YapDatabase *)database withRegisteredExtensions:(NSDictionary *)registeredExtensions
+/**
+ * YapDatabaseExtension subclasses may OPTIONALLY implement this method.
+ * This method is called during the extension registration process to enusre the extension (as configured)
+ * will support the given database configuration. This is primarily for extensions with dependecies.
+ *
+ * For example, the YapDatabaseFilteredView is configured with the registered name of a parent View instance.
+ * So that class should implement this method to ensure:
+ * - The parentView actually exists
+ * - The parentView is actually a YapDatabaseView class/subclass
+ *
+ * When this method is invoked, the 'self.registeredName' & 'self.registeredDatabase' properties
+ * will be set and available for inspection.
+ *
+ * @param registeredExtensions
+ *   The current set of registered extensions. (i.e. self.registeredDatabase.registeredExtensions)
+ *
+ * Return YES if the class/instance supports the database configuration.
+**/
+- (BOOL)supportsDatabaseWithRegisteredExtensions:(NSDictionary *)registeredExtensions
 {
-	if (![super supportsDatabase:database withRegisteredExtensions:registeredExtensions])
+	if (![super supportsDatabaseWithRegisteredExtensions:registeredExtensions])
 		return NO;
 	
 	YapDatabaseExtension *ext = [registeredExtensions objectForKey:fullTextSearchName];

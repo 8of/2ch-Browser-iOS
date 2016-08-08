@@ -8,11 +8,11 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <Mantle/Mantle.h>
+#import <Reachability/Reachability.h>
 #import "UIImage+DVBImageExtention.h"
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
-#import "Reachlibility.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
 #import "DVBComment.h"

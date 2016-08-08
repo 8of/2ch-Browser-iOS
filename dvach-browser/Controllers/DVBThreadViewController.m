@@ -9,10 +9,10 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
+#import <Reachability/Reachability.h>
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
-#import "Reachlibility.h"
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBComment.h"

@@ -4,8 +4,11 @@
 
 @implementation YapDatabaseViewState
 {
-	NSMutableDictionary *group_pagesMetadata_dict; // (NSString *)group -> @[ YapDatabaseViewPageMetadata, ... ]
-	NSMutableDictionary *pageKey_group_dict;       // (NSString *)pageKey -> (NSString *)group
+	NSMutableDictionary<NSString *, NSMutableArray<YapDatabaseViewPageMetadata *> *> *group_pagesMetadata_dict;
+	NSMutableDictionary<NSString *, NSString *> *pageKey_group_dict;
+	
+	// - group_pagesMetadata_dict : group -> @[ YapDatabaseViewPageMetadata, ... ]
+	// - pageKey_group_dict       : pageKey -> group
 }
 
 @synthesize isImmutable = isImmutable;
@@ -36,11 +39,9 @@
 {
 	NSMutableDictionary *deepCopy = [NSMutableDictionary dictionaryWithCapacity:[group_pagesMetadata_dict count]];
 	
-	[group_pagesMetadata_dict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL __unused *stop) {
-		
-		__unsafe_unretained NSString *group = (NSString *)key;
-		__unsafe_unretained NSMutableArray *pagesMetadata = (NSMutableArray *)obj;
-		
+	[group_pagesMetadata_dict enumerateKeysAndObjectsUsingBlock:
+	    ^(NSString *group, NSMutableArray *pagesMetadata, BOOL __unused *stop)
+	{
 		// We need a mutable copy of the pagesMetadata array,
 		// and we need a copy of each YapDatabaseViewPageMetadata object within the pages array.
 		
