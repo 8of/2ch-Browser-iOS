@@ -630,7 +630,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     NSURL *url = [NSURL URLWithString:urlString];
     NSArray *objectsToShare = @[url];
 
-    TUSafariActivity *safariAtivity = [[TUSafariActivity alloc] init];
+    TUSafariActivity *safariActivity = [[TUSafariActivity alloc] init];
 
     ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
 
@@ -638,11 +638,16 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     [chromeActivity setActivityTitle:openInChromActivityTitle];
 
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariAtivity, chromeActivity]];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariActivity, chromeActivity]];
 
-    // Only for iOS 8
+    // Only for iPad
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
-        activityViewController.popoverPresentationController.barButtonItem = _shareButton;
+        if (self.navigationController.isToolbarHidden) {
+            activityViewController.popoverPresentationController.sourceView = self.navigationController.navigationBar;
+            activityViewController.popoverPresentationController.sourceRect = self.navigationController.navigationBar.frame;
+        } else {
+            activityViewController.popoverPresentationController.barButtonItem = _shareButton;
+        }
     }
 
     [self presentViewController:activityViewController
