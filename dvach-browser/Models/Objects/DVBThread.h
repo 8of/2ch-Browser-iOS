@@ -31,6 +31,7 @@
 @property (nonatomic, strong) NSString *timeSinceFirstPost;
 
 + (BOOL)isTitle:(NSString *)title madeFromComment:(NSString *)comment;
++ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment;
 + (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment;
 
 @end

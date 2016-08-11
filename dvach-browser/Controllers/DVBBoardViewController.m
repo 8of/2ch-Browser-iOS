@@ -9,6 +9,7 @@
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
+#import "DVBThread.h"
 
 #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
@@ -261,10 +262,10 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
             tempThreadObj = [_threadsArray objectAtIndex:selectedCellPath.row];
             
             NSString *threadNum = tempThreadObj.num;
-            NSString *threadSubject = tempThreadObj.subject;
             
             threadViewController.threadNum = threadNum;
-            threadViewController.threadSubject = threadSubject;
+            threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:tempThreadObj.subject andNum:tempThreadObj.num andComment:tempThreadObj.comment];
+
         }
     } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
         

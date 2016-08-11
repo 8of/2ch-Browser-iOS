@@ -53,6 +53,20 @@ static NSInteger MAX_CHARACTERS_COUNT = 450;
     }];
 }
 
++ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
+{
+
+    if ([title isEqualToString:@""]) {
+        return num;
+    }
+
+    if ([comment containsString:num]) {
+        return num;
+    }
+
+    return title;
+}
+
 + (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
 {
     if (title.length > 2 && comment.length > 2) {
