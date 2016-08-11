@@ -89,17 +89,19 @@
                                 thread.thumbnail = thumbPath;
                             }
                         }
-                        
-                        NSString *preparedComment = @"";
 
                         // Strip comment from useless words that we'll not see anyway
                         NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
 
-                        // Need to rethink, doesn't look very good
-                        NSString *title = thread.subject;
-                        NSArray *titleArray = [title componentsSeparatedByString:@" "];
-                        if ([title isEqualToString:@""]) {
-                            preparedComment = [NSString stringWithFormat:@"%@ • ", thread.num];
+                        NSArray *titleArray = [thread.subject componentsSeparatedByString:@" "];
+
+                        NSString *preparedComment = @"";
+
+                        // If title auto-made from comment on server (/b/ - example) - mark it so
+                        BOOL isTitleMadeFromComment = [DVBThread isTitle:thread.subject madeFromComment:thread.comment];
+
+                        if ([thread.subject isEqualToString:@""] || isTitleMadeFromComment) {
+                            preparedComment = [NSString stringWithFormat:@"%@ • ", [DVBThread threadTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment]];
                         } else {
                             for (NSString *nextPart in titleArray) {
                                 NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
