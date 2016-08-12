@@ -75,19 +75,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self makeBottomRefreshAvailable];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-
-    BOOL isIOSgreater80 = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0");
-    BOOL isIOSlessTHAN83 = SYSTEM_VERSION_LESS_THAN(@"8.3");
-
-    // This preventing table view from jumping when we push other controller (answers/ gallery on top of it) in iOS 8.1-8.2
-    if (isIOSgreater80 && isIOSlessTHAN83) {
-        [self.tableView reloadData];
-    }
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -389,13 +376,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)openPostingControllerFromThisOne
 {
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                  sender:self];
-    } else {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                  sender:self];
-    }
+    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                              sender:self];
 }
 
 - (void)attachAnswerToCommentSingletonWithPostIndex:(NSInteger)postIndex andTextToo:(BOOL)textToo
@@ -587,28 +569,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
         }
     }
-}
-
-// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    // if we have Device with version under 8.0
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-
-        // and we have fancy popover 8.0 segue
-        if ([identifier isEqualToString:SEGUE_TO_NEW_POST]) {
-
-            // Execute iOS 7 segue
-            [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7 sender:self];
-
-            // drop iOS 8 segue
-            return NO;
-        }
-
-        return YES;
-    }
-    
-    return YES;
 }
 
 #pragma mark - UIActionSheetDelegate

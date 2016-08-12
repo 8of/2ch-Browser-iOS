@@ -283,28 +283,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     }
 }
 
-// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    // if we have Device with version under 8.0
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-
-        // and we have fancy popover 8.0 segue
-        if ([identifier isEqualToString:SEGUE_TO_NEW_THREAD]) {
-
-            // Execute iOS 7 segue
-            [self performSegueWithIdentifier:SEGUE_TO_NEW_THREAD_IOS_7 sender:self];
-
-            // drop iOS 8 segue
-            return NO;
-        }
-
-        return YES;
-    }
-
-    return YES;
-}
-
 - (void)openThredWithCreatedThread:(NSString *)threadNum
 {
     _createdThreadNum = threadNum;
