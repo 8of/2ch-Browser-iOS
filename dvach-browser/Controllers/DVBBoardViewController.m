@@ -267,7 +267,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
             threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:tempThreadObj.subject andNum:tempThreadObj.num andComment:tempThreadObj.comment];
 
         }
-    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
+    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPHONE]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
@@ -275,7 +275,7 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         createPostViewController.boardCode = _boardCode;
 
         // Fix ugly white popover arrow on Popover Controller when dark theme enabled
-        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] &&
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPAD] &&
             [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
         {
             [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
