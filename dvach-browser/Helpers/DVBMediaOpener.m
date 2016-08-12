@@ -86,7 +86,7 @@
 
         galleryBrowser.view.backgroundColor = [UIColor whiteColor];
 
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"enableDarkTheme"]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
             galleryBrowser.view.backgroundColor = [UIColor blackColor];
         }
 
