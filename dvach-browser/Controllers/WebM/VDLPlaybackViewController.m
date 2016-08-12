@@ -246,9 +246,9 @@
 - (void)toggleControlsVisible
 {
     _controlsHidden = !_controlsHidden;
-    [self.navigationController setNavigationBarHidden:_controlsHidden animated:@YES];
+    [self.navigationController setNavigationBarHidden:_controlsHidden animated:YES];
     [[UIApplication sharedApplication] setStatusBarHidden:_controlsHidden withAnimation:UIStatusBarAnimationSlide];
-    [self.navigationController setToolbarHidden:_controlsHidden animated:@YES];
+    [self.navigationController setToolbarHidden:_controlsHidden animated:YES];
 }
 
 @end
