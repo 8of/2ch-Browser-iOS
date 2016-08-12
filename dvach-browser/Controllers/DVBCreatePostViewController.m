@@ -138,9 +138,6 @@
 /// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
 {
-    // Dismiss keyboard before posting
-    [self.view endEditing:YES];
-
     // Clear any prompt messages
     self.navigationItem.prompt = nil;
 
