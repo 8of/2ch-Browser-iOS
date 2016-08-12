@@ -93,7 +93,7 @@
 {
     if (error &&
         error.userInfo[ERROR_USERINFO_KEY_IS_DDOS_PROTECTION] &&
-        error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] &&
+        (error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] != nil) &&
         ![error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER] isEqualToString:@""])
     {
         NSString *urlToCheckInBrowser = error.userInfo[ERROR_USERINFO_KEY_URL_TO_CHECK_IN_BROWSER];
@@ -108,6 +108,8 @@
 
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:webViewController];
     if (navigationController == nil) { return; }
+    
+    if (self.navigationController == nil) { return; }
 
     [self.navigationController presentViewController:navigationController
                                             animated:YES

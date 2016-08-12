@@ -106,10 +106,13 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 /// First time loading thread list
 - (void)loadNextBoardPage
 {
+    __weak typeof(self) weakSelf = self;
+    
     if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
                                  andCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
+            if (weakSelf == nil) { return; }
             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
             NSInteger threadsCountNow = _threadsArray.count ? _threadsArray.count : 0;
@@ -120,29 +123,28 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
                 [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
 
-            _alreadyLoadingNextPage = NO;
-
             if (_threadsArray.count == 0) {
-                [self showMessageAboutError];
-                self.navigationItem.rightBarButtonItem.enabled = NO;
+                [weakSelf showMessageAboutError];
+                weakSelf.navigationItem.rightBarButtonItem.enabled = NO;
             } else {
                 _currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                    self.tableView.backgroundView = nil;
+                    [weakSelf updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
+                    _alreadyLoadingNextPage = NO;
+                    weakSelf.navigationItem.rightBarButtonItem.enabled = YES;
+                    weakSelf.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    weakSelf.tableView.backgroundView = nil;
                     
                     if (!_alreadyDidTheSizeClassTrick) {
                         _alreadyDidTheSizeClassTrick = YES;
-                        [self.tableView setNeedsLayout];
-                        [self.tableView layoutIfNeeded];
-                        [self.tableView reloadData];
+                        [weakSelf.tableView setNeedsLayout];
+                        [weakSelf.tableView layoutIfNeeded];
+                        [weakSelf.tableView reloadData];
                     }
                 });
             }
-            [self handleError:error];
+            [weakSelf handleError:error];
         }];
     } else {
         _currentPage = 0;
@@ -227,16 +229,22 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 - (void)reloadBoardPage
 {
+    // Prevent reloading while already loading board items
+    if (_alreadyLoadingNextPage) {
+        [self.refreshControl endRefreshing];
+        return;
+    }
+
     _alreadyLoadingNextPage = YES;
     [_boardModel reloadBoardWithViewWidth:self.view.bounds.size.width
                         andCompletion:^(NSArray *completionThreadsArray)
     {
         _currentPage = 0;
-        _alreadyLoadingNextPage = NO;
         _threadsArray = [completionThreadsArray mutableCopy];
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
+            _alreadyLoadingNextPage = NO;
         });
     }];
 }
