@@ -52,7 +52,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
-@property (nonatomic, strong) UIRefreshControl *bottomRefreshControl;
+@property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 
 @end
 
@@ -73,6 +73,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self toolbarHandler];
 
     [self makeBottomRefreshAvailable];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    _bottomRefreshControl = nil;
+    self.tableView.bottomRefreshControl = nil;
+    
 }
 
 - (void)viewDidLoad
