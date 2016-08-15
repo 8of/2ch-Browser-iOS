@@ -12,6 +12,9 @@
 
 @interface DVBNetworking : NSObject
 
+/// Check network status.
+- (BOOL)getNetworkStatus;
+
 - (void)getBoardsFromNetworkWithCompletion:(void (^)(NSDictionary *))completion;
 
 /// Get threads for single page of single board

@@ -334,6 +334,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Reload thread by current thread num
 - (void)reloadThread
 {
+    if (![_threadModel isConnectionAvailable]) {
+        [self.refreshControl endRefreshing];
+        [_bottomRefreshControl endRefreshing];
+        return;
+    }
     // Very stupid but necessary check.
     // So app can't double refresh the same thread at the same time
     if (!_answersToPost) {
