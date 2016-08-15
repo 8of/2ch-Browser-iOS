@@ -10,6 +10,6 @@ inhibit_all_warnings!
 	pod 'CCBottomRefreshControl', '= 0.5.1'
 	pod 'YapDatabase', '= 2.9.1'
 	pod 'Fabric', '= 1.6.7'
-	pod 'Crashlytics', '= 3.7.2'
+	pod 'Crashlytics', '= 3.7.3'
 	pod 'Reachability', '= 3.2'
 	
