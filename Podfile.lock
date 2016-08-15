@@ -105,10 +105,20 @@ DEPENDENCIES:
   - Crashlytics (= 3.7.3)
   - Fabric (= 1.6.7)
   - Mantle (= 2.0.7)
-  - MWPhotoBrowser (= 2.1.2)
+  - MWPhotoBrowser (from `https://github.com/8ofproject/MWPhotoBrowser.git`, tag `2.1.2`)
   - Reachability (= 3.2)
   - TUSafariActivity (= 1.0.4)
   - YapDatabase (= 2.9.1)
+
+EXTERNAL SOURCES:
+  MWPhotoBrowser:
+    :git: https://github.com/8ofproject/MWPhotoBrowser.git
+    :tag: 2.1.2
+
+CHECKOUT OPTIONS:
+  MWPhotoBrowser:
+    :git: https://github.com/8ofproject/MWPhotoBrowser.git
+    :tag: 2.1.2
 
 SPEC CHECKSUMS:
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
@@ -120,7 +130,7 @@ SPEC CHECKSUMS:
   Mantle: bc40bb061d8c2c6fb48d5083e04d928c3b7f73d9
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
-  MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
+  MWPhotoBrowser: 0b43f8b0a007792b4747b9bfc3221b3fa9f28c10
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   SDWebImage: 35f9627a3e44b4f292a8a8ce6a531fa488239b91
   TUSafariActivity: afc55a00965377939107ce4fdc7f951f62454546
