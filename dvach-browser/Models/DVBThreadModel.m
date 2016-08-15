@@ -81,8 +81,10 @@
                 strongSelf.lastPostNum = lastPost.num;
             }
 
+            _postsArray = arrayOfPosts;
+
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion([arrayOfPosts mutableCopy]);
+                completion([arrayOfPosts copy]);
             });
         }];
     });
@@ -281,6 +283,12 @@
         NSLog(@"No Board code or Thread number");
         completion(nil);
     }
+}
+
+/// Check connection
+- (BOOL)isConnectionAvailable
+{
+    return [_networking getNetworkStatus];
 }
 
 - (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment

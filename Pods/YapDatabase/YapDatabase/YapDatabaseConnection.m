@@ -52,8 +52,6 @@ NS_INLINE BOOL YDBIsMainThread()
 
 #endif
 
-static const char * const yap_vfs_shim_name = "yap_vfs_shim";
-
 static void yapNotifyDidRead(yap_file *file)
 {
 	__unsafe_unretained YapDatabaseConnection *connection =
@@ -69,6 +67,23 @@ static void yapNotifyDidRead(yap_file *file)
 }
 
 
+static int connectionBusyHandler(void *ptr, int count)
+{
+	__unsafe_unretained YapDatabaseConnection *connection = (__bridge YapDatabaseConnection *)ptr;
+	
+	// sleep 50 milliseconds
+	int millis = 50;
+	usleep(millis * 1000);
+	
+	// log every 250 milliseconds
+	if ((count >= 4) && (count % 4 == 0)) {
+   	YDBLogWarn(@"Delay obtaining SQLite lock on connection (%p): %d milliseconds."
+		           @" Is another process locking the database?", connection, (millis * (count+1)));
+	}
+	
+	return 1;
+}
+
 @implementation YapDatabaseConnection {
 @private
 	
@@ -81,6 +96,7 @@ static void yapNotifyDidRead(yap_file *file)
 	BOOL throwExceptionsForImplicitlyEndingLongLivedReadTransaction;
 	NSMutableArray *pendingChangesets;
 	NSMutableArray *processedChangesets;
+	BOOL isFastForwarding;
 	
 	NSDictionary *registeredExtensions;
 	BOOL registeredExtensionsChanged;
@@ -93,6 +109,7 @@ static void yapNotifyDidRead(yap_file *file)
 	id sharedKeySetForExtensions;
 	
 	sqlite3_stmt *beginTransactionStatement;
+	sqlite3_stmt *beginImmediateTransactionStatement;
 	sqlite3_stmt *commitTransactionStatement;
 	sqlite3_stmt *rollbackTransactionStatement;
 	
@@ -163,11 +180,6 @@ static void yapNotifyDidRead(yap_file *file)
 		ydb_NSThread_Class = [NSThread class];
 		
 	#endif
-		
-		// Register the yap_vfs shim with sqlite.
-		// This only needs to be done once.
-		
-		yap_vfs_shim_register(yap_vfs_shim_name, NULL);
 	}
 }
 
@@ -196,6 +208,10 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		extensions = [[NSMutableDictionary alloc] init];
 		
+		YapDatabaseOptions *options = database.options;
+		
+		enableMultiProcessSupport = options.enableMultiProcessSupport;
+		
 		YapDatabaseConnectionDefaults *defaults = [database connectionDefaults];
 		
 		objectCacheLimit = defaults.objectCacheLimit;
@@ -212,7 +228,17 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		NSUInteger keyCacheLimit = [self calculateKeyCacheLimit];
 		
-		keyCache = [[YapCache alloc] initWithCountLimit:keyCacheLimit];
+		YapBidirectionalCacheCallBacks RowidCallBacks = kYapBidirectionalCacheDefaultCallBacks;
+		RowidCallBacks.shouldCopy = NO;
+		
+		YapBidirectionalCacheCallBacks YapCollectionKeyCallBacks = kYapBidirectionalCacheDefaultCallBacks;
+		YapCollectionKeyCallBacks.shouldCopy = NO;
+		YapCollectionKeyCallBacks.equal = (CFDictionaryEqualCallBack)YapCollectionKeyEqual;
+		YapCollectionKeyCallBacks.hash = (CFDictionaryHashCallBack)YapCollectionKeyHash;
+		
+		keyCache = [[YapBidirectionalCache alloc] initWithCountLimit:keyCacheLimit
+		                                                keyCallbacks:&RowidCallBacks
+		                                             objectCallbacks:&YapCollectionKeyCallBacks];
 		keyCache.allowedKeyClasses = [NSSet setWithObject:[NSNumber class]];
 		keyCache.allowedObjectClasses = [NSSet setWithObject:[YapCollectionKey class]];
 		
@@ -229,8 +255,21 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		lock = OS_SPINLOCK_INIT;
 		
-		db = [database connectionPoolDequeue];
-		if (db == NULL)
+		BOOL recycled = [database connectionPoolDequeue:&db main_file:&main_file wal_file:&wal_file];
+		if (recycled)
+		{
+			// Update pointer values
+			
+			if (main_file) {
+				main_file->yap_database_connection = (__bridge void *)self;
+			}
+			if (wal_file) {
+				wal_file->yap_database_connection = (__bridge void *)self;
+			}
+			
+			sqlite3_busy_handler(db, connectionBusyHandler, (__bridge void *)self);
+		}
+		else
 		{
 			// Open the database connection.
 			//
@@ -239,7 +278,8 @@ static void yapNotifyDidRead(yap_file *file)
 			
 			int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX | SQLITE_OPEN_PRIVATECACHE;
 			
-			int status = sqlite3_open_v2([database.databasePath UTF8String], &db, flags, yap_vfs_shim_name);
+			int status = sqlite3_open_v2([database.databasePath UTF8String], &db, flags,
+			                             [database->yap_vfs_shim_name UTF8String]);
 			if (status != SQLITE_OK)
 			{
 				// Sometimes the open function returns a db to allow us to query it for the error message
@@ -253,8 +293,6 @@ static void yapNotifyDidRead(yap_file *file)
 			else
 			{
 				// Set configurable pragmas
-				
-				YapDatabaseOptions *options = database.options;
 				
 				YapDatabasePragmaSynchronous pragmaSynchronous = options.pragmaSynchronous;
 				
@@ -297,24 +335,32 @@ static void yapNotifyDidRead(yap_file *file)
 				
 				sqlite3_wal_autocheckpoint(db, 0);
 				
-				// Edge case workaround.
+				// Install busy handler.
 				//
-				// If there's an active checkpoint operation,
-				// then the very first time we call sqlite3_prepare_v2 on this db,
-				// we sometimes get a SQLITE_BUSY error.
+				// When multi-process support is ENABLED:
 				//
-				// This only seems to happen once, and only during the very first use of the db instance.
-				// I'm still tyring to figure out exactly why this is.
-				// For now I'm setting a busy timeout as a temporary workaround.
+				//   This allows us to warn the developer (via log statements) when another process
+				//   may be holding the write lock for too long.
 				//
-				// Note: I've also tested setting a busy_handler which logs the number of times its called.
-				// And in all my testing, I've only seen the busy_handler called once per db.
-				
-				sqlite3_busy_timeout(db, 50); // milliseconds
+				// When multi-process support is DISABLED:
+				//
+				//   The busy handler acts as a potential edge case workaround.
+				//
+				//   If there's an active checkpoint operation,
+				//   then the very first time we call sqlite3_prepare_v2 on this db,
+				//   we sometimes get a SQLITE_BUSY error.
+				//
+				//   This only seems to happen once, and only during the very first use of the db instance.
+				//   I'm still tyring to figure out exactly why this is. (sqlite bug ?)
+				//   For now I'm setting a busy timeout as a temporary workaround.
+				//
+				//   Note: In all my testing, I've only seen the busy_handler called once per db.
+                
+				sqlite3_busy_handler(db, connectionBusyHandler, (__bridge void *)self);
                 
 #ifdef SQLITE_HAS_CODEC
-                // Configure SQLCipher encryption (if needed)
-                [database configureEncryptionForDatabase:db];
+				// Configure SQLCipher encryption (if needed)
+				[database configureEncryptionForDatabase:db];
 #endif
 			}
 		}
@@ -384,7 +430,7 @@ static void yapNotifyDidRead(yap_file *file)
 			wal_file->xNotifyDidRead = NULL;
 		}
 		
-		if (![database connectionPoolEnqueue:db])
+		if (![database connectionPoolEnqueue:db main_file:main_file wal_file:wal_file])
 		{
 			int status = sqlite3_close(db);
 			if (status != SQLITE_OK)
@@ -394,6 +440,8 @@ static void yapNotifyDidRead(yap_file *file)
 		}
 		
 		db = NULL;
+		main_file = NULL;
+		wal_file = NULL;
 	}
 	
 	[database removeConnection:self];
@@ -854,6 +902,24 @@ static void yapNotifyDidRead(yap_file *file)
 	return *statement;
 }
 
+- (sqlite3_stmt *)beginImmediateTransactionStatement
+{
+    sqlite3_stmt **statement = &beginImmediateTransactionStatement;
+    if (*statement == NULL)
+    {
+        const char *stmt = "BEGIN IMMEDIATE TRANSACTION;";
+        int stmtLen = (int)strlen(stmt);
+        
+        int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
+        if (status != SQLITE_OK)
+        {
+            YDBLogError(@"Error creating '%@': %d %s", THIS_METHOD, status, sqlite3_errmsg(db));
+        }
+    }
+    
+    return *statement;
+}
+
 - (sqlite3_stmt *)commitTransactionStatement
 {
 	sqlite3_stmt **statement = &commitTransactionStatement;
@@ -1129,7 +1195,7 @@ static void yapNotifyDidRead(yap_file *file)
 	sqlite3_stmt **statement = &getDataForKeyStatement;
 	if (*statement == NULL)
 	{
-		const char *stmt = "SELECT \"data\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"data\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1147,7 +1213,7 @@ static void yapNotifyDidRead(yap_file *file)
 	sqlite3_stmt **statement = &getMetadataForKeyStatement;
 	if (*statement == NULL)
 	{
-		const char *stmt = "SELECT \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -1165,7 +1231,8 @@ static void yapNotifyDidRead(yap_file *file)
 	sqlite3_stmt **statement = &getAllForKeyStatement;
 	if (*statement == NULL)
 	{
-		const char *stmt = "SELECT \"data\", \"metadata\" FROM \"database2\" WHERE \"collection\" = ? AND \"key\" = ?;";
+		const char *stmt = "SELECT \"rowid\", \"data\", \"metadata\" FROM \"database2\""
+		                   " WHERE \"collection\" = ? AND \"key\" = ?;";
 		int stmtLen = (int)strlen(stmt);
 		
 		int status = sqlite3_prepare_v2(db, stmt, stmtLen+1, statement, NULL);
@@ -2037,6 +2104,40 @@ static void yapNotifyDidRead(yap_file *file)
 	});      // End dispatch_async(connectionQueue)
 }
 
+/**
+ * It's sometimes useful to find out when all previously queued transactions on a connection have completed.
+ * For example, you may have multiple methods (perhaps scattered across multiple classes) that may queue
+ * asyncReadWriteTransaction's on a particular databaseConnection. And you'd like to know when all
+ * the queued readWriteTransactions have completed.
+ * 
+ * One way to accomplish this is simply to queue an asyncReadTransaction on the databaseConnection.
+ * Since all transactions on a databaseConnection are queued onto a serial dispatch queue, you'll know that once
+ * your asyncReadTransaction is running, all previously scheduled transactions have completed.
+ *
+ * Although the above technique works, the 'flushTransactionsWithCompletionQueue:completionBlock:'
+ * is a more efficient way to accomplish this task. (And a more elegant & readable way too.)
+ *
+ * @param completionQueue
+ *   The dispatch_queue to invoke the completionBlock on.
+ *   If NULL, dispatch_get_main_queue() is automatically used.
+ * 
+ * @param completionBlock
+ *   The block to invoke once all previously scheduled transactions have completed.
+**/
+- (void)flushTransactionsWithCompletionQueue:(nullable dispatch_queue_t)completionQueue
+                             completionBlock:(nullable dispatch_block_t)completionBlock
+{
+	if (completionBlock == NULL) return;
+	
+	if (completionQueue == NULL && completionBlock != NULL)
+		completionQueue = dispatch_get_main_queue();
+	
+	dispatch_async(connectionQueue, ^{
+		
+		dispatch_async(completionQueue, completionBlock);
+	});
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Transaction States
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2066,7 +2167,20 @@ static void yapNotifyDidRead(yap_file *file)
 **/
 - (void)preReadTransaction:(YapDatabaseReadTransaction *)transaction
 {
-	// Pre-Read-Transaction: Step 1 of 4
+	// Pre-Read-Transaction: Step 1 of 6
+	//
+	// Prep work: sqlite VFS shim listeners for read notifications (if needed).
+	// Initialize the 'main_file', if we haven't already.
+	
+	if (main_file == NULL)
+	{
+		sqlite3_file_control(db, "main", SQLITE_FCNTL_FILE_POINTER, &main_file);
+		if (main_file) {
+			main_file->yap_database_connection = (__bridge void *)self;
+		}
+	}
+	
+	// Pre-Read-Transaction: Step 2 of 6
 	//
 	// Execute "BEGIN TRANSACTION" on database connection.
 	// This is actually a deferred transaction, meaning the sqlite connection won't actually
@@ -2077,10 +2191,14 @@ static void yapNotifyDidRead(yap_file *file)
 	// hit our in-memory caches. Thus we avoid sqlite machinery when unneeded.
 	
 	[transaction beginTransaction];
-		
+	
+	__block uint64_t dbSnapshot = 0;
+	__block BOOL expectsChangesets = NO;
+	__block NSArray *changesets = nil;
+	
 	dispatch_sync(database->snapshotQueue, ^{ @autoreleasepool {
 		
-		// Pre-Read-Transaction: Step 2 of 4
+		// Pre-Read-Transaction: Step 3 of 6
 		//
 		// Update our connection state within the state table.
 		//
@@ -2117,11 +2235,11 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		NSAssert(myState != nil, @"Missing state in database->connectionStates");
 		
-		// Pre-Read-Transaction: Step 3 of 4
+		// Pre-Read-Transaction: Step 4 of 5
 		//
-		// Update our in-memory data (caches, etc) if needed.
+		// Compare our snapshot with the database's snapshot.
 		
-		if (hasActiveWriteTransaction || longLivedReadTransaction || wal_file == NULL)
+		if (hasActiveWriteTransaction || longLivedReadTransaction || wal_file == NULL || enableMultiProcessSupport)
 		{
 			// If there is a write transaction in progress,
 			// then it's not safe to proceed until we acquire a "sql-level" snapshot.
@@ -2134,6 +2252,9 @@ static void yapNotifyDidRead(yap_file *file)
 			// We need the wal_file in order to properly receive notifications of
 			// when sqlite acquires an "sql-level" snapshot.
 			//
+			// In case of multiple processes accessing the database,
+			// we can't know for sure so we must make this assumption.
+			//
 			// During this process we ensure that our "yap-level" snapshot of the in-memory data (caches, etc)
 			// is in sync with our "sql-level" snapshot of the database.
 			//
@@ -2143,25 +2264,23 @@ static void yapNotifyDidRead(yap_file *file)
 			// If the two match then our snapshots are in sync.
 			// If they don't then we need to get caught up by processing changesets.
 			
-			uint64_t yapSnapshot = snapshot;
-			uint64_t sqlSnapshot = [self readSnapshotFromDatabase];
+			dbSnapshot = [self readSnapshotFromDatabase];
+			if (wal_file == NULL)
+			{
+				wal_file = yap_vfs_last_opened_wal(database->yap_vfs_shim);
+				if (wal_file) {
+					wal_file->yap_database_connection = (__bridge void *)self;
+				}
+			}
 			
-			if (yapSnapshot < sqlSnapshot)
+			if (snapshot < dbSnapshot)
 			{
 				// The transaction can see the sqlite commit from another transaction,
-				// and it hasn't processed the changeset(s) yet. We need to process them now.
+				// and it hasn't processed the changeset(s) yet.
+				// We need to fetch them now.
 				
-				NSArray *changesets = [database pendingAndCommittedChangesetsSince:yapSnapshot until:sqlSnapshot];
-				
-				for (NSDictionary *changeset in changesets)
-				{
-					[self noteCommittedChangeset:changeset];
-				}
-				
-				// The noteCommittedChangeset method (invoked above) updates our 'snapshot' variable.
-				NSAssert(snapshot == sqlSnapshot,
-				         @"Invalid connection state in preReadTransaction: snapshot(%llu) != sqlSnapshot(%llu): %@",
-				         snapshot, sqlSnapshot, changesets);
+				expectsChangesets = YES;
+				changesets = [database pendingAndCommittedChangesetsSince:snapshot until:dbSnapshot];
 			}
 			
 			myState->longLivedReadTransaction = (longLivedReadTransaction != nil);
@@ -2180,58 +2299,60 @@ static void yapNotifyDidRead(yap_file *file)
 			// able to process a changeset from a sibling connection.
 			// If this is the case then we need to get caught up by processing the changeset(s).
 			
-			uint64_t localSnapshot = snapshot;
-			uint64_t globalSnapshot = [database snapshot];
+			dbSnapshot = [database snapshot];
 			
-			if (localSnapshot < globalSnapshot)
+			if (snapshot < dbSnapshot)
 			{
-				// The transaction hasn't processed recent changeset(s) yet. We need to process them now.
+				// The transaction hasn't processed recent changeset(s) yet.
+				// We need to fetch them now.
 				
-				NSArray *changesets = [database pendingAndCommittedChangesetsSince:localSnapshot until:globalSnapshot];
-				
-				for (NSDictionary *changeset in changesets)
-				{
-					[self noteCommittedChangeset:changeset];
-				}
-				
-				// The noteCommittedChangeset method (invoked above) updates our 'snapshot' variable.
-				NSAssert(snapshot == globalSnapshot,
-				         @"Invalid connection state in preReadTransaction: snapshot(%llu) != globalSnapshot(%llu): %@",
-				         snapshot, globalSnapshot, changesets);
+				expectsChangesets = YES;
+				changesets = [database pendingAndCommittedChangesetsSince:snapshot until:dbSnapshot];
 			}
 			
 			myState->sqlLevelSharedReadLock = NO;
 			needsMarkSqlLevelSharedReadLock = YES;
 		}
 		
-		myState->lastTransactionSnapshot = snapshot;
+		myState->lastTransactionSnapshot = dbSnapshot;
 		myState->lastTransactionTime = mach_absolute_time();
 	}});
 	
-	// Pre-Read-Transaction: Step 4 of 4
+	// Pre-Read-Transaction: Setp 5 of 6
 	//
-	// Enable sqlite VFS shim listeners for read notifications (if needed).
-	//
-	// Note: Code above performs the following:
-	//     if (hasActiveWriteTransaction || longLivedReadTransaction || wal_file == NULL)
-	//
-	// So we initialize the 'wal_file' here, if we haven't already.
+	// Update our in-memory data (caches, etc) if needed.
+	// Since this can be CPU intensive, we do this outside the snapshotQueue.
 	
-	if (main_file == NULL)
+	if (expectsChangesets)
 	{
-		sqlite3_file_control(db, "main", SQLITE_FCNTL_FILE_POINTER, &main_file);
-		if (main_file) {
-			main_file->yap_database_connection = (__bridge void *)self;
-		}
-	}
-	if (wal_file == NULL) // <- See note above
-	{
-		wal_file = yap_file_wal_find(main_file);
-		if (wal_file)
+		if (!changesets) // we could not retrieve changeset due to a change from another process.
 		{
-			wal_file->yap_database_connection = (__bridge void *)self;
+			NSUInteger flags = YapDatabaseConnectionFlushMemoryFlags_Caches |
+			                   YapDatabaseConnectionFlushMemoryFlags_Extension_State;
+			
+			[self _flushMemoryWithFlags:flags];
+			snapshot = dbSnapshot;
+		}
+		else
+		{
+			isFastForwarding = YES;
+			for (NSDictionary *changeset in changesets)
+			{
+				[self noteCommittedChangeset:changeset];
+			}
+			isFastForwarding = NO;
+			
+			// The noteCommittedChangeset method (invoked above) updates our 'snapshot' variable.
+			NSAssert(snapshot == dbSnapshot,
+			         @"Invalid connection state in preReadTransaction: snapshot(%llu) != dbSnapshot(%llu): %@",
+			         snapshot, dbSnapshot, changesets);
 		}
 	}
+	
+	// Pre-Read-Transaction: Step 6 of 6
+	//
+	// Prep work: sqlite VFS shim listeners for read notifications (if needed).
+	// Initialize the 'wal_file', if we haven't already.
 	
 	if (needsMarkSqlLevelSharedReadLock)
 	{
@@ -2382,7 +2503,27 @@ static void yapNotifyDidRead(yap_file *file)
 **/
 - (void)preReadWriteTransaction:(YapDatabaseReadWriteTransaction *)transaction
 {
-	// Pre-Write-Transaction: Step 1 of 5
+	// Pre-Write-Transaction: Step 1 of 7
+	//
+	// Add IsOnConnectionQueueKey flag to writeQueue.
+	// This allows various methods that depend on the flag to operate correctly.
+	
+	dispatch_queue_set_specific(database->writeQueue, IsOnConnectionQueueKey, IsOnConnectionQueueKey, NULL);
+	
+	// Pre-Write-Transaction: Step 2 of 7
+	//
+	// Prep work: sqlite VFS shim listeners for read notifications (if needed).
+	// Initialize the 'main_file', if we haven't already.
+	
+	if (main_file == NULL)
+	{
+		sqlite3_file_control(db, "main", SQLITE_FCNTL_FILE_POINTER, &main_file);
+		if (main_file) {
+			main_file->yap_database_connection = (__bridge void *)self;
+		}
+	}
+	
+	// Pre-Write-Transaction: Step 3 of 7
 	//
 	// Execute "BEGIN TRANSACTION" on database connection.
 	// This is actually a deferred transaction, meaning the sqlite connection won't actually
@@ -2397,11 +2538,20 @@ static void yapNotifyDidRead(yap_file *file)
 	// Thus no other transactions can possibly modify the database during our transaction.
 	// Therefore it doesn't matter when we acquire our "sql-level" locks for writing.
 	
-	[transaction beginTransaction];
+	if (enableMultiProcessSupport) {
+		// In the multiprocess case, we don't use a deferred transaction in order to avoid race conditions
+		[transaction beginImmediateTransaction];
+	} else {
+		[transaction beginTransaction];
+	}
+	
+	__block uint64_t dbSnapshot = 0;
+	__block BOOL expectsChangesets = NO;
+	__block NSArray *changesets = nil;
 	
 	dispatch_sync(database->snapshotQueue, ^{ @autoreleasepool {
 		
-		// Pre-Write-Transaction: Step 2 of 5
+		// Pre-Write-Transaction: Step 4 of 7
 		//
 		// Update our connection state within the state table.
 		//
@@ -2421,36 +2571,100 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		NSAssert(myState != nil, @"Missing state in database->connectionStates");
 		
-		// Pre-Write-Transaction: Step 3 of 5
+		// Pre-Write-Transaction: Step 5 of 7
 		//
-		// Validate our caches based on snapshot numbers
+		// Compare our snapshot with the database's snapshot.
 		
-		uint64_t localSnapshot = snapshot;
-		uint64_t globalSnapshot = [database snapshot];
-		
-		if (localSnapshot < globalSnapshot)
+		// In multiprocess mode, the snapshot number might have been externally updated
+		if (wal_file == NULL || enableMultiProcessSupport)
 		{
-			NSArray *changesets = [database pendingAndCommittedChangesetsSince:localSnapshot until:globalSnapshot];
+			// If sqlite hasn't opened the wal_file yet,
+			// then we need to invoke the sql machinery so we can get access to it.
+			// We need the wal_file in order to properly receive notifications of
+			// when sqlite acquires an "sql-level" snapshot.
+			//
+			// In case of multiple processes accessing the database,
+			// we can't know for sure so we must make this assumption.
 			
-			for (NSDictionary *changeset in changesets)
+			if (enableMultiProcessSupport)
 			{
-				[self noteCommittedChangeset:changeset];
+				dbSnapshot = [self readSnapshotFromDatabase];
+			}
+			else
+			{
+				(void)[self readSnapshotFromDatabase]; // create wal_file
+				dbSnapshot = [database snapshot];
 			}
 			
-			// The noteCommittedChangeset method (invoked above) updates our 'snapshot' variable.
-			NSAssert(snapshot == globalSnapshot,
-			         @"Invalid connection state in preReadWriteTransaction: snapshot(%llu) != globalSnapshot(%llu)",
-			         snapshot, globalSnapshot);
+			if (wal_file == NULL)
+			{
+				wal_file = yap_vfs_last_opened_wal(database->yap_vfs_shim);
+				if (wal_file) {
+					wal_file->yap_database_connection = (__bridge void *)self;
+				}
+			}
+		}
+		else
+		{
+			// We can just grab the snapshot from YapDatabase's in-memory version.
+			
+			dbSnapshot = [database snapshot];
 		}
 		
-		myState->lastTransactionSnapshot = snapshot;
+		if (snapshot < dbSnapshot)
+		{
+			// The transaction hasn't processed recent changeset(s) yet.
+			// We need to fetch them now.
+			
+			expectsChangesets = YES;
+			changesets = [database pendingAndCommittedChangesetsSince:snapshot until:dbSnapshot];
+		}
+		
+		myState->lastTransactionSnapshot = dbSnapshot;
 		myState->lastTransactionTime = mach_absolute_time();
 		needsMarkSqlLevelSharedReadLock = NO;
 		
 		YDBLogVerbose(@"YapDatabaseConnection(%p) starting read-write transaction.", self);
 	}});
 	
-	// Pre-Write-Transaction: Step 4 of 5
+	// Pre-Write-Transaction: Step 6 of 7
+	//
+	// Update our in-memory data (caches, etc) if needed.
+	// Since this can be CPU intensive, we do this outside the snapshotQueue.
+	
+	if (expectsChangesets)
+	{
+		externallyModified = (changesets == nil);
+		
+		if (!changesets) // we could not retrieve changeset due to a change from another process.
+		{
+			NSUInteger flags = YapDatabaseConnectionFlushMemoryFlags_Caches |
+			                   YapDatabaseConnectionFlushMemoryFlags_Extension_State;
+			
+			[self _flushMemoryWithFlags:flags];
+			snapshot = dbSnapshot;
+		}
+		else
+		{
+			isFastForwarding = YES;
+			for (NSDictionary *changeset in changesets)
+			{
+				[self noteCommittedChangeset:changeset];
+			}
+			isFastForwarding = NO;
+			
+			// The noteCommittedChangeset method (invoked above) updates our 'snapshot' variable.
+			NSAssert(snapshot == dbSnapshot,
+			         @"Invalid connection state in preReadWriteTransaction: snapshot(%llu) != dbSnapshot(%llu)",
+			         snapshot, dbSnapshot);
+		}
+	}
+	else
+	{
+		externallyModified = NO;
+	}
+	
+	// Pre-Write-Transaction: Step 7 of 7
 	//
 	// Setup write state and changeset variables
 	
@@ -2475,13 +2689,6 @@ static void yapNotifyDidRead(yap_file *file)
 	
 	if (mutationStack == nil)
 		mutationStack = [[YapMutationStack_Bool alloc] init];
-	
-	// Pre-Write-Transaction: Step 5 of 5
-	//
-	// Add IsOnConnectionQueueKey flag to writeQueue.
-	// This allows various methods that depend on the flag to operate correctly.
-	
-	dispatch_queue_set_specific(database->writeQueue, IsOnConnectionQueueKey, IsOnConnectionQueueKey, NULL);
 }
 
 /**
@@ -2561,7 +2768,7 @@ static void yapNotifyDidRead(yap_file *file)
 			// If hasDiskChanges is NO, then the database file was not modified.
 			// However, something was "touched" or an in-memory extension was changed.
 			
-			if (hasDiskChanges)
+			if (hasDiskChanges || enableMultiProcessSupport)
 				snapshot = [self incrementSnapshotInDatabase];
 			else
 				snapshot++;
@@ -2577,6 +2784,9 @@ static void yapNotifyDidRead(yap_file *file)
 			
 			[userInfo setObject:self forKey:YapDatabaseConnectionKey];
 		
+			if (externallyModified)
+				[changeset setObject:@(externallyModified) forKey:YapDatabaseModifiedExternallyKey];
+			
 			if (transaction->customObjectForNotification)
 				[userInfo setObject:transaction->customObjectForNotification forKey:YapDatabaseCustomKey];
 			
@@ -2836,7 +3046,27 @@ static void yapNotifyDidRead(yap_file *file)
 	// Thus we cannot simply use preReadWriteTransaction & postReadWriteTransaction.
 	// Instead we use a select subset of them.
 	
-	// Pre-Pseudo-Write-Transaction: Step 1 of 3
+	// Pre-Pseudo-Write-Transaction: Step 1 of 5
+	//
+	// Add IsOnConnectionQueueKey flag to writeQueue.
+	// This allows various methods that depend on the flag to operate correctly.
+	
+	dispatch_queue_set_specific(database->writeQueue, IsOnConnectionQueueKey, IsOnConnectionQueueKey, NULL);
+	
+	// Pre-Pseudo-Write-Transaction: Step 2 of 5
+	//
+	// Prep work: sqlite VFS shim listeners for read notifications (if needed).
+	// Initialize the 'main_file', if we haven't already.
+	
+	if (main_file == NULL)
+	{
+		sqlite3_file_control(db, "main", SQLITE_FCNTL_FILE_POINTER, &main_file);
+		if (main_file) {
+			main_file->yap_database_connection = (__bridge void *)self;
+		}
+	}
+	
+	// Pre-Pseudo-Write-Transaction: Step 3 of 5
 	//
 	// Update our connection state within the state table.
 	//
@@ -2858,6 +3088,26 @@ static void yapNotifyDidRead(yap_file *file)
 		
 		NSAssert(myState != nil, @"Missing state in database->connectionStates");
 		
+		// Pre-Pseudo-Write-Transaction: Step 4 of 5
+		//
+		// Prep work: sqlite VFS shim listeners for read notifications (if needed).
+		// Initialize the 'wal_file', if we haven't already.
+		
+		if (wal_file == NULL)
+		{
+			// If sqlite hasn't opened the wal_file yet,
+			// then we need to invoke the sql machinery so we can get access to it.
+			// We need the wal_file in order to properly receive notifications of
+			// when sqlite acquires an "sql-level" snapshot.
+			
+			(void)[self readSnapshotFromDatabase];
+			
+			wal_file = yap_vfs_last_opened_wal(database->yap_vfs_shim);
+			if (wal_file) {
+				wal_file->yap_database_connection = (__bridge void *)self;
+			}
+		}
+		
 		myState->lastTransactionSnapshot = [database snapshot];
 		myState->lastTransactionTime = mach_absolute_time();
 		needsMarkSqlLevelSharedReadLock = YES;
@@ -2865,20 +3115,13 @@ static void yapNotifyDidRead(yap_file *file)
 		YDBLogVerbose(@"YapDatabaseConnection(%p) starting vacuum operation.", self);
 	}});
 	
-	// Pre-Pseudo-Write-Transaction: Step 2 of 3
+	// Pre-Pseudo-Write-Transaction: Step 5 of 5
 	//
 	// Setup write state and changeset variables.
 	
 	hasDiskChanges = NO;
 	
 	// Note: We don't need to setup all changeset variables.
-	
-	// Pre-Pseudo-Write-Transaction: Step 3 of 3
-	//
-	// Add IsOnConnectionQueueKey flag to writeQueue.
-	// This allows various methods that depend on the flag to operate correctly.
-	
-	dispatch_queue_set_specific(database->writeQueue, IsOnConnectionQueueKey, IsOnConnectionQueueKey, NULL);
 }
 
 /**
@@ -3394,7 +3637,8 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	          YapDatabaseRemovedKeysKey,
 	          YapDatabaseRemovedCollectionsKey,
 	          YapDatabaseRemovedRowidsKey,
-	          YapDatabaseAllKeysRemovedKey ];
+	          YapDatabaseAllKeysRemovedKey,
+	          YapDatabaseModifiedExternallyKey ];
 }
 
 /**
@@ -3413,7 +3657,8 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	          YapDatabaseMetadataChangesKey,
 	          YapDatabaseRemovedKeysKey,
 	          YapDatabaseRemovedCollectionsKey,
-	          YapDatabaseAllKeysRemovedKey ];
+	          YapDatabaseAllKeysRemovedKey,
+	          YapDatabaseModifiedExternallyKey ];
 }
 
 /**
@@ -3562,6 +3807,12 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 			internalChangeset[YapDatabaseAllKeysRemovedKey] = @(YES);
 			externalChangeset[YapDatabaseAllKeysRemovedKey] = @(YES);
 		}
+        
+        if (externallyModified)
+        {
+            internalChangeset[YapDatabaseModifiedExternallyKey] = @(YES);
+            externalChangeset[YapDatabaseModifiedExternallyKey] = @(YES);
+        }
 	}
 	
 	*internalChangesetPtr = internalChangeset;
@@ -3613,27 +3864,7 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		registeredMemoryTables = changeset_registeredMemoryTables;
 	}
 	
-	// Allow extensions to process their individual changesets
-	
-	NSDictionary *changeset_extensions = [changeset objectForKey:YapDatabaseExtensionsKey];
-	if (changeset_extensions)
-	{
-		// Use existing extensions (extensions ivar, not [self extensions]).
-		// There's no need to create any new extConnections at this point.
-		
-		[extensions enumerateKeysAndObjectsUsingBlock:^(id extName, id extConnectionObj, BOOL __unused *stop) {
-			
-			__unsafe_unretained YapDatabaseExtensionConnection *extConnection = extConnectionObj;
-			
-			NSDictionary *changeset_extensions_extName = [changeset_extensions objectForKey:extName];
-			if (changeset_extensions_extName)
-			{
-				[extConnection processChangeset:changeset_extensions_extName];
-			}
-		}];
-	}
-	
-	// Process normal database changset information
+	// Process normal database changeset information
 	
 	NSDictionary *changeset_objectChanges   =  [changeset objectForKey:YapDatabaseObjectChangesKey];
 	NSDictionary *changeset_metadataChanges =  [changeset objectForKey:YapDatabaseMetadataChangesKey];
@@ -3642,12 +3873,23 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	NSSet *changeset_removedKeys        = [changeset objectForKey:YapDatabaseRemovedKeysKey];
 	NSSet *changeset_removedCollections = [changeset objectForKey:YapDatabaseRemovedCollectionsKey];
 	
+	BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
 	BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 	
 	BOOL hasObjectChanges      = [changeset_objectChanges count] > 0;
 	BOOL hasMetadataChanges    = [changeset_metadataChanges count] > 0;
 	BOOL hasRemovedKeys        = [changeset_removedKeys count] > 0;
 	BOOL hasRemovedCollections = [changeset_removedCollections count] > 0;
+	
+	// Check for external modification (special case)
+	
+	if (changeset_modifiedExternally)
+	{
+		NSUInteger flags = YapDatabaseConnectionFlushMemoryFlags_Caches |
+		                   YapDatabaseConnectionFlushMemoryFlags_Extension_State;
+		
+		[self _flushMemoryWithFlags:flags];
+	}
 	
 	// Update keyCache
 	
@@ -3659,6 +3901,11 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	}
 	else
 	{
+		if (changeset_removedRowids)
+		{
+			[keyCache removeObjectsForKeys:changeset_removedRowids];
+		}
+		
 		if (hasRemovedCollections)
 		{
 			__block NSMutableArray *toRemove = nil;
@@ -3677,14 +3924,6 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 			}];
 			
 			[keyCache removeObjectsForKeys:toRemove];
-		}
-		
-		if (changeset_removedRowids)
-		{
-			[changeset_removedRowids enumerateObjectsUsingBlock:^(id obj, BOOL __unused *stop) {
-				
-				[keyCache removeObjectForKey:obj];
-			}];
 		}
 	}
 	
@@ -3921,22 +4160,8 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 - (void)noteCommittedChangeset:(NSDictionary *)changeset
 {
 	// This method must be invoked from within connectionQueue.
-	// It may be invoked from:
-	//
-	// 1. [database noteCommittedChangeset:fromConnection:]
-	//   via dispatch_async(connectionQueue, ...)
-	//
-	// 2. [self  preReadTransaction:]
-	//   via dispatch_X(connectionQueue) -> dispatch_sync(database->snapshotQueue)
-	//
-	// 3. [self preReadWriteTransaction:]
-	//   via dispatch_X(connectionQueue) -> dispatch_sync(database->snapshotQueue)
-	//
-	// In case 1 (the common case) we can see IsOnConnectionQueueKey.
-	// In case 2 & 3 (the edge cases) we can see IsOnSnapshotQueueKey.
 	
-	NSAssert(dispatch_get_specific(IsOnConnectionQueueKey) ||
-			 dispatch_get_specific(database->IsOnSnapshotQueueKey), @"Must be invoked within connectionQueue");
+	NSAssert(dispatch_get_specific(IsOnConnectionQueueKey), @"Must be invoked within connectionQueue");
 	
 	// Grab the new snapshot.
 	// This tells us the minimum snapshot we could get if we started a transaction right now.
@@ -3968,10 +4193,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	
 	if (longLivedReadTransaction)
 	{
-		if (dispatch_get_specific(database->IsOnSnapshotQueueKey))
+		if (isFastForwarding)
 		{
-			// This method is being invoked from preReadTransaction:.
-			// We are to process the changeset for it.
+			// This method is being invoked from preReadTransaction or preReadWriteTransaction.
+			// We need to process the changeset for it.
 			
 			[processedChangesets addObject:changeset];
 		}
@@ -3994,8 +4219,35 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	YDBLogVerbose(@"Processing changeset %lu for connection %@, database %@",
 	              (unsigned long)changesetSnapshot, self, database);
 	
-	snapshot = changesetSnapshot;
-	[self processChangeset:changeset];
+	if (snapshot == changesetSnapshot - 1)
+	{
+		snapshot = changesetSnapshot;
+		[self processChangeset:changeset];
+	}
+	else
+	{
+		// Snapshot numbers do not match: there might have been a modification from another process.
+		// We should flush cache and then process the changeset.
+		
+		snapshot = changesetSnapshot;
+		
+		NSUInteger flags = YapDatabaseConnectionFlushMemoryFlags_Caches |
+		                   YapDatabaseConnectionFlushMemoryFlags_Extension_State;
+		
+		[self _flushMemoryWithFlags:flags];
+		[self processChangeset:changeset];
+	}
+	
+	// Allow extensions to process their individual changesets
+	//
+	// Use existing extensions (extensions ivar, not [self extensions]).
+	// There's no need to create any new extConnections at this point.
+		
+	[extensions enumerateKeysAndObjectsUsingBlock:
+	    ^(NSString *extName, YapDatabaseExtensionConnection *extConnection, BOOL __unused *stop)
+	{
+		[extConnection noteCommittedChangeset:changeset registeredName:extName];
+	}];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4057,6 +4309,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		if ([changeset_removedCollections containsObject:collection])
 			return YES;
 		
+        BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
+        if (changeset_modifiedExternally)
+            return YES;
+        
 		BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 		if (changeset_allKeysRemoved)
 			return YES;
@@ -4135,6 +4391,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		if ([changeset_removedCollections containsObject:collection])
 			return YES;
 		
+        BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
+        if (changeset_modifiedExternally)
+            return YES;
+        
 		BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 		if (changeset_allKeysRemoved)
 			return YES;
@@ -4243,6 +4503,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		YapSet *changeset_removedCollections = [changeset objectForKey:YapDatabaseRemovedCollectionsKey];
 		if ([changeset_removedCollections containsObject:collection])
 			return YES;
+        
+        BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
+        if (changeset_modifiedExternally)
+            return YES;
 		
 		BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 		if (changeset_allKeysRemoved)
@@ -4316,6 +4580,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		YapSet *changeset_removedCollections = [changeset objectForKey:YapDatabaseRemovedCollectionsKey];
 		if ([changeset_removedCollections containsObject:collection])
 			return YES;
+        
+        BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
+        if (changeset_modifiedExternally)
+            return YES;
 		
 		BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 		if (changeset_allKeysRemoved)
@@ -4347,6 +4615,10 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		
 		NSDictionary *changeset = notification.userInfo;
 		
+        BOOL changeset_modifiedExternally = [[changeset objectForKey:YapDatabaseModifiedExternallyKey] boolValue];
+        if (changeset_modifiedExternally)
+            return YES;
+        
 		BOOL changeset_allKeysRemoved = [[changeset objectForKey:YapDatabaseAllKeysRemovedKey] boolValue];
 		if (changeset_allKeysRemoved)
 			return YES;
@@ -4605,11 +4877,6 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		YapDatabaseReadWriteTransaction *transaction = [self newReadWriteTransaction];
 		[self preReadWriteTransaction:transaction];
 		
-		// Set the registeredName now.
-		// The extension will need this in order to perform the registration tasks such as creating tables, etc.
-		extension.registeredName = extensionName;
-		extension.registeredDatabase = database;
-		
 		YapDatabaseExtensionConnection *extensionConnection;
 		YapDatabaseExtensionTransaction *extensionTransaction;
 		
@@ -4637,9 +4904,6 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 		else
 		{
 			// Registration failed.
-			
-			extension.registeredName = nil;
-			extension.registeredDatabase = nil;
 			
 			[transaction rollback];
 		}
@@ -4860,7 +5124,7 @@ NS_INLINE void __postWriteQueue(YapDatabaseConnection *connection)
 	YDBLogWarn(@"Dropping tables for previously registered extension with name(%@), class(%@) for new class(%@)",
 	           extensionName, prevExtensionClassName, extensionClassName);
 	
-    Class abstractExtClass = NSClassFromString(@"YapDatabaseExtension");
+	Class abstractExtClass = NSClassFromString(@"YapDatabaseExtension");
 	Class prevExtensionClass = NSClassFromString(prevExtensionClassName);
 	
 	if (prevExtensionClass == NULL)

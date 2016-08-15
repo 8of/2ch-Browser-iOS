@@ -29,6 +29,9 @@
 /// Entirely reload post list in the thread
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion;
 
+/// Check connection
+- (BOOL)isConnectionAvailable;
+
 // Report thread
 - (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment;
 /**

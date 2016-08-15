@@ -150,6 +150,11 @@ extern NSString *const YapDatabasePathShmKey;
  * The notification object will be the database instance itself.
  * That is, it will be an instance of YapDatabase.
  *
+ * This notification is only posted for internal modifications.
+ * When the `enableMultiprocessSupport` option is set, external modification notifications are made
+ * available by adding a `CrossProcessNotifier` extension to the database, and listening to the
+ * `YapDatabaseModifiedExternallyNotification`.
+ *
  * The userInfo dictionary will look something like this:
  * @{
  *     YapDatabaseSnapshotKey   : <NSNumber of snapshot, incremented per read-write transaction w/modification>,
@@ -162,6 +167,15 @@ extern NSString *const YapDatabasePathShmKey;
 **/
 extern NSString *const YapDatabaseModifiedNotification;
 
+/**
+ * When the `enableMultiprocessSupport` option is set and a `CrossProcessNotifier` extension has been
+ * added to the database, this notification is posted following a readwrite transaction where the
+ * database was modified in another process.
+ *
+ * This notification is always posted to the main thread.
+ **/
+extern NSString *const YapDatabaseModifiedExternallyNotification;
+
 extern NSString *const YapDatabaseSnapshotKey;
 extern NSString *const YapDatabaseConnectionKey;
 extern NSString *const YapDatabaseExtensionsKey;
@@ -172,6 +186,7 @@ extern NSString *const YapDatabaseMetadataChangesKey;
 extern NSString *const YapDatabaseRemovedKeysKey;
 extern NSString *const YapDatabaseRemovedCollectionsKey;
 extern NSString *const YapDatabaseAllKeysRemovedKey;
+extern NSString *const YapDatabaseModifiedExternallyKey;
 
 
 @interface YapDatabase : NSObject
@@ -312,17 +327,17 @@ extern NSString *const YapDatabaseAllKeysRemovedKey;
 @property (nonatomic, strong, readonly) NSString *databasePath_wal;
 @property (nonatomic, strong, readonly) NSString *databasePath_shm;
 
-@property (nonatomic, strong, readonly) YapDatabaseSerializer objectSerializer;
-@property (nonatomic, strong, readonly) YapDatabaseDeserializer objectDeserializer;
+@property (nonatomic, copy, readonly) YapDatabaseSerializer objectSerializer;
+@property (nonatomic, copy, readonly) YapDatabaseDeserializer objectDeserializer;
 
-@property (nonatomic, strong, readonly) YapDatabaseSerializer metadataSerializer;
-@property (nonatomic, strong, readonly) YapDatabaseDeserializer metadataDeserializer;
+@property (nonatomic, copy, readonly) YapDatabaseSerializer metadataSerializer;
+@property (nonatomic, copy, readonly) YapDatabaseDeserializer metadataDeserializer;
 
-@property (nonatomic, strong, readonly, nullable) YapDatabasePreSanitizer objectPreSanitizer;
-@property (nonatomic, strong, readonly, nullable) YapDatabasePostSanitizer objectPostSanitizer;
+@property (nonatomic, copy, readonly, nullable) YapDatabasePreSanitizer objectPreSanitizer;
+@property (nonatomic, copy, readonly, nullable) YapDatabasePostSanitizer objectPostSanitizer;
 
-@property (nonatomic, strong, readonly, nullable) YapDatabasePreSanitizer metadataPreSanitizer;
-@property (nonatomic, strong, readonly, nullable) YapDatabasePostSanitizer metadataPostSanitizer;
+@property (nonatomic, copy, readonly, nullable) YapDatabasePreSanitizer metadataPreSanitizer;
+@property (nonatomic, copy, readonly, nullable) YapDatabasePostSanitizer metadataPostSanitizer;
 
 @property (nonatomic, copy, readonly) YapDatabaseOptions *options;
 

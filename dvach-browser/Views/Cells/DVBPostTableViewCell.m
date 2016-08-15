@@ -404,6 +404,7 @@
         NSString *urlString = _pathesArray[index];
         if (urlString) {
             [_threadViewController openMediaWithUrlString:urlString];
+            [_threadViewController.view endEditing:true];
         }
     }
 }
@@ -413,6 +414,7 @@
 - (IBAction)touchFirstPicture:(id)sender
 {
     [_threadViewController openMediaWithUrlString:_fullPathUrlString];
+    [_threadViewController.view endEditing:true];
 }
 
 - (IBAction)touchFirstMedia:(id)sender

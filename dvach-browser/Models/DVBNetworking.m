@@ -7,13 +7,13 @@
 //
 
 #import <AFNetworking/AFNetworking.h>
+#import <Reachability/Reachability.h>
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
 #import "DVBBoard.h"
 #import "DVBValidation.h"
-#import "Reachlibility.h"
 
 #import "UIImage+DVBImageExtention.h"
 

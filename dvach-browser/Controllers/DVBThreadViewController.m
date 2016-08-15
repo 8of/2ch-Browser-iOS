@@ -9,10 +9,10 @@
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
+#import <Reachability/Reachability.h>
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
-#import "Reachlibility.h"
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBComment.h"
@@ -52,7 +52,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
-@property (nonatomic, strong) UIRefreshControl *bottomRefreshControl;
+@property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 
 @end
 
@@ -78,14 +78,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
-    BOOL isIOSgreater80 = SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0");
-    BOOL isIOSlessTHAN83 = SYSTEM_VERSION_LESS_THAN(@"8.3");
-
-    // This preventing table view from jumping when we push other controller (answers/ gallery on top of it) in iOS 8.1-8.2
-    if (isIOSgreater80 && isIOSlessTHAN83) {
-        [self.tableView reloadData];
-    }
+    
+    _bottomRefreshControl = nil;
+    self.tableView.bottomRefreshControl = nil;
+    
 }
 
 - (void)viewDidLoad
@@ -338,6 +334,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Reload thread by current thread num
 - (void)reloadThread
 {
+    if (![_threadModel isConnectionAvailable]) {
+        [self.refreshControl endRefreshing];
+        [_bottomRefreshControl endRefreshing];
+        return;
+    }
     // Very stupid but necessary check.
     // So app can't double refresh the same thread at the same time
     if (!_answersToPost) {
@@ -389,13 +390,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)openPostingControllerFromThisOne
 {
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
-                                  sender:self];
-    } else {
-        [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7
-                                  sender:self];
-    }
+    [self performSegueWithIdentifier:SEGUE_TO_NEW_POST
+                              sender:self];
 }
 
 - (void)attachAnswerToCommentSingletonWithPostIndex:(NSInteger)postIndex andTextToo:(BOOL)textToo
@@ -589,28 +585,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 }
 
-// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    // if we have Device with version under 8.0
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-
-        // and we have fancy popover 8.0 segue
-        if ([identifier isEqualToString:SEGUE_TO_NEW_POST]) {
-
-            // Execute iOS 7 segue
-            [self performSegueWithIdentifier:SEGUE_TO_NEW_POST_IOS_7 sender:self];
-
-            // drop iOS 8 segue
-            return NO;
-        }
-
-        return YES;
-    }
-    
-    return YES;
-}
-
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -630,7 +604,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     NSURL *url = [NSURL URLWithString:urlString];
     NSArray *objectsToShare = @[url];
 
-    TUSafariActivity *safariAtivity = [[TUSafariActivity alloc] init];
+    TUSafariActivity *safariActivity = [[TUSafariActivity alloc] init];
 
     ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
 
@@ -638,11 +612,16 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     [chromeActivity setActivityTitle:openInChromActivityTitle];
 
-    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariAtivity, chromeActivity]];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariActivity, chromeActivity]];
 
-    // Only for iOS 8
+    // Only for iPad
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
-        activityViewController.popoverPresentationController.barButtonItem = _shareButton;
+        if (self.navigationController.isToolbarHidden) {
+            activityViewController.popoverPresentationController.sourceView = self.navigationController.navigationBar;
+            activityViewController.popoverPresentationController.sourceRect = self.navigationController.navigationBar.frame;
+        } else {
+            activityViewController.popoverPresentationController.barButtonItem = _shareButton;
+        }
     }
 
     [self presentViewController:activityViewController

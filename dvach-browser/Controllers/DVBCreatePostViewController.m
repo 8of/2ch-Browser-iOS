@@ -8,11 +8,11 @@
 
 #import <AFNetworking/AFNetworking.h>
 #import <Mantle/Mantle.h>
+#import <Reachability/Reachability.h>
 #import "UIImage+DVBImageExtention.h"
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
-#import "Reachlibility.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
 #import "DVBComment.h"
@@ -138,9 +138,6 @@
 /// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
 {
-    // Dismiss keyboard before posting
-    [self.view endEditing:YES];
-
     // Clear any prompt messages
     self.navigationItem.prompt = nil;
 

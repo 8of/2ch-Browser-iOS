@@ -17,7 +17,6 @@
 		8497BF341AD3F98F001616C2 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */; };
 		8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8497BF311AD3F98F001616C2 /* NSString+HTML.m */; };
 		84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */; };
-		84B74E671AE58D9300B7188E /* Reachlibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B74E661AE58D9300B7188E /* Reachlibility.m */; };
 		84CFC51019E1526E004D0BB8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC50F19E1526E004D0BB8 /* main.m */; };
 		84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CFC51219E1526E004D0BB8 /* AppDelegate.m */; };
 		84CFC51919E1526E004D0BB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51719E1526E004D0BB8 /* Main.storyboard */; };
@@ -122,8 +121,6 @@
 		8497BF301AD3F98F001616C2 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+HTML.h"; path = "Helpers/Third party/NSString+HTML.h"; sourceTree = "<group>"; };
 		8497BF311AD3F98F001616C2 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+HTML.m"; path = "Helpers/Third party/NSString+HTML.m"; sourceTree = "<group>"; };
 		84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		84B74E651AE58D9300B7188E /* Reachlibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachlibility.h; path = "Helpers/Third party/Reachlibility.h"; sourceTree = "<group>"; };
-		84B74E661AE58D9300B7188E /* Reachlibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachlibility.m; path = "Helpers/Third party/Reachlibility.m"; sourceTree = "<group>"; };
 		84CFC50A19E1526E004D0BB8 /* dvach-browser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "dvach-browser.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		84CFC50E19E1526E004D0BB8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84CFC50F19E1526E004D0BB8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -290,8 +287,6 @@
 		8497BF2D1AD3F97D001616C2 /* Third party */ = {
 			isa = PBXGroup;
 			children = (
-				84B74E651AE58D9300B7188E /* Reachlibility.h */,
-				84B74E661AE58D9300B7188E /* Reachlibility.m */,
 				8497BF2E1AD3F98F001616C2 /* GTMNSString+HTML.h */,
 				8497BF2F1AD3F98F001616C2 /* GTMNSString+HTML.m */,
 				8497BF301AD3F98F001616C2 /* NSString+HTML.h */,
@@ -843,7 +838,6 @@
 				9437FD2B1B90E9FB004FFB22 /* DVBWebmIconImageView.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
-				84B74E671AE58D9300B7188E /* Reachlibility.m in Sources */,
 				94BB6CA11B03DB3200050FDE /* DVBMediaOpener.m in Sources */,
 				94BECE991B111C2A002C3132 /* DVBThreadTableViewCell.m in Sources */,
 				9436ADD61AD1B83B00785710 /* DateFormatter.m in Sources */,
@@ -987,7 +981,6 @@
 			baseConfigurationReference = 24704D5E096DD80DBD0AD4EC /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -1013,7 +1006,6 @@
 			baseConfigurationReference = 8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

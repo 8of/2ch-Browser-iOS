@@ -49,11 +49,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     if (![self userAgreementAccepted]) {
         [self performSegueWithIdentifier:SEGUE_TO_EULA sender:self];
     }
-
-    // check if iOS ver prior 8.0 - disable open Settings.app feature
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-        self.navigationItem.leftBarButtonItem = nil;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

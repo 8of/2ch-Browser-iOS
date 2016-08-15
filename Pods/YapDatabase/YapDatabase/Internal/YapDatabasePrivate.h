@@ -6,6 +6,7 @@
 #import "YapDatabaseTransaction.h"
 #import "YapDatabaseExtension.h"
 
+#import "YapBidirectionalCache.h"
 #import "YapCache.h"
 #import "YapCollectionKey.h"
 #import "YapMemoryTable.h"
@@ -69,6 +70,9 @@ static NSString *const ext_key_class = @"class";
 @interface YapDatabase () {
 @public
 	
+	NSString *yap_vfs_shim_name;
+	yap_vfs *yap_vfs_shim;
+	
 	void *IsOnSnapshotQueueKey;       // Only to be used by YapDatabaseConnection
 	void *IsOnWriteQueueKey;          // Only to be used by YapDatabaseConnection
 	
@@ -120,8 +124,8 @@ static NSString *const ext_key_class = @"class";
 /**
  * YapDatabaseConnection uses these methods to recycle sqlite3 instances using the connection pool.
 **/
-- (BOOL)connectionPoolEnqueue:(sqlite3 *)aDb;
-- (sqlite3 *)connectionPoolDequeue;
+- (BOOL)connectionPoolEnqueue:(sqlite3 *)aDb main_file:(yap_file *)main_file wal_file:(yap_file *)wal_file;
+- (BOOL)connectionPoolDequeue:(sqlite3 **)aDb main_file:(yap_file **)main_file wal_file:(yap_file **)wal_file;
 
 /**
  * These methods are only accessible from within the snapshotQueue.
@@ -194,6 +198,9 @@ static NSString *const ext_key_class = @"class";
 	
 	sqlite3 *db;
 	
+	yap_file *main_file;
+	yap_file *wal_file;
+	
 	dispatch_queue_t connectionQueue;     // For YapDatabaseExtensionConnection subclasses
 	void *IsOnConnectionQueueKey;         // For YapDatabaseExtensionConnection subclasses
 	
@@ -201,8 +208,9 @@ static NSString *const ext_key_class = @"class";
 	NSDictionary *extensionDependencies;  // Read-only for YapDatabaseExtensionTransaction subclasses
 	
 	BOOL hasDiskChanges;
+	BOOL enableMultiProcessSupport;
 	
-	YapCache<NSNumber *, YapCollectionKey *> *keyCache;
+	YapBidirectionalCache<NSNumber *, YapCollectionKey *> *keyCache;
 	YapCache<YapCollectionKey *, id> *objectCache;
 	YapCache<YapCollectionKey *, id> *metadataCache;
 	
@@ -214,15 +222,13 @@ static NSString *const ext_key_class = @"class";
 	
 	BOOL needsMarkSqlLevelSharedReadLock; // Read-only by transaction. Use as consideration of whether to invoke method.
 	
-	yap_file *main_file;
-	yap_file *wal_file;
-	
 	NSMutableDictionary *objectChanges;
 	NSMutableDictionary *metadataChanges;
 	NSMutableSet *removedKeys;
 	NSMutableSet *removedCollections;
 	NSMutableSet *removedRowids;
 	BOOL allKeysRemoved;
+	BOOL externallyModified;
 	
 	YapMutationStack_Bool *mutationStack;
 }
@@ -230,6 +236,7 @@ static NSString *const ext_key_class = @"class";
 - (id)initWithDatabase:(YapDatabase *)database;
 
 - (sqlite3_stmt *)beginTransactionStatement;
+- (sqlite3_stmt *)beginImmediateTransactionStatement;
 - (sqlite3_stmt *)commitTransactionStatement;
 - (sqlite3_stmt *)rollbackTransactionStatement;
 
@@ -313,6 +320,7 @@ static NSString *const ext_key_class = @"class";
 - (id)initWithConnection:(YapDatabaseConnection *)connection isReadWriteTransaction:(BOOL)flag;
 
 - (void)beginTransaction;
+- (void)beginImmediateTransaction;
 - (void)preCommitReadWriteTransaction;
 - (void)commitTransaction;
 - (void)rollbackTransaction;
@@ -331,6 +339,7 @@ static NSString *const ext_key_class = @"class";
 
 - (NSException *)mutationDuringEnumerationException;
 
+- (BOOL)getRowid:(int64_t *)rowidPtr forCollectionKey:(YapCollectionKey *)collectionKey;
 - (BOOL)getRowid:(int64_t *)rowidPtr forKey:(NSString *)key inCollection:(NSString *)collection;
 
 - (YapCollectionKey *)collectionKeyForRowid:(int64_t)rowid;
@@ -352,9 +361,15 @@ static NSString *const ext_key_class = @"class";
 - (id)metadataForCollectionKey:(YapCollectionKey *)cacheKey withRowid:(int64_t)rowid;
 
 - (BOOL)getObject:(id *)objectPtr
-		 metadata:(id *)metadataPtr
+         metadata:(id *)metadataPtr
+           forKey:(NSString *)key
+     inCollection:(NSString *)collection
+        withRowid:(int64_t)rowid;
+
+- (BOOL)getObject:(id *)objectPtr
+         metadata:(id *)metadataPtr
  forCollectionKey:(YapCollectionKey *)collectionKey
-		withRowid:(int64_t)rowid;
+        withRowid:(int64_t)rowid;
 
 - (void)_enumerateKeysInCollection:(NSString *)collection
                         usingBlock:(void (^)(int64_t rowid, NSString *key, BOOL *stop))block;

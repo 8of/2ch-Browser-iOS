@@ -9,6 +9,7 @@
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
+#import "DVBThread.h"
 
 #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
@@ -105,10 +106,13 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 /// First time loading thread list
 - (void)loadNextBoardPage
 {
+    __weak typeof(self) weakSelf = self;
+    
     if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
                                  andCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
+            if (weakSelf == nil) { return; }
             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
             NSInteger threadsCountNow = _threadsArray.count ? _threadsArray.count : 0;
@@ -119,29 +123,28 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
                 [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
 
-            _alreadyLoadingNextPage = NO;
-
             if (_threadsArray.count == 0) {
-                [self showMessageAboutError];
-                self.navigationItem.rightBarButtonItem.enabled = NO;
+                [weakSelf showMessageAboutError];
+                weakSelf.navigationItem.rightBarButtonItem.enabled = NO;
             } else {
                 _currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
-                    self.navigationItem.rightBarButtonItem.enabled = YES;
-                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                    self.tableView.backgroundView = nil;
+                    [weakSelf updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
+                    _alreadyLoadingNextPage = NO;
+                    weakSelf.navigationItem.rightBarButtonItem.enabled = YES;
+                    weakSelf.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    weakSelf.tableView.backgroundView = nil;
                     
                     if (!_alreadyDidTheSizeClassTrick) {
                         _alreadyDidTheSizeClassTrick = YES;
-                        [self.tableView setNeedsLayout];
-                        [self.tableView layoutIfNeeded];
-                        [self.tableView reloadData];
+                        [weakSelf.tableView setNeedsLayout];
+                        [weakSelf.tableView layoutIfNeeded];
+                        [weakSelf.tableView reloadData];
                     }
                 });
             }
-            [self handleError:error];
+            [weakSelf handleError:error];
         }];
     } else {
         _currentPage = 0;
@@ -226,16 +229,22 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
 - (void)reloadBoardPage
 {
+    // Prevent reloading while already loading board items
+    if (_alreadyLoadingNextPage) {
+        [self.refreshControl endRefreshing];
+        return;
+    }
+
     _alreadyLoadingNextPage = YES;
     [_boardModel reloadBoardWithViewWidth:self.view.bounds.size.width
                         andCompletion:^(NSArray *completionThreadsArray)
     {
         _currentPage = 0;
-        _alreadyLoadingNextPage = NO;
         _threadsArray = [completionThreadsArray mutableCopy];
         [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
+            _alreadyLoadingNextPage = NO;
         });
     }];
 }
@@ -261,12 +270,12 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
             tempThreadObj = [_threadsArray objectAtIndex:selectedCellPath.row];
             
             NSString *threadNum = tempThreadObj.num;
-            NSString *threadSubject = tempThreadObj.subject;
             
             threadViewController.threadNum = threadNum;
-            threadViewController.threadSubject = threadSubject;
+            threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:tempThreadObj.subject andNum:tempThreadObj.num andComment:tempThreadObj.comment];
+
         }
-    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IOS_7]) {
+    } else if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPAD] || [[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPHONE]) {
         
         DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController*) [[segue destinationViewController] topViewController];
         createPostViewController.createPostViewControllerDelegate = self;
@@ -274,34 +283,12 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
         createPostViewController.boardCode = _boardCode;
 
         // Fix ugly white popover arrow on Popover Controller when dark theme enabled
-        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD] &&
+        if ([[segue identifier] isEqualToString:SEGUE_TO_NEW_THREAD_IPAD] &&
             [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME])
         {
             [segue destinationViewController].popoverPresentationController.backgroundColor = [UIColor blackColor];
         }
     }
-}
-
-// We need to twick our segues a little because of difference between iOS 7 and iOS 8 in segue types
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    // if we have Device with version under 8.0
-    if (!SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
-
-        // and we have fancy popover 8.0 segue
-        if ([identifier isEqualToString:SEGUE_TO_NEW_THREAD]) {
-
-            // Execute iOS 7 segue
-            [self performSegueWithIdentifier:SEGUE_TO_NEW_THREAD_IOS_7 sender:self];
-
-            // drop iOS 8 segue
-            return NO;
-        }
-
-        return YES;
-    }
-
-    return YES;
 }
 
 - (void)openThredWithCreatedThread:(NSString *)threadNum

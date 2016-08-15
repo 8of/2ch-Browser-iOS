@@ -17,8 +17,6 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
-@property (nonatomic, assign, readonly) BOOL enableDarkTheme;
-
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
