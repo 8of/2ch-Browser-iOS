@@ -42,7 +42,7 @@
 /// Check if we can post without captcha
 - (void)canPostWithoutCaptcha:(void (^)(BOOL))completion;
 
-- (void)getCaptchaImageUrl:(BOOL)thread andCompletion:(void (^)(NSString *))completion;
+- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion;
 
 - (NSString *)userAgent;
 

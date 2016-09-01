@@ -216,11 +216,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
             // If usercode presented then use as part of the message
             // NSLog(@"usercode way: %@", usercode);
             mutableParams[@"usercode"] = usercode;
-        } else if (!withoutCaptcha) {
-            // New ReCaptcha if server not permit us to post without captcha
-            mutableParams[@"captcha_type"] = @"recaptcha";
-            mutableParams[@"captcha-key"] = DVACH_RECAPTCHA_KEY;
-            mutableParams[@"g-recaptcha-response"] = captchaValue;
         }
     }
 
@@ -486,33 +481,34 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     }
 }
 
-- (void)getCaptchaImageUrl:(BOOL)thread andCompletion:(void (^)(NSString *))completion
+- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion
 {
     if ([self getNetworkStatus]) {
-        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha"];
-        if (!thread) {
-            address = [NSString stringWithFormat:@"%@&action=thread", address];
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"api/captcha/2chaptcha/id"];
+        if (threadNum != nil) {
+            address = [NSString stringWithFormat:@"%@?thread=%@", address, threadNum];
         }
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/plain", nil]];
 
         [manager GET:address
           parameters:nil
              success:^(AFHTTPRequestOperation *operation, id responseObject)
          {
-             completion(nil);
+             if (responseObject[@"id"] != nil) {
+                 NSString *captchaId = responseObject[@"id"];
+
+                 NSString *captchaImageAddress = [[NSString alloc] initWithFormat:@"%@%@%@", DVACH_BASE_URL, @"api/captcha/2chaptcha/image/", captchaId];
+                 completion(captchaImageAddress, captchaId);
+             } else {
+                 completion(nil, nil);
+             }
          }
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
-             NSString *reponseString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
-             if ([reponseString hasPrefix:DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD]) {
-                 completion(reponseString);
-             } else {
-                 completion(nil);
-             }
+             completion(nil, nil);
          }];
     } else {
-        completion(nil);
+        completion(nil, nil);
     }
 }
 

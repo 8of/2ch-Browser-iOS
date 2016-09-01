@@ -29,19 +29,13 @@
     return self;
 }
 
-- (void)getCaptchaImageUrl:(BOOL)thread andCompletion:(void (^)(NSString *, NSString *))completion
+- (void)getCaptchaImageUrl:(NSString *)threadNum andCompletion:(void (^)(NSString *, NSString *))completion
 {
-    [_networkManager getCaptchaImageUrl:thread
-                          andCompletion:^(NSString *responseString)
+    [_networkManager getCaptchaImageUrl:threadNum
+                          andCompletion:^( NSString * _Nullable fullUrl, NSString * _Nullable captchaId)
     {
-        if (responseString) {
-            NSString *stringTorepalce = [NSString stringWithFormat:@"%@\n", DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD];
-            NSRange replaceRange = [responseString rangeOfString:stringTorepalce];
-            NSString *idResult = [responseString stringByReplacingCharactersInRange:replaceRange withString:@""];
-            [idResult stringByTrimmingCharactersInSet:[NSCharacterSet  whitespaceAndNewlineCharacterSet]];
-
-            NSString *fullUrl = [[NSString alloc] initWithFormat:@"%@%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha&action=image&id=", idResult];
-            completion(fullUrl, idResult);
+        if (fullUrl) {
+            completion(fullUrl, captchaId);
         } else {
             completion(nil, nil);
         }
