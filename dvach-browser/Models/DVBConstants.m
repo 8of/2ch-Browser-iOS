@@ -27,10 +27,6 @@ NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status2.json";
 // Network
 NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
 
-// Keys
-NSString *const DVACH_RECAPTCHA_KEY = @"6LcM2P4SAAAAAD97nF449oigatS5hPCIgt8AQanz";
-NSString *const DVACH_CAPTCHA_ANSWER_CHECK_KEYWORD = @"CHECK";
-
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
@@ -50,7 +46,6 @@ NSString *const STORYBOARD_NAME_WEBVIEWS = @"WebViews";
 
 // Storyboard VC ID's
 NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER = @"DVBThreadViewController";
-NSString *const STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER = @"DVBCaptchaViewController";
 NSString *const STORYBOARD_ID_WEBVIEW_VIEW_CONTROLLER = @"DVBDvachWebViewViewController";
 
 // Segues

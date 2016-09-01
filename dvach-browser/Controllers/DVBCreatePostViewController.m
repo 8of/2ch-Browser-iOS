@@ -20,14 +20,13 @@
 
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
-#import "DVBCaptchaViewController.h"
 #import "DVBDvachCaptchaViewController.h"
 
 #import "DVBContainerForPostElements.h"
 #import "DVBAddPhotoIconImageViewContainer.h"
 #import "DVBPictureToSendPreviewImageView.h"
 
-@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate, DVBCaptchaViewControllerDelegate, DVBDvachCaptchaViewControllerDelegate>
+@interface DVBCreatePostViewController () <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIScrollViewDelegate, DVBDvachCaptchaViewControllerDelegate>
 
 @property (nonatomic, strong) DVBNetworking *networking;
 @property (nonatomic, strong) DVBComment *sharedComment;
@@ -113,21 +112,12 @@
 
 #pragma mark - Captcha
 
-- (void)showCaptchaController
-{
-    UIStoryboard *webviewsStoryboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_WEBVIEWS bundle:nil];
-    DVBCaptchaViewController *captchaVC = [webviewsStoryboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CAPTCHA_VIEW_CONTROLLER];
-    captchaVC.captchaViewControllerDelegate = self;
-    [self.navigationController pushViewController:captchaVC
-                                         animated:YES];
-}
-
 - (void)showDvachCaptchaController
 {
     DVBDvachCaptchaViewController *captchaVC = [[DVBDvachCaptchaViewController alloc] initWithNibName:nil bundle:nil];
     captchaVC.dvachCaptchaViewControllerDelegate = self;
-    if ([_threadNum isEqualToString:@"0"]) {
-        captchaVC.newThread = YES;
+    if (![_threadNum isEqualToString:@"0"]) {
+        captchaVC.threadNum = _threadNum;
     }
     [self.navigationController pushViewController:captchaVC
                                          animated:YES];
@@ -427,13 +417,6 @@
     } else {
         [self.view endEditing:YES];
     }
-}
-
-#pragma mark - DVBCaptchaViewControllerDelegate
-
-- (void)captchaBeenChecked
-{
-    [self sendPostWithoutCaptcha:NO];
 }
 
 #pragma mark - DVBDvachCaptchaViewControllerDelegate

@@ -36,10 +36,6 @@
     _captchaManager = [[DVBCaptchaManager alloc] init];
     [_reloadButton setTitle:@"" forState:UIControlStateNormal];
 
-    if (_newThread != YES) {
-        _newThread = NO;
-    }
-
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.view.backgroundColor = CELL_BACKGROUND_COLOR;
         _textField.backgroundColor = CELL_BACKGROUND_COLOR;
@@ -79,7 +75,7 @@
 {
     _imageView.image = nil;
     _textField.text = @"";
-    [_captchaManager getCaptchaImageUrl:_newThread
+    [_captchaManager getCaptchaImageUrl:_threadNum
                           andCompletion:^(NSString *captchaImageUrl, NSString *captchaId)
     {
         _captchaId = captchaId;
