@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DVBDvachCaptchaViewController">
@@ -36,16 +36,16 @@
                     </connections>
                 </button>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UWj-WJ-OzN">
-                    <rect key="frame" x="190" y="80" width="220" height="80"/>
+                    <rect key="frame" x="210" y="80" width="180" height="80"/>
                     <subviews>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="j3G-9f-kVM">
-                            <rect key="frame" x="100" y="30" width="20" height="20"/>
+                            <rect key="frame" x="80" y="30" width="20" height="20"/>
                         </activityIndicatorView>
                         <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NjF-HK-aHB">
-                            <rect key="frame" x="0.0" y="0.0" width="220" height="80"/>
+                            <rect key="frame" x="0.0" y="0.0" width="180" height="80"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="grI-hk-wBQ">
-                            <rect key="frame" x="0.0" y="0.0" width="220" height="80"/>
+                            <rect key="frame" x="0.0" y="0.0" width="180" height="80"/>
                             <state key="normal" title="Reload"/>
                             <connections>
                                 <action selector="reloadButtonAction:" destination="-1" eventType="touchUpInside" id="KvS-87-VzH"/>
@@ -65,7 +65,7 @@
                         <constraint firstItem="j3G-9f-kVM" firstAttribute="centerX" secondItem="UWj-WJ-OzN" secondAttribute="centerX" id="nDB-0a-NsA"/>
                         <constraint firstItem="NjF-HK-aHB" firstAttribute="leading" secondItem="UWj-WJ-OzN" secondAttribute="leading" id="qdb-TR-cmN"/>
                         <constraint firstItem="j3G-9f-kVM" firstAttribute="centerY" secondItem="UWj-WJ-OzN" secondAttribute="centerY" id="qp2-J5-Utx"/>
-                        <constraint firstAttribute="width" constant="220" id="vrG-Bb-yQI"/>
+                        <constraint firstAttribute="width" constant="180" id="vrG-Bb-yQI"/>
                     </constraints>
                 </view>
             </subviews>

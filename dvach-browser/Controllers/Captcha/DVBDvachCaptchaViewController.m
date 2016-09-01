@@ -79,8 +79,37 @@
                           andCompletion:^(NSString *captchaImageUrl, NSString *captchaId)
     {
         _captchaId = captchaId;
-        [_imageView setImageWithURL:[NSURL URLWithString:captchaImageUrl]];
-    }];
+        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:captchaImageUrl]];
+        __weak typeof(self) weakSelf = self;
+        [_imageView setImageWithURLRequest:request
+                          placeholderImage:nil
+                                   success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
+                                       if (weakSelf == nil) { return; }
+                                       if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+                                           _imageView.image = [self inverseColor:image];
+                                       } else {
+                                           _imageView.image = image;
+                                       }
+                                   }
+                                   failure:nil];
+        }];
+}
+
+#pragma mark - Private image stuff
+
+- (UIImage *)inverseColor:(UIImage *)image
+{
+    CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
+    CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
+    [filter setValue:coreImage forKey:kCIInputImageKey];
+    CIImage *result = [filter valueForKey:kCIOutputImageKey];
+
+    CIFilter *filterBrightness = [CIFilter filterWithName:@"CIColorControls"];
+    [filterBrightness setValue:result forKey:kCIInputImageKey];
+    [filterBrightness setValue:[NSNumber numberWithFloat:0.017] forKey:kCIInputBrightnessKey];
+    result = [filterBrightness valueForKey:kCIOutputImageKey];
+
+    return [UIImage imageWithCIImage:result];
 }
 
 - (void)submitCaptcha
