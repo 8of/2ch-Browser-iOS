@@ -18,6 +18,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>internalWebmPlayer</string>
+			<key>Key</key>
+			<string>internalWebmPlayer</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Little font</string>
 			<key>Key</key>
 			<string>enableLittleBodyFont</string>
@@ -31,26 +41,6 @@
 			<string>Traffic savings</string>
 			<key>Key</key>
 			<string>enableTrafficSavings</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>internalWebmPlayer</string>
-			<key>Key</key>
-			<string>internalWebmPlayer</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>enableSmoothScrolling</string>
-			<key>Key</key>
-			<string>enableSmoothScrolling</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
@@ -81,6 +71,28 @@
 			<string>clearThreads</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>domain</string>
+			<key>Key</key>
+			<string>domain</string>
+			<key>DefaultValue</key>
+			<string>2ch.hk</string>
+			<key>Titles</key>
+			<array>
+				<string>Hong Kong</string>
+				<string>Pearl Marble</string>
+				<string>2 channel</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string>2ch.hk</string>
+				<string>2ch.pm</string>
+				<string>2channel.hk</string>
+			</array>
 		</dict>
 		<dict>
 			<key>Type</key>

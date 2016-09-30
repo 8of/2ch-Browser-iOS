@@ -11,18 +11,8 @@
 // URL schemes
 NSString *const HTTPS_SCHEME = @"https://";
 NSString *const HTTP_SCHEME = @"http://";
-
 // URLs
-NSString *const DVACH_BASE_URL = @"https://2ch.hk/";
-NSString *const DVACH_BASE_URL_WITHOUT_SCHEME = @"2ch.hk/";
-NSString *const DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA = @"2ch.hk";
-NSString *const DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA_HK = @"2ch.hk";
-NSString *const GET_CAPTCHA_KEY_URL = @"https://2ch.hk/makaba/captcha.fcgi";
-NSString *const REPORT_THREAD_URL = @"https://2ch.hk/makaba/makaba.fcgi";
-
-NSString *const REAL_ADDRESS_FOR_BOARDS_LIST = @"https://2ch.hk/makaba/mobile.fcgi?task=get_boards";
-NSString *const URL_TO_GET_USERCODE = @"https://2ch.hk/makaba/makaba.fcgi";
-NSString *const URL_TO_CHECK_REVIEW_STATUS = @"http://8of.org/2ch/status.json";
+NSString *const DVACH_DOMAIN = @"2ch.hk";
 
 // Network
 NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
@@ -31,9 +21,9 @@ NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_LITTLE_BODY_FONT = @"enableLittleBodyFont";
 NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"internalWebmPlayer";
-NSString *const SETTING_ENABLE_SMOOTH_SCROLLING = @"enableSmoothScrolling";
 NSString *const SETTING_ENABLE_TRAFFIC_SAVINGS = @"enableTrafficSavings";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
+NSString *const SETTING_BASE_DOMAIN = @"domain";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
