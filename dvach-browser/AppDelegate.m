@@ -9,21 +9,21 @@
 #import <AFNetworking/AFNetworking.h>
 #import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 #import <SDWebImage/SDWebImageManager.h>
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
 
 #import "AppDelegate.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
 #import "DVBDatabaseManager.h"
 #import "DVBBoardsModel.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBPostPhotoContainerView.h"
 #import "DVBMarkupButton.h"
 
 @interface AppDelegate ()
 
-@property (nonatomic, strong) DVBNetworking *networking;
+@property (nonatomic, strong, nonnull) DVBNetworking *networking;
+@property (nonatomic, strong) DVBDefaultsManager *defaultsManager;
 
 @end
 
@@ -31,7 +31,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self createDefaultSettings];
+    [self createDefaultsAndSettings];
     [self managePasscode];
     [self appearanceTudeUp];
     [self manageAFNetworking];
@@ -45,38 +45,17 @@
     [DVBBoardsModel manageReviewStatus];
 }
 
-- (void)createDefaultSettings
+- (void)createDefaultsAndSettings
 {
-    [Fabric with:@[[Crashlytics class]]];
-
-    if (!_networking) {
-        _networking = [[DVBNetworking alloc] init];
-    }
-
+    _networking = [[DVBNetworking alloc] init];
     NSString *userAgent = [_networking userAgent];
-
-    NSDictionary* defaults = @{
-       USER_AGREEMENT_ACCEPTED : @NO,
-       SETTING_ENABLE_DARK_THEME : @NO,
-       SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
-       SETTING_ENABLE_INTERNAL_WEBM_PLAYER : @YES,
-       SETTING_ENABLE_SMOOTH_SCROLLING : @NO,
-       SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
-       SETTING_CLEAR_THREADS : @NO,
-       PASSCODE : @"",
-       USERCODE : @"",
-       DEFAULTS_REVIEW_STATUS : @NO,
-       DEFAULTS_USERAGENT_KEY : userAgent
-    };
-
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
-    // Turn off Shake to Undo because of tags on post screen
-    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
-
+    // Prevent Clauda shitting on my network queries
     [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
                                              forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+    if (!_defaultsManager) {
+        _defaultsManager = [[DVBDefaultsManager alloc] init];
+        [_defaultsManager createDefaultSettingsWithUserAgent:userAgent];
+    }
 }
 
 - (void)managePasscode

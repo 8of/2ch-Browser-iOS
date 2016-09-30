@@ -24,6 +24,7 @@ NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"internalWebmPlayer";
 NSString *const SETTING_ENABLE_SMOOTH_SCROLLING = @"enableSmoothScrolling";
 NSString *const SETTING_ENABLE_TRAFFIC_SAVINGS = @"enableTrafficSavings";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
+NSString *const SETTING_BASE_DOMAIN = @"domain";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";

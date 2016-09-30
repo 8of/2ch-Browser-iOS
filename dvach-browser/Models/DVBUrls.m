@@ -10,7 +10,6 @@
 
 @implementation DVBUrls
 
-static NSString *_dvachDomain;
 static NSString *_base;
 static NSString *_baseWithoutScheme;
 static NSString *_baseWithoutSchemeForUrlNinja;
@@ -96,14 +95,22 @@ static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
     return _checkReviewStatus;
 }
 
++ (void)reset
+{
+    _base = nil;
+    _baseWithoutScheme = nil;
+    _baseWithoutSchemeForUrlNinja = nil;
+    _getCaptchaKey = nil;
+    _reportThread = nil;
+    _boardsList = nil;
+    _getUsercode = nil;
+}
+
 // Private
 
 + (NSString *)domain
 {
-    if (_dvachDomain == nil) {
-        _dvachDomain = DVACH_DOMAIN;
-    }
-    return _dvachDomain;
+    return [[NSUserDefaults standardUserDefaults] objectForKey:SETTING_BASE_DOMAIN];
 }
 
 @end

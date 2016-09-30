@@ -22,4 +22,7 @@
 @property (class, nonatomic, readonly, nonnull) NSString *getUsercode;
 @property (class, nonatomic, readonly, nonnull) NSString *checkReviewStatus;
 
+/// Recalculate all base urls
++ (void)reset;
+
 @end
