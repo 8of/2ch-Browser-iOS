@@ -34,7 +34,6 @@
 {
     VLCMediaPlayer *_mediaplayer;
     BOOL _setPosition;
-    BOOL _displayRemainingTime;
     NSURL *_url;
 }
 
@@ -43,10 +42,8 @@
 @property (nonatomic, strong) UIBarButtonItem *doneButton;
 @property (nonatomic, weak) IBOutlet UISlider *positionSlider;
 @property (nonatomic, strong) UIBarButtonItem *timeDisplay;
-
-@property (nonatomic, strong) UIButton *playPauseButton;
-
 @property (nonatomic, assign) BOOL controlsHidden;
+@property (nonatomic, strong) UIBarButtonItem *playPauseItem;
 
 @end
 
@@ -62,7 +59,7 @@
     _doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closePlayback:)];
     _doneButton.title = NSLS(@"BUTTON_CLOSE");
 
-    _timeDisplay = [[UIBarButtonItem alloc] init];
+    _timeDisplay = [[UIBarButtonItem alloc] initWithTitle:@" ---:--  " style:UIBarButtonItemStylePlain target:self action:nil];
 
     // Change font to monospace version
     NSArray *monospacedSetting = @[@{UIFontFeatureTypeIdentifierKey: @(kNumberSpacingType),
@@ -72,26 +69,16 @@
      [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithDescriptor:newDescriptor size:0], NSFontAttributeName, nil]
                                 forState:UIControlStateNormal];
 
-    _timeDisplay.target = self;
-    _timeDisplay.action = @selector(toggleTimeDisplay:);
-    _timeDisplay.title = @"--:--";
-    
-    CGRect buttonRect = CGRectMake(0, 0, 30., 30.);
-    
-    _playPauseButton = [[UIButton alloc] initWithFrame:buttonRect];
-    [_playPauseButton setTitle:@"" forState:UIControlStateNormal];
-    [_playPauseButton addTarget:self action:@selector(playAndPause:) forControlEvents:UIControlEventTouchUpInside];
-
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     self.navigationItem.titleView = _navigationItemView;
     self.navigationItem.leftBarButtonItem = _doneButton;
     self.navigationItem.rightBarButtonItem = _timeDisplay;
-    
-    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    UIBarButtonItem *playPauseItem = [[UIBarButtonItem alloc] initWithCustomView:_playPauseButton];
 
-    [self setToolbarItems:@[flexibleItem, playPauseItem, flexibleItem] animated:NO];
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    _playPauseItem = [[UIBarButtonItem alloc] initWithImage:[self playButtonImage] style:UIBarButtonItemStylePlain target:self action:@selector(playAndPause:)];
+
     self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
+    [self setToolbarItems:@[flexibleItem, _playPauseItem, flexibleItem] animated:NO];
 
     UITapGestureRecognizer *tapOnVideoRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(toggleControlsVisible)];
     tapOnVideoRecognizer.delegate = self;
@@ -114,15 +101,12 @@
 
     /* create a media object and give it to the player */
     _mediaplayer.media = [VLCMedia mediaWithURL:_url];
-    
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     [_mediaplayer play];
-    [self changeBottomButtonStateForSize:self.view.bounds.size];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -149,25 +133,22 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [self changeBottomButtonStateForSize:size];
-}
-
-- (void)changeBottomButtonStateForSize:(CGSize)viewSize {
-    if (viewSize.width > viewSize.height) {
-        // Position elements for Landscape
-        _playPauseButton.frame = CGRectMake(0, 0, 22., 22.);
-    } else {
-        // Position elements for Portrait
-        _playPauseButton.frame = CGRectMake(0, 0, 30., 30.);
-    }
-}
-
 - (void)playMediaFromURL:(NSURL*)theURL
 {
     _url = theURL;
 }
+
+- (UIImage *)playButtonImage
+{
+    return [UIImage imageNamed:[_mediaplayer isPlaying]? @"PlayerPause" : @"PlayerPlay"];
+}
+
+- (void)changeImageFor:(UIBarButtonItem *)item
+{
+    [item setImage:[self playButtonImage]];
+}
+
+#pragma mark - Actions
 
 - (IBAction)playAndPause:(id)sender
 {
@@ -175,6 +156,11 @@
         [_mediaplayer pause];
     } else {
         [_mediaplayer play];
+    }
+
+    if ([sender isKindOfClass:UIBarButtonItem.class]) {
+        UIBarButtonItem *item = (UIBarButtonItem *)sender;
+        [self changeImageFor:item];
     }
 }
 
@@ -194,7 +180,7 @@
 
 - (IBAction)positionSliderAction:(UISlider *)sender
 {
-    /* we need to limit the number of events sent by the slider, since otherwise, the user
+    /* Need to limit the number of events sent by the slider, since otherwise, the user
      * wouldn't see the I-frames when seeking on current mobile devices. This isn't a problem
      * within the Simulator, but especially on older ARMv7 devices, it's clearly noticeable. */
     [self performSelector:@selector(_setPositionForReal) withObject:nil afterDelay:0.3];
@@ -221,8 +207,9 @@
     if (currentState == VLCMediaPlayerStateEnded || currentState == VLCMediaPlayerStateStopped)
         [self performSelector:@selector(closeAfterEnd:) withObject:nil afterDelay:2.];
 
-    UIImage *playButtonImage = [UIImage imageNamed:[_mediaplayer isPlaying]? @"PlayerPause" : @"PlayerPlay"];
-    [_playPauseButton setBackgroundImage:playButtonImage forState:UIControlStateNormal];
+    if (_playPauseItem != nil) {
+        [self changeImageFor:_playPauseItem];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -230,17 +217,8 @@
     self.positionSlider.value = [_mediaplayer position];
 
     [UIView performWithoutAnimation:^{
-        if (_displayRemainingTime) {
-            _timeDisplay.title = [[_mediaplayer remainingTime] stringValue];
-        } else {
-            _timeDisplay.title = [[_mediaplayer time] stringValue];
-        }
+        _timeDisplay.title = [[_mediaplayer remainingTime] stringValue];
     }];
-}
-
-- (IBAction)toggleTimeDisplay:(id)sender
-{
-    _displayRemainingTime = !_displayRemainingTime;
 }
 
 - (void)toggleControlsVisible
