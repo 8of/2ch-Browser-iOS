@@ -51,20 +51,22 @@
 
 - (void)loadNextPageWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *, NSError *))completion
 {
+    __weak typeof(self) weakSelf = self;
     [_networking getThreadsWithBoard:_boardCode
                              andPage:_currentPage
                        andCompletion:^(NSDictionary *resultDict, NSError *error)
     {
+        if (weakSelf == nil) { return; }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-            if (_currentPage == 0) {
-                _threadsAlreadyLoaded = [@{} mutableCopy];
+            if (weakSelf.currentPage == 0) {
+                weakSelf.threadsAlreadyLoaded = [@{} mutableCopy];
             }
             NSArray *threadsArray = resultDict[@"threads"];
             
             for (NSDictionary *thread in threadsArray) {
-                if (!_threadsAlreadyLoaded[thread[@"thread_num"]]) {
-                    _threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
+                if (!weakSelf.threadsAlreadyLoaded[thread[@"thread_num"]]) {
+                    weakSelf.threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
                     NSArray *threadPosts = thread[@"posts"];
 
                     NSError *parseError;
@@ -127,22 +129,23 @@
                         }
                         thread.comment = preparedComment;
 
-                        [_privateThreadsArray addObject:thread];
+                        [weakSelf.privateThreadsArray addObject:thread];
                     }
                     else {
                         NSLog(@"error while parsing threads: %@", parseError.localizedDescription);
                     }
                 }
             }
+
+            if (weakSelf == nil) { return; }
             
-            NSArray *resultArr = [[NSArray alloc] initWithArray:_privateThreadsArray];
+            NSArray *resultArr = [[NSArray alloc] initWithArray:weakSelf.privateThreadsArray];
+            [weakSelf assignThreadsArrayFromWeak:resultArr];
             
-            _threadsArray = resultArr;
+            weakSelf.currentPage++;
             
-            _currentPage++;
-            
-            if (_currentPage == _maxPage) {
-                _currentPage = 0;
+            if (weakSelf.currentPage == weakSelf.maxPage) {
+                weakSelf.currentPage = 0;
             }
             
             completion(resultArr, error);
@@ -150,12 +153,19 @@
     }];
 }
 
+- (void)assignThreadsArrayFromWeak:(NSArray *)array
+{
+    _threadsArray = array;
+}
+
 - (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion {
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
+    __weak typeof(self) weakSelf = self;
     [self loadNextPageWithViewWidth:width
                       andCompletion:^(NSArray *threadsCompletion, NSError *error)
     {
+        if (weakSelf == nil) { return; }
         completion(threadsCompletion);
     }];
 }

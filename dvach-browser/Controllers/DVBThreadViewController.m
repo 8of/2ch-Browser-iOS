@@ -308,26 +308,30 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Get data for thread from Db if any
 - (void)initialThreadLoad
 {
+    __weak typeof(self) weakSelf = self;
     [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) {
-        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
-        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
-        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
+        if (weakSelf == nil) { return; }
+        weakSelf.threadControllerTableViewManager.postsArray = weakSelf.threadModel.postsArray;
+        weakSelf.threadControllerTableViewManager.thumbImagesArray = weakSelf.threadModel.thumbImagesArray;
+        weakSelf.threadControllerTableViewManager.fullImagesArray = weakSelf.threadModel.fullImagesArray;
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
+            [weakSelf.tableView reloadData];
         });
 
-        [self reloadThread];
+        [weakSelf reloadThread];
     }];
 }
 
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
+    __weak typeof(self) weakSelf = self;
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
-        _threadControllerTableViewManager.postsArray = _threadModel.postsArray;
-        _threadControllerTableViewManager.thumbImagesArray = _threadModel.thumbImagesArray;
-        _threadControllerTableViewManager.fullImagesArray = _threadModel.fullImagesArray;
+        if (weakSelf == nil) { return; }
+        weakSelf.threadControllerTableViewManager.postsArray = weakSelf.threadModel.postsArray;
+        weakSelf.threadControllerTableViewManager.thumbImagesArray = weakSelf.threadModel.thumbImagesArray;
+        weakSelf.threadControllerTableViewManager.fullImagesArray = weakSelf.threadModel.fullImagesArray;
         completion(completionsPosts);
     }];
 }
@@ -363,26 +367,28 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         });
     }
     else {
+        __weak typeof(self) weakSelf = self;
         [self getPostsWithBoard:_boardCode
                       andThread:_threadNum
                   andCompletion:^(NSArray *postsArrayBlock)
         {
+            if (weakSelf == nil) { return; }
             if (postsArrayBlock) {
-                _threadControllerTableViewManager.postsArray = postsArrayBlock;
+                weakSelf.threadControllerTableViewManager.postsArray = postsArrayBlock;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.tableView reloadData];
-                    [self.refreshControl endRefreshing];
-                    [_bottomRefreshControl endRefreshing];
-                    [self checkNewPostsCount];
-                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                    self.tableView.backgroundView = nil;
+                    [weakSelf.tableView reloadData];
+                    [weakSelf.refreshControl endRefreshing];
+                    [weakSelf.bottomRefreshControl endRefreshing];
+                    [weakSelf checkNewPostsCount];
+                    weakSelf.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    weakSelf.tableView.backgroundView = nil;
                 });
             } else {
-                [self showMessageAboutError];
+                [weakSelf showMessageAboutError];
             }
 
-            self.refreshControl.enabled = YES;
-            _bottomRefreshControl.enabled = YES;
+            weakSelf.refreshControl.enabled = YES;
+            weakSelf.bottomRefreshControl.enabled = YES;
         }];
     }
 }
@@ -604,15 +610,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     NSURL *url = [NSURL URLWithString:urlString];
     NSArray *objectsToShare = @[url];
-
     TUSafariActivity *safariActivity = [[TUSafariActivity alloc] init];
-
     ARChromeActivity *chromeActivity = [[ARChromeActivity alloc] init];
-
     NSString *openInChromActivityTitle = NSLS(@"ACTIVITY_OPEN_IN_CHROME");
-
     [chromeActivity setActivityTitle:openInChromActivityTitle];
-
     UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:@[safariActivity, chromeActivity]];
 
     // Only for iPad

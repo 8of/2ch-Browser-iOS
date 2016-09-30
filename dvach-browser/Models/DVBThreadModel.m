@@ -58,21 +58,15 @@
 - (void)checkPostsInDbForThisThreadWithCompletion:(void (^)(NSArray *))completion
 {
     YapDatabaseConnection *connection = [_database newConnection];
-
     // To prevent retain cycles call back by weak reference
     __weak typeof(self) weakSelf = self;
-
     // Heavy work dispatched to a separate thread
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
         // Load posts from DB
         [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-
             // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
             typeof(weakSelf) strongSelf = weakSelf;
-
             NSArray *arrayOfPosts = [transaction objectForKey:strongSelf.threadNum inCollection:DB_COLLECTION_THREADS];
-
             strongSelf.privatePostsArray = [arrayOfPosts mutableCopy];
             strongSelf.privateThumbImagesArray = [[strongSelf thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
             strongSelf.privateFullImagesArray = [[strongSelf fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
@@ -93,15 +87,14 @@
 
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion
 {
+    // To prevent retain cycles call back by weak reference
+    __weak typeof(self) weakSelf = self;
     if (_boardCode && _threadNum) {
         [_networking getPostsWithBoard:_boardCode
                              andThread:_threadNum
                             andPostNum:_lastPostNum
                          andCompletion:^(id postsDictionary)
         {
-            // To prevent retain cycles call back by weak reference
-            __weak typeof(self) weakSelf = self;
-
             // Heavy work dispatched to a separate thread
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // NSLog(@"Work Dispatched");
@@ -112,9 +105,7 @@
                 // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
                 typeof(weakSelf) strongSelf = weakSelf;
                 if (strongSelf) {
-
                     NSMutableArray *postNumMutableArray = [@[] mutableCopy];
-
                     // If it's first load - do not include post
                     if (!strongSelf.lastPostNum) {
                         strongSelf.privatePostsArray = [@[] mutableCopy];
@@ -254,19 +245,19 @@
                         currentPostIndex++;
                     }
 
-                    _postsArray = semiResultMutableArray;
+                    [strongSelf assignPostsArrayFromWeak:semiResultMutableArray];
                     DVBPost *lastPost = (DVBPost *)[strongSelf.postsArray lastObject];
                     strongSelf.lastPostNum = lastPost.num;
 
-                    if (_postsArray.count == 0) {
-                        _postsArray = nil;
+                    if (strongSelf.postsArray.count == 0) {
+                        [strongSelf dropPostsArray];
 
                         // back to main
                         dispatch_async(dispatch_get_main_queue(), ^{
                             completion(strongSelf.postsArray);
                         });
                     } else {
-                        [self writeToDbWithPosts:_postsArray andThreadNum:_threadNum andCompletion:^
+                        [self writeToDbWithPosts:strongSelf.postsArray andThreadNum:strongSelf.threadNum andCompletion:^
                         {
                             // back to main
                             dispatch_async(dispatch_get_main_queue(), ^{
@@ -284,6 +275,16 @@
         NSLog(@"No Board code or Thread number");
         completion(nil);
     }
+}
+
+- (void)assignPostsArrayFromWeak:(NSArray *)array
+{
+    _postsArray = array;
+}
+
+- (void)dropPostsArray
+{
+    _postsArray = nil;
 }
 
 /// Check connection
@@ -304,7 +305,6 @@
     _privateThumbImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
         NSArray *postThumbsArray = post.thumbPathesArray;
-
         for (NSString *thumbPath in postThumbsArray) {
             [_privateThumbImagesArray addObject:thumbPath];
         }
@@ -319,7 +319,6 @@
     _privateFullImagesArray = [@[] mutableCopy];
     for (DVBPost *post in postsArray) {
         NSArray *postThumbsArray = post.pathesArray;
-
         for (NSString *thumbPath in postThumbsArray) {
             [_privateFullImagesArray addObject:thumbPath];
         }
@@ -335,11 +334,9 @@
 {
     // Get a connection to the database (can have multiple for concurrency)
     YapDatabaseConnection *connection = [_database newConnection];
-
     // Add an object
     [connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
         [transaction setObject:posts forKey:threadNumb inCollection:DB_COLLECTION_THREADS];
-
         callback();
     }];
 }
