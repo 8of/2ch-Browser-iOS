@@ -29,6 +29,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
 - (void)awakeFromNib
 {
+    [super awakeFromNib];
     [self setupAppearance];
 
     DVBCreatePostScrollView *scrollView = (DVBCreatePostScrollView *)self.superview;

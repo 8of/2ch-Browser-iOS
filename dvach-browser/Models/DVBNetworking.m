@@ -11,6 +11,7 @@
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBNetworking.h"
 #import "DVBBoard.h"
 #import "DVBValidation.h"
@@ -59,7 +60,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/html", @"application/json",nil]];
-    [manager GET:REAL_ADDRESS_FOR_BOARDS_LIST parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
+    [manager GET:[DVBUrls boardsList] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
     {
         completion(responseObject);
     }
@@ -84,7 +85,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
             pageStringValue = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)page];
         }
         
-        NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/%@.json", DVACH_BASE_URL, board, pageStringValue];
+        NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/%@.json", [DVBUrls base], board, pageStringValue];
 
         __weak typeof(self) weakSelf = self;
         
@@ -114,9 +115,9 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 {
     if ([self getNetworkStatus]) {
         // building URL for getting JSON-thread-answer from multiple strings
-        NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", DVACH_BASE_URL, board, threadNum];
+        NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/res/%@.json", [DVBUrls base], board, threadNum];
         if (postNum) {
-            requestAddress = [[NSString alloc] initWithFormat:@"%@makaba/mobile.fcgi?task=get_thread&board=%@&thread=%@&num=%@", DVACH_BASE_URL, board, threadNum, postNum];
+            requestAddress = [[NSString alloc] initWithFormat:@"%@makaba/mobile.fcgi?task=get_thread&board=%@&thread=%@&num=%@", [DVBUrls base], board, threadNum, postNum];
         }
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -139,7 +140,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 - (void)getUserCodeWithPasscode:(NSString *)passcode andCompletion:(void (^)(NSString *))completion
 {
     if ([self getNetworkStatus]) {
-        NSString *requestAddress = URL_TO_GET_USERCODE;
+        NSString *requestAddress = [DVBUrls getUsercode];
         
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/html",nil]];
@@ -192,7 +193,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
-    NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/posting.fcgi"];
+    NSString *address = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], @"makaba/posting.fcgi"];
     
     NSDictionary *params =
     @{
@@ -364,7 +365,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
         reportManager.responseSerializer = [AFHTTPResponseSerializer serializer];
         [reportManager.responseSerializer setAcceptableContentTypes:[NSSet setWithObject:@"text/html"]];
 
-        [reportManager POST:REPORT_THREAD_URL
+        [reportManager POST:[DVBUrls reportThread]
                  parameters:nil
                     success:^(NSURLSessionDataTask *task, id responseObject)
          {
@@ -383,7 +384,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 {
     if ([self getNetworkStatus]) {
 
-        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/mobile.fcgi"];
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], @"makaba/mobile.fcgi"];
 
         NSDictionary *params =
         @{
@@ -419,7 +420,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
-    [manager GET:URL_TO_CHECK_REVIEW_STATUS
+    [manager GET:[DVBUrls checkReviewStatus]
       parameters:nil
          success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject)
      {
@@ -457,7 +458,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 - (void)canPostWithoutCaptcha:(void (^)(BOOL))completion
 {
     if ([self getNetworkStatus]) {
-        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"makaba/captcha.fcgi?type=2chaptcha&action=thread"];
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], @"makaba/captcha.fcgi?type=2chaptcha&action=thread"];
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"text/plain", nil]];
 
@@ -484,7 +485,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 - (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion
 {
     if ([self getNetworkStatus]) {
-        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", DVACH_BASE_URL, @"api/captcha/2chaptcha/id"];
+        NSString *address = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], @"api/captcha/2chaptcha/id"];
         if (threadNum != nil) {
             address = [NSString stringWithFormat:@"%@?thread=%@", address, threadNum];
         }
@@ -497,7 +498,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
              if (responseObject[@"id"] != nil) {
                  NSString *captchaId = responseObject[@"id"];
 
-                 NSString *captchaImageAddress = [[NSString alloc] initWithFormat:@"%@%@%@", DVACH_BASE_URL, @"api/captcha/2chaptcha/image/", captchaId];
+                 NSString *captchaImageAddress = [[NSString alloc] initWithFormat:@"%@%@%@", [DVBUrls base], @"api/captcha/2chaptcha/image/", captchaId];
                  completion(captchaImageAddress, captchaId);
              } else {
                  completion(nil, nil);
@@ -541,7 +542,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
             NSRange range = [refreshUrl rangeOfString:ERROR_OPERATION_REFRESH_VALUE_SEPARATOR];
             if (range.location != NSNotFound) {
                 NSString *secondpartOfUrl = [refreshUrl substringFromIndex:NSMaxRange(range)];
-                NSString *fullUrlToReturn = [NSString stringWithFormat:@"%@%@", DVACH_BASE_URL, secondpartOfUrl];
+                NSString *fullUrlToReturn = [NSString stringWithFormat:@"%@%@", [DVBUrls base], secondpartOfUrl];
 
                 NSDictionary *userInfo = error.userInfo;
 

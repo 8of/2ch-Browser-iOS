@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Alexander Tewpin. All rights reserved.
 //
 
-#import "DVBConstants.h"
+#import "DVBUrls.h"
 
 #import "UrlNinja.h"
 
@@ -20,8 +20,8 @@
 
     if (self) {
     
-        NSString *basicUrlPm = DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA;
-        NSString *basicUrlHk = DVACH_BASE_URL_WITHOUT_SCHEME_FOR_URL_NINJA_HK;
+        NSString *basicUrlPm = [DVBUrls baseWithoutSchemeForUrlNinja];
+        NSString *basicUrlHk = [DVBUrls baseWithoutSchemeForUrlNinjaHk];
         
         // Check host - if it's not 2ch - just return external type
         if (!([url.host isEqualToString:basicUrlPm] ||

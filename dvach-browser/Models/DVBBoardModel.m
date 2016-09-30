@@ -10,7 +10,7 @@
 
 #import "DVBBoardModel.h"
 #import "DVBNetworking.h"
-#import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBThread.h"
 
 #import "DVBThreadTableViewCell.h"
@@ -85,7 +85,7 @@
                             NSArray *files = threadDict[@"files"];
                             if (files.count > 0) {
                                 NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
-                                NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", DVACH_BASE_URL, _boardCode, tmpThumbnail];
+                                NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", [DVBUrls base], _boardCode, tmpThumbnail];
                                 thread.thumbnail = thumbPath;
                             }
                         }

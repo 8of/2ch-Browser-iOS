@@ -10,6 +10,7 @@
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBThreadModel.h"
 #import "DVBDatabaseManager.h"
 #import "DVBNetworking.h"
@@ -180,7 +181,7 @@
                                 for (NSDictionary *fileDictionary in files) {
                                     NSString *fullFileName = fileDictionary[@"path"];
 
-                                    NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, strongSelf.boardCode, fileDictionary[@"thumbnail"]];
+                                    NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", [DVBUrls base], strongSelf.boardCode, fileDictionary[@"thumbnail"]];
 
                                     [singlePostThumbPathesArrayMutable addObject:thumbPath];
                                     [strongSelf.privateThumbImagesArray addObject:thumbPath];
@@ -191,10 +192,10 @@
                                     // check webm or not
                                     if (isContainWebm) { // if contains .webm
                                         // make VLC webm link
-                                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", DVACH_BASE_URL_WITHOUT_SCHEME, strongSelf.boardCode, fullFileName];
+                                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", [DVBUrls baseWithoutScheme], strongSelf.boardCode, fullFileName];
                                     }
                                     else {               // if regular image
-                                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", DVACH_BASE_URL, strongSelf.boardCode, fullFileName];
+                                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", [DVBUrls base], strongSelf.boardCode, fullFileName];
                                     }
 
                                     [singlePostPathesArrayMutable addObject:picPath];

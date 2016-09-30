@@ -13,6 +13,7 @@
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBThreadModel.h"
 #import "DVBNetworking.h"
 #import "DVBComment.h"
@@ -493,7 +494,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (IBAction)shareAction:(id)sender
 {
-    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", DVACH_BASE_URL, _boardCode, _threadNum];
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", [DVBUrls base], _boardCode, _threadNum];
     [self callShareControllerWithUrlString:urlToShare];
 }
 
