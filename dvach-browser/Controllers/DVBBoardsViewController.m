@@ -136,10 +136,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
             urlNinja.threadTitle = [_boardsModel threadTitleByIndexPath:selectedCellPath];
             [self openThreadWithUrlNinja:urlNinja];
 
-            // Clear selection after getting all we need from selected cell.
-            [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                          animated:YES];
-
             return NO;
         }
 
@@ -149,9 +145,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
             [alertView show];
 
-            // Clear selection after getting all we need from selected cell.
             [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                          animated:YES];
+                                        animated:YES];
 
             return NO;
         }
@@ -169,10 +164,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
         NSNumber *pages = [_boardsModel boardMaxPageByIndexPath:selectedCellPath];
-
-        // Clear selection after getting all we need from selected cell.
-        [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                      animated:YES];
         
         DVBBoardViewController *boardViewController = segue.destinationViewController;        
         
