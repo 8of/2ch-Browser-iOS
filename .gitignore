@@ -17,5 +17,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+.DS_Store
 Pods
 Podfile.lock
+dvach-browser.xcodeproj/project.xcworkspace
