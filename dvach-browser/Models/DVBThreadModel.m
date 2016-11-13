@@ -172,7 +172,7 @@
                                 for (NSDictionary *fileDictionary in files) {
                                     NSString *fullFileName = fileDictionary[@"path"];
 
-                                    NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@/%@", [DVBUrls base], strongSelf.boardCode, fileDictionary[@"thumbnail"]];
+                                    NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], fileDictionary[@"thumbnail"]];
 
                                     [singlePostThumbPathesArrayMutable addObject:thumbPath];
                                     [strongSelf.privateThumbImagesArray addObject:thumbPath];
@@ -183,10 +183,10 @@
                                     // check webm or not
                                     if (isContainWebm) { // if contains .webm
                                         // make VLC webm link
-                                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@/%@", [DVBUrls baseWithoutScheme], strongSelf.boardCode, fullFileName];
+                                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@", [DVBUrls baseWithoutScheme], fullFileName];
                                     }
                                     else {               // if regular image
-                                        picPath = [[NSString alloc] initWithFormat:@"%@%@/%@", [DVBUrls base], strongSelf.boardCode, fullFileName];
+                                        picPath = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], fullFileName];
                                     }
 
                                     [singlePostPathesArrayMutable addObject:picPath];
