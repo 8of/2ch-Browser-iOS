@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		624BA24D3A4258536D63526C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DB2041C9957E17E7EBCCE65F /* libPods.a */; };
 		840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */; };
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
@@ -76,6 +75,7 @@
 		94FC06A51C674ED600813A68 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FC06A41C674ED600813A68 /* VideoToolbox.framework */; };
 		94FC06AA1C675D5300813A68 /* VDLPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94FC06A81C675D5300813A68 /* VDLPlaybackViewController.m */; };
 		94FC06AB1C675D5300813A68 /* VDLPlaybackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 94FC06A91C675D5300813A68 /* VDLPlaybackViewController.xib */; };
+		95090021D5E865A763B18206 /* libPods-BasePods-dvach-browserTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
 		A15552351ABC06EF00E7DB1D /* DVBThreadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A15552341ABC06EF00E7DB1D /* DVBThreadModel.m */; };
 		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
@@ -94,6 +94,7 @@
 		A155FF181AB7362A00BE31F4 /* DVBThread.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF131AB7362A00BE31F4 /* DVBThread.m */; };
 		A155FF5A1AB736F100BE31F4 /* DVBDismissSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FF591AB736F100BE31F4 /* DVBDismissSegue.m */; };
 		A15896001AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */; };
+		F62DE04DED0A2C69DE8B8DD7 /* libPods-BasePods-dvach-browser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +108,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		16E05AB79E8C2A1134B2FF61 /* Pods-BasePods-dvach-browser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser.debug.xcconfig"; sourceTree = "<group>"; };
 		24704D5E096DD80DBD0AD4EC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasePods-dvach-browserTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasePods-dvach-browser.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8428B63919EDAC74007973A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -256,6 +260,9 @@
 		A15895FE1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBrowserViewControllerBuilder.h; path = Controllers/DVBBrowserViewControllerBuilder.h; sourceTree = "<group>"; };
 		A15895FF1AB9787200D309E0 /* DVBBrowserViewControllerBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBrowserViewControllerBuilder.m; path = Controllers/DVBBrowserViewControllerBuilder.m; sourceTree = "<group>"; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browserTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests.debug.xcconfig"; sourceTree = "<group>"; };
+		E2FB6DBFA4B0E60C9DC1E905 /* Pods-BasePods-dvach-browser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browser.release.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser.release.xcconfig"; sourceTree = "<group>"; };
+		F1530ABC30D521863753555A /* Pods-BasePods-dvach-browserTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browserTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,7 +278,7 @@
 				8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */,
 				842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */,
 				84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */,
-				624BA24D3A4258536D63526C /* libPods.a in Frameworks */,
+				F62DE04DED0A2C69DE8B8DD7 /* libPods-BasePods-dvach-browser.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +286,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95090021D5E865A763B18206 /* libPods-BasePods-dvach-browserTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,6 +556,10 @@
 			children = (
 				24704D5E096DD80DBD0AD4EC /* Pods.debug.xcconfig */,
 				8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */,
+				16E05AB79E8C2A1134B2FF61 /* Pods-BasePods-dvach-browser.debug.xcconfig */,
+				E2FB6DBFA4B0E60C9DC1E905 /* Pods-BasePods-dvach-browser.release.xcconfig */,
+				E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */,
+				F1530ABC30D521863753555A /* Pods-BasePods-dvach-browserTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -603,6 +615,8 @@
 				842E84E119E729F800CB9740 /* Foundation.framework */,
 				84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */,
 				DB2041C9957E17E7EBCCE65F /* libPods.a */,
+				4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */,
+				24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -614,12 +628,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84CFC52D19E1526E004D0BB8 /* Build configuration list for PBXNativeTarget "dvach-browser" */;
 			buildPhases = (
-				857FF7A2A696552F8C0A2607 /* Check Pods Manifest.lock */,
+				857FF7A2A696552F8C0A2607 /* [CP] Check Pods Manifest.lock */,
 				84CFC50619E1526E004D0BB8 /* Sources */,
 				84CFC50719E1526E004D0BB8 /* Frameworks */,
 				84CFC50819E1526E004D0BB8 /* Resources */,
-				123962959E72D9D255ECCDA0 /* Copy Pods Resources */,
-				F20F39559485DF9E8E944ADB /* Embed Pods Frameworks */,
+				123962959E72D9D255ECCDA0 /* [CP] Copy Pods Resources */,
+				F20F39559485DF9E8E944ADB /* [CP] Embed Pods Frameworks */,
 				94C65F451CFA4FDA00210E60 /* ShellScript */,
 			);
 			buildRules = (
@@ -635,9 +649,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 84CFC53019E1526E004D0BB8 /* Build configuration list for PBXNativeTarget "dvach-browserTests" */;
 			buildPhases = (
+				8F793540FB37BE2DB05F8CE4 /* [CP] Check Pods Manifest.lock */,
 				84CFC51F19E1526E004D0BB8 /* Sources */,
 				84CFC52019E1526E004D0BB8 /* Frameworks */,
 				84CFC52119E1526E004D0BB8 /* Resources */,
+				857360C0AD5C47878B5E8458 /* [CP] Embed Pods Frameworks */,
+				CDF147E692315511DF0E4EA2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -728,34 +745,64 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		123962959E72D9D255ECCDA0 /* Copy Pods Resources */ = {
+		123962959E72D9D255ECCDA0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		857FF7A2A696552F8C0A2607 /* Check Pods Manifest.lock */ = {
+		857360C0AD5C47878B5E8458 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		857FF7A2A696552F8C0A2607 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8F793540FB37BE2DB05F8CE4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		94C65F451CFA4FDA00210E60 /* ShellScript */ = {
@@ -771,19 +818,34 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" 4694b81d12b6c4e35979189acf5bc1937dd18182 bf9dd288213e5c45bc751d1c13f8965ea2aa17d1b1b45de4a8cc608e562fb043";
 		};
-		F20F39559485DF9E8E944ADB /* Embed Pods Frameworks */ = {
+		CDF147E692315511DF0E4EA2 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F20F39559485DF9E8E944ADB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -980,7 +1042,7 @@
 		};
 		84CFC52E19E1526E004D0BB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 24704D5E096DD80DBD0AD4EC /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 16E05AB79E8C2A1134B2FF61 /* Pods-BasePods-dvach-browser.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -994,7 +1056,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.8of.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1005,7 +1067,7 @@
 		};
 		84CFC52F19E1526E004D0BB8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8B86A1FA1CD0BE0D673988F6 /* Pods.release.xcconfig */;
+			baseConfigurationReference = E2FB6DBFA4B0E60C9DC1E905 /* Pods-BasePods-dvach-browser.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -1019,7 +1081,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.8of.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1029,6 +1091,7 @@
 		};
 		84CFC53119E1526E004D0BB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1049,6 +1112,7 @@
 		};
 		84CFC53219E1526E004D0BB8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1530ABC30D521863753555A /* Pods-BasePods-dvach-browserTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
