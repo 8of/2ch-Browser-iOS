@@ -87,7 +87,7 @@
                             NSArray *files = threadDict[@"files"];
                             if (files.count > 0) {
                                 NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];
-                                NSString *thumbPath = [NSString stringWithFormat:@"%@%@/%@", [DVBUrls base], _boardCode, tmpThumbnail];
+                                NSString *thumbPath = [NSString stringWithFormat:@"%@%@", [DVBUrls base], tmpThumbnail];
                                 thread.thumbnail = thumbPath;
                             }
                         }
