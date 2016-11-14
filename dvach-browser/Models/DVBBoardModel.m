@@ -158,7 +158,8 @@
     _threadsArray = array;
 }
 
-- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion {
+- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion
+{
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
     __weak typeof(self) weakSelf = self;

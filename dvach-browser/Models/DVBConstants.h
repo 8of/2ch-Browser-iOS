@@ -21,11 +21,12 @@
 #define DVACH_COLOR_HIGHLIGHTED [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:0.3]
 #define DVACH_COLOR_HIGHLIGHTED_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:0.3] CGColor]
 #define THUMBNAIL_GREY_BORDER [[UIColor colorWithRed:(151.0/255.0) green:(151.0/255.0) blue:(151.0/255.0) alpha:1.0] CGColor]
+#define CELL_SEPARATOR_COLOR [UIColor colorWithRed:(200.0/255.0) green:(200.0/255.0) blue:(204.0/255.0) alpha:1.0]
 
 // Colors - Dark theme
 #define CELL_BACKGROUND_COLOR [UIColor colorWithRed:(35.0/255.0) green:(35.0/255.0) blue:(37.0/255.0) alpha:1.0]
 #define CELL_TEXT_COLOR [UIColor colorWithRed:(199.0/255.0) green:(199.0/255.0) blue:(204.0/255.0) alpha:1.0]
-#define CELL_SEPARATOR_COLOR [UIColor colorWithRed:(24.0/255.0) green:(24.0/255.0) blue:(26.0/255.0) alpha:1.0]
+#define CELL_SEPARATOR_COLOR_BLACK [UIColor colorWithRed:(24.0/255.0) green:(24.0/255.0) blue:(26.0/255.0) alpha:1.0]
 #define CELL_TEXT_SPOILER_COLOR [UIColor colorWithRed:(199.0/255.0) green:(199.0/255.0) blue:(204.0/255.0) alpha:0.3]
 
 // URL schemes

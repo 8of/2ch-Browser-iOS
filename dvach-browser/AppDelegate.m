@@ -6,24 +6,13 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import <AFNetworking/AFNetworking.h>
-#import <AFNetworking/AFNetworkActivityIndicatorManager.h>
-#import <SDWebImage/SDWebImageManager.h>
-
 #import "AppDelegate.h"
-#import "DVBConstants.h"
-#import "DVBNetworking.h"
-#import "DVBDatabaseManager.h"
 #import "DVBBoardsModel.h"
 #import "DVBDefaultsManager.h"
 
-#import "DVBPostPhotoContainerView.h"
-#import "DVBMarkupButton.h"
-
 @interface AppDelegate ()
 
-@property (nonatomic, strong, nonnull) DVBNetworking *networking;
-@property (nonatomic, strong) DVBDefaultsManager *defaultsManager;
+@property (nonatomic, strong, nonnull) DVBDefaultsManager *defaultsManager;
 
 @end
 
@@ -31,11 +20,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self createDefaultsAndSettings];
-    [self managePasscode];
-    [self appearanceTudeUp];
-    [self manageAFNetworking];
-    [self manageDb];
+    _defaultsManager = [[DVBDefaultsManager alloc] init];
+    [_defaultsManager initApp];
 
     return YES;
 }
@@ -43,113 +29,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [DVBBoardsModel manageReviewStatus];
-}
-
-- (void)createDefaultsAndSettings
-{
-    _networking = [[DVBNetworking alloc] init];
-    NSString *userAgent = [_networking userAgent];
-    // Prevent Clauda shitting on my network queries
-    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
-                                             forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
-    if (!_defaultsManager) {
-        _defaultsManager = [[DVBDefaultsManager alloc] init];
-        [_defaultsManager createDefaultSettingsWithUserAgent:userAgent];
-    }
-}
-
-- (void)managePasscode
-{
-    NSString *passcode = [[NSUserDefaults standardUserDefaults] objectForKey:PASSCODE];
-    NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
-
-    BOOL isPassCodeNotEmpty = ![passcode isEqualToString:@""];
-    BOOL isUserCodeEmpty = [usercode isEqualToString:@""];
-
-    if (isPassCodeNotEmpty && isUserCodeEmpty) {
-        [_networking getUserCodeWithPasscode:passcode
-                               andCompletion:^(NSString *completion)
-         {
-             if (completion) {
-                 [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
-                 [[NSUserDefaults standardUserDefaults] synchronize];
-
-                 NSString *usercode = completion;
-                 [self setUserCodeCookieWithUsercode:usercode];
-             }
-         }];
-    } else if (!isPassCodeNotEmpty) {
-        [self deleteUsercodeOldData];
-    } else if (!isUserCodeEmpty) {
-        [self setUserCodeCookieWithUsercode:usercode];
-    }
-}
-
-- (void)clearAllCaches
-{
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    [[SDImageCache sharedImageCache] clearDisk];
-}
-
-/// Create cookies for later posting with super csecret usercode
-- (void)setUserCodeCookieWithUsercode:(NSString *)usercode
-{
-    NSDictionary *usercodeCookieDictionary = @{
-        @"name" : @"usercode_nocaptcha",
-        @"value" : usercode
-    };
-    NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
-}
-
-- (void)deleteUsercodeOldData
-{
-    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERCODE];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
-        if ([cookie.name isEqualToString:@"usercode_nocaptcha"]) {
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-            break;
-        }
-    }
-}
-
-/// Execute all AFNetworking methods that need to be executed one time for entire app.
-- (void)manageAFNetworking
-{
-    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
-    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-}
-
-/// Tuning appearance for entire app.
-- (void)appearanceTudeUp
-{
-    [UIView appearance].tintColor = DVACH_COLOR;
-
-    [UIActivityIndicatorView appearance].color = DVACH_COLOR;
-
-    [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        UIView *colorView = [[UIView alloc] init];
-        colorView.backgroundColor = CELL_SEPARATOR_COLOR;
-        [UITableViewCell appearance].selectedBackgroundView = colorView;
-    }
-}
-
-- (void)manageDb
-{
-    BOOL shouldClearDB = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
-
-    if (shouldClearDB) {
-        [self clearAllCaches];
-        DVBDatabaseManager *dbManager = [DVBDatabaseManager sharedDatabase];
-        [dbManager clearAll];
-
-        [[NSUserDefaults standardUserDefaults] setBool:NO
-                                                forKey:SETTING_CLEAR_THREADS];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
 }
 
 #pragma mark - Core Data stack

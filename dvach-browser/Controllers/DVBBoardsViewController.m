@@ -31,6 +31,11 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 @implementation DVBBoardsViewController
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -38,6 +43,10 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     self.title = NSLS(@"TITLE_BOARDS");
 
     [self darkThemeHandler];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(darkThemeHandler)
+                                                 name:NSUserDefaultsDidChangeNotification
+                                               object:nil];
     
     if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
@@ -76,12 +85,19 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)darkThemeHandler
 {
+    [self.navigationController popToRootViewControllerAnimated:YES];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.tableView.backgroundColor = [UIColor blackColor];
-        [self.tableView setSeparatorColor:CELL_SEPARATOR_COLOR];
+        [self.tableView setSeparatorColor:CELL_SEPARATOR_COLOR_BLACK];
         _searchBar.barStyle = UIBarStyleBlackTranslucent;
+    } else {
+        self.navigationController.navigationBar.barStyle = UISearchBarStyleDefault;
+        self.tableView.backgroundColor = [UIColor whiteColor];
+        [self.tableView setSeparatorColor:CELL_SEPARATOR_COLOR];
+        _searchBar.barStyle = UIBarStyleDefault;
     }
+    [self updateTable];
 }
 
 #pragma mark - Board List
@@ -126,6 +142,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
+    [self.searchBar endEditing:YES];
     if ([self userAgreementAccepted]) {
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];

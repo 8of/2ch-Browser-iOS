@@ -314,12 +314,13 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
-
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-
-        UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-        [header.textLabel setTextColor:[UIColor whiteColor]];
-        header.contentView.backgroundColor = CELL_SEPARATOR_COLOR;
+        header.textLabel.textColor = [UIColor whiteColor];
+        header.contentView.backgroundColor = CELL_SEPARATOR_COLOR_BLACK;
+    } else {
+        header.textLabel.textColor = [UIColor blackColor];
+        header.contentView.backgroundColor = [UIColor colorWithRed:(247.0/255.0) green:(247.0/255.0) blue:(247.0/255.0) alpha:1.0];
     }
 }
 
@@ -483,23 +484,27 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 #pragma mark - UISearchBarDelegate
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
     [searchBar endEditing:YES];
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar
+{
     [searchBar setShowsCancelButton:YES
                            animated:YES];
 }
 
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar
+{
     [searchBar setText:@""];
     [searchBar setShowsCancelButton:NO
                            animated:YES];
     [self updateTableWithSearchText:nil];
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
     NSUInteger countOfLetters = searchText.length;
     NSUInteger minimalCountOfCharactersToStartSearch = 1;
 

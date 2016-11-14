@@ -11,12 +11,18 @@
 
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <SDWebImage/SDWebImageManager.h>
+#import <AFNetworking/AFNetworking.h>
+#import <AFNetworking/AFNetworkActivityIndicatorManager.h>
 
 #import "DVBConstants.h"
 #import "DVBUrls.h"
+#import "DVBNetworking.h"
+#import "DVBDatabaseManager.h"
+#import "DVBPostPhotoContainerView.h"
 
 @interface DVBDefaultsManager : NSObject
 
-- (void)createDefaultSettingsWithUserAgent:(NSString *)userAgent;
+- (void)initApp;
 
 @end

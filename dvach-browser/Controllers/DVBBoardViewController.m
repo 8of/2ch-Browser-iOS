@@ -100,6 +100,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.tableView.backgroundColor = [UIColor blackColor];
+    } else {
+        self.tableView.backgroundColor = [UIColor whiteColor];
     }
 }
 

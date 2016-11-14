@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DVBBoard.h"
+#import "DVBConstants.h"
 
 @interface DVBBoardTableViewCell : UITableViewCell
 
