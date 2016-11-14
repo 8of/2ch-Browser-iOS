@@ -41,11 +41,6 @@
     _doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closePlayback:)];
     _doneButton.title = NSLS(@"BUTTON_CLOSE");
 
-    // Change font to monospace version
-    NSArray *monospacedSetting = @[@{UIFontFeatureTypeIdentifierKey: @(kNumberSpacingType),
-                                     UIFontFeatureSelectorIdentifierKey: @(kMonospacedNumbersSelector)}];
-    UIFontDescriptor *newDescriptor = [[[UIFont systemFontOfSize:17.0] fontDescriptor] fontDescriptorByAddingAttributes:@{UIFontDescriptorFeatureSettingsAttribute: monospacedSetting}];
-
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     self.navigationItem.titleView = _navigationItemView;
     self.navigationItem.leftBarButtonItem = _doneButton;
