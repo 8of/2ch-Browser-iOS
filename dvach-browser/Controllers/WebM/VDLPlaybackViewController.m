@@ -24,7 +24,6 @@
 @property (nonatomic, weak) IBOutlet UIView *navigationItemView;
 @property (nonatomic, strong) UIBarButtonItem *doneButton;
 @property (nonatomic, weak) IBOutlet UISlider *positionSlider;
-@property (nonatomic, strong) UIBarButtonItem *timeDisplay;
 @property (nonatomic, assign) BOOL controlsHidden;
 @property (nonatomic, strong) UIBarButtonItem *playPauseItem;
 
@@ -42,20 +41,14 @@
     _doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(closePlayback:)];
     _doneButton.title = NSLS(@"BUTTON_CLOSE");
 
-    _timeDisplay = [[UIBarButtonItem alloc] initWithTitle:@" ---:--  " style:UIBarButtonItemStylePlain target:self action:nil];
-
     // Change font to monospace version
     NSArray *monospacedSetting = @[@{UIFontFeatureTypeIdentifierKey: @(kNumberSpacingType),
                                      UIFontFeatureSelectorIdentifierKey: @(kMonospacedNumbersSelector)}];
     UIFontDescriptor *newDescriptor = [[[UIFont systemFontOfSize:17.0] fontDescriptor] fontDescriptorByAddingAttributes:@{UIFontDescriptorFeatureSettingsAttribute: monospacedSetting}];
-    [_timeDisplay setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithDescriptor:newDescriptor size:0], NSFontAttributeName, nil]
-                                forState:UIControlStateNormal];
 
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     self.navigationItem.titleView = _navigationItemView;
     self.navigationItem.leftBarButtonItem = _doneButton;
-    self.navigationItem.rightBarButtonItem = _timeDisplay;
 
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     _playPauseItem = [[UIBarButtonItem alloc] initWithImage:[self playButtonImage] style:UIBarButtonItemStylePlain target:self action:@selector(playAndPause:)];
@@ -198,10 +191,6 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     self.positionSlider.value = [_mediaplayer position];
-
-    [UIView performWithoutAnimation:^{
-        _timeDisplay.title = [[_mediaplayer remainingTime] stringValue];
-    }];
 }
 
 - (void)toggleControlsVisible
