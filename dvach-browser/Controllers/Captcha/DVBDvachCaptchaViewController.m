@@ -10,7 +10,6 @@
 
 #import <UIImageView+AFNetworking.h>
 
-#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBCaptchaManager.h"
 
@@ -75,16 +74,20 @@
 {
     _imageView.image = nil;
     _textField.text = @"";
+    weakify(self);
     [_captchaManager getCaptchaImageUrl:_threadNum
                           andCompletion:^(NSString *captchaImageUrl, NSString *captchaId)
     {
+        strongify(self);
+        if (!self) { return; }
         _captchaId = captchaId;
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:captchaImageUrl]];
-        __weak typeof(self) weakSelf = self;
+        weakify(self);
         [_imageView setImageWithURLRequest:request
                           placeholderImage:nil
                                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
-                                       if (weakSelf == nil) { return; }
+                                       strongify(self);
+                                       if (!self) { return; }
                                        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
                                            _imageView.image = [self inverseColor:image];
                                        } else {
@@ -117,6 +120,7 @@
     [self.navigationController popViewControllerAnimated:YES];
     if (_dvachCaptchaViewControllerDelegate && [_dvachCaptchaViewControllerDelegate respondsToSelector:@selector(captchaBeenCheckedWithCode:andWithId:)]) {
         NSString *code = _textField.text;
+        if (!code || !_captchaId) { return; }
         [_dvachCaptchaViewControllerDelegate captchaBeenCheckedWithCode:code
                                                               andWithId:_captchaId];
     }

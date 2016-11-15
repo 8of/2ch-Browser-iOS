@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
-#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardModel.h"
 #import "DVBThread.h"
@@ -47,7 +46,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-
     // Because we need to turn off toolbar every time view appears, not only when it loads first time
     [self.navigationController setToolbarHidden:YES animated:NO];
 }
@@ -61,11 +59,8 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     [self darkThemeHandler];
-
     CGFloat cellHeight = PREVIEW_ROW_DEFAULT_HEIGHT + 1;
-
     if (IS_IPAD) {
         cellHeight = PREVIEW_ROW_DEFAULT_HEIGHT_IPAD + 1;
     }
@@ -74,7 +69,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 
     _viewAlreadyAppeared = NO;
     _alreadyDidTheSizeClassTrick = NO;
-    
     _currentPage = 0;
 
     // set loading flag here because othervise
@@ -88,11 +82,9 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     }
     
     self.title = [NSString stringWithFormat:@"/%@/",_boardCode];
-    
     _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                 andMaxPage:_pages];
     [self makeRefreshAvailable];
-
     _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
 }
 
@@ -108,44 +100,44 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 /// First time loading thread list
 - (void)loadNextBoardPage
 {
-    __weak typeof(self) weakSelf = self;
-    
+    weakify(self);
     if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
                                  andCompletion:^(NSArray *completionThreadsArray, NSError *error)
         {
-            if (weakSelf == nil) { return; }
-            NSInteger threadsCountWas = weakSelf.threadsArray.count ? weakSelf.threadsArray.count : 0;
+            strongify(self);
+            if (!self) { return; }
+            NSInteger threadsCountWas = self.threadsArray.count ? self.threadsArray.count : 0;
             _threadsArray = [completionThreadsArray mutableCopy];
-            NSInteger threadsCountNow = weakSelf.threadsArray.count ? weakSelf.threadsArray.count : 0;
+            NSInteger threadsCountNow = self.threadsArray.count ? self.threadsArray.count : 0;
 
             NSMutableArray *mutableIndexPathes = [@[] mutableCopy];
 
             for (NSInteger i = threadsCountWas; i < threadsCountNow; i++) {
                 [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
             }
-            if (weakSelf.threadsArray.count == 0) {
-                [weakSelf showMessageAboutError];
-                weakSelf.navigationItem.rightBarButtonItem.enabled = NO;
+            if (self.threadsArray.count == 0) {
+                [self showMessageAboutError];
+                self.navigationItem.rightBarButtonItem.enabled = NO;
             } else {
-                weakSelf.currentPage++;
+                self.currentPage++;
                 // Update only if we have something to show
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
-                    weakSelf.alreadyLoadingNextPage = NO;
-                    weakSelf.navigationItem.rightBarButtonItem.enabled = YES;
-                    weakSelf.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                    weakSelf.tableView.backgroundView = nil;
+                    [self updateTableSmoothlyForIndexPathes:mutableIndexPathes.copy];
+                    self.alreadyLoadingNextPage = NO;
+                    self.navigationItem.rightBarButtonItem.enabled = YES;
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
                     
-                    if (!weakSelf.alreadyDidTheSizeClassTrick) {
-                        weakSelf.alreadyDidTheSizeClassTrick = YES;
-                        [weakSelf.tableView setNeedsLayout];
-                        [weakSelf.tableView layoutIfNeeded];
-                        [weakSelf.tableView reloadData];
+                    if (!self.alreadyDidTheSizeClassTrick) {
+                        self.alreadyDidTheSizeClassTrick = YES;
+                        [self.tableView setNeedsLayout];
+                        [self.tableView layoutIfNeeded];
+                        [self.tableView reloadData];
                     }
                 });
             }
-            [weakSelf handleError:error];
+            [self handleError:error];
         }];
     } else {
         _currentPage = 0;
@@ -237,17 +229,18 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
     }
 
     _alreadyLoadingNextPage = YES;
-    __weak typeof(self) weakSelf = self;
+    weakify(self);
     [_boardModel reloadBoardWithViewWidth:self.view.bounds.size.width
                         andCompletion:^(NSArray *completionThreadsArray)
     {
-        if (weakSelf == nil) { return; }
-        weakSelf.currentPage = 0;
-        weakSelf.threadsArray = [completionThreadsArray mutableCopy];
-        [weakSelf.refreshControl endRefreshing];
+        strongify(self);
+        if (!self) { return; }
+        self.currentPage = 0;
+        self.threadsArray = [completionThreadsArray mutableCopy];
+        [self.refreshControl endRefreshing];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.tableView reloadData];
-            weakSelf.alreadyLoadingNextPage = NO;
+            [self.tableView reloadData];
+            self.alreadyLoadingNextPage = NO;
         });
     }];
 }

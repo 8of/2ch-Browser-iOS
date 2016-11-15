@@ -9,7 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "DVBThreadViewController.h"
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DVBPost.h"
+
+@class DVBThreadViewController;
 
 @interface DVBThreadControllerTableViewManager : NSObject <UITableViewDelegate, UITableViewDataSource>
 

@@ -11,7 +11,6 @@
 #import <Reachability/Reachability.h>
 #import "UIImage+DVBImageExtention.h"
 
-#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBNetworking.h"
 #import "DVBPost.h"
@@ -141,15 +140,16 @@
             [self showDvachCaptchaController];
             return;
         }
-        __weak typeof(self) weakSelf = self;
+        weakify(self);
         [_networking canPostWithoutCaptcha:^(BOOL canPost) {
-            typeof(weakSelf) strongSelf = weakSelf;
+            strongify(self);
+            if (!self) { return; }
             // Check if captcha isn't needed and that it's answer - and not a new thread
             if (canPost) {
-                [strongSelf sendPostWithoutCaptcha:YES];
+                [self sendPostWithoutCaptcha:YES];
             } else {
                 // Show captcha Controller othervise
-                [strongSelf showDvachCaptchaController];
+                [self showDvachCaptchaController];
             }
         }];
     }

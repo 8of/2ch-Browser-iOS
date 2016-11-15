@@ -11,16 +11,6 @@
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 #import <Reachability/Reachability.h>
 
-#import "DVBCommon.h"
-#import "DVBConstants.h"
-#import "DVBUrls.h"
-#import "DVBThreadModel.h"
-#import "DVBNetworking.h"
-#import "DVBComment.h"
-#import "DVBAlertViewGenerator.h"
-#import "DVBMediaOpener.h"
-#import "DVBThreadControllerTableViewManager.h"
-
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBBrowserViewControllerBuilder.h"
@@ -238,10 +228,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url
 {
     UrlNinja *urlNinjaHelper = [[UrlNinja alloc] init];
-
-    __weak __typeof__(self) weakSelf = self;
-    urlNinjaHelper.urlOpener = weakSelf;
-
+    urlNinjaHelper.urlOpener = self;
     BOOL answer = [urlNinjaHelper isLinkInternalWithLink:url andThreadNum:_threadNum andBoardCode:_boardCode];
 
     return answer;
@@ -311,30 +298,30 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Get data for thread from Db if any
 - (void)initialThreadLoad
 {
-    __weak typeof(self) weakSelf = self;
+    weakify(self);
     [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) {
-        if (weakSelf == nil) { return; }
-        weakSelf.threadControllerTableViewManager.postsArray = weakSelf.threadModel.postsArray;
-        weakSelf.threadControllerTableViewManager.thumbImagesArray = weakSelf.threadModel.thumbImagesArray;
-        weakSelf.threadControllerTableViewManager.fullImagesArray = weakSelf.threadModel.fullImagesArray;
-
+        strongify(self);
+        if (!self) { return; }
+        self.threadControllerTableViewManager.postsArray = self.threadModel.postsArray;
+        self.threadControllerTableViewManager.thumbImagesArray = self.threadModel.thumbImagesArray;
+        self.threadControllerTableViewManager.fullImagesArray = self.threadModel.fullImagesArray;
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.tableView reloadData];
+            [self.tableView reloadData];
         });
-
-        [weakSelf reloadThread];
+        [self reloadThread];
     }];
 }
 
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
-    __weak typeof(self) weakSelf = self;
+    weakify(self);
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
-        if (weakSelf == nil) { return; }
-        weakSelf.threadControllerTableViewManager.postsArray = weakSelf.threadModel.postsArray;
-        weakSelf.threadControllerTableViewManager.thumbImagesArray = weakSelf.threadModel.thumbImagesArray;
-        weakSelf.threadControllerTableViewManager.fullImagesArray = weakSelf.threadModel.fullImagesArray;
+        strongify(self);
+        if (!self) { return; }
+        self.threadControllerTableViewManager.postsArray = self.threadModel.postsArray;
+        self.threadControllerTableViewManager.thumbImagesArray = self.threadModel.thumbImagesArray;
+        self.threadControllerTableViewManager.fullImagesArray = self.threadModel.fullImagesArray;
         completion(completionsPosts);
     }];
 }
@@ -368,30 +355,30 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
-    }
-    else {
-        __weak typeof(self) weakSelf = self;
+    } else {
+        weakify(self);
         [self getPostsWithBoard:_boardCode
                       andThread:_threadNum
                   andCompletion:^(NSArray *postsArrayBlock)
         {
-            if (weakSelf == nil) { return; }
+            strongify(self);
+            if (!self) { return; }
             if (postsArrayBlock) {
-                weakSelf.threadControllerTableViewManager.postsArray = postsArrayBlock;
+                self.threadControllerTableViewManager.postsArray = postsArrayBlock;
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
-                    [weakSelf.refreshControl endRefreshing];
-                    [weakSelf.bottomRefreshControl endRefreshing];
-                    [weakSelf checkNewPostsCount];
-                    weakSelf.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-                    weakSelf.tableView.backgroundView = nil;
+                    [self.tableView reloadData];
+                    [self.refreshControl endRefreshing];
+                    [self.bottomRefreshControl endRefreshing];
+                    [self checkNewPostsCount];
+                    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+                    self.tableView.backgroundView = nil;
                 });
             } else {
-                [weakSelf showMessageAboutError];
+                [self showMessageAboutError];
             }
 
-            weakSelf.refreshControl.enabled = YES;
-            weakSelf.bottomRefreshControl.enabled = YES;
+            self.refreshControl.enabled = YES;
+            self.bottomRefreshControl.enabled = YES;
         }];
     }
 }
@@ -712,7 +699,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)clearPrompt
 {
     // Prevent crashes
-    if (self == nil || self.navigationItem == nil || self.navigationItem.prompt == nil) { return; }
+    if (!self || self.navigationItem == nil || self.navigationItem.prompt == nil) { return; }
     self.navigationItem.prompt = nil;
 }
 

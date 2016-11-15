@@ -9,8 +9,6 @@
 #import <AFNetworking/AFNetworking.h>
 #import <Reachability/Reachability.h>
 
-#import "DVBCommon.h"
-#import "DVBConstants.h"
 #import "DVBUrls.h"
 #import "DVBNetworking.h"
 #import "DVBBoard.h"
@@ -80,26 +78,23 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
         
         if (page == 0) {
             pageStringValue = @"index";
-        }
-        else {
+        } else {
             pageStringValue = [[NSString alloc] initWithFormat:@"%lu", (unsigned long)page];
         }
-        
         NSString *requestAddress = [[NSString alloc] initWithFormat:@"%@%@/%@.json", [DVBUrls base], board, pageStringValue];
-
-        __weak typeof(self) weakSelf = self;
-        
         AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        // manager.responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
         [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json", nil]];
-        
+
+        weakify(self);
         [manager GET:requestAddress parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)
         {
             completion(responseObject, nil);
         }
              failure:^(AFHTTPRequestOperation *operation, NSError *error)
         {
-            NSError *finalError = [weakSelf updateErrorWithOperation:operation
+            strongify(self);
+            if (!self) { return; }
+            NSError *finalError = [self updateErrorWithOperation:operation
                                                             andError:error];
             NSLog(@"error while threads: %@", finalError);
             completion(nil, finalError);
@@ -513,7 +508,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     }
 }
 
-- (NSString *)userAgent
+- (NSString * _Nullable)userAgent
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     NSString *userAgent = [manager.requestSerializer  valueForHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];

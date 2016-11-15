@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
+
 @protocol DVBDvachWebViewViewControllerProtocol <NSObject>
 
 @optional

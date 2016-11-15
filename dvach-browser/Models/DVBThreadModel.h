@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBPost.h"
 
 @interface DVBThreadModel : NSObject

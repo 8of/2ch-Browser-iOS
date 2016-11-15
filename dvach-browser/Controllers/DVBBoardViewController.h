@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
 #import "DVBCreatePostViewController.h"
 #import "DVBCommonTableViewController.h"
 

@@ -15,6 +15,10 @@
 #import <Foundation/Foundation.h>
 #import <Mantle/Mantle.h>
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DateFormatter.h"
+
 @interface DVBPost : MTLModel <MTLJSONSerializing>
 
 /// Number of the post

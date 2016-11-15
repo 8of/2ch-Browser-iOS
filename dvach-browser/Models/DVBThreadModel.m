@@ -8,9 +8,6 @@
 
 #import <Mantle/Mantle.h>
 
-#import "DVBCommon.h"
-#import "DVBConstants.h"
-#import "DVBUrls.h"
 #import "DVBThreadModel.h"
 #import "DVBDatabaseManager.h"
 #import "DVBNetworking.h"
@@ -58,22 +55,21 @@
 - (void)checkPostsInDbForThisThreadWithCompletion:(void (^)(NSArray *))completion
 {
     YapDatabaseConnection *connection = [_database newConnection];
-    // To prevent retain cycles call back by weak reference
-    __weak typeof(self) weakSelf = self;
+    weakify(self);
     // Heavy work dispatched to a separate thread
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // Load posts from DB
         [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
-            // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
-            typeof(weakSelf) strongSelf = weakSelf;
-            NSArray *arrayOfPosts = [transaction objectForKey:strongSelf.threadNum inCollection:DB_COLLECTION_THREADS];
-            strongSelf.privatePostsArray = [arrayOfPosts mutableCopy];
-            strongSelf.privateThumbImagesArray = [[strongSelf thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
-            strongSelf.privateFullImagesArray = [[strongSelf fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+            strongify(self);
+            if (!self) { return; }
+            NSArray *arrayOfPosts = [transaction objectForKey:self.threadNum inCollection:DB_COLLECTION_THREADS];
+            self.privatePostsArray = [arrayOfPosts mutableCopy];
+            self.privateThumbImagesArray = [[self thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
+            self.privateFullImagesArray = [[self fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
 
-            if (strongSelf.privatePostsArray.count != 0) {
-                DVBPost *lastPost = (DVBPost *)strongSelf.privatePostsArray.lastObject;
-                strongSelf.lastPostNum = lastPost.num;
+            if (self.privatePostsArray.count != 0) {
+                DVBPost *lastPost = (DVBPost *)self.privatePostsArray.lastObject;
+                self.lastPostNum = lastPost.num;
             }
 
             _postsArray = arrayOfPosts;
@@ -87,8 +83,7 @@
 
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion
 {
-    // To prevent retain cycles call back by weak reference
-    __weak typeof(self) weakSelf = self;
+    weakify(self);
     if (_boardCode && _threadNum) {
         [_networking getPostsWithBoard:_boardCode
                              andThread:_threadNum
@@ -97,23 +92,22 @@
         {
             // Heavy work dispatched to a separate thread
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                strongify(self);
+                if (!self) { return; }
                 // NSLog(@"Work Dispatched");
                 // Do heavy or time consuming work
                 // Task 1: Read the data from sqlite
                 // Task 2: Process the data with a flag to stop the process if needed (only if this takes very long and may be cancelled often).
-
-                // Create strong reference to the weakSelf inside the block so that it´s not released while the block is running
-                typeof(weakSelf) strongSelf = weakSelf;
-                if (strongSelf) {
+//                if (strongSelf) {
                     NSMutableArray *postNumMutableArray = [@[] mutableCopy];
                     // If it's first load - do not include post
-                    if (!strongSelf.lastPostNum) {
-                        strongSelf.privatePostsArray = [@[] mutableCopy];
-                        strongSelf.privateThumbImagesArray = [@[] mutableCopy];
-                        strongSelf.privateFullImagesArray = [@[] mutableCopy];
+                    if (!self.lastPostNum) {
+                        self.privatePostsArray = [@[] mutableCopy];
+                        self.privateThumbImagesArray = [@[] mutableCopy];
+                        self.privateFullImagesArray = [@[] mutableCopy];
                     } else {
                         // update dates to relevant values
-                        for (DVBPost *earlierPost in strongSelf.privatePostsArray) {
+                        for (DVBPost *earlierPost in self.privatePostsArray) {
                             [earlierPost updateDateAgo];
                             [postNumMutableArray addObject:earlierPost.num];
                             earlierPost.replies = [@[] mutableCopy];
@@ -133,7 +127,7 @@
                     for (NSDictionary *postDictionary in posts2Array) {
                         // Check if currently loading not the entire thread from the sratch but only from specific post
                         // just skip first element because it will be the same as the last element from previous loading
-                        if ((postIndexNumber == 0) && (strongSelf.lastPostNum)) {
+                        if ((postIndexNumber == 0) && (self.lastPostNum)) {
                             postIndexNumber++;
                             continue;
                         }
@@ -153,13 +147,13 @@
                                 comment = brokenStringHere;
                             }
 
-                            NSAttributedString *attributedComment = [strongSelf.postPreparation commentWithMarkdownWithComments:comment];
+                            NSAttributedString *attributedComment = [self.postPreparation commentWithMarkdownWithComments:comment];
 
                             post.comment = attributedComment;
 
                             [postNumMutableArray addObject:post.num];
 
-                            NSMutableArray *repliesToArray = [strongSelf.postPreparation repliesToArrayForPost];
+                            NSMutableArray *repliesToArray = [self.postPreparation repliesToArrayForPost];
 
                             NSArray *files = postDictionary[@"files"];
                             NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
@@ -175,7 +169,7 @@
                                     NSString *thumbPath = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], fileDictionary[@"thumbnail"]];
 
                                     [singlePostThumbPathesArrayMutable addObject:thumbPath];
-                                    [strongSelf.privateThumbImagesArray addObject:thumbPath];
+                                    [self.privateThumbImagesArray addObject:thumbPath];
 
                                     NSString *picPath;
                                     BOOL isContainWebm = ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
@@ -190,7 +184,7 @@
                                     }
 
                                     [singlePostPathesArrayMutable addObject:picPath];
-                                    [strongSelf.privateFullImagesArray addObject:picPath];
+                                    [self.privateFullImagesArray addObject:picPath];
                                 }
                             }
 
@@ -202,7 +196,7 @@
                             post.pathesArray = [singlePostPathesArrayMutable copy];
                             singlePostPathesArrayMutable = nil;
 
-                            [strongSelf.privatePostsArray addObject:post];
+                            [self.privatePostsArray addObject:post];
 
                             postIndexNumber++;
                         } else {
@@ -210,13 +204,13 @@
                         }
                     }
                     
-                    strongSelf.thumbImagesArray = strongSelf.privateThumbImagesArray;
-                    strongSelf.fullImagesArray = strongSelf.privateFullImagesArray;
+                    self.thumbImagesArray = self.privateThumbImagesArray;
+                    self.fullImagesArray = self.privateFullImagesArray;
                     
-                    strongSelf.postNumArray = postNumMutableArray;
+                    self.postNumArray = postNumMutableArray;
                     
                     // array with almost all info - BUT without final ANSWERS array for every post
-                    NSArray *semiResultArray = [strongSelf.privatePostsArray copy];
+                    NSArray *semiResultArray = [self.privatePostsArray copy];
                     
                     NSMutableArray *semiResultMutableArray = [semiResultArray mutableCopy];
                     
@@ -225,7 +219,7 @@
                     for (DVBPost *post in semiResultArray) {
                         NSMutableArray *delete = [NSMutableArray array];
                         for (NSString *replyTo in post.repliesTo) {
-                            NSInteger index = [strongSelf.postNumArray indexOfObject:replyTo];
+                            NSInteger index = [self.postNumArray indexOfObject:replyTo];
                             
                             if (index != NSNotFound) {
                                 DVBPost *replyPost = semiResultMutableArray[index];
@@ -245,29 +239,29 @@
                         currentPostIndex++;
                     }
 
-                    [strongSelf assignPostsArrayFromWeak:semiResultMutableArray];
-                    DVBPost *lastPost = (DVBPost *)[strongSelf.postsArray lastObject];
-                    strongSelf.lastPostNum = lastPost.num;
+                    [self assignPostsArrayFromWeak:semiResultMutableArray];
+                    DVBPost *lastPost = (DVBPost *)[self.postsArray lastObject];
+                    self.lastPostNum = lastPost.num;
 
-                    if (strongSelf.postsArray.count == 0) {
-                        [strongSelf dropPostsArray];
+                    if (self.postsArray.count == 0) {
+                        [self dropPostsArray];
 
                         // back to main
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            completion(strongSelf.postsArray);
+                            completion(self.postsArray);
                         });
                     } else {
-                        [self writeToDbWithPosts:strongSelf.postsArray andThreadNum:strongSelf.threadNum andCompletion:^
+                        [self writeToDbWithPosts:self.postsArray andThreadNum:self.threadNum andCompletion:^
                         {
                             // back to main
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                completion(strongSelf.postsArray);
+                                completion(self.postsArray);
                             });
                         }];
                     }
 
 
-                }
+//                }
             });
         }];
     }

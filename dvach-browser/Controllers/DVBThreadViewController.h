@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "UrlNinja.h"
 #import "DVBThreadsScrollPositionManager.h"
-
+#import "DVBThreadModel.h"
+#import "DVBNetworking.h"
+#import "DVBComment.h"
+#import "DVBAlertViewGenerator.h"
+#import "DVBMediaOpener.h"
+#import "DVBThreadControllerTableViewManager.h"
 #import "DVBCommonTableViewController.h"
 
 @interface DVBThreadViewController : DVBCommonTableViewController

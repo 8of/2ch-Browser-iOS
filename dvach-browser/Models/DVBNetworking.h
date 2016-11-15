@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "DVBCommon.h"
+#import "DVBConstants.h"
 #import "DVBMessagePostServerAnswer.h"
 
 @interface DVBNetworking : NSObject
@@ -44,6 +46,6 @@
 
 - (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion;
 
-- (NSString *)userAgent;
+- (NSString * _Nullable)userAgent;
 
 @end

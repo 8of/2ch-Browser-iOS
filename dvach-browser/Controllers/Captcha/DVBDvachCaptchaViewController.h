@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
+
 @protocol DVBDvachCaptchaViewControllerDelegate <NSObject>
 
-- (void)captchaBeenCheckedWithCode:(NSString *)code andWithId:(NSString *)captchaId;
+- (void)captchaBeenCheckedWithCode:(NSString * _Nonnull)code andWithId:(NSString * _Nonnull)captchaId;
 
 @end
 
 @interface DVBDvachCaptchaViewController : UIViewController
 
-@property (nonatomic, weak) id<DVBDvachCaptchaViewControllerDelegate> dvachCaptchaViewControllerDelegate;
+@property (nonatomic, weak, nullable) id<DVBDvachCaptchaViewControllerDelegate> dvachCaptchaViewControllerDelegate;
 @property (nonatomic, strong, nullable) NSString *threadNum;
 
 @end

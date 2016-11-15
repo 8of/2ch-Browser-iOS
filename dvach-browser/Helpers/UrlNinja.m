@@ -6,10 +6,7 @@
 //  Copyright (c) 2014 Alexander Tewpin. All rights reserved.
 //
 
-#import "DVBUrls.h"
-
 #import "UrlNinja.h"
-
 #import "DVBThreadViewController.h"
 
 @implementation UrlNinja
@@ -103,6 +100,7 @@
 
 - (BOOL)isLinkInternalWithLink:(UrlNinja *)url andThreadNum:(NSString *)threadNum andBoardCode:(NSString *)boardCode
 {
+    if (!_urlOpener) { return NO; }
     switch (url.type) {
         case boardLink: { // Open board
             /*

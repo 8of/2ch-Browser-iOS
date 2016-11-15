@@ -6,7 +6,6 @@
 //  Copyright © 2015 8of. All rights reserved.
 //
 
-#import "DVBCommon.h"
 #import "DVBConstants.h"
 
 #import "DVBDvachWebViewViewController.h"
@@ -83,13 +82,14 @@
 /// Dismiss controller and restart board
 - (void)closeController
 {
-    __weak typeof(self) weakSelf = self;
-
+    weakify(self);
     [self dismissViewControllerAnimated:YES completion:^{
-        if (weakSelf.dvachWebViewViewControllerDelegate &&
-            [weakSelf.dvachWebViewViewControllerDelegate respondsToSelector:@selector(reloadAfterWebViewDismissing)])
+        strongify(self);
+        if (!self) { return; }
+        if (self.dvachWebViewViewControllerDelegate &&
+            [self.dvachWebViewViewControllerDelegate respondsToSelector:@selector(reloadAfterWebViewDismissing)])
         {
-            [weakSelf.dvachWebViewViewControllerDelegate reloadAfterWebViewDismissing];
+            [self.dvachWebViewViewControllerDelegate reloadAfterWebViewDismissing];
         }
     }];
 }

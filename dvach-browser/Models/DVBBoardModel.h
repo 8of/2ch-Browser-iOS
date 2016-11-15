@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
+
 @interface DVBBoardModel : NSObject
 
 /// Array contains all threads' OP posts for one page.
