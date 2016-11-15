@@ -10,6 +10,7 @@
 #import "DVBThread.h"
 #import "DVBBoardModel.h"
 #import "ThreadNode.h"
+#import "DVBThreadViewController.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate>
 
@@ -26,10 +27,6 @@
 /// Need property for know if we gonna create new thread or not.
 @property (nonatomic, strong) NSString *createdThreadNum;
 
-@property (nonatomic, assign) BOOL viewAlreadyAppeared;
-@property (nonatomic, assign) BOOL alreadyDidTheSizeClassTrick;
-@property (nonatomic, strong) NSDate *lastLoadDate;
-
 @end
 
 @implementation DVBAsyncBoardViewController
@@ -43,7 +40,8 @@
     if (self) {
         _boardCode = boardCode;
         _pages = pages;
-
+        _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableNode.view.contentInset = UIEdgeInsetsMake(5, 0, 5, 0);
         _tableNode.delegate = self;
         _tableNode.dataSource = self;
         _tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -64,18 +62,10 @@
         _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                     andMaxPage:_pages];
         // [self makeRefreshAvailable];
-        _lastLoadDate = [NSDate dateWithTimeIntervalSince1970:0];
+        [self reloadBoardPage];
     }
     
     return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    // SocialAppNode has its own separator
-    self.tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -83,12 +73,6 @@
     [super viewWillAppear:YES];
     // Because we need to turn off toolbar every time view appears, not only when it loads first time
     [self.navigationController setToolbarHidden:YES animated:NO];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [self reloadBoardPage];
 }
 
 - (void)reloadBoardPage
@@ -133,16 +117,16 @@
 
 - (void)tableNode:(ASTableNode *)tableNode didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    PostNode *postNode = (PostNode *)[_tableNode nodeForRowAtIndexPath:indexPath];
-//    Post *post = self.socialAppDataSource[indexPath.row];
-//    
-//    BOOL shouldRasterize = postNode.shouldRasterizeDescendants;
-//    shouldRasterize = !shouldRasterize;
-//    postNode.shouldRasterizeDescendants = shouldRasterize;
-//    
-//    NSLog(@"%@ rasterization for %@'s post: %@", shouldRasterize ? @"Enabling" : @"Disabling", post.name, postNode);
-//    
-//    [tableNode deselectRowAtIndexPath:indexPath animated:YES];
+    DVBThread *thread = _boardModel.threadsArray[indexPath.row];
+    NSString *threadNum = thread.num;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
+                                                         bundle:nil];
+    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+    threadViewController.boardCode = _boardCode;
+    threadViewController.threadNum = threadNum;
+    threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment];
+    [self.navigationController pushViewController:threadViewController animated:YES];
+    [_tableNode deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

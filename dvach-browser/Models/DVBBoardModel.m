@@ -120,15 +120,15 @@
                             }
                         }
 
-                        for (NSString *nextPart in commentArray) {
-                            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
-                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
-                                preparedComment = newCommentLike;
-                            } else {
-                                break;
-                            }
-                        }
-                        thread.comment = preparedComment;
+//                        for (NSString *nextPart in commentArray) {
+//                            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
+//                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
+//                                preparedComment = newCommentLike;
+//                            } else {
+//                                break;
+//                            }
+//                        }
+//                        thread.comment = preparedComment;
 
                         [self.privateThreadsArray addObject:thread];
                     }
