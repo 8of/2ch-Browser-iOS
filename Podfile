@@ -6,6 +6,7 @@ inhibit_all_warnings!
 abstract_target 'BasePods' do
   # pods
 	pod 'AFNetworking', '2.6.3'
+	pod 'AsyncDisplayKit', '2.0-beta.1'
 	pod 'CCBottomRefreshControl', '0.5.1'
 	pod 'Crashlytics', '3.7.3'
 	pod 'Fabric', '1.6.7'

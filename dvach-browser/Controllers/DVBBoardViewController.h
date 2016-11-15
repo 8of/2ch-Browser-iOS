@@ -16,6 +16,7 @@
 
 @interface DVBBoardViewController : DVBCommonTableViewController
 
+@property (nonatomic, strong) NSMutableArray *threadsArray;
 /// Board's shortcode.
 @property (strong, nonatomic) NSString *boardCode;
 /// MaxPage (i.e. page count) for specific board.

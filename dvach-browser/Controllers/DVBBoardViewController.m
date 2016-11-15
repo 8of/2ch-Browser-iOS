@@ -30,7 +30,6 @@ static NSTimeInterval const MIN_TIME_INTERVAL_BEFORE_NEXT_THREAD_UPDATE = 3;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (atomic, assign) BOOL alreadyLoadingNextPage;
 /// Array contains all threads' OP posts for one page.
-@property (nonatomic, strong) NSMutableArray *threadsArray;
 @property (nonatomic, strong) DVBBoardModel *boardModel;
 /// Need property for know if we gonna create new thread or not.
 @property (nonatomic, strong) NSString *createdThreadNum;

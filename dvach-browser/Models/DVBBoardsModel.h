@@ -12,6 +12,7 @@
 @protocol DVBBoardsModelDelegate <NSObject>
 
 - (void)updateTable;
+- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages;
 
 @end
 

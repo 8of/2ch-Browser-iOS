@@ -12,6 +12,7 @@
 #import "DVBAlertViewGenerator.h"
 #import "UrlNinja.h"
 
+#import "DVBAsyncBoardViewController.h"
 #import "DVBBoardsViewController.h"
 #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
@@ -125,6 +126,14 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     });
 }
 
+- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages
+{
+    DVBAsyncBoardViewController *boardViewController = [[DVBAsyncBoardViewController alloc] initBoardCode:boardId
+                                                                                                    pages:pages];
+    [self.navigationController pushViewController:boardViewController
+                                         animated:YES];
+}
+
 #pragma mark - user Agreement
 
 /**
@@ -143,6 +152,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     [self.searchBar endEditing:YES];
+    return NO;
     if ([self userAgreementAccepted]) {
         NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
         NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
@@ -167,8 +177,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
             return NO;
         }
-
-        return YES;
+        return NO;
+        // return YES;
     }
 
     return NO;
@@ -178,15 +188,17 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     
     if ([[segue identifier] isEqualToString:SEGUE_TO_BOARD]) {
         
-        NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
-        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
-        NSNumber *pages = [_boardsModel boardMaxPageByIndexPath:selectedCellPath];
+//        NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
+//        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
+//        NSNumber *pages = [_boardsModel boardMaxPageByIndexPath:selectedCellPath];
         
-        DVBBoardViewController *boardViewController = segue.destinationViewController;        
         
-        // Set board id and pages count for future board/thread requests.
-        boardViewController.boardCode = boardId;
-        boardViewController.pages = pages.integerValue;
+        
+//        DVBBoardViewController *boardViewController = segue.destinationViewController;        
+//        
+//        // Set board id and pages count for future board/thread requests.
+//        boardViewController.boardCode = boardId;
+//        boardViewController.pages = pages.integerValue;
     }
 }
 

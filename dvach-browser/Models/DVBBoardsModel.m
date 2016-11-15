@@ -403,6 +403,14 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *boardId = [self boardIdByIndexPath:indexPath];
+    NSNumber *pages = [self boardMaxPageByIndexPath:indexPath];
+    [_boardsModelDelegate openWithBoardId:boardId
+                                    pages:pages.integerValue];
+}
+
 
 - (NSString *)boardIdByIndexPath:(NSIndexPath *)indexPath {
     
