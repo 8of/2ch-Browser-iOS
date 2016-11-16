@@ -33,6 +33,8 @@
 		9437FD2B1B90E9FB004FFB22 /* DVBWebmIconImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9437FD2A1B90E9FB004FFB22 /* DVBWebmIconImageView.m */; };
 		943F99CA1AED8E5000A85C61 /* DVBMarkupButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 943F99C91AED8E5000A85C61 /* DVBMarkupButton.m */; };
 		94452CB31B94D54E001D521E /* DVBDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94452CB21B94D54E001D521E /* DVBDatabaseManager.m */; };
+		944AA0EF1DDC635100FE135A /* DVBRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 944AA0EE1DDC635100FE135A /* DVBRouter.m */; };
+		944AA0F21DDC658500FE135A /* DVBBoardStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 944AA0F11DDC658500FE135A /* DVBBoardStyler.m */; };
 		944CC80A1AECFDB900C45F7C /* DVBContainerForPostElements.m in Sources */ = {isa = PBXBuildFile; fileRef = 944CC8091AECFDB900C45F7C /* DVBContainerForPostElements.m */; };
 		945A53A31BCA472500AA5EAE /* DVBUrlRequestHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 945A53A21BCA472500AA5EAE /* DVBUrlRequestHelper.m */; };
 		945FB1EF1B90F75800E87D52 /* BoardCategories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 945FB1F11B90F75800E87D52 /* BoardCategories.plist */; };
@@ -160,6 +162,10 @@
 		943F99C91AED8E5000A85C61 /* DVBMarkupButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMarkupButton.m; path = Views/DVBMarkupButton.m; sourceTree = "<group>"; };
 		94452CB11B94D54E001D521E /* DVBDatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBDatabaseManager.h; path = Models/DVBDatabaseManager.h; sourceTree = "<group>"; };
 		94452CB21B94D54E001D521E /* DVBDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDatabaseManager.m; path = Models/DVBDatabaseManager.m; sourceTree = "<group>"; };
+		944AA0ED1DDC635100FE135A /* DVBRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBRouter.h; path = Models/DVBRouter.h; sourceTree = "<group>"; };
+		944AA0EE1DDC635100FE135A /* DVBRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBRouter.m; path = Models/DVBRouter.m; sourceTree = "<group>"; };
+		944AA0F01DDC658500FE135A /* DVBBoardStyler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBBoardStyler.h; path = Models/DVBBoardStyler.h; sourceTree = "<group>"; };
+		944AA0F11DDC658500FE135A /* DVBBoardStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBoardStyler.m; path = Models/DVBBoardStyler.m; sourceTree = "<group>"; };
 		944CC8081AECFDB900C45F7C /* DVBContainerForPostElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBContainerForPostElements.h; path = Views/DVBContainerForPostElements.h; sourceTree = "<group>"; };
 		944CC8091AECFDB900C45F7C /* DVBContainerForPostElements.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBContainerForPostElements.m; path = Views/DVBContainerForPostElements.m; sourceTree = "<group>"; };
 		945A53A11BCA472500AA5EAE /* DVBUrlRequestHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBUrlRequestHelper.h; path = Helpers/DVBUrlRequestHelper.h; sourceTree = "<group>"; };
@@ -455,6 +461,10 @@
 				9497D99C1D9EF368002B013A /* DVBUrls.m */,
 				9497D99E1D9F0251002B013A /* DVBDefaultsManager.h */,
 				9497D99F1D9F0251002B013A /* DVBDefaultsManager.m */,
+				944AA0ED1DDC635100FE135A /* DVBRouter.h */,
+				944AA0EE1DDC635100FE135A /* DVBRouter.m */,
+				944AA0F01DDC658500FE135A /* DVBBoardStyler.h */,
+				944AA0F11DDC658500FE135A /* DVBBoardStyler.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -887,6 +897,7 @@
 				943F99CA1AED8E5000A85C61 /* DVBMarkupButton.m in Sources */,
 				A155FEF21AB7355600BE31F4 /* DVBCreatePostViewController.m in Sources */,
 				94A834591B0BB8FE00D7AFC1 /* DVBAddPhotoIconImageView.m in Sources */,
+				944AA0F21DDC658500FE135A /* DVBBoardStyler.m in Sources */,
 				94A17DCA1B335CE50009A002 /* DVBGalleryTransition.m in Sources */,
 				8497BF351AD3F98F001616C2 /* NSString+HTML.m in Sources */,
 				942BE0AB1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m in Sources */,
@@ -911,6 +922,7 @@
 				9437FD2B1B90E9FB004FFB22 /* DVBWebmIconImageView.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,
 				A155FF061AB735DD00BE31F4 /* DVBComment.m in Sources */,
+				944AA0EF1DDC635100FE135A /* DVBRouter.m in Sources */,
 				9497D9A01D9F0251002B013A /* DVBDefaultsManager.m in Sources */,
 				94BB6CA11B03DB3200050FDE /* DVBMediaOpener.m in Sources */,
 				94BECE991B111C2A002C3132 /* DVBThreadTableViewCell.m in Sources */,
@@ -992,6 +1004,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				"DEBUG_INFORMATION_FORMAT[sdk=*]" = "dwarf-with-dsym";
+				"DEBUG_INFORMATION_FORMAT[sdk=iphonesimulator*]" = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

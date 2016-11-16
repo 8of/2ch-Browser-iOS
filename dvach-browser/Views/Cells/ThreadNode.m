@@ -15,9 +15,10 @@
 //  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import "DVBConstants.h"
 #import "ThreadNode.h"
 #import "DVBThread.h"
-
+#import "DVBBoardStyler.h"
 
 @interface ThreadNode() <ASNetworkImageNodeDelegate>
 
@@ -40,32 +41,37 @@
 
         // Total border
         _borderNode = [[ASDisplayNode alloc] init];
-        _borderNode.borderColor = [[UIColor lightGrayColor] CGColor];
-        _borderNode.borderWidth = 1.0f / [[UIScreen mainScreen] scale];
-        _borderNode.backgroundColor = [UIColor whiteColor];
-        _borderNode.cornerRadius = 3.0;
+        _borderNode.borderColor = [DVBBoardStyler borderColor];
+        _borderNode.borderWidth = ONE_PIXEL;
+        _borderNode.backgroundColor = [DVBBoardStyler threadCellInsideBackgroundColor];
+        _borderNode.cornerRadius = [DVBBoardStyler cornerRadius];
         [self addSubnode:_borderNode];
 
         // Comment node
         _postNode = [[ASTextNode alloc] init];
-        _postNode.attributedText = [[NSAttributedString alloc] initWithString:thread.comment];
+        NSDictionary *textAttributes = @
+        {
+            NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleBody],
+            NSForegroundColorAttributeName: [DVBBoardStyler textColor]
+        };
+        _postNode.attributedText = [[NSAttributedString alloc] initWithString:thread.comment attributes:textAttributes];
         _postNode.style.flexShrink = 1.0; //if name and username don't fit to cell width, allow username shrink
         _postNode.truncationMode = NSLineBreakByWordWrapping;
         _postNode.maximumNumberOfLines = 0;
-        _postNode.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10);
+        _postNode.textContainerInset = UIEdgeInsetsMake([DVBBoardStyler elementInset], [DVBBoardStyler elementInset], [DVBBoardStyler elementInset], [DVBBoardStyler elementInset]);
         [self addSubnode:_postNode];
 
         // Media
         _mediaNode = [[ASNetworkImageNode alloc] init];
-        _mediaNode.style.width = ASDimensionMakeWithPoints(80);
-        _mediaNode.style.height = ASDimensionMakeWithPoints(80);
+        _mediaNode.style.width = ASDimensionMakeWithPoints([DVBBoardStyler mediaSize]);
+        _mediaNode.style.height = ASDimensionMakeWithPoints([DVBBoardStyler mediaSize]);
         _mediaNode.URL = [NSURL URLWithString:_thread.thumbnail];
         _mediaNode.delegate = self;
         _mediaNode.imageModificationBlock = ^UIImage *(UIImage *image) {
             UIImage *modifiedImage;
             CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
             UIGraphicsBeginImageContextWithOptions(image.size, false, [[UIScreen mainScreen] scale]);
-            [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:(UIRectCornerTopLeft|UIRectCornerBottomLeft) cornerRadii:CGSizeMake(6, 6)] addClip];
+            [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:(UIRectCornerTopLeft|UIRectCornerBottomLeft) cornerRadii:CGSizeMake(2*[DVBBoardStyler cornerRadius], 2*[DVBBoardStyler cornerRadius])] addClip];
             [image drawInRect:rect];
             modifiedImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
@@ -74,6 +80,26 @@
         [self addSubnode:_mediaNode];
     }
     return self;
+}
+
+- (void)setHighlighted:(BOOL)highlighted
+{
+    self.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
+    if (highlighted) {
+        _borderNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
+    } else {
+        _borderNode.backgroundColor = [DVBBoardStyler threadCellInsideBackgroundColor];
+    }
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    self.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
+    if (selected) {
+        _borderNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
+    } else {
+        _borderNode.backgroundColor = [DVBBoardStyler threadCellInsideBackgroundColor];
+    }
 }
 
 #pragma mark - ASDisplayNode
@@ -90,10 +116,9 @@
     ASStackLayoutSpec *horizontalStack = [ASStackLayoutSpec horizontalStackLayoutSpec];
     horizontalStack.direction          = ASStackLayoutDirectionHorizontal;
     horizontalStack.alignItems = ASStackLayoutAlignItemsStretch;
-    horizontalStack.style.height = ASDimensionMakeWithPoints(80);
+    horizontalStack.style.height = ASDimensionMakeWithPoints([DVBBoardStyler mediaSize]);
     [horizontalStack setChildren:@[_mediaNode, _postNode]];
-    CGFloat onePixel = 1.0f / [[UIScreen mainScreen] scale];
-    UIEdgeInsets insets = UIEdgeInsetsMake(5+onePixel, 10+onePixel, 5+onePixel, 10+onePixel);
+    UIEdgeInsets insets = UIEdgeInsetsMake([DVBBoardStyler elementInset]/2+ONE_PIXEL, [DVBBoardStyler elementInset]+ONE_PIXEL, [DVBBoardStyler elementInset]/2+ONE_PIXEL, [DVBBoardStyler elementInset]+ONE_PIXEL);
     return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
                                                   child:horizontalStack];
 }
@@ -101,10 +126,8 @@
 - (void)layout
 {
     [super layout];
-    
     // Manually layout the divider.
-    _borderNode.frame = CGRectMake(10.0f, 5.0f, self.calculatedSize.width - 20, self.calculatedSize.height - 10);
-
+    _borderNode.frame = CGRectMake([DVBBoardStyler elementInset], [DVBBoardStyler elementInset]/2, self.calculatedSize.width - 2*[DVBBoardStyler elementInset], self.calculatedSize.height - [DVBBoardStyler elementInset]);
 }
 
 #pragma mark - ASNetworkImageNodeDelegate methods.

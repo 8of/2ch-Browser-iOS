@@ -10,7 +10,8 @@
 #import "DVBThread.h"
 #import "DVBBoardModel.h"
 #import "ThreadNode.h"
-#import "DVBThreadViewController.h"
+#import "DVBRouter.h"
+#import "DVBBoardStyler.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate>
 
@@ -41,11 +42,16 @@
         _boardCode = boardCode;
         _pages = pages;
         _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableNode.view.contentInset = UIEdgeInsetsMake(5, 0, 5, 0);
+        _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset], 0, [DVBBoardStyler elementInset], 0);
+        _tableNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
         _tableNode.delegate = self;
         _tableNode.dataSource = self;
         _tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        
+
+        _tableNode.view.refreshControl = [[UIRefreshControl alloc] init];
+        [_tableNode.view.refreshControl addTarget:self
+                                           action:@selector(reloadBoardPage)
+                                 forControlEvents:UIControlEventValueChanged];
         _currentPage = 0;
         
         // set loading flag here because othervise
@@ -75,11 +81,14 @@
     [self.navigationController setToolbarHidden:YES animated:NO];
 }
 
+#pragma mark - Network
+
+/// First time loading thread list
 - (void)reloadBoardPage
 {
     // Prevent reloading while already loading board items
     if (_alreadyLoadingNextPage) {
-        // [self.refreshControl endRefreshing];
+        [_tableNode.view.refreshControl endRefreshing];
         return;
     }
     
@@ -92,13 +101,60 @@
          if (!self) { return; }
          self.currentPage = 0;
          self.threadsArray = [completionThreadsArray mutableCopy];
-         // [self.refreshControl endRefreshing];
+         [_tableNode.view.refreshControl endRefreshing];
          dispatch_async(dispatch_get_main_queue(), ^{
              [self.tableNode reloadData];
              self.alreadyLoadingNextPage = NO;
          });
      }];
 }
+
+- (void)loadNextBoardPage
+{
+    weakify(self);
+    if (_pages > _currentPage)  {
+        [_boardModel loadNextPageWithViewWidth:self.view.bounds.size.width
+                                 andCompletion:^(NSArray *completionThreadsArray, NSError *error)
+         {
+             strongify(self);
+             if (!self) { return; }
+             NSInteger threadsCountWas = self.threadsArray.count ? self.threadsArray.count : 0;
+             _threadsArray = [completionThreadsArray mutableCopy];
+             NSInteger threadsCountNow = self.threadsArray.count ? self.threadsArray.count : 0;
+
+             NSMutableArray *mutableIndexPathes = [@[] mutableCopy];
+
+             for (NSInteger i = threadsCountWas; i < threadsCountNow; i++) {
+                 [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+             }
+             if (self.threadsArray.count == 0) {
+                 // [self showMessageAboutError];
+                 self.navigationItem.rightBarButtonItem.enabled = NO;
+             } else {
+                 self.currentPage++;
+                 // Update only if we have something to show
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     [_tableNode insertRowsAtIndexPaths:mutableIndexPathes.copy withRowAnimation:UITableViewRowAnimationFade];
+                     self.alreadyLoadingNextPage = NO;
+                     self.navigationItem.rightBarButtonItem.enabled = YES;
+                     // self.tableView.backgroundView = nil;
+                 });
+             }
+             // [self handleError:error];
+         }];
+    } else {
+        _currentPage = 0;
+        [self loadNextBoardPage];
+    }
+}
+
+#pragma mark - Routing
+
+- (void)openNewThread
+{
+    
+}
+
 
 #pragma mark - ASTableNode
 
@@ -110,6 +166,13 @@
     };
 }
 
+- (void)tableNode:(ASTableNode *)tableNode willDisplayRowWithNode:(ASCellNode *)node
+{
+    if ([[_boardModel.threadsArray lastObject] isEqual:_boardModel.threadsArray[node.indexPath.row]] ) {
+        [self loadNextBoardPage];
+    }
+}
+
 - (NSInteger)tableNode:(ASTableNode *)tableNode numberOfRowsInSection:(NSInteger)section
 {
     return _boardModel.threadsArray.count;
@@ -118,14 +181,7 @@
 - (void)tableNode:(ASTableNode *)tableNode didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBThread *thread = _boardModel.threadsArray[indexPath.row];
-    NSString *threadNum = thread.num;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
-                                                         bundle:nil];
-    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewController.boardCode = _boardCode;
-    threadViewController.threadNum = threadNum;
-    threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment];
-    [self.navigationController pushViewController:threadViewController animated:YES];
+    [DVBRouter pushThreadFrom:self withThread:thread boardCode:_boardCode];
     [_tableNode deselectRowAtIndexPath:indexPath animated:YES];
 }
 

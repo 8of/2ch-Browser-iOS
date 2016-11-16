@@ -12,10 +12,11 @@
 #import "DVBAlertViewGenerator.h"
 #import "UrlNinja.h"
 
-#import "DVBAsyncBoardViewController.h"
+// #import "DVBAsyncBoardViewController.h"
 #import "DVBBoardsViewController.h"
-#import "DVBBoardViewController.h"
+// #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
+#import "DVBRouter.h"
 
 static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
@@ -128,10 +129,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages
 {
-    DVBAsyncBoardViewController *boardViewController = [[DVBAsyncBoardViewController alloc] initBoardCode:boardId
-                                                                                                    pages:pages];
-    [self.navigationController pushViewController:boardViewController
-                                         animated:YES];
+    [DVBRouter pushBoardFrom:self boardCode:boardId pages:pages];
 }
 
 #pragma mark - user Agreement
