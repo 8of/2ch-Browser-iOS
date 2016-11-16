@@ -48,7 +48,6 @@ NSString *const SEGUE_TO_NEW_THREAD_IPHONE = @"segueToThreadiOS7";
 NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
 NSString *const SEGUE_TO_NEW_POST_IOS_7 = @"segueToNewPostiOS7";
 NSString *const SEGUE_DISMISS_TO_THREAD = @"dismissWithCancelToThreadSegue";
-NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegue";
 
 // Cells
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";

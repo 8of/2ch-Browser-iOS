@@ -366,8 +366,14 @@
     BOOL isThreadNumZero = [_threadNum isEqualToString:@"0"];
     
     if (isThreadNumZero) {
-        [self performSegueWithIdentifier:SEGUE_DISMISS_TO_NEW_THREAD
-                                  sender:self];
+        if (_createdThreadNum) {
+            id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
+            if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
+                [strongDelegate openThredWithCreatedThread:_createdThreadNum];
+            }
+        } else {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }
     } else  {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
@@ -377,7 +383,6 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
-    BOOL isSegueDismissToNewThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_NEW_THREAD];
     
     /**
      *  Xcode will complain if we access a weak property more than once here, since it could in theory be nilled between accesses
@@ -389,13 +394,6 @@
         // Update thread in any case (was post successfull or not)
         if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
             [strongDelegate updateThreadAfterPosting];
-        }
-    } else if (isSegueDismissToNewThread) {
-
-        if (_createdThreadNum) {
-            if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
-                [strongDelegate openThredWithCreatedThread:_createdThreadNum];
-            }
         }
     }
 }

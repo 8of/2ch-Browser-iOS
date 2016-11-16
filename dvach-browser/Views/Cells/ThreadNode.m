@@ -42,7 +42,7 @@
         _postNode = [[ASTextNode alloc] init];
         NSDictionary *textAttributes = @
         {
-            NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleBody],
+            NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
             NSForegroundColorAttributeName: [DVBBoardStyler textColor]
         };
         _postNode.attributedText = [[NSAttributedString alloc] initWithString:thread.comment attributes:textAttributes];

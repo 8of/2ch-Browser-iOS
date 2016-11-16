@@ -43,9 +43,10 @@
         _boardCode = boardCode;
         _pages = pages;
 
-        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCompose
-                                                                              target:self 
-                                                                              action:@selector(openNewThread)];
+        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Compose"]
+                                                                 style:UIBarButtonItemStylePlain
+                                                                target:self
+                                                                action:@selector(openNewThread)];
         self.navigationItem.rightBarButtonItem = item;
 
         [self setupTableNode];
@@ -82,7 +83,7 @@
 - (void)setupTableNode
 {
     _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset], 0, [DVBBoardStyler elementInset], 0);
+    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset]-1, 0, [DVBBoardStyler elementInset], 0);
     _tableNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
     _tableNode.delegate = self;
     _tableNode.dataSource = self;
