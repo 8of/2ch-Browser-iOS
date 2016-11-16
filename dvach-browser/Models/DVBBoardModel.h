@@ -18,8 +18,10 @@
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode andMaxPage:(NSUInteger)maxPage;
 /// Load next page for the current board
-- (void)loadNextPageWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *, NSError *))completion;
+- (void)loadNextPageWithCompletion:(void (^)(NSArray *, NSError *))completion;
 /// Entirely reload threads list in the board
-- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion;
+- (void)reloadBoardWithCompletion:(void (^)(NSArray *))completion;
+
+- (void)emptyThreadsArray;
 
 @end

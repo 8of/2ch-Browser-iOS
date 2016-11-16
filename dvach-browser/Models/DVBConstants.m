@@ -37,6 +37,7 @@ NSString *const STORYBOARD_NAME_WEBVIEWS = @"WebViews";
 // Storyboard VC ID's
 NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER = @"DVBThreadViewController";
 NSString *const STORYBOARD_ID_WEBVIEW_VIEW_CONTROLLER = @"DVBDvachWebViewViewController";
+NSString *const STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER = @"DVBCreateViewController";
 
 // Segues
 NSString *const SEGUE_TO_EULA = @"segueToEula";

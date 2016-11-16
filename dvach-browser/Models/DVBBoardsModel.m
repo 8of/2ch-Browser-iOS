@@ -15,7 +15,6 @@
 #import "DVBNetworking.h"
 #import "DVBValidation.h"
 #import "DVBBoardsModel.h"
-#import "UrlNinja.h"
 
 #import "DVBBoardTableViewCell.h"
 
@@ -407,8 +406,16 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 {
     NSString *boardId = [self boardIdByIndexPath:indexPath];
     NSNumber *pages = [self boardMaxPageByIndexPath:indexPath];
-    [_boardsModelDelegate openWithBoardId:boardId
-                                    pages:pages.integerValue];
+
+    // Check if deal with thread bookmark and not board
+    UrlNinja *urlNinja = [[UrlNinja alloc] initWithUrl:[NSURL URLWithString:boardId]];
+    if (urlNinja.type == boardThreadLink) {
+        urlNinja.threadTitle = [self threadTitleByIndexPath:indexPath];
+        [_boardsModelDelegate openThreadWithUrlNinja:urlNinja];
+    } else { // board
+        [_boardsModelDelegate openWithBoardId:boardId
+                                        pages:pages.integerValue];
+    }
 }
 
 
