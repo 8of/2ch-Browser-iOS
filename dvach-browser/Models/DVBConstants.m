@@ -37,6 +37,7 @@ NSString *const STORYBOARD_NAME_WEBVIEWS = @"WebViews";
 // Storyboard VC ID's
 NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER = @"DVBThreadViewController";
 NSString *const STORYBOARD_ID_WEBVIEW_VIEW_CONTROLLER = @"DVBDvachWebViewViewController";
+NSString *const STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER = @"DVBCreateViewController";
 
 // Segues
 NSString *const SEGUE_TO_EULA = @"segueToEula";
@@ -47,7 +48,6 @@ NSString *const SEGUE_TO_NEW_THREAD_IPHONE = @"segueToThreadiOS7";
 NSString *const SEGUE_TO_NEW_POST = @"segueToNewPost";
 NSString *const SEGUE_TO_NEW_POST_IOS_7 = @"segueToNewPostiOS7";
 NSString *const SEGUE_DISMISS_TO_THREAD = @"dismissWithCancelToThreadSegue";
-NSString *const SEGUE_DISMISS_TO_NEW_THREAD = @"dismissWithCancelToNewThreadSegue";
 
 // Cells
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";

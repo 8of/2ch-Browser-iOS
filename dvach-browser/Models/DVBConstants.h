@@ -15,6 +15,8 @@
 #define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 #define SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(v)     ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedDescending)
 
+// Sizes
+#define ONE_PIXEL (1.0f / [[UIScreen mainScreen] scale])
 // Colors
 #define DVACH_COLOR [UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0]
 #define DVACH_COLOR_CG [[UIColor colorWithRed:(255.0/255.0) green:(139.0/255.0) blue:(16.0/255.0) alpha:1.0] CGColor]
@@ -59,6 +61,7 @@ FOUNDATION_EXPORT NSString *const STORYBOARD_NAME_WEBVIEWS;
 // Storyboard VC ID's
 FOUNDATION_EXPORT NSString *const STORYBOARD_ID_THREAD_VIEW_CONTROLLER;
 FOUNDATION_EXPORT NSString *const STORYBOARD_ID_WEBVIEW_VIEW_CONTROLLER;
+FOUNDATION_EXPORT NSString *const STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER;
 
 // Segues
 FOUNDATION_EXPORT NSString *const SEGUE_TO_EULA;
@@ -69,7 +72,6 @@ FOUNDATION_EXPORT NSString *const SEGUE_TO_NEW_THREAD_IPHONE;
 FOUNDATION_EXPORT NSString *const SEGUE_TO_NEW_POST;
 FOUNDATION_EXPORT NSString *const SEGUE_TO_NEW_POST_IOS_7;
 FOUNDATION_EXPORT NSString *const SEGUE_DISMISS_TO_THREAD;
-FOUNDATION_EXPORT NSString *const SEGUE_DISMISS_TO_NEW_THREAD;
 
 // Cells
 FOUNDATION_EXPORT NSString *const BOARD_CELL_IDENTIFIER;

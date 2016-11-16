@@ -13,8 +13,6 @@
 #import "DVBUrls.h"
 #import "DVBThread.h"
 
-#import "DVBThreadTableViewCell.h"
-
 @interface DVBBoardModel ()
 
 @property (nonatomic, strong) NSString *boardCode;
@@ -32,7 +30,6 @@
 - (instancetype)init
 {
     @throw [NSException exceptionWithName:@"Need board code" reason:@"Use -[[DVBBoardModel alloc] initWithBoardCode:]" userInfo:nil];
-    
     return nil;
 }
 
@@ -49,7 +46,7 @@
     return self;
 }
 
-- (void)loadNextPageWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *, NSError *))completion
+- (void)loadNextPageWithCompletion:(void (^)(NSArray *, NSError *))completion
 {
     weakify(self);
     [_networking getThreadsWithBoard:_boardCode
@@ -69,19 +66,14 @@
                 if (!self.threadsAlreadyLoaded[thread[@"thread_num"]]) {
                     self.threadsAlreadyLoaded[thread[@"thread_num"]] = @"";
                     NSArray *threadPosts = thread[@"posts"];
-
                     NSError *parseError;
-
                     NSDictionary *threadDict = [threadPosts firstObject];
 
                     DVBThread *thread = [MTLJSONAdapter modelOfClass:DVBThread.class
                                               fromJSONDictionary:threadDict
                                                            error:&parseError];
-
                     if (!parseError) {
-
                         thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
-
                         BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
 
                         if (threadDict[@"files"] && isInReviewModeOk) {
@@ -92,44 +84,6 @@
                                 thread.thumbnail = thumbPath;
                             }
                         }
-
-                        // Strip comment from useless words that we'll not see anyway
-                        NSArray *commentArray = [thread.comment componentsSeparatedByString:@" "];
-
-                        NSArray *titleArray = [thread.subject componentsSeparatedByString:@" "];
-
-                        NSString *preparedComment = @"";
-
-                        // If title auto-made from comment on server (/b/ - example) - mark it so
-                        BOOL isTitleMadeFromComment = [DVBThread isTitle:thread.subject madeFromComment:thread.comment];
-
-                        if ([thread.subject isEqualToString:@""] || isTitleMadeFromComment) {
-                            preparedComment = [NSString stringWithFormat:@"%@ • ", [DVBThread threadTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment]];
-                        } else {
-                            for (NSString *nextPart in titleArray) {
-                                NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
-                                if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
-                                    preparedComment = newCommentLike;
-                                } else {
-                                    break;
-                                }
-                            }
-                            NSString *withDotPart = [NSString stringWithFormat:@"%@ • ", preparedComment];
-                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:withDotPart]) {
-                                preparedComment = withDotPart;
-                            }
-                        }
-
-                        for (NSString *nextPart in commentArray) {
-                            NSString *newCommentLike = [preparedComment stringByAppendingFormat:@"%@ ", nextPart];
-                            if ([DVBThreadTableViewCell goodFitWithViewWidth:width andString:newCommentLike]) {
-                                preparedComment = newCommentLike;
-                            } else {
-                                break;
-                            }
-                        }
-                        thread.comment = preparedComment;
-
                         [self.privateThreadsArray addObject:thread];
                     }
                     else {
@@ -137,14 +91,10 @@
                     }
                 }
             }
-
             if (!self) { return; }
-            
             NSArray *resultArr = [[NSArray alloc] initWithArray:self.privateThreadsArray];
             [self assignThreadsArrayFromWeak:resultArr];
-            
             self.currentPage++;
-            
             if (self.currentPage == self.maxPage) {
                 self.currentPage = 0;
             }
@@ -159,15 +109,20 @@
     _threadsArray = array;
 }
 
-- (void)reloadBoardWithViewWidth:(CGFloat)width andCompletion:(void (^)(NSArray *))completion
+- (void)reloadBoardWithCompletion:(void (^)(NSArray *))completion
 {
     _privateThreadsArray = [NSMutableArray array];
     _currentPage = 0;
-    [self loadNextPageWithViewWidth:width
-                      andCompletion:^(NSArray *threadsCompletion, NSError *error)
+    [self loadNextPageWithCompletion:^(NSArray *threadsCompletion, NSError *error)
     {
         completion(threadsCompletion);
     }];
+}
+
+- (void)emptyThreadsArray
+{
+    _threadsArray = [@[] mutableCopy];
+    _privateThreadsArray = [@[] mutableCopy];
 }
 
 @end

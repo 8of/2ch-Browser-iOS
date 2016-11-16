@@ -12,9 +12,11 @@
 #import "DVBAlertViewGenerator.h"
 #import "UrlNinja.h"
 
+// #import "DVBAsyncBoardViewController.h"
 #import "DVBBoardsViewController.h"
-#import "DVBBoardViewController.h"
+// #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
+#import "DVBRouter.h"
 
 static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
@@ -119,10 +121,36 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     [self updateTable];
 }
 
+#pragma mark - DVBBoardsModelDelegate
+
 - (void)updateTable {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
+}
+
+- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages
+{
+    // Cancel opening if app isn't allowed to open the board
+    if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
+        UIAlertView *alertView = [_alertViewGenerator alertViewForBadBoard];
+        [alertView show];
+        return;
+    }
+    [DVBRouter pushBoardFrom:self boardCode:boardId pages:pages];
+}
+
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
+{
+    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+    threadViewControllerToOpen.boardCode = urlNinja.boardId;
+    threadViewControllerToOpen.threadNum = urlNinja.threadId;
+    if (urlNinja.threadTitle) {
+        threadViewControllerToOpen.threadSubject = urlNinja.threadTitle;
+    }
+
+    [self.navigationController pushViewController:threadViewControllerToOpen
+                                         animated:YES];
 }
 
 #pragma mark - user Agreement
@@ -143,51 +171,10 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
     [self.searchBar endEditing:YES];
-    if ([self userAgreementAccepted]) {
-        NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
-        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
-
-        // Check if deal with thread bookmark and not board
-        UrlNinja *urlNinja = [[UrlNinja alloc] initWithUrl:[NSURL URLWithString:boardId]];
-        if (urlNinja.type == boardThreadLink) {
-            urlNinja.threadTitle = [_boardsModel threadTitleByIndexPath:selectedCellPath];
-            [self openThreadWithUrlNinja:urlNinja];
-
-            return NO;
-        }
-
-        // Cancel opening if app isn't allowed to open the board
-        if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
-            UIAlertView *alertView = [_alertViewGenerator alertViewForBadBoard];
-
-            [alertView show];
-
-            [self.tableView deselectRowAtIndexPath:selectedCellPath
-                                        animated:YES];
-
-            return NO;
-        }
-
+    if ([identifier isEqualToString:SEGUE_TO_EULA]) {
         return YES;
     }
-
     return NO;
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    
-    if ([[segue identifier] isEqualToString:SEGUE_TO_BOARD]) {
-        
-        NSIndexPath *selectedCellPath = [self.tableView indexPathForSelectedRow];
-        NSString *boardId = [_boardsModel boardIdByIndexPath:selectedCellPath];
-        NSNumber *pages = [_boardsModel boardMaxPageByIndexPath:selectedCellPath];
-        
-        DVBBoardViewController *boardViewController = segue.destinationViewController;        
-        
-        // Set board id and pages count for future board/thread requests.
-        boardViewController.boardCode = boardId;
-        boardViewController.pages = pages.integerValue;
-    }
 }
 
 #pragma mark - Actions
@@ -202,21 +189,6 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (IBAction)openSettingsApp:(id)sender
 {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-}
-
-#pragma mark - Thread opener
-
-- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
-{
-    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewControllerToOpen.boardCode = urlNinja.boardId;
-    threadViewControllerToOpen.threadNum = urlNinja.threadId;
-    if (urlNinja.threadTitle) {
-        threadViewControllerToOpen.threadSubject = urlNinja.threadTitle;
-    }
-
-    [self.navigationController pushViewController:threadViewControllerToOpen
-                                         animated:YES];
 }
 
 @end

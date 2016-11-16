@@ -9,16 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "DVBCommon.h"
-
-@protocol DVBCreatePostViewControllerDelegate <NSObject>
-
-@optional
-/// Open thread after creating
-- (void)openThredWithCreatedThread:(NSString *)threadNum;
-/// Update thread after posting
-- (void)updateThreadAfterPosting;
-
-@end
+#import "DVBCreatePostViewControllerDelegate.h"
 
 @interface DVBCreatePostViewController : UIViewController
 

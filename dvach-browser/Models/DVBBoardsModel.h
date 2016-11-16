@@ -9,9 +9,13 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "UrlNinja.h"
+
 @protocol DVBBoardsModelDelegate <NSObject>
 
 - (void)updateTable;
+- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages;
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja;
 
 @end
 
