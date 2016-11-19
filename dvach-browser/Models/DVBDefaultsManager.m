@@ -16,6 +16,31 @@
 
 @implementation DVBDefaultsManager
 
++ (NSDictionary *)initialDefaultsMattersForAppReset
+{
+    BOOL defDarkTheme = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
+    BOOL defClearThreads = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
+    return @
+    {
+    SETTING_ENABLE_DARK_THEME: @(defDarkTheme),
+    SETTING_CLEAR_THREADS: @(defClearThreads)
+    };
+}
+
++ (BOOL)needToResetWithStoredDefaults:(NSDictionary *)defaultsToCompare
+{
+    BOOL defDarkTheme = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
+    BOOL defClearThreads = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_CLEAR_THREADS];
+    NSNumber *storedDefDarkTheme = defaultsToCompare[SETTING_ENABLE_DARK_THEME];
+    NSNumber *storedDefClearThreads = defaultsToCompare[SETTING_CLEAR_THREADS];
+
+    if (storedDefDarkTheme.boolValue != defDarkTheme || storedDefClearThreads.boolValue != defClearThreads) {
+        return YES;
+    }
+
+    return NO;
+}
+
 - (void)dealloc
 {
     [self observeDefaults:NO];

@@ -11,10 +11,8 @@
 #import "DVBBoardsModel.h"
 #import "DVBAlertViewGenerator.h"
 #import "UrlNinja.h"
-
-// #import "DVBAsyncBoardViewController.h"
+#import "DVBDefaultsManager.h"
 #import "DVBBoardsViewController.h"
-// #import "DVBBoardViewController.h"
 #import "DVBThreadViewController.h"
 #import "DVBRouter.h"
 
@@ -24,6 +22,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 /// For storing fetched boards
 @property (strong, nonatomic) NSDictionary *boardsDict;
+@property (nonatomic, strong, nonnull) NSDictionary *defaultsToCompare;
 @property (strong, nonatomic) DVBBoardsModel *boardsModel;
 @property (strong, nonatomic) DVBAlertViewGenerator *alertViewGenerator;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -41,7 +40,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    _defaultsToCompare = [DVBDefaultsManager initialDefaultsMattersForAppReset];
     self.title = NSLS(@"TITLE_BOARDS");
 
     [self darkThemeHandler];
@@ -87,7 +86,10 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)darkThemeHandler
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    if ([DVBDefaultsManager needToResetWithStoredDefaults:_defaultsToCompare]) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.tableView.backgroundColor = [UIColor blackColor];

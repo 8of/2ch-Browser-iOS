@@ -23,6 +23,8 @@
 
 @interface DVBDefaultsManager : NSObject
 
++ (NSDictionary *)initialDefaultsMattersForAppReset;
++ (BOOL)needToResetWithStoredDefaults:(NSDictionary *)defaultsToCompare;
 - (void)initApp;
 
 @end
