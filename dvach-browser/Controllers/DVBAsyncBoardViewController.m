@@ -65,8 +65,7 @@
         self.title = [NSString stringWithFormat:@"/%@/",_boardCode];
         _boardModel = [[DVBBoardModel alloc] initWithBoardCode:_boardCode
                                                     andMaxPage:_pages];
-        // [self makeRefreshAvailable];
-        [self reloadBoardPage];
+        [self initialBoardLoad];
     }
     
     return self;
@@ -83,6 +82,8 @@
 
 - (void)setupTableNode
 {
+    [UIApplication sharedApplication].keyWindow.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
+
     _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset]-1, 0, [DVBBoardStyler elementInset], 0);
     _tableNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
@@ -101,18 +102,29 @@
 #pragma mark - Network
 
 /// First time loading thread list
+- (void)initialBoardLoad
+{
+    weakify(self);
+    [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
+     {
+         strongify(self);
+         if (!self) { return; }
+         _threadsArray = [completionThreadsArray mutableCopy];
+         dispatch_async(dispatch_get_main_queue(), ^{
+             [_tableNode reloadData];
+             self.alreadyLoadingNextPage = NO;
+         });
+     }];
+}
 - (void)reloadBoardPage
 {
-    __block double duration = 0.0;
     // Prevent reloading while already loading board items
     if (_alreadyLoadingNextPage) {
         [_refreshControl endRefreshing];
         return;
     }
-    if (_threadsArray.count != 0) {
-        duration = 1.0;
-    }
     _alreadyLoadingNextPage = YES;
+    double duration = 1.0;
     [UIView animateWithDuration:duration
                      animations:^{
         _tableNode.view.layer.opacity = 0;
