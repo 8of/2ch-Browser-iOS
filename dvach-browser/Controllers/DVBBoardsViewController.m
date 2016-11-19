@@ -48,7 +48,11 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
                                              selector:@selector(darkThemeHandler)
                                                  name:NSUserDefaultsDidChangeNotification
                                                object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(goToFirstController)
+                                                 name:UIContentSizeCategoryDidChangeNotification
+                                               object:nil];
+
     if (!_alertViewGenerator) {
         _alertViewGenerator = [[DVBAlertViewGenerator alloc] init];
         _alertViewGenerator.alertViewGeneratorDelegate = self;
@@ -84,10 +88,15 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     }
 }
 
+- (void)goToFirstController
+{
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 - (void)darkThemeHandler
 {
     if ([DVBDefaultsManager needToResetWithStoredDefaults:_defaultsToCompare]) {
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [self goToFirstController];
     }
 
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
