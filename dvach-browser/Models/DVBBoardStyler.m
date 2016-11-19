@@ -24,7 +24,7 @@
 
 + (UIColor *)textColor
 {
-    return [self isDarkTheme] ? [UIColor whiteColor] : [UIColor blackColor];
+    return [self isDarkTheme] ? DARK_CELL_TEXT_COLOR : [UIColor blackColor];
 }
 
 + (CGColorRef)borderColor
@@ -35,7 +35,7 @@
 
 + (CGFloat)mediaSize
 {
-    return IS_IPAD ? 100 : 80;
+    return IS_IPAD ? 200 : 100;
 }
 
 + (CGFloat)elementInset
