@@ -103,24 +103,21 @@
 /// First time loading thread list
 - (void)reloadBoardPage
 {
-    double delayInSeconds = 0.0;
+    __block double duration = 0.0;
     // Prevent reloading while already loading board items
     if (_alreadyLoadingNextPage) {
         [_refreshControl endRefreshing];
         return;
-    } else {
-        if (_threadsArray.count != 0) {
-            _threadsArray = [@[] mutableCopy];
-            [_boardModel emptyThreadsArray];
-            [_tableNode reloadData];
-            delayInSeconds = 1.0;
-        }
     }
-    
+    if (_threadsArray.count != 0) {
+        duration = 1.0;
+    }
     _alreadyLoadingNextPage = YES;
-
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    [UIView animateWithDuration:duration
+                     animations:^{
+        _tableNode.view.layer.opacity = 0;
+    } completion:^(BOOL finished) {
+        [_tableNode reloadData];
         weakify(self);
         [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
          {
@@ -130,21 +127,18 @@
              _threadsArray = [completionThreadsArray mutableCopy];
              dispatch_async(dispatch_get_main_queue(), ^{
                  [_refreshControl endRefreshing];
-                 self.alreadyLoadingNextPage = NO;
-
-                 if (delayInSeconds == 0.0) { // first load
-                     [_tableNode reloadData];
-                 } else { // pull to refresh
-                     NSMutableArray <NSIndexPath *> * indexesToAdd = [@[] mutableCopy];
-                     [_threadsArray enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-                         NSIndexPath *path = [NSIndexPath indexPathForRow:idx inSection:0];
-                         [indexesToAdd addObject:path];
-                     }];
-                     [_tableNode insertRowsAtIndexPaths:indexesToAdd.copy withRowAnimation:UITableViewRowAnimationTop];
-                 }
+                 [_tableNode reloadData];
+                 [UIView animateWithDuration:duration
+                                  animations:^{
+                     _tableNode.view.layer.opacity = 1;
+                 } completion:^(BOOL finished) {
+                     self.alreadyLoadingNextPage = NO;
+                 }];
              });
          }];
-    });
+    }];
+
+
 }
 
 - (void)loadNextBoardPage
