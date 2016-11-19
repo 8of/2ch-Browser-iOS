@@ -74,4 +74,8 @@ NSInteger const PREVIEW_ROW_DEFAULT_HEIGHT = 84;
 NSInteger const PREVIEW_ROW_DEFAULT_HEIGHT_IPAD = 120;
 
 // Notifications
-NSString  *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";
+NSString *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";
+
+// Keys
+NSString *const AP_CAPTCHA_PUBLIC_KEY = @"BiIWoUVlqn5AquNm1NY832D4Ljj0IOzR";
+NSString *const AP_CAPTCHA_PRIVATE_KEY = @"";

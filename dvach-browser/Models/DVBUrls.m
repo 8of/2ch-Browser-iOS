@@ -14,7 +14,6 @@ static NSString *_base;
 static NSString *_baseWithoutScheme;
 static NSString *_baseWithoutSchemeForUrlNinja;
 static NSString *_baseWithoutSchemeForUrlNinjaHk = @"2ch.hk";
-static NSString *_getCaptchaKey;
 static NSString *_reportThread;
 static NSString *_boardsList;
 static NSString *_getUsercode;
@@ -51,15 +50,6 @@ static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
 + (NSString *)baseWithoutSchemeForUrlNinjaHk
 {
     return _baseWithoutSchemeForUrlNinjaHk;
-}
-
-/// https://2ch.hk/makaba/captcha.fcgi
-+ (NSString *)getCaptchaKey
-{
-    if (_getCaptchaKey == nil) {
-        _getCaptchaKey = [NSString stringWithFormat:@"https://%@/makaba/captcha.fcgi", [self domain]];
-    }
-    return _getCaptchaKey;
 }
 
 /// https://2ch.hk/makaba/makaba.fcgi
@@ -100,7 +90,6 @@ static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
     _base = nil;
     _baseWithoutScheme = nil;
     _baseWithoutSchemeForUrlNinja = nil;
-    _getCaptchaKey = nil;
     _reportThread = nil;
     _boardsList = nil;
     _getUsercode = nil;

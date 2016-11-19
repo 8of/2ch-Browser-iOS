@@ -21,8 +21,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 @interface DVBNetworking ()
 
 @property (nonatomic, strong) Reachability *networkReachability;
-/// Captcha stuff
-@property (nonatomic, strong) NSString *captchaKey;
 
 @end
 
@@ -178,10 +176,10 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 
 #pragma mark - Posting
 
-- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCaptchId:(NSString *)captchaId andCaptchaCode:(NSString *)captchaCode andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
+- (void)postMessageWithBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCaptchaParameters:(NSDictionary *)captchaParameters andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion
 {
     // Prevent crashing
-    if (board == nil || threadNum == nil || task == nil) {
+    if (!board || !threadNum) {
         return;
     }
 
@@ -192,7 +190,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     
     NSDictionary *params =
     @{
-         @"task" : task,
+         @"task" : @"post",
          @"json" : @"1",
          @"board" : board,
          @"thread" : threadNum
@@ -202,9 +200,8 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     NSMutableDictionary *mutableParams = [params mutableCopy];
 
     // if new captcha
-    if (captchaId && captchaCode) {
-        mutableParams[@"2chaptcha_id"] = captchaId;
-        mutableParams[@"2chaptcha_value"] = captchaCode;
+    if (captchaParameters) {
+        [mutableParams addEntriesFromDictionary:captchaParameters];
     } else {
         // Check userCode
         BOOL isUsercodeNotEmpty = ![usercode isEqualToString:@""];
@@ -216,7 +213,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     }
 
     // Back to unmutable dictionary to be safe
-    params = mutableParams;
+    params = [mutableParams copy];
     
     [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects: @"application/json",nil]];
     
@@ -244,29 +241,21 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
          // Check if we have images to upload
          if (imagesToUpload) {
              NSUInteger imageIndex = 1;
-
              for (UIImage *imageToLoad in imagesToUpload) {
-
                  NSData *fileData;
-
                  NSString *imageName = [NSString stringWithFormat:@"image%ld", (unsigned long)imageIndex];
-
                  NSString *imageFilename = [NSString stringWithFormat:@"image.%@", imageToLoad.imageExtention];
-
                  NSString *imageMimeType;
-
                  BOOL isThisJpegImage = [imageToLoad.imageExtention isEqualToString:@"jpg"];
 
                  // Mime type for jpeg differs from its file extention string
                  if (isThisJpegImage) {
                      imageMimeType = @"image/jpeg";
                      fileData = UIImageJPEGRepresentation(imageToLoad, 1.0);
-                 }
-                 else {
+                 } else {
                      imageMimeType = [NSString stringWithFormat:@"image/%@", imageToLoad.imageExtention];
                      fileData = UIImagePNGRepresentation(imageToLoad);
                  }
-
                  [formData appendPartWithFileData:fileData
                                              name:imageName
                                          fileName:imageFilename
@@ -274,11 +263,9 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
                  imageIndex++;
              }
          }
-         
      }
           success:^(NSURLSessionDataTask *task, id responseObject)
      {
-         
          NSString *responseString = [[NSString alloc] initWithData:responseObject
                                                           encoding:NSUTF8StringEncoding];
          NSLog(@"Success: %@", responseString);
@@ -291,7 +278,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
           *  Status field from response.
           */
          NSString *status = responseDictionary[@"Status"];
-         
          /**
           *  Reason field from response.
           */
@@ -514,6 +500,24 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     NSString *userAgent = [manager.requestSerializer  valueForHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
 
     return userAgent;
+}
+
+- (void)tryApCaptchaWithCompletion:(void (^)(NSString * _Nullable))completion
+{
+    NSString *address = [[NSString alloc] initWithFormat:@"%@%@%@", [DVBUrls base], @"api/captcha/app/id/", AP_CAPTCHA_PUBLIC_KEY];
+    [[AFHTTPRequestOperationManager manager] GET:address
+                                      parameters:nil
+                                         success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+                                             if (responseObject[@"id"] != nil) {
+                                                 NSString *appResponseId = responseObject[@"id"];
+                                                 completion(appResponseId);
+                                             } else {
+                                                 completion(nil);
+                                             }
+                                         }
+                                         failure:^(AFHTTPRequestOperation * _Nullable operation, NSError * _Nonnull error) {
+                                             completion(nil);
+                                         }];
 }
 
 #pragma mark - Error handling
