@@ -15,6 +15,8 @@
 #import "DVBPostTableViewCell.h"
 #import "DVBWebmIconImageView.h"
 
+static CGFloat const HORISONTAL_CONSTRAINT = 10.0f;
+
 @interface DVBPostTableViewCell () <UITextViewDelegate>
 
 /// Title
@@ -44,28 +46,8 @@
 
 // Actual post
 
-// Thumbnail url
-@property (nonatomic, strong) NSString *fullPathUrlString;
 // TextView for post comment
 @property (nonatomic, weak) IBOutlet UITextView *commentTextView;
-// Post thumbnail
-@property (nonatomic, weak) IBOutlet UIImageView *postThumb;
-
-// Constraints - image
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageLeftConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageWidthConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *imageHeightConstraint;
-
-// Constraints - video-icon
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconWidthContstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *videoiconHeightContstraint;
-
-// Constraint storages of initial values
-@property (nonatomic, assign) CGFloat imageLeftConstraintStorage;
-@property (nonatomic, assign) CGFloat imageWidthConstraintStorage;
-@property (nonatomic, assign) CGFloat imageHeightConstraintStorage;
-@property (nonatomic, assign) CGFloat videoiconWidthContstraintStorage;
-@property (nonatomic, assign) CGFloat videoiconHeightContstraintStorage;
 
 // Action buttons
 
@@ -90,37 +72,17 @@
     _titleLabel.layer.masksToBounds = NO;
     _titleLabel.opaque = YES;
     _titleLabel.backgroundColor = [UIColor whiteColor];
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        _titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-    }
     
     _commentTextView.delegate = self;
-    _imageLeftConstraintStorage = _imageLeftConstraint.constant;
 
     if (IS_IPAD) {
-        _imageWidthConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
-        _imageHeightConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
-
         _mediaHeightConstraintStorage = PREVIEW_IMAGE_SIZE_IPAD;
     } else {
-        _imageWidthConstraintStorage = _imageWidthConstraint.constant;
-        _imageHeightConstraintStorage = _imageHeightConstraint.constant;
-
         _mediaHeightConstraintStorage = _mediaHeightConstraint.constant;
     }
     _mediaHeightConstraint.constant = 0;
 
     _mediaTopConstraint.constant = 0;
-
-    _videoiconWidthContstraintStorage = _videoiconWidthContstraint.constant;
-    _videoiconHeightContstraintStorage = _videoiconHeightContstraint.constant;
-
-    // for more tidy images and keep aspect ratio
-    _postThumb.contentMode = UIViewContentModeScaleAspectFill;
-    _postThumb.clipsToBounds = YES;
-    [self rebuildPostThumbImageWithImagePresence:NO
-                        andWithVideoIconPresence:NO];
 
     // set minimum delay before textView recognize tap on link
     _commentTextView.delaysContentTouches = NO;
@@ -185,9 +147,8 @@
     _pathesArray = pathesArray;
 
     // 4 Media images/icons
-    if (pathesArray && ([pathesArray count] > 1)) {
-        _mediaTopConstraint.constant = _imageLeftConstraintStorage;
-
+    if (pathesArray && (pathesArray.count > 0)) {
+        _mediaTopConstraint.constant = HORISONTAL_CONSTRAINT;
         _mediaHeightConstraint.constant = _mediaHeightConstraintStorage;
 
         NSUInteger currentImageIndex = 0;
@@ -220,21 +181,6 @@
                 currentImageIndex++;
             }
         }
-    } else if (thumbPathesArray && ([thumbPathesArray count] == 1)) {
-        // load the image and setting image source depending on presented image or set blank image
-        __weak typeof(UIImageView *)weakPostThumb = _postThumb;
-        [_postThumb setImageWithURLRequest:[DVBUrlRequestHelper urlRequestForUrlString:thumbPathesArray[0]]
-                          placeholderImage:[UIImage imageNamed:FILENAME_THUMB_IMAGE_PLACEHOLDER]
-                                   success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, UIImage * _Nonnull image)
-         {
-             weakPostThumb.image = image;
-         } failure:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nonnull response, NSError * _Nonnull error) { }];
-
-        BOOL isThumbForWebm = [self isMediaTypeWebmWithPicPath:pathesArray[0]];
-        [self rebuildPostThumbImageWithImagePresence:YES
-                            andWithVideoIconPresence:isThumbForWebm];
-
-        _fullPathUrlString = pathesArray[0];
     }
 
 
@@ -256,27 +202,6 @@
 
     _answerToPostButton.tag = index;
     _answerToPostWithQuoteButton.tag = index;
-}
-
-- (void)rebuildPostThumbImageWithImagePresence:(BOOL)isImagePresent andWithVideoIconPresence:(BOOL)videoIconPresentce
-{
-    if (isImagePresent) {
-        _imageLeftConstraint.constant = _imageLeftConstraintStorage;
-        _imageWidthConstraint.constant = _imageWidthConstraintStorage;
-        _imageHeightConstraint.constant = _imageWidthConstraintStorage;
-    } else {
-        _imageLeftConstraint.constant = 0;
-        _imageWidthConstraint.constant = 0;
-        _imageHeightConstraint.constant = 0;
-    }
-
-    if (videoIconPresentce) {
-        _videoiconWidthContstraint.constant = _videoiconWidthContstraintStorage;
-        _videoiconHeightContstraint.constant = _videoiconHeightContstraintStorage;
-    } else {
-        _videoiconWidthContstraint.constant = 0;
-        _videoiconHeightContstraint.constant = 0;
-    }
 }
 
 - (void)layoutSubviews
@@ -303,17 +228,7 @@
     _commentTextView.text = nil;
     _commentTextView.attributedText = nil;
 
-
-    [_postThumb setImage:nil];
-    [self rebuildPostThumbImageWithImagePresence:NO
-                        andWithVideoIconPresence:NO];
-    
-    _imageLeftConstraint.constant = 0;
-
     _mediaTopConstraint.constant = 0;
-
-    _imageWidthConstraint.constant = 0;
-    _imageHeightConstraint.constant = 0;
 
     _mediaHeightConstraint.constant = 0;
 
@@ -400,6 +315,7 @@
 
 - (void)openMediaWithMediaIndex:(NSUInteger)index
 {
+    [_threadViewController.view endEditing:true];
     if (_threadViewController && (index < [_pathesArray count])) {
         NSString *urlString = _pathesArray[index];
         if (urlString) {
@@ -410,12 +326,6 @@
 }
 
 #pragma mark - Actions
-
-- (IBAction)touchFirstPicture:(id)sender
-{
-    [_threadViewController openMediaWithUrlString:_fullPathUrlString];
-    [_threadViewController.view endEditing:true];
-}
 
 - (IBAction)touchFirstMedia:(id)sender
 {

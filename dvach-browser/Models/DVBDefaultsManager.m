@@ -60,9 +60,7 @@
     NSDictionary* defaults = @{
                                USER_AGREEMENT_ACCEPTED : @NO,
                                SETTING_ENABLE_DARK_THEME : @NO,
-                               SETTING_ENABLE_LITTLE_BODY_FONT : @NO,
                                SETTING_ENABLE_INTERNAL_WEBM_PLAYER : @YES,
-                               SETTING_ENABLE_TRAFFIC_SAVINGS : @NO,
                                SETTING_CLEAR_THREADS : @NO,
                                SETTING_BASE_DOMAIN : DVACH_DOMAIN,
                                PASSCODE : @"",

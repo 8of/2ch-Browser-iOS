@@ -17,8 +17,6 @@ static CGFloat const ROW_ACTIONS_DEFAULT_HEIGHT = 42.0f;
 static CGFloat const ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD = 36.0f;
 static CGFloat const ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD = 36.0f;
 
-// Thumbnail width in post row
-static CGFloat const THUMBNAIL_WIDTH = 64.f;
 // Thumbnail contstraints for calculating layout dimentions
 static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
@@ -113,15 +111,12 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
     // Additional calculations for title
     UIFont *fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        fontFromSettings = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
-    }
     CGSize size = [post.num sizeWithAttributes:@{NSFontAttributeName:fontFromSettings}];
     CGFloat titleHeight = size.height + HORISONTAL_CONSTRAINT * 2;
 
     // Additional calculations for 4-in-line-media
     CGFloat additionalHeightForMedia = 0;
-    if ([post.thumbPathesArray count] > 1) { // If post have more than one thumbnail and this is first row
+    if ([post.thumbPathesArray count] > 0) { // If post have more than one thumbnail and this is first row
         additionalHeightForMedia = ROW_MEDIA_DEFAULT_HEIGHT;
         if (IS_IPAD) {
             additionalHeightForMedia = additionalHeightForMedia + ADDITIONAL_HEIGHT_FOR_MEDIA_ON_IPAD;
@@ -138,14 +133,6 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
     // Set default difference (if we hve image in the cell).
     CGFloat widthDifferenceBecauseOfImageAndConstraints = HORISONTAL_CONSTRAINT * 2;
 
-    // If not - then set the difference just to two constraints.
-    if ([post.thumbPathesArray count] == 1) {
-        widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + THUMBNAIL_WIDTH + HORISONTAL_CONSTRAINT;
-        if (IS_IPAD) {
-            widthDifferenceBecauseOfImageAndConstraints = widthDifferenceBecauseOfImageAndConstraints + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
-        }
-    }
-
     // Decrease window width value by taking off elements and contraints values
     CGFloat textViewWidth = viewWidth - widthDifferenceBecauseOfImageAndConstraints;
 
@@ -159,67 +146,61 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
 
     heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf + 1;
 
-    CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + ROW_DEFAULT_HEIGHT + 1;
+    CGFloat minimumTextRowHeightToCompareTo = titleHeight + additionalHeightForMedia + additionalHeightForActionButtons + 1;
 
     // Check if we have 2-4 images on top and no comment text at all - we need to delete one extra horisontal constraint
     BOOL isPostHasCommentText = ![post.comment isEqualToAttributedString:[[NSAttributedString alloc] initWithString:@""]];
-    if (!isPostHasCommentText && ([post.thumbPathesArray count] > 1)) {
+    if (!isPostHasCommentText && ([post.thumbPathesArray count] > 0)) {
         heightForReturnWithCorrectionAndCeilf = heightForReturnWithCorrectionAndCeilf - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
         minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo - HORISONTAL_CONSTRAINT * 2; // still not sure why we need x2 here
     }
 
     if (IS_IPAD) {
-        minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo + ADDITIONAL_HEIGHT_FOR_POST_THUMB_ON_IPAD;
+        minimumTextRowHeightToCompareTo = minimumTextRowHeightToCompareTo;
     }
 
     // Check if comment is too short compare to thumbnail on the left
     if (heightForReturnWithCorrectionAndCeilf < minimumTextRowHeightToCompareTo) {
-        if (([post.thumbPathesArray count] == 0) || ([post.thumbPathesArray count] > 1)) {
-            return heightForReturnWithCorrectionAndCeilf;
-        }
-
         return (minimumTextRowHeightToCompareTo);
     }
 
     return heightForReturnWithCorrectionAndCeilf;
-
-    
-    return 0;
 }
 
 #pragma mark - Cell configuration and calculation
 
 - (void)configureCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([cell isKindOfClass:[DVBPostTableViewCell class]]) {
-        DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
-        DVBPost *post = _postsArray[indexPath.section];
-
-        // Configure title
-        NSString *dateAgo = post.dateAgo;
-        NSString *num = post.num;
-        // Need to increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
-        NSInteger postNumToShow = indexPath.section + 1;
-        NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
-
-        // Configure post itself
-        confCell.threadViewController = _threadViewController;
-
-        // Configure action buttons
-        NSUInteger indexForButton = indexPath.section;
-        BOOL shouldDisableActionButton = NO;
-        if (_answersToPost) {
-            shouldDisableActionButton = YES;
-        }
-
-        [confCell prepareCellWithTitle:title
-                        andCommentText:post.comment
-               andWithPostRepliesCount:[post.replies count]
-                              andIndex:indexForButton
-                andDisableActionButton:shouldDisableActionButton
-                   andThumbPathesArray:post.thumbPathesArray
-                        andPathesArray:post.pathesArray];
+    if (![cell isKindOfClass:[DVBPostTableViewCell class]]) {
+        return;
     }
+    DVBPostTableViewCell *confCell = (DVBPostTableViewCell *)cell;
+    DVBPost *post = _postsArray[indexPath.section];
+
+    // Configure title
+    NSString *dateAgo = post.dateAgo;
+    NSString *num = post.num;
+    // Need to increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
+    NSInteger postNumToShow = indexPath.section + 1;
+    NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
+
+    // Configure post itself
+    confCell.threadViewController = _threadViewController;
+
+    // Configure action buttons
+    NSUInteger indexForButton = indexPath.section;
+    BOOL shouldDisableActionButton = NO;
+    if (_answersToPost) {
+        shouldDisableActionButton = YES;
+    }
+
+    [confCell prepareCellWithTitle:title
+                    andCommentText:post.comment
+           andWithPostRepliesCount:post.replies.count
+                          andIndex:indexForButton
+            andDisableActionButton:shouldDisableActionButton
+               andThumbPathesArray:post.thumbPathesArray
+                    andPathesArray:post.pathesArray];
 }
 
 /// Utility method for calculation how much space we need to fit that text. Calculation for texView height.
