@@ -110,14 +110,9 @@
         return;
     } else {
         if (_threadsArray.count != 0) {
-            NSMutableArray <NSIndexPath *> * indexesToDelete = [@[] mutableCopy];
-            [_threadsArray enumerateObjectsUsingBlock:^(id object, NSUInteger idx, BOOL *stop) {
-                NSIndexPath *path = [NSIndexPath indexPathForRow:idx inSection:0];
-                [indexesToDelete addObject:path];
-            }];
             _threadsArray = [@[] mutableCopy];
             [_boardModel emptyThreadsArray];
-            [_tableNode deleteRowsAtIndexPaths:indexesToDelete.copy withRowAnimation:UITableViewRowAnimationAutomatic];
+            [_tableNode reloadData];
             delayInSeconds = 1.0;
         }
     }
@@ -145,7 +140,7 @@
                          NSIndexPath *path = [NSIndexPath indexPathForRow:idx inSection:0];
                          [indexesToAdd addObject:path];
                      }];
-                     [_tableNode insertRowsAtIndexPaths:indexesToAdd.copy withRowAnimation:UITableViewRowAnimationFade];
+                     [_tableNode insertRowsAtIndexPaths:indexesToAdd.copy withRowAnimation:UITableViewRowAnimationTop];
                  }
              });
          }];
@@ -216,6 +211,10 @@
 
 - (void)tableNode:(ASTableNode *)tableNode willDisplayRowWithNode:(ASCellNode *)node
 {
+    // Early return if something go wrong
+    if (!node.indexPath.row || _boardModel.threadsArray.count == 0 || _boardModel.threadsArray.count <= node.indexPath.row) {
+        return;
+    }
     if ([[_boardModel.threadsArray lastObject] isEqual:_boardModel.threadsArray[node.indexPath.row]] ) {
         [self loadNextBoardPage];
     }
