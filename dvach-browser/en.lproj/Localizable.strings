@@ -14,6 +14,9 @@
 "BUTTON_ACCEPT" = "Accept";
 "BUTTON_PLAY" = "Play";
 "BUTTON_PAUSE" = "Pause";
+"BUTTON_DELETE" = "Delete";
+"BUTTON_CHANGE" = "Change";
+"BUTTON_SAVE" = "Save";
 
 "BOARD_CATEGORY_FAVOURITE" = "Favourite";
 "BOARD_CATEGORY_THEMED" = "Theme-centered";
@@ -31,6 +34,7 @@
 "ALERT_SETTINGS_CHANGED_TITLE" = "Settings changed";
 "ALERT_SETTINGS_CHANGED_MESSAGE" = "New settings will apply after app restart.";
 "ALERT_BAD_BOARD_TITLE" = "This board is not permitted in mobile app";
+"ALERT_CHANGE_FAVOURITE_TITLE" = "Change title in the list";
 
 "DATE_FORMATTER_DAYS" = "%ld d";
 "DATE_FORMATTER_HOURS" = "%ld h";

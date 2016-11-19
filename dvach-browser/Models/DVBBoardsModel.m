@@ -139,7 +139,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return _boardsPrivate;
 }
 
-- (void)loadAllboards {
+- (void)loadAllboards
+{
     // To prevent from "rebuilding" it
     _memoryStore = [_persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:nil];
 
@@ -375,31 +376,104 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return NO;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+-(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewRowAction *change = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault
+                                                                      title:NSLS(@"BUTTON_CHANGE")
+                                                                    handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                    {
+                                        [self changeActionForTableView:tableView indexPath:indexPath];
+                                    }];
+    change.backgroundColor = [UIColor orangeColor];
 
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
-        NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
-        NSUInteger indexOfCurrentBoard = 0;
+    UITableViewRowAction *delete = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDestructive
+                                                                      title:NSLS(@"BUTTON_DELETE")
+                                                                    handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
+                                     {
+                                         [self deleteActionForTableView:tableView indexPath:indexPath];
+                                     }];
+    return @[delete, change];
+}
 
-        for (DVBBoard *board in arrayForInterating) {
-            NSString *boardId = board.boardId;
-            NSNumber *boardCategoryId = board.categoryId;
-            NSNumber *favouritesCategoryid = [NSNumber numberWithInt:0];
-            BOOL isBoardIdEquals = [boardId isEqualToString:boardIdToDeleteFromFavourites];
-            BOOL isInFavourites = ([boardCategoryId intValue] == [favouritesCategoryid intValue]);
-            if (isBoardIdEquals && isInFavourites) {
-                [_boardsPrivate removeObjectAtIndex:indexOfCurrentBoard];
-                [_context deleteObject:board];
-                break;
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Method should be here even if it's empty
+}
+
+- (void)changeActionForTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+{
+    [tableView endEditing:YES];
+    NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
+    NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
+    NSUInteger indexOfCurrentBoard = 0;
+
+    for (DVBBoard *board in arrayForInterating) {
+        NSString *boardId = board.boardId;
+        NSNumber *boardCategoryId = board.categoryId;
+        NSNumber *favouritesCategoryid = [NSNumber numberWithInt:0];
+        BOOL isBoardIdEquals = [boardId isEqualToString:boardIdToDeleteFromFavourites];
+        BOOL isInFavourites = ([boardCategoryId intValue] == [favouritesCategoryid intValue]);
+        if (isBoardIdEquals && isInFavourites) {
+            UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:NSLS(@"ALERT_CHANGE_FAVOURITE_TITLE") message:nil preferredStyle:UIAlertControllerStyleAlert];
+
+            [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+                textField.text = board.name;
+                [textField becomeFirstResponder];
+            }];
+            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_CANCEL")
+                                                                   style:UIAlertActionStyleCancel
+                                                                 handler:^(UIAlertAction * _Nonnull action) {
+
+            }];
+            [alertVC addAction:cancelAction];
+
+            UIAlertAction *changeAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_SAVE")
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction * _Nonnull action) {
+                UITextField *field = alertVC.textFields.firstObject;
+                NSString *text = field.text;
+                if (!text || [text isEqualToString:@""]) {
+                    return;
+                }
+                DVBBoard *board = _boardsPrivate[indexOfCurrentBoard];
+                board.name = text;
+                [self saveChanges];
+                [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }];
+            [alertVC addAction:changeAction];
+
+            if (_boardsModelDelegate) {
+                UIViewController *vc = (UIViewController *)_boardsModelDelegate;
+                [vc presentViewController:alertVC animated:YES completion:nil];
             }
-            indexOfCurrentBoard++;
+
+            break;
         }
-        [self saveChanges];
-        
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
+        indexOfCurrentBoard++;
     }
+}
+
+- (void)deleteActionForTableView:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath
+{
+    NSMutableArray *arrayForInterating = [_boardsPrivate mutableCopy];
+    NSString *boardIdToDeleteFromFavourites = [self boardIdByIndexPath:indexPath];
+    NSUInteger indexOfCurrentBoard = 0;
+
+    for (DVBBoard *board in arrayForInterating) {
+        NSString *boardId = board.boardId;
+        NSNumber *boardCategoryId = board.categoryId;
+        NSNumber *favouritesCategoryid = [NSNumber numberWithInt:0];
+        BOOL isBoardIdEquals = [boardId isEqualToString:boardIdToDeleteFromFavourites];
+        BOOL isInFavourites = ([boardCategoryId intValue] == [favouritesCategoryid intValue]);
+        if (isBoardIdEquals && isInFavourites) {
+            [_boardsPrivate removeObjectAtIndex:indexOfCurrentBoard];
+            [_context deleteObject:board];
+            break;
+        }
+        indexOfCurrentBoard++;
+    }
+    [self saveChanges];
+
+    [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -472,15 +546,14 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return matchedBoardsResult;
 }
 
-- (NSUInteger)countOfBoardsInCategoryWithIndex:(NSUInteger)index {
-    
+- (NSUInteger)countOfBoardsInCategoryWithIndex:(NSUInteger)index
+{
     NSArray *matchedBoardsResult = [self arrayForCategoryWithIndex:index];
-    
     return [matchedBoardsResult count];
 }
 
-- (void)updateTableWithSearchText:(NSString *)searchText {
-
+- (void)updateTableWithSearchText:(NSString *)searchText
+{
     if (!searchText) {
         _boardsPrivate = _allBoardsPrivate;
     } else {
@@ -489,11 +562,11 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     [_boardsModelDelegate updateTable];
 }
 
-- (NSArray *)getArrayOfBoardsWithSearchText:(NSString *)searchText {
+- (NSArray *)getArrayOfBoardsWithSearchText:(NSString *)searchText
+{
     NSArray *fullBoarsArray = [_allBoardsPrivate copy];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(name contains[cd] %@) || (boardId contains[cd] %@)", searchText, searchText];
     NSArray *filteredArray = [fullBoarsArray filteredArrayUsingPredicate:predicate];
-
     return filteredArray;
 }
 
@@ -528,7 +601,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     } else {
         [self updateTableWithSearchText:nil];
     }
-
 }
 
 #pragma mark - Notifications

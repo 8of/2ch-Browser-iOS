@@ -14,6 +14,9 @@
 "BUTTON_ACCEPT" = "Принять";
 "BUTTON_PLAY" = "Пуск";
 "BUTTON_PAUSE" = "Пауза";
+"BUTTON_DELETE" = "Удалить";
+"BUTTON_CHANGE" = "Изменить";
+"BUTTON_SAVE" = "Сохранить";
 
 "BOARD_CATEGORY_FAVOURITE" = "Избранное";
 "BOARD_CATEGORY_THEMED" = "Тематика";
@@ -31,6 +34,7 @@
 "ALERT_SETTINGS_CHANGED_TITLE" = "Настройки изменены";
 "ALERT_SETTINGS_CHANGED_MESSAGE" = "Для правильной работы закройте приложение и запустите его заново.";
 "ALERT_BAD_BOARD_TITLE" = "Доска временно запрещена к просмотру";
+"ALERT_CHANGE_FAVOURITE_TITLE" = "Изменить название в списке";
 
 "DATE_FORMATTER_DAYS" = "%ld д.";
 "DATE_FORMATTER_HOURS" = "%ld ч.";

@@ -127,14 +127,16 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     [self updateTable];
 }
 
-- (void)addBoardWithCode:(NSString *)code {
+- (void)addBoardWithCode:(NSString *)code
+{
     [_boardsModel addBoardWithBoardId:code];
     [self updateTable];
 }
 
 #pragma mark - DVBBoardsModelDelegate
 
-- (void)updateTable {
+- (void)updateTable
+{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableView reloadData];
     });
