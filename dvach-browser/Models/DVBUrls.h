@@ -16,7 +16,6 @@
 @property (class, nonatomic, readonly, nonnull) NSString *baseWithoutScheme;
 @property (class, nonatomic, readonly, nonnull) NSString *baseWithoutSchemeForUrlNinja;
 @property (class, nonatomic, readonly, nonnull) NSString *baseWithoutSchemeForUrlNinjaHk;
-@property (class, nonatomic, readonly, nonnull) NSString *getCaptchaKey;
 @property (class, nonatomic, readonly, nonnull) NSString *reportThread;
 @property (class, nonatomic, readonly, nonnull) NSString *boardsList;
 @property (class, nonatomic, readonly, nonnull) NSString *getUsercode;

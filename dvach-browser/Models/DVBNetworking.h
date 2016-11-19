@@ -30,7 +30,7 @@
                   andCompletion:(void (^)(NSString *))completion;
 
 /// Post user message to server and return server answer
-- (void)postMessageWithTask:(NSString *)task andBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andcaptchaValue:(NSString *)captchaValue andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andWithoutCaptcha:(BOOL)withoutCaptcha andCaptchId:(NSString *)captchaId andCaptchaCode:(NSString *)captchaCode andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion;
+- (void)postMessageWithBoard:(NSString *)board andThreadnum:(NSString *)threadNum andName:(NSString *)name andEmail:(NSString *)email andSubject:(NSString *)subject andComment:(NSString *)comment andUsercode:(NSString *)usercode andImagesToUpload:(NSArray *)imagesToUpload andCaptchaParameters:(NSDictionary *)captchaParameters andCompletion:(void (^)(DVBMessagePostServerAnswer *))completion;
 
 /// Report thread
 - (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment;
@@ -47,5 +47,8 @@
 - (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion;
 
 - (NSString * _Nullable)userAgent;
+
+/// AP captcha
+- (void)tryApCaptchaWithCompletion:(void (^)(NSString * _Nullable))completion;
 
 @end

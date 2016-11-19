@@ -16,6 +16,7 @@
 #import "DVBPost.h"
 #import "DVBComment.h"
 #import "DVBMessagePostServerAnswer.h"
+#import "DVBCaptchaHelper.h"
 
 #import "DVBCreatePostViewController.h"
 #import "DVBThreadViewController.h"
@@ -134,24 +135,23 @@
     BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
     if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
-        [self sendPostWithoutCaptcha:YES];
+        [self sendPostWithoutCaptcha:YES andAppResponseId:nil];
     } else {
         if ([_threadNum isEqualToString:@"0"]) {
             [self showDvachCaptchaController];
             return;
+        } else {
+            weakify(self);
+            [_networking tryApCaptchaWithCompletion:^(NSString * _Nullable appResponseId) {
+                strongify(self);
+                if (!self) { return; }
+                if (!appResponseId) { // Can't get APCaptcha, show regular captcha
+                    [self showDvachCaptchaController];
+                    return;
+                }
+                [self sendPostWithoutCaptcha:YES andAppResponseId:appResponseId];
+            }];
         }
-        weakify(self);
-        [_networking canPostWithoutCaptcha:^(BOOL canPost) {
-            strongify(self);
-            if (!self) { return; }
-            // Check if captcha isn't needed and that it's answer - and not a new thread
-            if (canPost) {
-                [self sendPostWithoutCaptcha:YES];
-            } else {
-                // Show captcha Controller othervise
-                [self showDvachCaptchaController];
-            }
-        }];
     }
 }
 
@@ -176,79 +176,48 @@
     [self goBackToThread];
 }
 
-- (void)sendPostWithoutCaptcha:(BOOL)noCaptcha
+- (void)sendPostWithoutCaptcha:(BOOL)noCaptcha andAppResponseId:(NSString * _Nullable)appResponseId
 {
+    // Turn off POST button
+    _sendPostButton.enabled = NO;
+
     // Get values from fields
     NSString *name = _containerForPostElementsView.nameTextField.text;
     NSString *subject = _containerForPostElementsView.subjectTextField.text;
     NSString *email = _containerForPostElementsView.emailTextField.text;
     NSString *comment = _containerForPostElementsView.commentTextView.text;
-    NSString *captchaValue = _sharedComment.captchaKey;
-
     NSArray *imagesToUpload = [_imagesToUpload copy];
-    // Fire actual method
-    [self postMessageWithTask:@"post"
-                     andBoard:_boardCode
-                 andThreadnum:_threadNum
-                      andName:name
-                     andEmail:email
-                   andSubject:subject
-                   andComment:comment
-              andcaptchaValue:captchaValue
-                  andUsercode:_usercode
-            andImagesToUpload:imagesToUpload
-            andWithoutCaptcha:noCaptcha
-                  andCaptchId:_captchaId
-               andCaptchaCode:_captchaCode
-     ];
-}
 
-/// Send post to thread (or create thread)
-- (void)postMessageWithTask:(NSString *)task
-                   andBoard:(NSString *)board
-               andThreadnum:(NSString *)threadNum
-                    andName:(NSString *)name
-                   andEmail:(NSString *)email
-                 andSubject:(NSString *)subject
-                 andComment:(NSString *)comment
-            andcaptchaValue:(NSString *)captchaValue
-                andUsercode:(NSString *)usercode
-          andImagesToUpload:(NSArray *)imagesToUpload
-          andWithoutCaptcha:(BOOL)withoutCaptcha
-                andCaptchId:(NSString *)captchaId
-             andCaptchaCode:(NSString *)captchaCode
-{
-    
-    // Turn off POST button
-    _sendPostButton.enabled = NO;
-    
-    [_networking postMessageWithTask:task
-                            andBoard:board
-                        andThreadnum:threadNum
-                             andName:name
-                            andEmail:email
-                          andSubject:subject
-                          andComment:comment
-                     andcaptchaValue:captchaValue
-                         andUsercode:usercode
-                   andImagesToUpload:imagesToUpload
-                   andWithoutCaptcha:(BOOL)withoutCaptcha
-                         andCaptchId:captchaId
-                      andCaptchaCode:captchaCode
-                       andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
+    NSDictionary *captchaParameters = @{};
 
+    // Check server response and our app response
+    if (appResponseId && [DVBCaptchaHelper appResponseFrom:appResponseId]) {
+        captchaParameters = @
+        {
+            @"captcha_type": @"app",
+            @"app_response_id": appResponseId,
+            @"app_response": [DVBCaptchaHelper appResponseFrom:appResponseId]
+        };
+    } else if (_captchaId && _captchaCode) { // Check manually entered captcha
+        captchaParameters = @
+        {
+            @"2chaptcha_id": _captchaId,
+            @"2chaptcha_value": _captchaCode
+        };
+    }
+
+    [_networking postMessageWithBoard:_boardCode andThreadnum:_threadNum andName:name andEmail:email andSubject:subject andComment:comment andUsercode:_usercode andImagesToUpload:imagesToUpload andCaptchaParameters:captchaParameters andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
     {
         // Set Navigation prompt accordingly to server answer.
         NSString *serverStatusMessage = messagePostServerAnswer.statusMessage;
         self.navigationItem.prompt = serverStatusMessage;
-        
+
         BOOL isPostWasSuccessful = messagePostServerAnswer.success;
-        
+
         if (isPostWasSuccessful) {
-            
             NSString *threadToRedirectTo = messagePostServerAnswer.threadToRedirectTo;
             BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
-            
+
             if (threadToRedirectTo && isThreadToRedirectToNotEmpty) {
                 _createdThreadNum = threadToRedirectTo;
             }
@@ -261,13 +230,10 @@
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
                        afterDelay:1.0];
-        }
-        else {
+        } else {
             // Enable Post button back.
             _sendPostButton.enabled = YES;
         }
-
-        _sharedComment.captchaKey = @"";
     }];
 }
 
@@ -371,9 +337,8 @@
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
-        } else {
-            [self dismissViewControllerAnimated:YES completion:nil];
         }
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else  {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
@@ -423,7 +388,7 @@
 {
     _captchaId = captchaId;
     _captchaCode = code;
-    [self sendPostWithoutCaptcha:NO];
+    [self sendPostWithoutCaptcha:NO andAppResponseId:nil];
 }
 
 @end

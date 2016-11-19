@@ -17,6 +17,7 @@
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
 @property (nonatomic, strong) ASTableNode *tableNode;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 /// Board's shortcode.
 @property (strong, nonatomic) NSString *boardCode;
 /// MaxPage (i.e. page count) for specific board.
@@ -90,11 +91,11 @@
     _tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _tableNode.view.showsVerticalScrollIndicator = NO;
     _tableNode.view.showsHorizontalScrollIndicator = NO;
-
-    _tableNode.view.refreshControl = [[UIRefreshControl alloc] init];
-    [_tableNode.view.refreshControl addTarget:self
-                                       action:@selector(reloadBoardPage)
-                             forControlEvents:UIControlEventValueChanged];
+    _refreshControl = [[UIRefreshControl alloc] init];
+    [_refreshControl addTarget:self
+                        action:@selector(reloadBoardPage)
+              forControlEvents:UIControlEventValueChanged];
+    [_tableNode.view addSubview:_refreshControl];
 }
 
 #pragma mark - Network
@@ -105,7 +106,7 @@
     double delayInSeconds = 0.0;
     // Prevent reloading while already loading board items
     if (_alreadyLoadingNextPage) {
-        [_tableNode.view.refreshControl endRefreshing];
+        [_refreshControl endRefreshing];
         return;
     } else {
         if (_threadsArray.count != 0) {
@@ -133,7 +134,7 @@
              self.currentPage = 0;
              _threadsArray = [completionThreadsArray mutableCopy];
              dispatch_async(dispatch_get_main_queue(), ^{
-                 [_tableNode.view.refreshControl endRefreshing];
+                 [_refreshControl endRefreshing];
                  self.alreadyLoadingNextPage = NO;
 
                  if (delayInSeconds == 0.0) { // first load

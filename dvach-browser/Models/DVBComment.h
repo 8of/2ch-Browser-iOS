@@ -17,11 +17,9 @@
 @interface DVBComment : NSObject
 {
     NSString *comment;
-    NSString *captchaKey;
 }
 
 @property (nonatomic, retain) NSString *comment;
-@property (nonatomic, retain) NSString *captchaKey;
 
 + (id)sharedComment;
 /**

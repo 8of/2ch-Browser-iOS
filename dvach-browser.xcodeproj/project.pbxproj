@@ -66,6 +66,7 @@
 		94C42CE81BC9D733001F6840 /* WebViews.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 94C42CE71BC9D733001F6840 /* WebViews.storyboard */; };
 		94C42CEB1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */; };
 		94C7272C1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */; };
+		94CF0CFC1DE08DB000AA3AC8 /* DVBCaptchaHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 94CF0CFB1DE08DB000AA3AC8 /* DVBCaptchaHelper.m */; };
 		94DAFF641AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94DAFF631AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m */; };
 		94DD37A71ACA7E5100C658EB /* DefaultBoards.plist in Resources */ = {isa = PBXBuildFile; fileRef = 94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */; };
 		94E8E06D1B20CF88008761C6 /* DVBUrlNinjaTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E8E06C1B20CF88008761C6 /* DVBUrlNinjaTest.m */; };
@@ -214,6 +215,8 @@
 		94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDvachWebViewViewController.m; path = Controllers/DVBDvachWebViewViewController.m; sourceTree = "<group>"; };
 		94C7272A1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSNotification+DVBBookmarkThreadNotification.h"; path = "Helpers/NSNotification+DVBBookmarkThreadNotification.h"; sourceTree = "<group>"; };
 		94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSNotification+DVBBookmarkThreadNotification.m"; path = "Helpers/NSNotification+DVBBookmarkThreadNotification.m"; sourceTree = "<group>"; };
+		94CF0CFA1DE08DB000AA3AC8 /* DVBCaptchaHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCaptchaHelper.h; path = Helpers/DVBCaptchaHelper.h; sourceTree = "<group>"; };
+		94CF0CFB1DE08DB000AA3AC8 /* DVBCaptchaHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCaptchaHelper.m; path = Helpers/DVBCaptchaHelper.m; sourceTree = "<group>"; };
 		94DAFF621AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadsScrollPositionManager.h; path = Models/DVBThreadsScrollPositionManager.h; sourceTree = "<group>"; };
 		94DAFF631AFE6BD900C7CEBE /* DVBThreadsScrollPositionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadsScrollPositionManager.m; path = Models/DVBThreadsScrollPositionManager.m; sourceTree = "<group>"; };
 		94DD37A61ACA7E5100C658EB /* DefaultBoards.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultBoards.plist; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 				94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */,
 				94C7272A1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.h */,
 				94C7272B1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m */,
+				94CF0CFA1DE08DB000AA3AC8 /* DVBCaptchaHelper.h */,
+				94CF0CFB1DE08DB000AA3AC8 /* DVBCaptchaHelper.m */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -878,6 +883,7 @@
 				94C7272C1BF8907C00F5DA27 /* NSNotification+DVBBookmarkThreadNotification.m in Sources */,
 				948B34CF1C693749003D3BB4 /* DVBDvachCaptchaViewController.m in Sources */,
 				A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */,
+				94CF0CFC1DE08DB000AA3AC8 /* DVBCaptchaHelper.m in Sources */,
 				9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */,
 				9497D99D1D9EF368002B013A /* DVBUrls.m in Sources */,
 				A155FF181AB7362A00BE31F4 /* DVBThread.m in Sources */,
