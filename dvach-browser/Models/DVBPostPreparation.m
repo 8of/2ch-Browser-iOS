@@ -40,10 +40,6 @@
         _threadId = threadId;
 
         _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
-
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-            _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleCaption1];
-        }
     }
     
     return self;

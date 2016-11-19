@@ -86,10 +86,6 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_LITTLE_BODY_FONT]) {
-        defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-    }
-
     _nameTextField.font = defaultFont;
     _subjectTextField.font = defaultFont;
     _emailTextField.font = defaultFont;
