@@ -11,6 +11,6 @@
 
 @interface DVBCaptchaHelper : NSObject
 
-+ (NSString*)appResponseFrom:(NSString *)appResponseId;
++ (NSString * _Nullable)appResponseFrom:(NSString * _Nonnull)appResponseId;
 
 @end

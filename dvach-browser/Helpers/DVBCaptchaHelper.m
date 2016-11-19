@@ -11,8 +11,11 @@
 
 @implementation DVBCaptchaHelper
 
-+ (NSString*)appResponseFrom:(NSString *)appResponseId
++ (NSString * _Nullable)appResponseFrom:(NSString * _Nonnull)appResponseId
 {
+    if ([AP_CAPTCHA_PRIVATE_KEY isEqualToString:@""]) {
+        return nil;
+    }
     NSString *fullString = [NSString stringWithFormat:@"%@|%@", appResponseId, AP_CAPTCHA_PRIVATE_KEY];
     const char *s=[fullString cStringUsingEncoding:NSASCIIStringEncoding];
     NSData *keyData=[NSData dataWithBytes:s length:strlen(s)];

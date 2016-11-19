@@ -190,14 +190,15 @@
 
     NSDictionary *captchaParameters = @{};
 
-    if (appResponseId) {
+    // Check server response and our app response
+    if (appResponseId && [DVBCaptchaHelper appResponseFrom:appResponseId]) {
         captchaParameters = @
         {
             @"captcha_type": @"app",
             @"app_response_id": appResponseId,
             @"app_response": [DVBCaptchaHelper appResponseFrom:appResponseId]
         };
-    } else if (_captchaId && _captchaCode) {
+    } else if (_captchaId && _captchaCode) { // Check manually entered captcha
         captchaParameters = @
         {
             @"2chaptcha_id": _captchaId,
@@ -214,7 +215,6 @@
         BOOL isPostWasSuccessful = messagePostServerAnswer.success;
 
         if (isPostWasSuccessful) {
-
             NSString *threadToRedirectTo = messagePostServerAnswer.threadToRedirectTo;
             BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
 
@@ -230,8 +230,7 @@
             [self performSelector:@selector(goBackToThread)
                        withObject:nil
                        afterDelay:1.0];
-        }
-        else {
+        } else {
             // Enable Post button back.
             _sendPostButton.enabled = YES;
         }
@@ -338,9 +337,8 @@
             if ([strongDelegate respondsToSelector:@selector(openThredWithCreatedThread:)]) {
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
-        } else {
-            [self dismissViewControllerAnimated:YES completion:nil];
         }
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else  {
         [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
                                   sender:self];
