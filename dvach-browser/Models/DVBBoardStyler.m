@@ -53,4 +53,9 @@
     return [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
 }
 
++ (BOOL)isWaitingForReview
+{
+    return ![[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+}
+
 @end

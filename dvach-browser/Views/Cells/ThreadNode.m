@@ -54,7 +54,8 @@
 
         // Media
         _mediaNode = [[ASNetworkImageNode alloc] init];
-        _mediaNode.style.width = ASDimensionMakeWithPoints([DVBBoardStyler mediaSize]);
+        CGFloat mediaWidth = [DVBBoardStyler isWaitingForReview] ? 0 : [DVBBoardStyler mediaSize];
+        _mediaNode.style.width = ASDimensionMakeWithPoints(mediaWidth);
         _mediaNode.style.height = ASDimensionMakeWithPoints([DVBBoardStyler mediaSize]);
         _mediaNode.URL = [NSURL URLWithString:_thread.thumbnail];
         _mediaNode.delegate = self;

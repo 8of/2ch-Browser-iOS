@@ -22,4 +22,6 @@
 + (CGFloat)elementInset;
 + (CGFloat)cornerRadius;
 
++ (BOOL)isWaitingForReview;
+
 @end
