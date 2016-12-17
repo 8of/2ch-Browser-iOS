@@ -45,10 +45,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<dict/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Attach images to post on demand</string>
 	<key>UILaunchStoryboardName</key>
