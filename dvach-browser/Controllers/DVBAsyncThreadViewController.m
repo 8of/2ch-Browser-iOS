@@ -9,25 +9,29 @@
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBThreadDelegate.h"
 #import "DVBThreadModel.h"
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBPostStyler.h"
 #import "DVBPostViewModel.h"
 #import "DVBPostNode.h"
 #import "ARChromeActivity.h"
+#import "DVBMediaOpener.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
-@interface DVBAsyncThreadViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
+@interface DVBAsyncThreadViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate, DVBThreadDelegate>
 
 @property (nonatomic, strong) DVBThreadModel *threadModel;
 
 @property (nonatomic, strong) ASTableNode *tableNode;
-@property (nonatomic, strong) UIRefreshControl *refreshControl;
-@property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
+@property (nonatomic, strong, nullable) UIRefreshControl *refreshControl;
+// @property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 @property (nonatomic, strong) NSArray <DVBPostViewModel *> *posts;
+@property (nonatomic, strong, nullable) NSArray <DVBPostViewModel *> *allPosts;
+
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
@@ -55,18 +59,37 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [UIApplication sharedApplication].keyWindow.backgroundColor = [DVBPostStyler postCellBackgroundColor];
 
     _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBPostStyler elementInset]-1, 0, [DVBPostStyler elementInset], 0);
+    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBPostStyler elementInset]/2, 0, [DVBPostStyler elementInset]/2, 0);
+    _tableNode.allowsSelection = NO;
     _tableNode.backgroundColor = [DVBPostStyler postCellBackgroundColor];
     _tableNode.delegate = self;
     _tableNode.dataSource = self;
     _tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _tableNode.view.showsVerticalScrollIndicator = NO;
     _tableNode.view.showsHorizontalScrollIndicator = NO;
+    if (!_allPosts) {
+        [self addTopRefreshControl];
+        [self addBottomRefreshControl];
+    }
+}
+
+- (void)addTopRefreshControl
+{
     _refreshControl = [[UIRefreshControl alloc] init];
     [_refreshControl addTarget:self
                         action:@selector(reloadThread)
               forControlEvents:UIControlEventValueChanged];
     [_tableNode.view addSubview:_refreshControl];
+    [_tableNode.view sendSubviewToBack:_refreshControl];
+}
+
+- (void)addBottomRefreshControl
+{
+//    _bottomRefreshControl = [UIRefreshControl new];
+//    _bottomRefreshControl.triggerVerticalOffset = 80.;
+//    [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
+//    _tableNode.view.bottomRefreshControl = _bottomRefreshControl;
+//    [_tableNode.view sendSubviewToBack:_bottomRefreshControl];
 }
 
 - (void)createRightButton
@@ -86,7 +109,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     weakify(self);
     [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) { // array of DVBPost
         strongify(self);
-        if (!self || !posts) { return; }
+        if (!self) { return; }
+        if (!posts) {
+            [self reloadThread];
+            return;
+        }
         _posts = [self convertPostsToViewModel:posts];
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableNode reloadData];
@@ -111,7 +138,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     DVBPostViewModel *post = _posts[indexPath.row];
     return ^{
-        return [[DVBPostNode alloc] initWithPost:post];
+        return [[DVBPostNode alloc] initWithPost:post andDelegate:self];
     };
 }
 
@@ -139,13 +166,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
          dispatch_async(dispatch_get_main_queue(), ^{
              [_tableNode reloadData];
              [_refreshControl endRefreshing];
-             [_bottomRefreshControl endRefreshing];
+             // [_bottomRefreshControl endRefreshing];
              [self checkNewPostsCount];
              // self.tableView.backgroundView = nil;
          });
 
          _refreshControl.enabled = YES;
-         _bottomRefreshControl.enabled = YES;
+         // _bottomRefreshControl.enabled = YES;
      }];
 }
 
@@ -232,6 +259,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 //
 //    [self.tableView setContentOffset:pointToScrollTo
 //                            animated:YES];
+}
+
+#pragma mark - DVBThreadDelegate
+
+- (void)openGalleryWIthUrl:(NSString *)url
+{
+    DVBMediaOpener *mediaOpener = [[DVBMediaOpener alloc] initWithViewController:self];
+
+    [mediaOpener openMediaWithUrlString:url
+                    andThumbImagesArray:_threadModel.thumbImagesArray
+                     andFullImagesArray:_threadModel.fullImagesArray];
 }
 
 #pragma mark - Routing

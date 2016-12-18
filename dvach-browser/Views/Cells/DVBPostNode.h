@@ -8,13 +8,15 @@
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
+#import "DVBThreadDelegate.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class DVBPostViewModel;
 
 @interface DVBPostNode : ASCellNode
 
-- (instancetype)initWithPost:(DVBPostViewModel *)post;
+- (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate;
 
 NS_ASSUME_NONNULL_END
 

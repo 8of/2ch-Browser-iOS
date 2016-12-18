@@ -158,6 +158,7 @@
 		9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DVBImageExtention.m"; path = "Helpers/UIImage+DVBImageExtention.m"; sourceTree = "<group>"; };
 		94216FC11E06DE7100A7D5D0 /* DVBAsyncThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAsyncThreadViewController.h; path = Controllers/DVBAsyncThreadViewController.h; sourceTree = "<group>"; };
 		94216FC21E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAsyncThreadViewController.m; path = Controllers/DVBAsyncThreadViewController.m; sourceTree = "<group>"; };
+		94216FC41E07171500A7D5D0 /* DVBThreadDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadDelegate.h; path = Protocols/DVBThreadDelegate.h; sourceTree = "<group>"; };
 		942BE0A61B2C56F9009B3EC4 /* DVBCreatePostScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCreatePostScrollView.h; path = Views/DVBCreatePostScrollView.h; sourceTree = "<group>"; };
 		942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCreatePostScrollView.m; path = Views/DVBCreatePostScrollView.m; sourceTree = "<group>"; };
 		942BE0A91B2C5ECB009B3EC4 /* DVBCommonTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCommonTableViewController.h; path = Controllers/DVBCommonTableViewController.h; sourceTree = "<group>"; };
@@ -541,6 +542,7 @@
 			isa = PBXGroup;
 			children = (
 				9442DCD31DDC889A008DF1D4 /* DVBCreatePostViewControllerDelegate.h */,
+				94216FC41E07171500A7D5D0 /* DVBThreadDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";

@@ -83,7 +83,7 @@
     [UIApplication sharedApplication].keyWindow.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
 
     _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset]-1, 0, [DVBBoardStyler elementInset], 0);
+    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBBoardStyler elementInset]/2, 0, [DVBBoardStyler elementInset]/2, 0);
     _tableNode.backgroundColor = [DVBBoardStyler threadCellBackgroundColor];
     _tableNode.delegate = self;
     _tableNode.dataSource = self;

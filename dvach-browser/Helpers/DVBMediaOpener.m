@@ -16,7 +16,7 @@
 
 @interface DVBMediaOpener ()
 
-@property (nonatomic, strong) UIViewController *viewController;
+@property (nonatomic, weak) UIViewController *viewController;
 
 @end
 
