@@ -74,12 +74,13 @@ NS_ASSUME_NONNULL_BEGIN
             _answersButton = [DVBPostViewGenerator showAnswersButtonWithCount:post.repliesCount];
             [self addSubnode:_answersButton];
         }
+        NSArray *buttonsChildren = _answersButton ? @[_answerToPostButton, _answerToPostWithQuoteButton, _answersButton] : @[_answerToPostButton, _answerToPostWithQuoteButton];
         _buttonsContainer = [ASStackLayoutSpec
                            stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
                            spacing:[DVBPostStyler elementInset]
                            justifyContent:ASStackLayoutJustifyContentStart
                            alignItems:ASStackLayoutAlignItemsStart
-                           children:@[_answerToPostButton, _answerToPostWithQuoteButton]];
+                           children:buttonsChildren];
 
     }
     return self;
@@ -91,8 +92,10 @@ NS_ASSUME_NONNULL_BEGIN
     verticalStack.direction          = ASStackLayoutDirectionVertical;
     verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
     verticalStack.spacing = [DVBPostStyler elementInset];
-    [verticalStack setChildren:@[_titleNode, _textNode, _buttonsContainer]];
-    UIEdgeInsets insets = UIEdgeInsetsMake([DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset]);
+    NSArray *vertStackChildren = _mediaContainer ? @[_mediaContainer, _titleNode, _textNode, _buttonsContainer] : @[_titleNode, _textNode, _buttonsContainer];
+    verticalStack.children = vertStackChildren;
+    CGFloat topInset = 1.5 * [DVBPostStyler elementInset];
+    UIEdgeInsets insets = UIEdgeInsetsMake(topInset, [DVBPostStyler innerInset], topInset, [DVBPostStyler innerInset]);
     return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
                                                   child:verticalStack];
 }

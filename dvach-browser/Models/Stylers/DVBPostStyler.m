@@ -41,6 +41,12 @@
 {
     return [DVBBoardStyler elementInset];
 }
+
++ (CGFloat)innerInset
+{
+    return 2*[self elementInset];
+}
+
 + (CGFloat)cornerRadius
 {
     return [DVBBoardStyler cornerRadius];

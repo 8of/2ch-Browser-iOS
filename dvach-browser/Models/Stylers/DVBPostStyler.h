@@ -18,6 +18,7 @@
 
 + (CGFloat)mediaSize;
 + (CGFloat)elementInset;
++ (CGFloat)innerInset;
 + (CGFloat)cornerRadius;
 
 + (BOOL)isWaitingForReview;
