@@ -79,7 +79,7 @@ NS_ASSUME_NONNULL_BEGIN
                            spacing:[DVBPostStyler elementInset]
                            justifyContent:ASStackLayoutJustifyContentStart
                            alignItems:ASStackLayoutAlignItemsStart
-                           children:@[_answerToPostButton, _answerToPostWithQuoteButton, _answersButton]];
+                           children:@[_answerToPostButton, _answerToPostWithQuoteButton]];
 
     }
     return self;
@@ -91,7 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
     verticalStack.direction          = ASStackLayoutDirectionVertical;
     verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
     verticalStack.spacing = [DVBPostStyler elementInset];
-    [verticalStack setChildren:@[_mediaContainer, _titleNode, _textNode]];
+    [verticalStack setChildren:@[_titleNode, _textNode, _buttonsContainer]];
     UIEdgeInsets insets = UIEdgeInsetsMake([DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset]);
     return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
                                                   child:verticalStack];

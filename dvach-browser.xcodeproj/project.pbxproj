@@ -27,6 +27,7 @@
 		940BD5561E0564B900D6BAF8 /* DVBBoardStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 940BD5551E0564B900D6BAF8 /* DVBBoardStyler.m */; };
 		940BD5591E0564CC00D6BAF8 /* DVBPostStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 940BD5581E0564CC00D6BAF8 /* DVBPostStyler.m */; };
 		9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */ = {isa = PBXBuildFile; fileRef = 9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */; };
+		94216FC31E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94216FC21E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m */; };
 		942BE0A81B2C56F9009B3EC4 /* DVBCreatePostScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */; };
 		942BE0AB1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 942BE0AA1B2C5ECB009B3EC4 /* DVBCommonTableViewController.m */; };
 		942F1CC01B939DFC00E4018E /* DVBLoadingStatusView.m in Sources */ = {isa = PBXBuildFile; fileRef = 942F1CBE1B939DFC00E4018E /* DVBLoadingStatusView.m */; };
@@ -155,6 +156,8 @@
 		940BD5581E0564CC00D6BAF8 /* DVBPostStyler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostStyler.m; path = Models/Stylers/DVBPostStyler.m; sourceTree = "<group>"; };
 		9415B1401AF2BC7700C7EB7B /* UIImage+DVBImageExtention.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+DVBImageExtention.h"; path = "Helpers/UIImage+DVBImageExtention.h"; sourceTree = "<group>"; };
 		9415B1411AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+DVBImageExtention.m"; path = "Helpers/UIImage+DVBImageExtention.m"; sourceTree = "<group>"; };
+		94216FC11E06DE7100A7D5D0 /* DVBAsyncThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAsyncThreadViewController.h; path = Controllers/DVBAsyncThreadViewController.h; sourceTree = "<group>"; };
+		94216FC21E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAsyncThreadViewController.m; path = Controllers/DVBAsyncThreadViewController.m; sourceTree = "<group>"; };
 		942BE0A61B2C56F9009B3EC4 /* DVBCreatePostScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCreatePostScrollView.h; path = Views/DVBCreatePostScrollView.h; sourceTree = "<group>"; };
 		942BE0A71B2C56F9009B3EC4 /* DVBCreatePostScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCreatePostScrollView.m; path = Views/DVBCreatePostScrollView.m; sourceTree = "<group>"; };
 		942BE0A91B2C5ECB009B3EC4 /* DVBCommonTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCommonTableViewController.h; path = Controllers/DVBCommonTableViewController.h; sourceTree = "<group>"; };
@@ -362,6 +365,8 @@
 				94C42CEA1BC9D9CB001F6840 /* DVBDvachWebViewViewController.m */,
 				A1F0EE8D1DDB179B00668886 /* DVBAsyncBoardViewController.h */,
 				A1F0EE8E1DDB179B00668886 /* DVBAsyncBoardViewController.m */,
+				94216FC11E06DE7100A7D5D0 /* DVBAsyncThreadViewController.h */,
+				94216FC21E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -966,6 +971,7 @@
 				940BD5531E05649100D6BAF8 /* DVBPostViewGenerator.m in Sources */,
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				94F5BD001B05294D0037C8C0 /* DVBThreadControllerTableViewManager.m in Sources */,
+				94216FC31E06DE7100A7D5D0 /* DVBAsyncThreadViewController.m in Sources */,
 				94FC06AA1C675D5300813A68 /* VDLPlaybackViewController.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,

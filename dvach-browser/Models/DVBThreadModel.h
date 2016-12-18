@@ -14,13 +14,14 @@
 
 @interface DVBThreadModel : NSObject
 
-/**
- *  Array contains all posts in the thread
- */
+@property (nonatomic, strong, readonly) NSString *boardCode;
+@property (nonatomic, strong, readonly) NSString *threadNum;
+
+/// Array contains all posts in the thread
 @property (nonatomic, strong, readonly) NSArray *postsArray;
-// array of all post thumb images in thread
+/// Array of all post thumb images in thread
 @property (nonatomic, strong) NSArray *thumbImagesArray;
-// array of all post full images in thread
+/// Array of all post full images in thread
 @property (nonatomic, strong) NSArray *fullImagesArray;
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode andThreadNum:(NSString *)threadNum;

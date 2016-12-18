@@ -11,6 +11,7 @@
 #import "DVBAsyncBoardViewController.h"
 #import "DVBThreadViewController.h"
 #import "DVBCreatePostViewController.h"
+#import "DVBAsyncThreadViewController.h"
 
 @implementation DVBRouter
 
@@ -24,25 +25,32 @@
 
 + (void)pushThreadFrom:(UIViewController *)viewController withThread:(DVBThread *)thread boardCode:(NSString *)boardCode
 {
-    NSString *threadNum = thread.num;
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
-                                                         bundle:nil];
-    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewController.boardCode = boardCode;
-    threadViewController.threadNum = threadNum;
-    threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment];
-    [viewController.navigationController pushViewController:threadViewController animated:YES];
+    NSString *subject = [DVBThread threadControllerTitleFromTitle:thread.subject
+                                                           andNum:thread.num
+                                                       andComment:thread.comment];
+    DVBAsyncThreadViewController *vc = [[DVBAsyncThreadViewController alloc] initWithBoardCode:boardCode andThreadNumber:thread.num andThreadSubject:subject];
+    [viewController.navigationController pushViewController:vc
+                                                   animated:YES];
+
+//    NSString *threadNum = thread.num;
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
+//                                                         bundle:nil];
+//    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+//    threadViewController.boardCode = boardCode;
+//    threadViewController.threadNum = threadNum;
+//    threadViewController.threadSubject = [DVBThread threadControllerTitleFromTitle:thread.subject andNum:thread.num andComment:thread.comment];
+//    [viewController.navigationController pushViewController:threadViewController animated:YES];
 }
 
-+ (void)pushThreadFrom:(UIViewController *)viewController withThreadNum:(NSString *)threadNum boardCode:(NSString *)boardCode
-{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
-                                                         bundle:nil];
-    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewController.boardCode = boardCode;
-    threadViewController.threadNum = threadNum;
-    [viewController.navigationController pushViewController:threadViewController animated:YES];
-}
+//+ (void)pushThreadFrom:(UIViewController *)viewController withThreadNum:(NSString *)threadNum boardCode:(NSString *)boardCode
+//{
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
+//                                                         bundle:nil];
+//    DVBThreadViewController *threadViewController = (DVBThreadViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
+//    threadViewController.boardCode = boardCode;
+//    threadViewController.threadNum = threadNum;
+//    [viewController.navigationController pushViewController:threadViewController animated:YES];
+//}
 
 + (void)openCreateThreadFrom:(UIViewController *)viewController boardCode:(NSString *)boardCode
 {

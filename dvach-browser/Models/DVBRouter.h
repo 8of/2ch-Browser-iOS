@@ -15,7 +15,7 @@
 
 + (void)pushBoardFrom:(UIViewController *)viewController boardCode:(NSString *)boardCode pages:(NSInteger)pages;
 + (void)pushThreadFrom:(UIViewController *)viewController withThread:(DVBThread *)thread boardCode:(NSString *)boardCode;
-+ (void)pushThreadFrom:(UIViewController *)viewController withThreadNum:(NSString *)threadNum boardCode:(NSString *)boardCode;
+//+ (void)pushThreadFrom:(UIViewController *)viewController withThreadNum:(NSString *)threadNum boardCode:(NSString *)boardCode;
 + (void)openCreateThreadFrom:(UIViewController *)viewController boardCode:(NSString *)boardCode;
 
 @end

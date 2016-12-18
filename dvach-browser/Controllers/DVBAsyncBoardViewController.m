@@ -37,9 +37,7 @@
 - (instancetype)initBoardCode:(NSString *)boardCode pages:(NSInteger)pages
 {
     _tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
-    
     self = [super initWithNode:_tableNode];
-    
     if (self) {
         _boardCode = boardCode;
         _pages = pages;
@@ -202,7 +200,12 @@
 
 - (void)openThredWithCreatedThread:(NSString *)threadNum
 {
-    [DVBRouter pushThreadFrom:self withThreadNum:threadNum boardCode:_boardCode];
+    DVBThread *thread = [[DVBThread alloc] init];
+    thread.num = threadNum;
+
+    [DVBRouter pushThreadFrom:self withThread:thread
+                    boardCode:_boardCode];
+//    [DVBRouter pushThreadFrom:self withThreadNum:threadNum boardCode:_boardCode];
 }
 
 #pragma mark - ASTableNode

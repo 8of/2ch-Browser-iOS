@@ -17,8 +17,6 @@
 
 @interface DVBThreadModel ()
 
-@property (nonatomic, strong) NSString *boardCode;
-@property (nonatomic, strong) NSString *threadNum;
 @property (nonatomic, strong) NSMutableArray *privatePostsArray;
 @property (nonatomic, strong) NSMutableArray *privateThumbImagesArray;
 @property (nonatomic, strong) NSMutableArray *privateFullImagesArray;
