@@ -9,7 +9,8 @@
 #import "DVBConstants.h"
 #import "DVBPostNode.h"
 #import "DVBPostViewModel.h"
-#import "DVBBoardStyler.h"
+#import "DVBPostViewGenerator.h"
+#import "DVBPostStyler.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) ASTextNode *titleNode;
 @property (nonatomic, strong) ASTextNode *textNode;
-// @property (nonatomic, strong) ASNetworkImageNode *mediaNode;
+@property (nonatomic, strong) ASDisplayNode *mediaNodeContainer;
 @property (nonatomic, strong) ASDisplayNode *borderNode;
 
 @end
@@ -30,24 +31,50 @@ NS_ASSUME_NONNULL_BEGIN
 {
     self = [super init];
     if (self) {
-
         // Total border
-        _borderNode = [[ASDisplayNode alloc] init];
-        _borderNode.borderColor = [DVBBoardStyler borderColor];
-        _borderNode.borderWidth = ONE_PIXEL;
-        _borderNode.backgroundColor = [DVBBoardStyler threadCellInsideBackgroundColor];
-        _borderNode.cornerRadius = [DVBBoardStyler cornerRadius];
+        _borderNode = [DVBPostViewGenerator borderNode];
         [self addSubnode:_borderNode];
+        // Post num, title, time
+        _titleNode = [DVBPostViewGenerator titleNodeWithText:post.title];
+        [self addSubnode:_titleNode];
+        // Post text
+        _textNode = [DVBPostViewGenerator textNodeWithText:post.text];
+        [self addSubnode:_textNode];
+        // Images
+        _mediaNodeContainer = [[ASDisplayNode alloc] init];
+        for (NSString *mediaUrl in post.thumbs) {
+            ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl];
+            media.delegate = self;
+            [_mediaNodeContainer addSubnode:media];
+        }
 
     }
     return self;
+}
+
+- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
+{
+    ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec horizontalStackLayoutSpec];
+    verticalStack.direction          = ASStackLayoutDirectionVertical;
+    verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
+    [verticalStack setChildren:@[_titleNode, _textNode]];
+    UIEdgeInsets insets = UIEdgeInsetsMake([DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset]);
+    return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
+                                                  child:verticalStack];
 }
 
 - (void)layout
 {
     [super layout];
     // Manually layout the divider.
-    _borderNode.frame = CGRectMake([DVBBoardStyler elementInset], [DVBBoardStyler elementInset]/2, self.calculatedSize.width - 2*[DVBBoardStyler elementInset], self.calculatedSize.height - [DVBBoardStyler elementInset]);
+    _borderNode.frame = CGRectMake([DVBPostStyler elementInset], [DVBPostStyler elementInset]/2, self.calculatedSize.width - 2*[DVBPostStyler elementInset], self.calculatedSize.height - [DVBPostStyler elementInset]);
+}
+
+#pragma mark - ASNetworkImageNodeDelegate methods.
+
+- (void)imageNode:(ASNetworkImageNode *)imageNode didLoadImage:(UIImage *)image
+{
+    [self setNeedsLayout];
 }
 
 @end
