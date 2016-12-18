@@ -68,6 +68,44 @@ NS_ASSUME_NONNULL_BEGIN
     return node;
 }
 
++ (ASButtonNode *)answerButton
+{
+    ASButtonNode *node = [[ASButtonNode alloc] init];
+    UIImage *image = [UIImage imageNamed:@"AnswerToPost"];
+    [node setImage:image forState:ASControlStateNormal];
+    return node;
+}
+
++ (ASButtonNode *)answerWithQuoteButton
+{
+    ASButtonNode *node = [[ASButtonNode alloc] init];
+    UIImage *image = [UIImage imageNamed:@"AnswerToPostWithQuote"];
+    [node setImage:image forState:ASControlStateNormal];
+    return node;
+}
+
++ (ASButtonNode *)showAnswersButtonWithCount:(NSInteger)count
+{
+    ASButtonNode *node = [self button];
+    NSString *title = [NSString stringWithFormat:@"%ld", (long)count];
+    UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    [node setTitle:title
+          withFont:font
+         withColor:DVACH_COLOR
+          forState:ASControlStateNormal];
+    return node;
+}
+
++ (ASButtonNode *)button
+{
+    ASButtonNode *node = [[ASButtonNode alloc] init];
+    [node setTintColor:DVACH_COLOR];
+    node.borderColor = DVACH_COLOR_CG;
+    node.borderWidth = 1;
+    node.cornerRadius = [DVBPostStyler cornerRadius];
+    return node;
+}
+
 @end
 
 NS_ASSUME_NONNULL_END

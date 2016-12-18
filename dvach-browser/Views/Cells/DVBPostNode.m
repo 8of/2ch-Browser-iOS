@@ -18,8 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) ASTextNode *titleNode;
 @property (nonatomic, strong) ASTextNode *textNode;
-@property (nonatomic, strong) ASDisplayNode *mediaNodeContainer;
+@property (nonatomic, strong, nullable) ASStackLayoutSpec *mediaContainer;
 @property (nonatomic, strong) ASDisplayNode *borderNode;
+@property (nonatomic, strong) ASButtonNode *answerToPostButton;
+@property (nonatomic, strong) ASButtonNode *answerToPostWithQuoteButton;
+@property (nonatomic, strong, nullable) ASButtonNode *answersButton;
+@property (nonatomic, strong) ASStackLayoutSpec *buttonsContainer;
 
 @end
 
@@ -40,13 +44,42 @@ NS_ASSUME_NONNULL_BEGIN
         // Post text
         _textNode = [DVBPostViewGenerator textNodeWithText:post.text];
         [self addSubnode:_textNode];
+
         // Images
-        _mediaNodeContainer = [[ASDisplayNode alloc] init];
-        for (NSString *mediaUrl in post.thumbs) {
-            ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl];
-            media.delegate = self;
-            [_mediaNodeContainer addSubnode:media];
+        if (post.thumbs.count > 0) {
+            NSMutableArray <ASNetworkImageNode *> *mediaNodesArray = [@[] mutableCopy];
+            for (NSString *mediaUrl in post.thumbs) {
+                ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl];
+                media.delegate = self;
+                [mediaNodesArray addObject:media];
+                [self addSubnode:media];
+            }
+            _mediaContainer = [ASStackLayoutSpec
+                               stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
+                               spacing:[DVBPostStyler elementInset]
+                               justifyContent:ASStackLayoutJustifyContentStart
+                               alignItems:ASStackLayoutAlignItemsStart
+                               children:[mediaNodesArray copy]];
         }
+
+        // Buttons
+
+        // Answers buttons
+        _answerToPostButton = [DVBPostViewGenerator answerButton];
+        [self addSubnode:_answerToPostButton];
+        _answerToPostWithQuoteButton = [DVBPostViewGenerator answerWithQuoteButton];
+        [self addSubnode:_answerToPostWithQuoteButton];
+
+        if (post.repliesCount > 0) {
+            _answersButton = [DVBPostViewGenerator showAnswersButtonWithCount:post.repliesCount];
+            [self addSubnode:_answersButton];
+        }
+        _buttonsContainer = [ASStackLayoutSpec
+                           stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
+                           spacing:[DVBPostStyler elementInset]
+                           justifyContent:ASStackLayoutJustifyContentStart
+                           alignItems:ASStackLayoutAlignItemsStart
+                           children:@[_answerToPostButton, _answerToPostWithQuoteButton, _answersButton]];
 
     }
     return self;
@@ -57,7 +90,8 @@ NS_ASSUME_NONNULL_BEGIN
     ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec horizontalStackLayoutSpec];
     verticalStack.direction          = ASStackLayoutDirectionVertical;
     verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
-    [verticalStack setChildren:@[_titleNode, _textNode]];
+    verticalStack.spacing = [DVBPostStyler elementInset];
+    [verticalStack setChildren:@[_mediaContainer, _titleNode, _textNode]];
     UIEdgeInsets insets = UIEdgeInsetsMake([DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset], [DVBPostStyler elementInset]);
     return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
                                                   child:verticalStack];
