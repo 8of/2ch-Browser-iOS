@@ -52,7 +52,15 @@
                                                              style:UIBarButtonItemStylePlain
                                                             target:target
                                                             action:scrollBottom];
-    return @[scrollItem];
+    UIBarButtonItem *flex1 = [self flexItemWithTarget:target];
+    return @[scrollItem, flex1];
+}
+
+/// Empty space between toolbar items
++ (UIBarButtonItem *)flexItemWithTarget:(id)target
+{
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:target action:nil];
+    return item;
 }
 
 @end
