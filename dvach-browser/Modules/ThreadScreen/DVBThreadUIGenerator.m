@@ -24,12 +24,35 @@
     tableNode.view.showsHorizontalScrollIndicator = NO;
 }
 
-+ (UIRefreshControl *)refreshControlFor:(ASTableView *)tableView
++ (UIRefreshControl *)refreshControlFor:(ASTableView *)tableView target:(id)target action:(SEL)action
 {
     UIRefreshControl *refresh = [[UIRefreshControl alloc] init];
     [tableView addSubview:refresh];
     [tableView sendSubviewToBack:refresh];
+    [refresh addTarget:target
+                action:action
+      forControlEvents:UIControlEventValueChanged];
     return refresh;
+}
+
+#pragma mark - Buttons
+
++ (UIBarButtonItem *)composeItemTarget:(id)target action:(SEL)action
+{
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Compose"]
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:target
+                                                            action:action];
+    return item;
+}
+
++ (NSArray <UIBarButtonItem *> *)toolbarItemsTarget:(id)target scrollBottom:(SEL)scrollBottom
+{
+    UIBarButtonItem *scrollItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Bottompage"]
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:target
+                                                            action:scrollBottom];
+    return @[scrollItem];
 }
 
 @end

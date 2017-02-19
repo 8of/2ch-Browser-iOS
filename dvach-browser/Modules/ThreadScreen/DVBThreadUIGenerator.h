@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DVBThreadUIGenerator : NSObject
 
 + (void)styleTableNode:(ASTableNode *)tableNode;
-+ (UIRefreshControl *)refreshControlFor:(ASTableView *)tableView;
++ (UIRefreshControl *)refreshControlFor:(ASTableView *)tableView target:(id)target action:(SEL)action;
++ (UIBarButtonItem *)composeItemTarget:(id)target action:(SEL)action;
++ (NSArray <UIBarButtonItem *> *)toolbarItemsTarget:(id)target scrollBottom:(SEL)scrollBottom;
 
 @end
 

@@ -49,11 +49,22 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         [self createRightButton];
         [self setupTableNode];
         [self initialThreadLoad];
+        if (!_allPosts) {
+            [self fillToolbar];
+        }
     }
     return self;
 }
 
 #pragma mark - View stuff
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (!_allPosts) {
+        [self.navigationController setToolbarHidden:NO animated:YES];
+    }
+}
 
 - (void)setupTableNode
 {
@@ -69,10 +80,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)addTopRefreshControl
 {
-    _refreshControl = [DVBThreadUIGenerator refreshControlFor:_tableNode.view];
-    [_refreshControl addTarget:self
-                        action:@selector(reloadThread)
-              forControlEvents:UIControlEventValueChanged];
+    _refreshControl = [DVBThreadUIGenerator refreshControlFor:_tableNode.view
+                                                       target:self
+                                                       action:@selector(reloadThread)];
 }
 
 - (void)addBottomRefreshControl
@@ -86,11 +96,12 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)createRightButton
 {
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Compose"]
-                                                             style:UIBarButtonItemStylePlain
-                                                            target:self
-                                                            action:@selector(openNewPost)];
-    self.navigationItem.rightBarButtonItem = item;
+    self.navigationItem.rightBarButtonItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(openNewPost)];
+}
+
+- (void)fillToolbar
+{
+    self.toolbarItems = [DVBThreadUIGenerator toolbarItemsTarget:self scrollBottom:@selector(scrollToBottom)];
 }
 
 #pragma mark - Data management and processing
