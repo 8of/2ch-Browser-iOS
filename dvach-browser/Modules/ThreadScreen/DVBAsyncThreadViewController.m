@@ -17,6 +17,7 @@
 #import "DVBPostNode.h"
 #import "ARChromeActivity.h"
 #import "DVBMediaOpener.h"
+#import "DVBThreadUIGenerator.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,17 +57,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)setupTableNode
 {
-    [UIApplication sharedApplication].keyWindow.backgroundColor = [DVBPostStyler postCellBackgroundColor];
-
-    _tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableNode.view.contentInset = UIEdgeInsetsMake([DVBPostStyler elementInset]/2, 0, [DVBPostStyler elementInset]/2, 0);
-    _tableNode.allowsSelection = NO;
-    _tableNode.backgroundColor = [DVBPostStyler postCellBackgroundColor];
+    [DVBThreadUIGenerator styleTableNode:_tableNode];
     _tableNode.delegate = self;
     _tableNode.dataSource = self;
-    _tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _tableNode.view.showsVerticalScrollIndicator = NO;
-    _tableNode.view.showsHorizontalScrollIndicator = NO;
+
     if (!_allPosts) {
         [self addTopRefreshControl];
         [self addBottomRefreshControl];
@@ -75,12 +69,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)addTopRefreshControl
 {
-    _refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl = [DVBThreadUIGenerator refreshControlFor:_tableNode.view];
     [_refreshControl addTarget:self
                         action:@selector(reloadThread)
               forControlEvents:UIControlEventValueChanged];
-    [_tableNode.view addSubview:_refreshControl];
-    [_tableNode.view sendSubviewToBack:_refreshControl];
 }
 
 - (void)addBottomRefreshControl

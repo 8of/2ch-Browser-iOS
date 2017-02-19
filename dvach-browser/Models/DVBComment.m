@@ -7,7 +7,6 @@
 //
 
 #import "DVBComment.h"
-#import "DVBPostPreparation.h"
 
 @implementation DVBComment
 
