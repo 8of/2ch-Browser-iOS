@@ -137,7 +137,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             [self reloadThread];
             return;
         }
-        _posts = [self convertPostsToViewModel:posts];
+        _posts = [self convertPostsToViewModel:posts forAnswer:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableNode reloadData];
         });
@@ -145,11 +145,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }];
 }
 
-- (NSArray <DVBPostViewModel *> *)convertPostsToViewModel:(NSArray <DVBPost *> *)posts
+- (NSArray <DVBPostViewModel *> *)convertPostsToViewModel:(NSArray <DVBPost *> *)posts forAnswer:(BOOL)forAnswer
 {
     NSMutableArray <DVBPostViewModel *> *vmPosts = [@[] mutableCopy];
     [posts enumerateObjectsUsingBlock:^(DVBPost *post, NSUInteger idx, BOOL * _Nonnull stop) {
         DVBPostViewModel *vm = [[DVBPostViewModel alloc] initWithPost:post andIndex:idx];
+        if (forAnswer) {
+            vm.repliesCount = 0; // to prevent multiple nesting
+        }
         [vmPosts addObject:vm];
     }];
     return [vmPosts copy];
@@ -185,7 +188,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
              // [self showMessageAboutError];
              return;
          }
-         _posts = [self convertPostsToViewModel:posts];
+         _posts = [self convertPostsToViewModel:posts forAnswer:NO];
          dispatch_async(dispatch_get_main_queue(), ^{
              [_tableNode reloadData];
              [_refreshControl endRefreshing];
@@ -312,7 +315,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     DVBPost *post = _threadModel.postsArray[index];
     [DVBRouter pushAnswersFrom:self
                        postNum:post.num
-                       answers:[self convertPostsToViewModel:post.replies]
+                       answers:[self convertPostsToViewModel:post.replies forAnswer:YES]
                       allPosts:_allPosts ? _allPosts : _posts
      ];
 }

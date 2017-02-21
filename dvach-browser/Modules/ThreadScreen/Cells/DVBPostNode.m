@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
     self = [super init];
     if (self) {
         _delegate = delegate;
+        _index = post.index;
         // Total border
         _borderNode = [DVBPostViewGenerator borderNode];
         [self addSubnode:_borderNode];
