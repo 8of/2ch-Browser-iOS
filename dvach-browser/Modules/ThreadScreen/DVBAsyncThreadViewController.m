@@ -286,9 +286,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)openGalleryWIthUrl:(NSString *)url
 {
+    NSInteger thumbIndex = [_threadModel.thumbImagesArray indexOfObject:url];
+    if (thumbIndex == NSNotFound) {
+        return;
+    }
     DVBMediaOpener *mediaOpener = [[DVBMediaOpener alloc] initWithViewController:self];
 
-    [mediaOpener openMediaWithUrlString:url
+    [mediaOpener openMediaWithUrlString:_threadModel.fullImagesArray[thumbIndex]
                     andThumbImagesArray:_threadModel.thumbImagesArray
                      andFullImagesArray:_threadModel.fullImagesArray];
 }
