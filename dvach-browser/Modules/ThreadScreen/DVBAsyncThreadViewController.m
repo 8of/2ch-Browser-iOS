@@ -49,6 +49,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     self = [super initWithNode:_tableNode];
     if (self) {
         _threadModel = [[DVBThreadModel alloc] initWithBoardCode:boardCode andThreadNum:threadNumber];
+        self.title = [DVBThreadUIGenerator titleWithSubject:subject
+                                               andThreadNum:threadNumber];
         [self createRightButton];
         [self setupTableNode];
         [self initialThreadLoad];

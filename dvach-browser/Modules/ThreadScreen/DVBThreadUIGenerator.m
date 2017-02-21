@@ -131,4 +131,15 @@
     return item;
 }
 
++ (NSString *)titleWithSubject:(NSString *)subject andThreadNum:(NSString *)num
+{
+    /// If thread Subject is empty - return OP post number
+    BOOL isSubjectEmpty = [subject isEqualToString:@""];
+    if (isSubjectEmpty) {
+        return num;
+    }
+
+    return subject;
+}
+
 @end

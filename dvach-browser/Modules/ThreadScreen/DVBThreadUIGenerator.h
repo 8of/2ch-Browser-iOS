@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)shareUrl:(NSString *)urlString fromVC:(UIViewController *)vc fromButton:(UIBarButtonItem *)button;
 /// Flag
 + (void)flagFromVC:(UIViewController *)vc handler:(void (^)(UIAlertAction *))handler;
++ (NSString *)titleWithSubject:(NSString *)subject andThreadNum:(NSString *)num;
 
 @end
 
