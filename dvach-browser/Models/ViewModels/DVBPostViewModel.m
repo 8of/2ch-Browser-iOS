@@ -26,4 +26,9 @@
     return self;
 }
 
+- (void)convertToNested
+{
+    _repliesCount = 0;
+}
+
 @end

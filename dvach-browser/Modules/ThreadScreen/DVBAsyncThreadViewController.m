@@ -151,7 +151,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [posts enumerateObjectsUsingBlock:^(DVBPost *post, NSUInteger idx, BOOL * _Nonnull stop) {
         DVBPostViewModel *vm = [[DVBPostViewModel alloc] initWithPost:post andIndex:idx];
         if (forAnswer) {
-            vm.repliesCount = 0; // to prevent multiple nesting
+            [vm convertToNested];
         }
         [vmPosts addObject:vm];
     }];

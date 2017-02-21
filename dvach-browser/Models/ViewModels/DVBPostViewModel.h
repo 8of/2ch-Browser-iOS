@@ -17,11 +17,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) NSString *title;
 @property (nonatomic, strong, readonly) NSAttributedString *text;
 @property (nonatomic, assign, readonly) NSInteger index;
-@property (nonatomic, assign) NSInteger repliesCount;
+@property (nonatomic, assign, readonly) NSInteger repliesCount;
 @property (nonatomic, strong, readonly) NSArray <NSString *> *thumbs;
 @property (nonatomic, strong, readonly) NSArray <NSString *> *pictures;
 
 - (instancetype)initWithPost:(DVBPost *)post andIndex:(NSInteger)index;
+/// To prevent multiple nesting
+- (void)convertToNested;
 
 @end
 
