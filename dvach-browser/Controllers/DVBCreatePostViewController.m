@@ -204,6 +204,9 @@
             @"2chaptcha_id": _captchaId,
             @"2chaptcha_value": _captchaCode
         };
+    } else {
+        // No right app response from server, and entered manual captcha yet
+        [self showDvachCaptchaController];
     }
 
     [_networking postMessageWithBoard:_boardCode andThreadnum:_threadNum andName:name andEmail:email andSubject:subject andComment:comment andUsercode:_usercode andImagesToUpload:imagesToUpload andCaptchaParameters:captchaParameters andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)

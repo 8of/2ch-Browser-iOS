@@ -11,6 +11,7 @@
 #import "DVBPostViewModel.h"
 #import "DVBPostViewGenerator.h"
 #import "DVBPostStyler.h"
+#import "DVBMediaButtonNode.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,12 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak, nullable) id<DVBThreadDelegate> delegate;
 
+@property (nonatomic, assign) NSInteger index;
 @property (nonatomic, strong) ASTextNode *titleNode;
 @property (nonatomic, strong) ASTextNode *textNode;
 @property (nonatomic, strong, nullable) ASStackLayoutSpec *mediaContainer;
 @property (nonatomic, strong) ASDisplayNode *borderNode;
 @property (nonatomic, strong) ASButtonNode *answerToPostButton;
-@property (nonatomic, strong) ASButtonNode *answerToPostWithQuoteButton;
 @property (nonatomic, strong, nullable) ASButtonNode *answersButton;
 @property (nonatomic, strong) ASStackLayoutSpec *buttonsContainer;
 
@@ -55,7 +56,7 @@ NS_ASSUME_NONNULL_BEGIN
             NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArray = [@[] mutableCopy];
             for (NSString *mediaUrl in post.thumbs) {
                 ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl];
-                ASButtonNode *mediaButton = [[ASButtonNode alloc] init];
+                DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
                 [mediaButton addTarget:self
                                 action:@selector(pictureTap:)
                       forControlEvents:ASControlNodeEventTouchUpInside];
@@ -81,11 +82,6 @@ NS_ASSUME_NONNULL_BEGIN
                                 action:@selector(answer:)
                       forControlEvents:ASControlNodeEventTouchUpInside];
         [self addSubnode:_answerToPostButton];
-        _answerToPostWithQuoteButton = [DVBPostViewGenerator answerWithQuoteButton];
-        [_answerToPostWithQuoteButton addTarget:self
-                                         action:@selector(answerWithQuote:)
-                               forControlEvents:ASControlNodeEventTouchUpInside];
-        [self addSubnode:_answerToPostWithQuoteButton];
 
         if (post.repliesCount > 0) {
             _answersButton = [DVBPostViewGenerator showAnswersButtonWithCount:post.repliesCount];
@@ -94,13 +90,7 @@ NS_ASSUME_NONNULL_BEGIN
                      forControlEvents:ASControlNodeEventTouchUpInside];
             [self addSubnode:_answersButton];
         }
-        ASStackLayoutSpec *leftButtonsContainer = [ASStackLayoutSpec
-                                                   stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
-                                                   spacing:[DVBPostStyler elementInset]
-                                                   justifyContent:ASStackLayoutJustifyContentStart
-                                                   alignItems:ASStackLayoutAlignItemsStart
-                                                   children:@[_answerToPostButton, _answerToPostWithQuoteButton]];
-        NSArray *buttonsChildren = _answersButton ? @[leftButtonsContainer, _answersButton] : @[leftButtonsContainer];
+        NSArray *buttonsChildren = _answersButton ? @[_answerToPostButton, _answersButton] : @[_answerToPostButton];
         _buttonsContainer = [ASStackLayoutSpec
                            stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
                            spacing:[DVBPostStyler elementInset]
@@ -147,24 +137,21 @@ NS_ASSUME_NONNULL_BEGIN
     return [vertStackChildren copy];
 }
 
+#pragma mark - Actions
+
 - (void)answer:(id)sender
 {
-
+    [self.delegate quotePostIndex:_index andText:nil];
 }
 
-- (void)answerWithQuote:(id)sender
+- (void)pictureTap:(DVBMediaButtonNode *)sender
 {
-
-}
-
-- (void)pictureTap:(id)sender
-{
-
+    [self.delegate openGalleryWIthUrl:sender.url];
 }
 
 - (void)showAnswers:(id)sender
 {
-
+    [self.delegate showAnswersFor:_index];
 }
 
 #pragma mark - ASNetworkImageNodeDelegate methods.

@@ -39,7 +39,7 @@
         _boardId = boardId;
         _threadId = threadId;
 
-        _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleBody];
+        _bodyFontDescriptor= [UIFontDescriptor preferredFontDescriptorWithTextStyle:UIFontTextStyleSubheadline];
     }
     
     return self;
@@ -128,7 +128,7 @@
     [strike enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSStrikethroughStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:result.range];
     }];
-    
+
     // spoiler
     UIColor *spoilerColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
@@ -138,27 +138,27 @@
     [spoiler enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSForegroundColorAttributeName value:spoilerColor range:result.range];
     }];
-    
+
     // quote
     UIColor *quoteColor = [UIColor colorWithRed:(17/255.0) green:(139/255.0) blue:(116/255.0) alpha:1.0];
     NSRegularExpression *quote = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"unkfunc\">(.*?)</span>" options:0 error:nil];
     [quote enumerateMatchesInString:comment options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [maComment addAttribute:NSForegroundColorAttributeName value:quoteColor range:result.range];
     }];
-    
+
     // link
     UIColor *linkColor = [UIColor colorWithRed:(255/255.0) green:(102/255.0) blue:(0/255.0) alpha:1.0];
     NSRegularExpression *link = [[NSRegularExpression alloc]initWithPattern:@"<a[^>]*>(.*?)</a>" options:0 error:nil];
     NSRegularExpression *linkLink = [[NSRegularExpression alloc]initWithPattern:@"href=\"(.*?)\"" options:0 error:nil];
     NSRegularExpression *linkLinkTwo = [[NSRegularExpression alloc]initWithPattern:@"href='(.*?)'" options:0 error:nil];
-    
+
     // prepare repliesTo array
     _repliesToPrivate = [NSMutableArray array];
-    
+
     if ((!_threadId)||(!_boardId)) {
         @throw [NSException exceptionWithName:@"Not enough params" reason:@"Specify threadId and boardId params please" userInfo:nil];
     }
-    
+
     [link enumerateMatchesInString:comment
                            options:0
                              range:range
@@ -167,15 +167,15 @@
         NSString *fullLink = [comment substringWithRange:result.range];
         NSTextCheckingResult *linkLinkResult = [linkLink firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
         NSTextCheckingResult *linkLinkTwoResult = [linkLinkTwo firstMatchInString:fullLink options:0 range:NSMakeRange(0, fullLink.length)];
-        
+
         NSRange urlRange = NSMakeRange(0, 0);
-        
+
         if (linkLinkResult.numberOfRanges != 0) {
             urlRange = NSMakeRange(linkLinkResult.range.location+6, linkLinkResult.range.length-7);
         } else if (linkLinkResult.numberOfRanges != 0) {
             urlRange = NSMakeRange(linkLinkTwoResult.range.location+6, linkLinkTwoResult.range.length-7);
         }
-        
+
         if (urlRange.length != 0) {
             NSString *urlString = [fullLink substringWithRange:urlRange];
             urlString = [urlString stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];

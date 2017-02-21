@@ -587,9 +587,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
     if ((actionSheet == _reportSheet) && (buttonIndex == 0)) {
-        [_threadModel reportThreadWithBoardCode:_boardCode
-                                      andThread:_threadNum
-                                     andComment:@"нарушение правил"];
+//        [_threadModel reportThreadWithBoardCode:_boardCode
+//                                      andThread:_threadNum
+//                                     andComment:@"нарушение правил"];
         [self showPromptAboutReportedPost];
     }
 }

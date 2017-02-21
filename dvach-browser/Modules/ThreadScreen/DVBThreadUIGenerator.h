@@ -15,7 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)styleTableNode:(ASTableNode *)tableNode;
 + (UIRefreshControl *)refreshControlFor:(ASTableView *)tableView target:(id)target action:(SEL)action;
 + (UIBarButtonItem *)composeItemTarget:(id)target action:(SEL)action;
-+ (NSArray <UIBarButtonItem *> *)toolbarItemsTarget:(id)target scrollBottom:(SEL)scrollBottom;
++ (NSArray <UIBarButtonItem *> *)toolbarItemsTarget:(id)target scrollBottom:(SEL)scrollBottom bookmark:(SEL)bookmark share:(SEL)share flag:(SEL)flag reload:(SEL)reload;
+/// Share
++ (void)shareUrl:(NSString *)urlString fromVC:(UIViewController *)vc fromButton:(UIBarButtonItem *)button;
+/// Flag
++ (void)flagFromVC:(UIViewController *)vc handler:(void (^)(UIAlertAction *))handler;
 
 @end
 

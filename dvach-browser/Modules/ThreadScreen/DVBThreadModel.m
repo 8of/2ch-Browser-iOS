@@ -284,11 +284,25 @@
     return [_networking getNetworkStatus];
 }
 
-- (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment
+- (void)reportThread
 {
-    [_networking reportThreadWithBoardCode:board
-                                 andThread:thread
-                                andComment:comment];
+    [_networking reportThreadWithBoardCode:_boardCode
+                                 andThread:_threadNum
+                                andComment:@"нарушение правил"];
+}
+
+- (void)bookmarkThreadWithTitle:(NSString *)title
+{
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"/%@/res/%@.html", _boardCode, _threadNum];
+    NSDictionary *userInfo = @
+    {
+        @"url" : urlToShare,
+        @"title" : title ? title : _threadNum
+    };
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_NAME_BOOKMARK_THREAD
+                                                        object:self
+                                                      userInfo:userInfo];
 }
 
 - (NSArray *)thumbImagesArrayForPostsArray:(NSArray *)postsArray

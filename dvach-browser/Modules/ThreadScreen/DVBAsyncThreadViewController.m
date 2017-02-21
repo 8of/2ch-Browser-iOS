@@ -15,9 +15,12 @@
 #import "DVBPostStyler.h"
 #import "DVBPostViewModel.h"
 #import "DVBPostNode.h"
-#import "ARChromeActivity.h"
+#import "DVBUrls.h"
+
 #import "DVBMediaOpener.h"
 #import "DVBThreadUIGenerator.h"
+#import "DVBRouter.h"
+#import "DVBComment.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +28,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 @interface DVBAsyncThreadViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate, DVBThreadDelegate>
 
-@property (nonatomic, strong) DVBThreadModel *threadModel;
+@property (nonatomic, strong, nullable) DVBThreadModel *threadModel;
 
 @property (nonatomic, strong) ASTableNode *tableNode;
 @property (nonatomic, strong, nullable) UIRefreshControl *refreshControl;
@@ -49,9 +52,21 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         [self createRightButton];
         [self setupTableNode];
         [self initialThreadLoad];
-        if (!_allPosts) {
-            [self fillToolbar];
-        }
+        [self fillToolbar];
+    }
+    return self;
+}
+
+- (instancetype)initWithPostNum:(NSString *)postNum answers:(NSArray <DVBPostViewModel *> *)answers allPosts:(NSArray <DVBPostViewModel *> *)allPosts
+{
+    _tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
+    self = [super initWithNode:_tableNode];
+    if (self) {
+        _posts = answers;
+        _allPosts = allPosts;
+        self.title = postNum;
+        [self setupTableNode];
+        [self initialThreadLoad];
     }
     return self;
 }
@@ -96,12 +111,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)createRightButton
 {
-    self.navigationItem.rightBarButtonItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(openNewPost)];
+    self.navigationItem.rightBarButtonItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(composeAction)];
 }
 
 - (void)fillToolbar
 {
-    self.toolbarItems = [DVBThreadUIGenerator toolbarItemsTarget:self scrollBottom:@selector(scrollToBottom)];
+    self.toolbarItems = [DVBThreadUIGenerator toolbarItemsTarget:self
+                                                    scrollBottom:@selector(scrollToBottom)
+                                                        bookmark:@selector(bookmarkAction)
+                                                           share:@selector(shareAction)
+                                                            flag:@selector(flagAction)
+                                                          reload:@selector(reloadThread)];
 }
 
 #pragma mark - Data management and processing
@@ -211,8 +231,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     // _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
     _previousPostsCount = postsCountNewValue;
-
-    // _refreshButton.enabled = YES;
 }
 
 #pragma mark - Prompt
@@ -240,7 +258,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self showPromptWithMessage:[NSString stringWithFormat:@"%@ %@", @(newMessagesCount.integerValue), NSLS(@"PROMPT_NEW_MESSAGES")]];
 
     // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-
     CGFloat offsetDifference = self.tableNode.view.contentSize.height - self.tableNode.view.contentOffset.y - self.tableNode.view.bounds.size.height;
 
     if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING &&
@@ -256,12 +273,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)scrollToBottom
 {
-//    CGFloat heightDifference = self.tableView.contentSize.height - self.tableView.frame.size.height + self.navigationController.toolbar.frame.size.height;
-//
-//    CGPoint pointToScrollTo = CGPointMake(0, heightDifference);
-//
-//    [self.tableView setContentOffset:pointToScrollTo
-//                            animated:YES];
+    NSInteger lastRowIndex = [_tableNode numberOfRowsInSection:0] - 1;
+    if (lastRowIndex < 0) {
+        lastRowIndex = 0;
+    }
+    [_tableNode scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRowIndex inSection:0]
+                      atScrollPosition:UITableViewScrollPositionBottom
+                              animated:YES];
 }
 
 #pragma mark - DVBThreadDelegate
@@ -275,11 +293,118 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                      andFullImagesArray:_threadModel.fullImagesArray];
 }
 
-#pragma mark - Routing
-
-- (void)openNewPost
+- (void)quotePostIndex:(NSInteger)index andText:(nullable NSString *)text
 {
+    [self attachAnswerToCommentSingletonWithPostIndex:index andText:text];
+    
+    if ([self shouldStopReplyAndRedirect]) {
+        return;
+    }
+    
+    [self composeAction];
+}
+- (void)showAnswersFor:(NSInteger)index
+{
+    DVBPost *post = _threadModel.postsArray[index];
+    [DVBRouter pushAnswersFrom:self
+                       postNum:post.num
+                       answers:[self convertPostsToViewModel:post.replies]
+                      allPosts:_allPosts ? _allPosts : _posts
+     ];
+}
 
+- (void)attachAnswerToCommentSingletonWithPostIndex:(NSInteger)index andText:(nullable NSString *)text
+{
+    DVBPost *post = _threadModel.postsArray[index];
+    NSString *postNum = post.num;
+    
+    DVBComment *sharedComment = [DVBComment sharedComment];
+    
+    if (text) {
+        NSAttributedString *postComment = post.comment;
+        [sharedComment topUpCommentWithPostNum:postNum
+                           andOriginalPostText:postComment
+                                andQuoteString:text];
+    } else {
+        [sharedComment topUpCommentWithPostNum:postNum];
+    }
+}
+
+#pragma mark - Helpers for posting from another copy of the controller
+
+/// Plain post id reply
+- (BOOL)shouldStopReplyAndRedirect
+{
+    if ([self shouldPopToPreviousControllerBeforeAnswering]) {
+        DVBAsyncThreadViewController *firstThreadVC = self.navigationController.viewControllers[2];
+        [self.navigationController popToViewController:firstThreadVC
+                                              animated:YES];
+        [DVBRouter showComposeFrom:firstThreadVC boardCode:_threadModel.boardCode threadNum:_threadModel.threadNum];
+        return true;
+    }
+    
+    return false;
+}
+
+/// Helper to determine if current controller is the original one or just 'Answers' controller
+- (BOOL)shouldPopToPreviousControllerBeforeAnswering
+{
+    NSArray *arrayOfControllers = self.navigationController.viewControllers;
+    
+    NSInteger countOfThreadControllersInStack = 0;
+    for (UIViewController *vc in arrayOfControllers) {
+        if ([vc isKindOfClass:self.class]) {
+            countOfThreadControllersInStack++;
+            
+            if ((countOfThreadControllersInStack >= 2)&&
+                (self.navigationController.viewControllers.count >= 3))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+#pragma mark - Actions
+
+- (void)composeAction
+{
+    [DVBRouter showComposeFrom:self boardCode:_threadModel.boardCode threadNum:_threadModel.threadNum];
+}
+
+- (void)shareAction
+{
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", [DVBUrls base], _threadModel.boardCode, _threadModel.threadNum];
+    UIBarButtonItem *shareItem = self.toolbarItems[2];
+    [DVBThreadUIGenerator shareUrl:urlToShare
+                            fromVC:self
+                        fromButton:shareItem];
+}
+
+- (void)flagAction
+{
+    weakify(self);
+    [DVBThreadUIGenerator flagFromVC:self handler:^(UIAlertAction * _Nonnull action) {
+        strongify(self);
+        if (!self) { return; }
+        [self.threadModel reportThread];
+        [self showPromptAboutReportedPost];
+    }];
+}
+
+- (void)bookmarkAction
+{
+    [_threadModel bookmarkThreadWithTitle:self.title];
+    [self showPromptWithMessage:NSLS(@"PROMPT_THREAD_BOOKMARKED")];
+}
+
+- (void)showPromptAboutReportedPost
+{
+    self.navigationItem.prompt = NSLS(@"PROMPT_REPORT_SENT");
+    [self performSelector:@selector(clearPrompt)
+               withObject:nil
+               afterDelay:2.0];
 }
 
 @end

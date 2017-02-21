@@ -35,8 +35,9 @@
 /// Check connection
 - (BOOL)isConnectionAvailable;
 
-// Report thread
-- (void)reportThreadWithBoardCode:(NSString *)board andThread:(NSString *)thread andComment:(NSString *)comment;
+/// Report thread to admins
+- (void)reportThread;
+- (void)bookmarkThreadWithTitle:(NSString *)title;
 /**
  *  Generate array of thumbnail images from posts
  *

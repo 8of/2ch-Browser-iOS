@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol DVBThreadDelegate <NSObject>
 
 - (void)openGalleryWIthUrl:(NSString *)url;
+- (void)quotePostIndex:(NSInteger)index andText:(nullable NSString *)text;
+- (void)showAnswersFor:(NSInteger)index;
 
 @end
 

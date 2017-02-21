@@ -15,6 +15,7 @@
 #import "DVBBoardsViewController.h"
 #import "DVBThreadViewController.h"
 #import "DVBRouter.h"
+#import "DVBThread.h"
 
 static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
@@ -155,15 +156,9 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
 {
-    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewControllerToOpen.boardCode = urlNinja.boardId;
-    threadViewControllerToOpen.threadNum = urlNinja.threadId;
-    if (urlNinja.threadTitle) {
-        threadViewControllerToOpen.threadSubject = urlNinja.threadTitle;
-    }
-
-    [self.navigationController pushViewController:threadViewControllerToOpen
-                                         animated:YES];
+    DVBThread *thread = [[DVBThread alloc] init];
+    thread.num = urlNinja.threadId;
+    [DVBRouter pushThreadFrom:self withThread:thread boardCode:urlNinja.boardId];
 }
 
 #pragma mark - user Agreement

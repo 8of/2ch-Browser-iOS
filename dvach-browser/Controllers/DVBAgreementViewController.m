@@ -27,7 +27,7 @@ static CGFloat const AGREEMENT_TEXTVIEW_HORISONTAL_INSET = 12.0f;
 {
     [super viewDidLoad];
     self.title = NSLS(@"TITLE_AGREEMENT");
-    _agreementTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    _agreementTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
     [_agreementTextView setTextContainerInset:UIEdgeInsetsMake(AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET, AGREEMENT_TEXTVIEW_VERTICAL_INSET, AGREEMENT_TEXTVIEW_HORISONTAL_INSET)];
     _acceptButton.title = NSLS(@"BUTTON_ACCEPT");
 }

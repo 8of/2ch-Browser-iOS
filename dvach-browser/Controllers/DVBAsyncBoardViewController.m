@@ -203,9 +203,9 @@
     DVBThread *thread = [[DVBThread alloc] init];
     thread.num = threadNum;
 
-    [DVBRouter pushThreadFrom:self withThread:thread
+    [DVBRouter pushThreadFrom:self
+                   withThread:thread
                     boardCode:_boardCode];
-//    [DVBRouter pushThreadFrom:self withThreadNum:threadNum boardCode:_boardCode];
 }
 
 #pragma mark - ASTableNode

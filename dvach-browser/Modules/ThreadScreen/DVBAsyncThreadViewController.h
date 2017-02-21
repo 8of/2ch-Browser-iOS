@@ -8,11 +8,15 @@
 
 #import <AsyncDisplayKit/AsyncDisplayKit.h>
 
+@class DVBPostViewModel;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface DVBAsyncThreadViewController : ASViewController
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode andThreadNumber:(NSString *)threadNumber andThreadSubject:(NSString *)subject;
+
+- (instancetype)initWithPostNum:(NSString *)postNum answers:(NSArray <DVBPostViewModel *> *)answers allPosts:(NSArray <DVBPostViewModel *> *)allPosts;
 
 @end
 
