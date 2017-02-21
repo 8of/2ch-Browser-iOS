@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DVBPostViewModel : NSObject
 
 @property (nonatomic, strong, readonly) NSString *title;
+@property (nonatomic, strong, readonly) NSString *num;
 @property (nonatomic, strong, readonly) NSAttributedString *text;
 @property (nonatomic, assign, readonly) NSInteger index;
 @property (nonatomic, assign, readonly) NSInteger repliesCount;

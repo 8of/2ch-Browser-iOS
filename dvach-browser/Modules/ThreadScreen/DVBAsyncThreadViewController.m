@@ -304,7 +304,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)quotePostIndex:(NSInteger)index andText:(nullable NSString *)text
 {
-    [self attachAnswerToCommentSingletonWithPostIndex:index andText:text];
+    [self attachAnswerToCommentWithPostIndex:index andText:text];
     
     if ([self shouldStopReplyAndRedirect]) {
         return;
@@ -322,15 +322,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
      ];
 }
 
-- (void)attachAnswerToCommentSingletonWithPostIndex:(NSInteger)index andText:(nullable NSString *)text
+- (void)attachAnswerToCommentWithPostIndex:(NSInteger)index andText:(nullable NSString *)text
 {
-    DVBPost *post = _threadModel.postsArray[index];
+    DVBPostViewModel *post = _posts[index];
     NSString *postNum = post.num;
     
     DVBComment *sharedComment = [DVBComment sharedComment];
     
     if (text) {
-        NSAttributedString *postComment = post.comment;
+        NSAttributedString *postComment = post.text;
         [sharedComment topUpCommentWithPostNum:postNum
                            andOriginalPostText:postComment
                                 andQuoteString:text];

@@ -16,6 +16,7 @@
     self = [super init];
     if (self) {
         _title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)(index+1), post.num, post.dateAgo];
+        _num = post.num;
         _text = post.comment;
         _index = index;
         _repliesCount = post.replies.count;
