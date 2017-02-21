@@ -31,13 +31,5 @@
  *  @return attributed string with 2ch markup
  */
 - (NSAttributedString *)commentWithMarkdownWithComments:(NSString *)comment;
-/**
- *  Strips off tags from poster's name
- *
- *  @param name name in HTML format with tags
- *
- *  @return plain name without HTML tags
- */
-- (NSString *)cleanPosterNameWithHtmlPosterName:(NSString *)name;
 
 @end

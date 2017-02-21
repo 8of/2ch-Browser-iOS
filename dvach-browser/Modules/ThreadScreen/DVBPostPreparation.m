@@ -7,10 +7,12 @@
 //
 #import <UIKit/UIKit.h>
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "UrlNinja.h"
 #import "DVBPostPreparation.h"
 #import "NSString+HTML.h"
+#import "DVBBoardStyler.h"
 
 @interface DVBPostPreparation ()
 
@@ -192,6 +194,8 @@
                 [maComment addAttribute:NSLinkAttributeName value:url range:result.range];
                 [maComment addAttribute:NSForegroundColorAttributeName value:linkColor range:result.range];
                 [maComment addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleNone] range:result.range];
+                UIColor *underlineColor = [DVBBoardStyler threadCellInsideBackgroundColor];
+                [maComment addAttribute:NSUnderlineColorAttributeName value:underlineColor range:result.range];
             }
         }
     }];
@@ -262,20 +266,6 @@
     [[maComment mutableString] replaceOccurrencesOfString:@"&amp;" withString:@"&" options:NSCaseInsensitiveSearch range:NSMakeRange(0, maComment.string.length)];
     
     return maComment;
-}
-
-- (NSString *)cleanPosterNameWithHtmlPosterName:(NSString *)name {
-    NSString *plainTextName = [name stringByConvertingHTMLToPlainText];
-    
-    return plainTextName;
-}
-
-- (BOOL)isPostContaintSageWithEmail:(NSString *)email {
-    NSString *sageStringToLookFor = @"sage";
-    if ([email rangeOfString:sageStringToLookFor options:NSCaseInsensitiveSearch].location != NSNotFound) {
-        return YES;
-    }
-    return NO;
 }
 
 @end
