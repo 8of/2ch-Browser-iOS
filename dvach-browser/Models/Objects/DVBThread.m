@@ -50,15 +50,15 @@
 + (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(nullable NSString *)num andComment:(nullable NSString *)comment
 {
 
-    if ([title isEqualToString:@""]) {
-        return num;
-    }
+  if (!title || [title isEqualToString:@""]) {
+    return num;
+  }
 
-    if ([comment containsString:num]) {
-        return num;
-    }
+  if (!comment || [comment containsString:num]) {
+    return num;
+  }
 
-    return title;
+  return title;
 }
 
 + (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
