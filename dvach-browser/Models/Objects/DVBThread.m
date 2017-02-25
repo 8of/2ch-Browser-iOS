@@ -25,6 +25,13 @@
      };
 }
 
++ (NSValueTransformer *)subjectJSONTransformer
+{
+  return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
+    return [string stringByConvertingHTMLToPlainText];
+  }];
+}
+
 + (NSValueTransformer *)commentJSONTransformer
 {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
@@ -57,7 +64,7 @@
   if (!comment || [comment containsString:num]) {
     return num;
   }
-  return [title stringByReplacingOccurrencesOfString:@"&gt;" withString:@""];
+  return title;
 }
 
 + (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment

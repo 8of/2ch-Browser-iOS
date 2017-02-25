@@ -145,7 +145,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)answer:(id)sender
 {
-    [self.delegate quotePostIndex:_index andText:nil];
+  [self.delegate quotePostIndex:_index andText:nil];
 }
 
 - (void)pictureTap:(DVBMediaButtonNode *)sender
