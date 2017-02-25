@@ -57,8 +57,7 @@
   if (!comment || [comment containsString:num]) {
     return num;
   }
-
-  return title;
+  return [title stringByReplacingOccurrencesOfString:@"&gt;" withString:@""];
 }
 
 + (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
