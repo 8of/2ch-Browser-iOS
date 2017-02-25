@@ -6,6 +6,7 @@
 //  Copyright © 2016 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBPostNode.h"
 #import "DVBPostViewModel.h"
@@ -58,18 +59,22 @@ NS_ASSUME_NONNULL_BEGIN
         // Images
         if (post.thumbs.count > 0) {
             NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArray = [@[] mutableCopy];
-            for (NSString *mediaUrl in post.thumbs) {
-                ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl];
-                DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
-                [mediaButton addTarget:self
-                                action:@selector(pictureTap:)
-                      forControlEvents:ASControlNodeEventTouchUpInside];
-                media.delegate = self;
-                [self addSubnode:media];
-                [self addSubnode:mediaButton];
-                ASOverlayLayoutSpec *overlay = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:media overlay:mediaButton];
-                [mediaNodesArray addObject:overlay];
-            }
+            weakify(self);
+            [post.thumbs enumerateObjectsUsingBlock:^(NSString * _Nonnull mediaUrl, NSUInteger idx, BOOL * _Nonnull stop) {
+              strongify(self);
+              if (!self) { return; }
+              BOOL isWebm = (post.pictures.count > idx) && [post.pictures[idx] containsString:@".webm"];
+              ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isWebm];
+              DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
+              [mediaButton addTarget:self
+                              action:@selector(pictureTap:)
+                    forControlEvents:ASControlNodeEventTouchUpInside];
+              media.delegate = self;
+              [self addSubnode:media];
+              [self addSubnode:mediaButton];
+              ASOverlayLayoutSpec *overlay = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:media overlay:mediaButton];
+              [mediaNodesArray addObject:overlay];
+            }];
             _mediaContainer = [ASStackLayoutSpec
                                stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
                                spacing:[DVBPostStyler elementInset]

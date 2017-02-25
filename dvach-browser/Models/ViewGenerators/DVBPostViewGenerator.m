@@ -52,24 +52,43 @@ NS_ASSUME_NONNULL_BEGIN
   return node;
 }
 
-+ (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url
++ (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url isWebm:(BOOL)isWebm
 {
-    ASNetworkImageNode *node = [[ASNetworkImageNode alloc] init];
-    CGFloat mediaWidth = [DVBPostStyler isWaitingForReview] ? 0 : [DVBPostStyler mediaSize];
-    node.style.width = ASDimensionMakeWithPoints(mediaWidth);
-    node.style.height = ASDimensionMakeWithPoints([DVBPostStyler mediaSize]);
-    node.URL = [NSURL URLWithString:url];
-    node.imageModificationBlock = ^UIImage *(UIImage *image) {
-        UIImage *modifiedImage;
-        CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
-        UIGraphicsBeginImageContextWithOptions(image.size, false, [[UIScreen mainScreen] scale]);
-        [[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2*[DVBPostStyler cornerRadius]] addClip];
-        [image drawInRect:rect];
-        modifiedImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return modifiedImage;
-    };
-    return node;
+  ASNetworkImageNode *node = [[ASNetworkImageNode alloc] init];
+  CGFloat mediaWidth = [DVBPostStyler isWaitingForReview] ? 0 : [DVBPostStyler mediaSize];
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  node.style.width = ASDimensionMakeWithPoints(mediaWidth);
+  node.style.height = ASDimensionMakeWithPoints([DVBPostStyler mediaSize]);
+  node.URL = [NSURL URLWithString:url];
+  node.imageModificationBlock = ^UIImage *(UIImage *image) {
+    CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    UIGraphicsBeginImageContextWithOptions(image.size, true, scale);
+
+    // Fill background with color
+    [[DVBPostStyler postCellInsideBackgroundColor] set];
+    UIRectFill(CGRectMake(0, 0, rect.size.width, rect.size.height));
+
+    [[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2*[DVBPostStyler cornerRadius]] addClip];
+    [image drawInRect:rect];
+    if (isWebm) {
+      UIImage *icon = [self webmIcon];
+      CGFloat iconSide = icon.size.width * scale;
+      CGFloat iconX = (rect.size.width - iconSide) / 2;
+      CGFloat iconY = (rect.size.width - iconSide) / 2;
+      CGRect iconRect = CGRectMake(iconX, iconY, iconSide, iconSide);
+      [icon drawInRect:iconRect];
+    }
+    UIImage *modifiedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return modifiedImage;
+  };
+  return node;
+}
+
++ (UIImage *)webmIcon
+{
+  return [UIImage imageNamed:@"Video"];
 }
 
 + (ASButtonNode *)answerButton
