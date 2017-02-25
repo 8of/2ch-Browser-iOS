@@ -168,17 +168,7 @@
                                     [singlePostThumbPathesArrayMutable addObject:thumbPath];
                                     [self.privateThumbImagesArray addObject:thumbPath];
 
-                                    NSString *picPath;
-                                    BOOL isContainWebm = ([fullFileName rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound);
-
-                                    // check webm or not
-                                    if (isContainWebm) { // if contains .webm
-                                        // make VLC webm link
-                                        picPath = [[NSString alloc] initWithFormat:@"vlc://%@%@", [DVBUrls baseWithoutScheme], fullFileName];
-                                    }
-                                    else {               // if regular image
-                                        picPath = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], fullFileName];
-                                    }
+                                    NSString *picPath = [[NSString alloc] initWithFormat:@"%@%@", [DVBUrls base], fullFileName];
 
                                     [singlePostPathesArrayMutable addObject:picPath];
                                     [self.privateFullImagesArray addObject:picPath];

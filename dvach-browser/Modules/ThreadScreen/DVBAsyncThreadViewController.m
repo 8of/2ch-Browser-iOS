@@ -384,7 +384,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)shareAction
 {
-    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@%@/res/%@.html", [DVBUrls base], _threadModel.boardCode, _threadModel.threadNum];
+    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@/%@/res/%@.html", [DVBUrls base], _threadModel.boardCode, _threadModel.threadNum];
     UIBarButtonItem *shareItem = self.toolbarItems[2];
     [DVBThreadUIGenerator shareUrl:urlToShare
                             fromVC:self
