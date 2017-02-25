@@ -47,7 +47,7 @@
     }];
 }
 
-+ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
++ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(nullable NSString *)num andComment:(nullable NSString *)comment
 {
 
     if ([title isEqualToString:@""]) {

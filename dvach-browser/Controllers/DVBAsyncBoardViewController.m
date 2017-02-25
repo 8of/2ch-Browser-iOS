@@ -202,10 +202,10 @@
 {
     DVBThread *thread = [[DVBThread alloc] init];
     thread.num = threadNum;
-
-    [DVBRouter pushThreadFrom:self
-                   withThread:thread
-                    boardCode:_boardCode];
+  [DVBRouter pushThreadFrom:self board:_boardCode
+                     thread:threadNum
+                    subject:nil
+                    comment:nil];
 }
 
 #pragma mark - ASTableNode
@@ -236,9 +236,13 @@
 
 - (void)tableNode:(ASTableNode *)tableNode didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DVBThread *thread = _boardModel.threadsArray[indexPath.row];
-    [DVBRouter pushThreadFrom:self withThread:thread boardCode:_boardCode];
-    [_tableNode deselectRowAtIndexPath:indexPath animated:YES];
+  DVBThread *thread = _boardModel.threadsArray[indexPath.row];
+  [DVBRouter pushThreadFrom:self
+                      board:_boardCode
+                     thread:thread.num
+                    subject:thread.subject
+                    comment:thread.comment];
+  [_tableNode deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

@@ -25,12 +25,12 @@
                                                    animated:YES];
 }
 
-+ (void)pushThreadFrom:(UIViewController *)viewController withThread:(DVBThread *)thread boardCode:(NSString *)boardCode
++ (void)pushThreadFrom:(UIViewController *)viewController board:(NSString *)board thread:(NSString *)thread subject:(nullable NSString *)subject comment:(nullable NSString *)comment
 {
-    NSString *subject = [DVBThread threadControllerTitleFromTitle:thread.subject
-                                                           andNum:thread.num
-                                                       andComment:thread.comment];
-    DVBAsyncThreadViewController *vc = [[DVBAsyncThreadViewController alloc] initWithBoardCode:boardCode andThreadNumber:thread.num andThreadSubject:subject];
+    NSString *vcSubject = [DVBThread threadControllerTitleFromTitle:subject
+                                                           andNum:thread
+                                                       andComment:comment];
+    DVBAsyncThreadViewController *vc = [[DVBAsyncThreadViewController alloc] initWithBoardCode:board andThreadNumber:thread andThreadSubject:vcSubject];
     [viewController.navigationController pushViewController:vc
                                                    animated:YES];
 }

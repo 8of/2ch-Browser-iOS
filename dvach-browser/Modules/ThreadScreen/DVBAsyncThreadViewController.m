@@ -21,6 +21,7 @@
 #import "DVBThreadUIGenerator.h"
 #import "DVBRouter.h"
 #import "DVBComment.h"
+#import "UrlNinja.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -339,6 +340,73 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 }
 
+- (void)shareWithUrl:(NSString *)url
+{
+  UIBarButtonItem *shareItem = self.toolbarItems[4];
+  [DVBThreadUIGenerator shareUrl:url
+                          fromVC:self
+                      fromButton:shareItem];
+}
+
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url
+{
+  UrlNinja *urlNinjaHelper = [[UrlNinja alloc] init];
+  urlNinjaHelper.urlOpener = self;
+  BOOL answer = [urlNinjaHelper isLinkInternalWithLink:url andThreadNum:_threadModel.threadNum andBoardCode:_threadModel.boardCode];
+
+  return answer;
+}
+
+- (void)openPostWithUrlNinja:(UrlNinja *)urlNinja
+{
+  NSString *postNum = urlNinja.postId;
+  NSPredicate *postNumPredicate = [NSPredicate predicateWithFormat:@"num == %@", postNum];
+
+  NSArray *arrayOfPosts = [_threadModel.postsArray filteredArrayUsingPredicate:postNumPredicate];
+
+  DVBPost *post;
+
+  if ([arrayOfPosts count] > 0) { // check our regular array first
+    post = arrayOfPosts[0];
+    [DVBRouter pushAnswersFrom:self
+                       postNum:post.num
+                       answers:[self convertPostsToViewModel:@[post] forAnswer:YES]
+                      allPosts:_allPosts ? _allPosts : _posts
+     ];
+    return;
+  }
+  else if (_allPosts) { // if it didn't work - check our full array
+    arrayOfPosts = [_allPosts filteredArrayUsingPredicate:postNumPredicate];
+
+    if ([arrayOfPosts count] > 0) {
+      post = arrayOfPosts[0];
+      DVBPostViewModel *postVM = (DVBPostViewModel *)post;
+      [postVM convertToNested];
+      [DVBRouter pushAnswersFrom:self
+                         postNum:postVM.num
+                         answers:@[postVM]
+                        allPosts:_allPosts ? _allPosts : _posts
+       ];
+    }
+    else { // end method if we can't find posts
+      return;
+    }
+  }
+  else { // if we do not have allThreadsArray AND can't find post in regular array (impossible but just in case...)
+    return;
+  }
+
+}
+
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
+{
+  [DVBRouter pushThreadFrom:self
+                      board:urlNinja.boardId
+                     thread:urlNinja.threadId
+                    subject:nil
+                    comment:nil];
+}
+
 #pragma mark - DVBCreatePostViewControllerDelegate
 
 -(void)updateThreadAfterPosting
@@ -391,11 +459,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)shareAction
 {
-    NSString *urlToShare = [[NSString alloc] initWithFormat:@"%@/%@/res/%@.html", [DVBUrls base], _threadModel.boardCode, _threadModel.threadNum];
-    UIBarButtonItem *shareItem = self.toolbarItems[2];
-    [DVBThreadUIGenerator shareUrl:urlToShare
-                            fromVC:self
-                        fromButton:shareItem];
+  NSString *url = [[NSString alloc] initWithFormat:@"%@/%@/res/%@.html", [DVBUrls base], _threadModel.boardCode, _threadModel.threadNum];
+  [self shareWithUrl:url];
 }
 
 - (void)flagAction

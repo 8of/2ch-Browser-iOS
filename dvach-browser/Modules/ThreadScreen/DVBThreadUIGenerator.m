@@ -53,7 +53,8 @@
     
     // Only for iPad
     if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
-        if (vc.navigationController.isToolbarHidden) {
+
+        if (!button) {
             activityViewController.popoverPresentationController.sourceView = vc.navigationController.navigationBar;
             activityViewController.popoverPresentationController.sourceRect = vc.navigationController.navigationBar.frame;
         } else {

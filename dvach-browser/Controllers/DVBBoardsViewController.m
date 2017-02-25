@@ -156,9 +156,11 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
 {
-    DVBThread *thread = [[DVBThread alloc] init];
-    thread.num = urlNinja.threadId;
-    [DVBRouter pushThreadFrom:self withThread:thread boardCode:urlNinja.boardId];
+  [DVBRouter pushThreadFrom:self
+                      board:urlNinja.boardId
+                     thread:urlNinja.threadId
+                    subject:nil
+                    comment:nil];
 }
 
 #pragma mark - user Agreement

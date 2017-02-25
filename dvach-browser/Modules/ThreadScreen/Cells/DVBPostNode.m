@@ -12,10 +12,11 @@
 #import "DVBPostViewGenerator.h"
 #import "DVBPostStyler.h"
 #import "DVBMediaButtonNode.h"
+#import "UrlNinja.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface DVBPostNode() <ASNetworkImageNodeDelegate>
+@interface DVBPostNode() <ASNetworkImageNodeDelegate, ASTextNodeDelegate>
 
 @property (nonatomic, weak, nullable) id<DVBThreadDelegate> delegate;
 
@@ -49,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
         // Post text
         if (![post.text.string isEqualToString:@""]) {
             _textNode = [DVBPostViewGenerator textNodeWithText:post.text];
+            _textNode.delegate = self;
+          _textNode.userInteractionEnabled = YES;
             [self addSubnode:_textNode];
         }
 
@@ -155,11 +158,28 @@ NS_ASSUME_NONNULL_BEGIN
     [self.delegate showAnswersFor:_index];
 }
 
-#pragma mark - ASNetworkImageNodeDelegate methods.
+#pragma mark - ASNetworkImageNodeDelegate
 
 - (void)imageNode:(ASNetworkImageNode *)imageNode didLoadImage:(UIImage *)image
 {
     [self setNeedsLayout];
+}
+
+#pragma mark - ASTextNodeDelegate
+
+- (void)textNode:(ASTextNode *)textNode tappedLinkAttribute:(NSString *)attribute value:(id)value atPoint:(CGPoint)point textRange:(NSRange)textRange
+{
+  if (!_delegate || ![value isKindOfClass:[NSURL class]]) {
+    return;
+  }
+  NSURL *url = (NSURL *)value;
+  UrlNinja *urlNinja = [UrlNinja unWithUrl:url];
+
+  BOOL isLocalPostLink = [_delegate isLinkInternalWithLink:urlNinja];
+  if (isLocalPostLink) {
+    return;
+  }
+  [_delegate shareWithUrl:[url absoluteString]];
 }
 
 @end

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class UrlNinja;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol DVBThreadDelegate <NSObject>
@@ -16,6 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)openGalleryWIthUrl:(NSString *)url;
 - (void)quotePostIndex:(NSInteger)index andText:(nullable NSString *)text;
 - (void)showAnswersFor:(NSInteger)index;
+- (void)shareWithUrl:(NSString *)url;
+- (BOOL)isLinkInternalWithLink:(UrlNinja *)url;
+/// Open single post
+- (void)openPostWithUrlNinja:(UrlNinja *)urlNinja;
+/// Open whole new thread
+- (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja;
 
 @end
 
