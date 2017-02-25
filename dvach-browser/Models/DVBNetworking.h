@@ -12,6 +12,8 @@
 #import "DVBConstants.h"
 #import "DVBMessagePostServerAnswer.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface DVBNetworking : NSObject
 
 /// Check network status.
@@ -52,3 +54,5 @@
 - (void)tryApCaptchaWithCompletion:(void (^)(NSString * _Nullable))completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

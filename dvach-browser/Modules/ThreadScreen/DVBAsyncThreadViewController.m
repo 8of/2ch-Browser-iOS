@@ -339,6 +339,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 }
 
+#pragma mark - DVBCreatePostViewControllerDelegate
+
+-(void)updateThreadAfterPosting
+{
+  [self reloadThread];
+}
+
 #pragma mark - Helpers for posting from another copy of the controller
 
 /// Plain post id reply
