@@ -16,36 +16,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (ASDisplayNode *)borderNode
 {
-    ASDisplayNode *node = [[ASDisplayNode alloc] init];
-    node.borderColor = [DVBPostStyler borderColor];
-    node.borderWidth = ONE_PIXEL;
-    node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
-    node.cornerRadius = [DVBPostStyler cornerRadius];
+  ASDisplayNode *node = [[ASDisplayNode alloc] init];
+  node.opaque = YES;
+  node.borderColor = [DVBPostStyler borderColor];
+  node.borderWidth = ONE_PIXEL;
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  node.cornerRadius = [DVBPostStyler cornerRadius];
 
-    return node;
+  return node;
 }
 
 + (ASTextNode *)titleNodeWithText:(NSString *)text
 {
-    ASTextNode *node = [[ASTextNode alloc] init];
-    NSDictionary *textAttributes = @
-    {
-        NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
-        NSForegroundColorAttributeName: [DVBPostStyler textColor]
-    };
-    node.attributedText = [[NSAttributedString alloc] initWithString:text attributes:textAttributes];
-    node.truncationMode = NSLineBreakByTruncatingTail;
-    node.maximumNumberOfLines = 1;
-    return node;
+  ASTextNode *node = [[ASTextNode alloc] init];
+  NSDictionary *textAttributes = @
+  {
+    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
+    NSForegroundColorAttributeName: [DVBPostStyler textColor],
+    NSBackgroundColorAttributeName: [DVBPostStyler postCellInsideBackgroundColor]
+  };
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  node.attributedText = [[NSAttributedString alloc] initWithString:text attributes:textAttributes];
+  node.truncationMode = NSLineBreakByTruncatingTail;
+  node.maximumNumberOfLines = 1;
+  return node;
 }
 
 + (ASTextNode *)textNodeWithText:(NSAttributedString *)text
 {
-    ASTextNode *node = [[ASTextNode alloc] init];
-    node.attributedText = text;
-    node.truncationMode = NSLineBreakByWordWrapping;
-    node.maximumNumberOfLines = 0;
-    return node;
+  ASTextNode *node = [[ASTextNode alloc] init];
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  node.attributedText = text;
+  node.truncationMode = NSLineBreakByWordWrapping;
+  node.maximumNumberOfLines = 0;
+  return node;
 }
 
 + (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url
@@ -70,37 +74,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (ASButtonNode *)answerButton
 {
-    ASButtonNode *node = [[ASButtonNode alloc] init];
-    UIImage *image = [UIImage imageNamed:@"AnswerToPost"];
-    [node setImage:image forState:ASControlStateNormal];
-    return node;
+  ASButtonNode *node = [[ASButtonNode alloc] init];
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  UIImage *image = [UIImage imageNamed:@"AnswerToPost"];
+  [node setImage:image forState:ASControlStateNormal];
+  return node;
 }
 
 + (ASButtonNode *)answerWithQuoteButton
 {
-    ASButtonNode *node = [[ASButtonNode alloc] init];
-    UIImage *image = [UIImage imageNamed:@"AnswerToPostWithQuote"];
-    [node setImage:image forState:ASControlStateNormal];
-    return node;
+  ASButtonNode *node = [[ASButtonNode alloc] init];
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  UIImage *image = [UIImage imageNamed:@"AnswerToPostWithQuote"];
+  [node setImage:image forState:ASControlStateNormal];
+  return node;
 }
 
 + (ASButtonNode *)showAnswersButtonWithCount:(NSInteger)count
 {
-    ASButtonNode *node = [self button];
-    NSString *title = [NSString stringWithFormat:@"%ld", (long)count];
-    UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    [node setTitle:title
-          withFont:font
-         withColor:DVACH_COLOR
-          forState:ASControlStateNormal];
-    [node setTitle:title
-          withFont:font
-         withColor:DVACH_COLOR_HIGHLIGHTED
-          forState:ASControlStateHighlighted];
-    node.style.height = ASDimensionMake(22);
-    node.style.minWidth = ASDimensionMake(33);
-    node.contentEdgeInsets = UIEdgeInsetsMake(0, [DVBPostStyler elementInset], 0, [DVBPostStyler elementInset]);
-    return node;
+  ASButtonNode *node = [self button];
+  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
+  NSString *title = [NSString stringWithFormat:@"%ld", (long)count];
+  UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+  [node setTitle:title
+        withFont:font
+       withColor:DVACH_COLOR
+        forState:ASControlStateNormal];
+  [node setTitle:title
+        withFont:font
+       withColor:DVACH_COLOR_HIGHLIGHTED
+        forState:ASControlStateHighlighted];
+  node.style.height = ASDimensionMake(22);
+  node.style.minWidth = ASDimensionMake(33);
+  node.contentEdgeInsets = UIEdgeInsetsMake(0, [DVBPostStyler elementInset], 0, [DVBPostStyler elementInset]);
+  return node;
 }
 
 + (ASButtonNode *)button
