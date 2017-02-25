@@ -6,8 +6,8 @@
 //  Copyright © 2016 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBPostStyler.h"
-
 #import "DVBBoardStyler.h"
 
 @implementation DVBPostStyler
@@ -34,7 +34,7 @@
 
 + (CGFloat)mediaSize
 {
-    return [DVBBoardStyler mediaSize];
+    return IS_IPAD ? 150 : 62;
 }
 
 + (CGFloat)elementInset

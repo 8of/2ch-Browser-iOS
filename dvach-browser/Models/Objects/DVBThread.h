@@ -34,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)isTitle:(NSString *)title madeFromComment:(NSString *)comment;
 + (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(nullable NSString *)num andComment:(nullable NSString *)comment;
-+ (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment;
 
 @end
 

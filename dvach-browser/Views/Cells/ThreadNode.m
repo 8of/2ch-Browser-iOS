@@ -40,12 +40,8 @@
 
         // Comment node
         _postNode = [[ASTextNode alloc] init];
-        NSDictionary *textAttributes = @
-        {
-            NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
-            NSForegroundColorAttributeName: [DVBBoardStyler textColor]
-        };
-        _postNode.attributedText = [[NSAttributedString alloc] initWithString:thread.comment attributes:textAttributes];
+
+        _postNode.attributedText = [self fromComment:thread.comment subject:thread.subject posts:thread.postsCount];
         _postNode.style.flexShrink = 1.0; //if name and username don't fit to cell width, allow username shrink
         _postNode.truncationMode = NSLineBreakByWordWrapping;
         _postNode.maximumNumberOfLines = 0;
@@ -72,6 +68,27 @@
         [self addSubnode:_mediaNode];
     }
     return self;
+}
+
+- (NSAttributedString *)fromComment:(NSString *)comment subject:(NSString *)subject posts:(NSNumber *)posts
+{
+  NSDictionary *textAttributes = @
+  {
+    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
+    NSForegroundColorAttributeName: [DVBBoardStyler textColor]
+  };
+  NSString *string = [NSString stringWithFormat:@"[%li] %@", (long)posts.integerValue, [self textFromSubject:subject andComment:comment]];
+  return [[NSAttributedString alloc] initWithString:string attributes:textAttributes];
+}
+
+- (NSString *)textFromSubject:(NSString *)subject andComment:(NSString *)comment
+{
+  if (subject.length > 2 && comment.length > 2) {
+    if ([[subject substringToIndex:2] isEqualToString:[comment substringToIndex:2]]) {
+      return comment;
+    }
+  }
+  return [NSString stringWithFormat:@"%@\n%@", subject, comment];
 }
 
 - (void)setHighlighted:(BOOL)highlighted
