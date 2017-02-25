@@ -35,7 +35,7 @@
 
 + (CGFloat)mediaSize
 {
-    return IS_IPAD ? 200 : 100;
+    return IS_IPAD ? 150 : 62;
 }
 
 + (CGFloat)elementInset

@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
     self = [super init];
     if (self) {
+        self.opaque = YES;
         _delegate = delegate;
         _index = post.index;
         // Total border
@@ -63,6 +64,12 @@ NS_ASSUME_NONNULL_BEGIN
             [post.thumbs enumerateObjectsUsingBlock:^(NSString * _Nonnull mediaUrl, NSUInteger idx, BOOL * _Nonnull stop) {
               strongify(self);
               if (!self) { return; }
+              // Do not show 5th and next items
+              if (idx == 4) {
+                *stop = YES;
+                return;
+              }
+
               BOOL isWebm = (post.pictures.count > idx) && [post.pictures[idx] containsString:@".webm"];
               ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isWebm];
               DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
