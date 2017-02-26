@@ -217,7 +217,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
          strongify(self);
          if (!self) { return; }
          if (!posts) {
-             // [self showMessageAboutError];
+             dispatch_async(dispatch_get_main_queue(), ^{
+               self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
+             });
              return;
          }
          _posts = [self convertPostsToViewModel:posts forAnswer:NO];
@@ -226,11 +228,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
              [_refreshControl endRefreshing];
              // [_bottomRefreshControl endRefreshing];
              [self checkNewPostsCount];
-             // self.tableView.backgroundView = nil;
+             self.tableNode.view.backgroundView = nil;
          });
-
-         _refreshControl.enabled = YES;
-         // _bottomRefreshControl.enabled = YES;
      }];
 }
 
@@ -264,7 +263,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
     NSNumber *postsCountNewValue = @(_posts.count);
 
-    // _threadsScrollPositionManager.threadPostCounts[_threadNum] = postsCountNewValue;
     _previousPostsCount = postsCountNewValue;
 }
 

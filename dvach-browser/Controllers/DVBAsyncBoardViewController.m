@@ -13,6 +13,7 @@
 #import "DVBRouter.h"
 #import "DVBBoardStyler.h"
 #import "DVBCreatePostViewControllerDelegate.h"
+#import "DVBThreadUIGenerator.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -111,6 +112,11 @@
          dispatch_async(dispatch_get_main_queue(), ^{
              [_tableNode reloadData];
              self.alreadyLoadingNextPage = NO;
+             if (!completionThreadsArray || completionThreadsArray.count == 0) {
+               self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
+             } else {
+               self.tableNode.view.backgroundView = nil;
+             }
          });
      }];
 }
@@ -138,6 +144,9 @@
              dispatch_async(dispatch_get_main_queue(), ^{
                  [_refreshControl endRefreshing];
                  [_tableNode reloadData];
+                 if (_threadsArray.count > 0) {
+                   self.tableNode.view.backgroundView = nil;
+                 }
                  [UIView animateWithDuration:duration
                                   animations:^{
                      _tableNode.view.layer.opacity = 1;
