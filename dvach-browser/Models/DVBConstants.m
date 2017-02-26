@@ -19,7 +19,6 @@ NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
 
 // Settings
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
-NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"internalWebmPlayer";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
 NSString *const SETTING_BASE_DOMAIN = @"domain";
 NSString *const SETTING_FORCE_CAPTCHA = @"forceCaptcha";

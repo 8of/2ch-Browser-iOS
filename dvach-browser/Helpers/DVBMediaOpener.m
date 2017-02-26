@@ -12,8 +12,6 @@
 #import "DVBMediaOpener.h"
 #import "DVBBrowserViewControllerBuilder.h"
 
-#import "VDLPlaybackViewController.h"
-
 @interface DVBMediaOpener ()
 
 @property (nonatomic, weak) UIViewController *viewController;
@@ -48,13 +46,8 @@
   }
   // if contains .webm
   if ([fullUrlString containsString:@".webm"]) {
-
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_INTERNAL_WEBM_PLAYER]) {
-      [self openWebMWithUrl:[NSURL URLWithString:fullUrlString]];
-    } else {
-      NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
-      [self openVLCWithURL:fullUrl];
-    }
+    NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
+    [self openVLCWithURL:fullUrl];
   }
   // if not
   else {
@@ -88,17 +81,6 @@
                                                            animated:YES
                                                          completion:nil];
     }
-}
-
-- (void)openWebMWithUrl:(NSURL *)url
-{
-    VDLPlaybackViewController *playbackViewController = [[VDLPlaybackViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:playbackViewController];
-    navCon.modalPresentationStyle = UIModalPresentationFullScreen;
-    [playbackViewController playMediaFromURL:url];
-    [_viewController presentViewController:navCon
-                                  animated:YES
-                                completion:nil];
 }
 
 #pragma mark - VLC
