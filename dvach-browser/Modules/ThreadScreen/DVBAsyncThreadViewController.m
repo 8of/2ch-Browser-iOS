@@ -195,7 +195,17 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
   [_threadModel storeThreadPosition:visibleIndexes.lastObject];
 }
 
-#pragma - Network Loading
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
+{
+  NSInteger count = [_tableNode numberOfRowsInSection:0];
+  if (count == 0) {
+    return;
+  }
+  NSIndexPath *firstIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+  [_threadModel storeThreadPosition:firstIndexPath];
+}
+
+#pragma mark - Network Loading
 
 - (void)reloadThread
 {
