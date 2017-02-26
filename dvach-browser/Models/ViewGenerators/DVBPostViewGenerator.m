@@ -69,7 +69,7 @@ NS_ASSUME_NONNULL_BEGIN
     [[DVBPostStyler postCellInsideBackgroundColor] set];
     UIRectFill(CGRectMake(0, 0, rect.size.width, rect.size.height));
 
-    [[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:2*[DVBPostStyler cornerRadius]] addClip];
+    [[UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:[DVBPostStyler cornerRadius]] addClip];
     [image drawInRect:rect];
     if (isWebm) {
       UIImage *icon = [self webmIcon];

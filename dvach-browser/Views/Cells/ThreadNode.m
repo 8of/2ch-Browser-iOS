@@ -59,7 +59,7 @@
             UIImage *modifiedImage;
             CGRect rect = CGRectMake(0, 0, image.size.width, image.size.height);
             UIGraphicsBeginImageContextWithOptions(image.size, false, [[UIScreen mainScreen] scale]);
-            [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:(UIRectCornerTopLeft|UIRectCornerBottomLeft) cornerRadii:CGSizeMake(2*[DVBBoardStyler cornerRadius], 2*[DVBBoardStyler cornerRadius])] addClip];
+            [[UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:(UIRectCornerTopLeft|UIRectCornerBottomLeft) cornerRadii:CGSizeMake([DVBBoardStyler cornerRadius], [DVBBoardStyler cornerRadius])] addClip];
             [image drawInRect:rect];
             modifiedImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
