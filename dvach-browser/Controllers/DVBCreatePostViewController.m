@@ -128,31 +128,36 @@
 /// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
 {
-    // Clear any prompt messages
-    self.navigationItem.prompt = nil;
+  // Clear any prompt messages
+  self.navigationItem.prompt = nil;
 
-    // Check usercode - send post if needed
-    BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
+  // Check usercode - send post if needed
+  BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
-    if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
-        [self sendPostWithoutCaptcha:YES andAppResponseId:nil];
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_FORCE_CAPTCHA]) {
+    [self showDvachCaptchaController];
+    return;
+  }
+
+  if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
+    [self sendPostWithoutCaptcha:YES andAppResponseId:nil];
+  } else {
+    if ([_threadNum isEqualToString:@"0"]) {
+      [self showDvachCaptchaController];
+      return;
     } else {
-        if ([_threadNum isEqualToString:@"0"]) {
-            [self showDvachCaptchaController];
-            return;
-        } else {
-            weakify(self);
-            [_networking tryApCaptchaWithCompletion:^(NSString * _Nullable appResponseId) {
-                strongify(self);
-                if (!self) { return; }
-                if (!appResponseId) { // Can't get APCaptcha, show regular captcha
-                    [self showDvachCaptchaController];
-                    return;
-                }
-                [self sendPostWithoutCaptcha:YES andAppResponseId:appResponseId];
-            }];
+      weakify(self);
+      [_networking tryApCaptchaWithCompletion:^(NSString * _Nullable appResponseId) {
+        strongify(self);
+        if (!self) { return; }
+        if (!appResponseId) { // Can't get APCaptcha, show regular captcha
+          [self showDvachCaptchaController];
+          return;
         }
+        [self sendPostWithoutCaptcha:YES andAppResponseId:appResponseId];
+      }];
     }
+  }
 }
 
 - (IBAction)pickPhotoAction:(id)sender

@@ -22,6 +22,7 @@ NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_ENABLE_INTERNAL_WEBM_PLAYER = @"internalWebmPlayer";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
 NSString *const SETTING_BASE_DOMAIN = @"domain";
+NSString *const SETTING_FORCE_CAPTCHA = @"forceCaptcha";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
