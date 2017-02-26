@@ -8,6 +8,7 @@
 
 #import <AsyncDisplayKit/ASPINRemoteImageDownloader.h>
 #import <PINCache/PINCache.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 #import "DVBDefaultsManager.h"
 
@@ -89,6 +90,7 @@
   [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
                                            forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
   [ASPINRemoteImageDownloader setSharedImageManagerWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+  
 }
 
 - (void)observeDefaults:(BOOL)enable
