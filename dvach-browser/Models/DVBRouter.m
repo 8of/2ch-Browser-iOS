@@ -49,20 +49,28 @@
 
 + (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(NSString *)threadNum
 {
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
-                                                         bundle:nil];
-    DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER];
-    createPostViewController.createPostViewControllerDelegate = (id<DVBCreatePostViewControllerDelegate>)vc;
-    createPostViewController.threadNum = threadNum;
-    createPostViewController.boardCode = boardCode;
+  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
+                                                       bundle:nil];
+  DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER];
+  createPostViewController.createPostViewControllerDelegate = (id<DVBCreatePostViewControllerDelegate>)vc;
+  createPostViewController.threadNum = threadNum;
+  createPostViewController.boardCode = boardCode;
+  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:createPostViewController];
+
+  if (IS_IPAD) {
+    navigationController.modalPresentationStyle = UIModalPresentationPopover;
+    createPostViewController.preferredContentSize = CGSizeMake(320, 480);
+    navigationController.popoverPresentationController.delegate = (id<UIPopoverPresentationControllerDelegate>)vc;
+    navigationController.popoverPresentationController.barButtonItem = vc.navigationItem.rightBarButtonItem;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
-        createPostViewController.popoverPresentationController.backgroundColor = [UIColor blackColor];
+      // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+      navigationController.popoverPresentationController.backgroundColor = [UIColor blackColor];
     }
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:createPostViewController];
-    [vc presentViewController:navigationController
-                     animated:YES
-                   completion:nil];
+  }
+
+  [vc presentViewController:navigationController
+                   animated:YES
+                 completion:nil];
 }
 
 @end

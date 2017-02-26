@@ -78,10 +78,15 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    if (!_allPosts) {
-        [self.navigationController setToolbarHidden:NO animated:YES];
-    }
+  [super viewWillAppear:animated];
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
+  } else {
+    self.navigationController.toolbar.barStyle = UIBarStyleDefault;
+  }
+  if (!_allPosts) {
+    [self.navigationController setToolbarHidden:NO animated:YES];
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -94,14 +99,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)setupTableNode
 {
-    [DVBThreadUIGenerator styleTableNode:_tableNode];
-    _tableNode.delegate = self;
-    _tableNode.dataSource = self;
-
-    if (!_allPosts) {
-        [self addTopRefreshControl];
-        [self addBottomRefreshControl];
-    }
+  [DVBThreadUIGenerator styleTableNode:_tableNode];
+  _tableNode.delegate = self;
+  _tableNode.dataSource = self;
+  if (!_allPosts) {
+    [self addTopRefreshControl];
+    [self addBottomRefreshControl];
+  }
 }
 
 - (void)addTopRefreshControl
