@@ -18,7 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (ASTextNode *)textNodeWithText:(NSAttributedString *)text;
 + (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url isWebm:(BOOL)isWebm;
 + (ASButtonNode *)answerButton;
-+ (ASButtonNode *)answerWithQuoteButton;
 + (ASButtonNode *)showAnswersButtonWithCount:(NSInteger)count;
 
 @end

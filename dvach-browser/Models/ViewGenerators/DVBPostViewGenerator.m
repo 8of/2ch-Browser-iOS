@@ -93,19 +93,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (ASButtonNode *)answerButton
 {
-  ASButtonNode *node = [[ASButtonNode alloc] init];
+  ASButtonNode *node = [self button];
   node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
   UIImage *image = [UIImage imageNamed:@"AnswerToPost"];
   [node setImage:image forState:ASControlStateNormal];
-  return node;
-}
-
-+ (ASButtonNode *)answerWithQuoteButton
-{
-  ASButtonNode *node = [[ASButtonNode alloc] init];
-  node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
-  UIImage *image = [UIImage imageNamed:@"AnswerToPostWithQuote"];
-  [node setImage:image forState:ASControlStateNormal];
+  node.style.height = ASDimensionMake(22);
   return node;
 }
 
@@ -113,7 +105,7 @@ NS_ASSUME_NONNULL_BEGIN
 {
   ASButtonNode *node = [self button];
   node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
-  NSString *title = [NSString stringWithFormat:@"%ld", (long)count];
+  NSString *title = [NSString stringWithFormat:@"%li", (long)count];
   UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
   [node setTitle:title
         withFont:font
