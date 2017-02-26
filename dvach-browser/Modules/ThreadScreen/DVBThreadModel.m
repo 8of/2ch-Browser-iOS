@@ -96,7 +96,6 @@
                 // Do heavy or time consuming work
                 // Task 1: Read the data from sqlite
                 // Task 2: Process the data with a flag to stop the process if needed (only if this takes very long and may be cancelled often).
-//                if (strongSelf) {
                     NSMutableArray *postNumMutableArray = [@[] mutableCopy];
                     // If it's first load - do not include post
                     if (!self.lastPostNum) {
@@ -247,8 +246,6 @@
                         }];
                     }
 
-
-//                }
             });
         }];
     }
@@ -321,6 +318,38 @@
    _fullImagesArray = _privateFullImagesArray;
     
     return _fullImagesArray;
+}
+
+#pragma mark - Scroll position
+
+- (void)storedThreadPosition:(void (^)(NSIndexPath *))completion
+{
+  YapDatabaseConnection *connection = [_database newConnection];
+  weakify(self);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [connection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
+      strongify(self);
+      if (!self) { return; }
+      NSIndexPath * _Nullable visibleIndex = [transaction objectForKey:self.threadNum inCollection:DB_COLLECTION_THREAD_POSITIONS];
+      if (!visibleIndex) { return; }
+      dispatch_async(dispatch_get_main_queue(), ^{
+        completion(visibleIndex);
+      });
+    }];
+  });
+}
+
+- (void)storeThreadPosition:(NSIndexPath *)indexPath
+{
+  YapDatabaseConnection *connection = [_database newConnection];
+  weakify(self);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
+      strongify(self);
+      if (!self) { return; }
+      [transaction setObject:indexPath forKey:self.threadNum inCollection:DB_COLLECTION_THREAD_POSITIONS];
+    }];
+  });
 }
 
 #pragma mark - DB

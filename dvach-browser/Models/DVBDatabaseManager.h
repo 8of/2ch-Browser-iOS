@@ -10,6 +10,7 @@
 #import <YapDatabase/YapDatabase.h>
 
 static NSString * const DB_COLLECTION_THREADS = @"kDbCollectionThreads";
+static NSString * const DB_COLLECTION_THREAD_POSITIONS = @"kDbCollectionThreadPositions";
 
 @interface DVBDatabaseManager : NSObject
 

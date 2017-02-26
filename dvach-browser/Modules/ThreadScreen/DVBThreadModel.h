@@ -55,4 +55,7 @@
  */
 - (NSArray *)fullImagesArrayForPostsArray:(NSArray *)postsArray;
 
+- (void)storedThreadPosition:(void (^)(NSIndexPath *))completion;
+- (void)storeThreadPosition:(NSIndexPath *)indexPath;
+
 @end

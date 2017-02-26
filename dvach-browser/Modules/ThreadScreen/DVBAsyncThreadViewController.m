@@ -84,6 +84,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+  [super viewDidAppear:animated];
+  [_threadModel storedThreadPosition:^(NSIndexPath *indexPath) {
+    [_tableNode scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+  }];
+}
+
 - (void)setupTableNode
 {
     [DVBThreadUIGenerator styleTableNode:_tableNode];
@@ -174,6 +182,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (NSInteger)tableNode:(ASTableNode *)tableNode numberOfRowsInSection:(NSInteger)section
 {
     return _posts.count;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+  NSArray <NSIndexPath *> *visibleIndexes = [_tableNode indexPathsForVisibleRows];
+  if (visibleIndexes.count == 0) { return; }
+  [_threadModel storeThreadPosition:visibleIndexes.lastObject];
 }
 
 #pragma - Network Loading
@@ -275,17 +290,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                        userInfo:nil
                                         repeats:NO];
     }
-}
-
-- (void)scrollToBottom
-{
-    NSInteger lastRowIndex = [_tableNode numberOfRowsInSection:0] - 1;
-    if (lastRowIndex < 0) {
-        lastRowIndex = 0;
-    }
-    [_tableNode scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:lastRowIndex inSection:0]
-                      atScrollPosition:UITableViewScrollPositionBottom
-                              animated:YES];
 }
 
 #pragma mark - DVBThreadDelegate
@@ -455,6 +459,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)composeAction
 {
     [DVBRouter showComposeFrom:self boardCode:_threadModel.boardCode threadNum:_threadModel.threadNum];
+}
+
+- (void)scrollToBottom
+{
+  NSInteger lastRowIndex = [_tableNode numberOfRowsInSection:0] - 1;
+  if (lastRowIndex < 0) {
+    lastRowIndex = 0;
+  }
+  NSIndexPath *lastIndexPath = [NSIndexPath indexPathForRow:lastRowIndex inSection:0];
+  [_tableNode scrollToRowAtIndexPath:lastIndexPath
+                    atScrollPosition:UITableViewScrollPositionBottom
+                            animated:YES];
+  [_threadModel storeThreadPosition:lastIndexPath];
 }
 
 - (void)shareAction
