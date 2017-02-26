@@ -36,6 +36,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 // @property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 @property (nonatomic, strong) NSArray <DVBPostViewModel *> *posts;
 @property (nonatomic, strong, nullable) NSArray <DVBPostViewModel *> *allPosts;
+@property (nonatomic, assign) BOOL autoScrolled;
 
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
@@ -92,7 +93,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewDidAppear:(BOOL)animated
 {
   [super viewDidAppear:animated];
+  if (_autoScrolled) {
+    return;
+  }
+  _autoScrolled = YES;
+  weakify(self);
   [_threadModel storedThreadPosition:^(NSIndexPath *indexPath) {
+    strongify(self);
+    if (!self) { return; }
     [_tableNode scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
   }];
 }
