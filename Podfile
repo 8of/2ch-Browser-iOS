@@ -11,7 +11,7 @@ abstract_target 'BasePods' do
 	pod 'Crashlytics', '3.8.3'
 	pod 'Fabric', '1.6.11'
 	pod 'Mantle', '2.1.0'
-	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git', :tag => '2.1.2'
+	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
 	pod 'Reachability', '3.2'
 	pod 'TUSafariActivity', '1.0.4'
 	pod 'YapDatabase', '2.9.2'
