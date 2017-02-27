@@ -683,6 +683,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A1E118891E63F71B0075AB38 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		A1FC04381E5A0EFF008C3577 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -696,6 +703,7 @@
 		A1FC04391E5A0F45008C3577 /* BoardScreen */ = {
 			isa = PBXGroup;
 			children = (
+				A1E118891E63F71B0075AB38 /* View */,
 			);
 			name = BoardScreen;
 			sourceTree = "<group>";

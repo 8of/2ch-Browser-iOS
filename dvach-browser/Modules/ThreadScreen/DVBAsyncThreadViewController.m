@@ -181,7 +181,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     return [vmPosts copy];
 }
 
-#pragma mark - ASTableNode
+#pragma mark - ASTableDataSource & ASTableDelegate
 
 - (ASCellNodeBlock)tableNode:(ASTableNode *)tableNode nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {

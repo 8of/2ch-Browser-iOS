@@ -9,11 +9,11 @@
 #import "DVBAsyncBoardViewController.h"
 #import "DVBThread.h"
 #import "DVBBoardModel.h"
-#import "ThreadNode.h"
 #import "DVBRouter.h"
 #import "DVBBoardStyler.h"
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBThreadUIGenerator.h"
+#import "ThreadNode.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -104,6 +104,7 @@
 - (void)initialBoardLoad
 {
     weakify(self);
+  _alreadyLoadingNextPage = YES;
     [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
      {
          strongify(self);
@@ -156,12 +157,13 @@
              });
          }];
     }];
-
-
 }
 
 - (void)loadNextBoardPage
 {
+  if (_alreadyLoadingNextPage) {
+    return;
+  }
     weakify(self);
     if (_pages > _currentPage)  {
         [_boardModel loadNextPageWithCompletion:^(NSArray *completionThreadsArray, NSError *error)
@@ -217,30 +219,33 @@
                     comment:nil];
 }
 
-#pragma mark - ASTableNode
+#pragma mark - ASTableDataSource & ASTableDelegate
 
 - (ASCellNodeBlock)tableNode:(ASTableNode *)tableNode nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DVBThread *thread = _boardModel.threadsArray[indexPath.row];
+  // Early return in case of error
+  if (indexPath.row >= _boardModel.threadsArray.count) {
     return ^{
-        return [[ThreadNode alloc] initWithThread:thread];
+      return [[ASCellNode alloc] init];
     };
+  }
+
+  DVBThread *thread = _boardModel.threadsArray[indexPath.row];
+  return ^{
+      return [[ThreadNode alloc] initWithThread:thread];
+  };
 }
 
 - (void)tableNode:(ASTableNode *)tableNode willDisplayRowWithNode:(ASCellNode *)node
 {
-    // Early return if something go wrong
-    if (!node.indexPath.row || _boardModel.threadsArray.count == 0 || _boardModel.threadsArray.count <= node.indexPath.row) {
-        return;
-    }
-    if ([[_boardModel.threadsArray lastObject] isEqual:_boardModel.threadsArray[node.indexPath.row]] ) {
-        [self loadNextBoardPage];
-    }
+  if (node.indexPath.row == _boardModel.threadsArray.count) {
+    [self loadNextBoardPage];
+  }
 }
 
 - (NSInteger)tableNode:(ASTableNode *)tableNode numberOfRowsInSection:(NSInteger)section
 {
-    return _boardModel.threadsArray.count;
+  return _boardModel.threadsArray.count + 1;
 }
 
 - (void)tableNode:(ASTableNode *)tableNode didSelectRowAtIndexPath:(NSIndexPath *)indexPath
