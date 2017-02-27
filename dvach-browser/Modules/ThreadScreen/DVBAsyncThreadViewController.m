@@ -186,8 +186,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (ASCellNodeBlock)tableNode:(ASTableNode *)tableNode nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPostViewModel *post = _posts[indexPath.row];
+
     return ^{
-        return [[DVBPostNode alloc] initWithPost:post andDelegate:self];
+        return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:self.view.bounds.size.width];
     };
 }
 

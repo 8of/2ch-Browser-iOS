@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DVBPostNode : ASCellNode
 
-- (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate;
+- (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate width:(CGFloat)width;
 
 NS_ASSUME_NONNULL_END
 

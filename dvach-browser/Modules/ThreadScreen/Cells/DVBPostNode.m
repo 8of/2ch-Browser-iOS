@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Lifecycle
 
-- (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate
+- (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate width:(CGFloat)width
 {
     self = [super init];
     if (self) {
@@ -59,35 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         // Images
         if (post.thumbs.count > 0) {
-            NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArray = [@[] mutableCopy];
-            weakify(self);
-            [post.thumbs enumerateObjectsUsingBlock:^(NSString * _Nonnull mediaUrl, NSUInteger idx, BOOL * _Nonnull stop) {
-              strongify(self);
-              if (!self) { return; }
-              // Do not show 5th and next items
-              if (idx == 4) {
-                *stop = YES;
-                return;
-              }
-
-              BOOL isWebm = (post.pictures.count > idx) && [post.pictures[idx] containsString:@".webm"];
-              ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isWebm];
-              DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
-              [mediaButton addTarget:self
-                              action:@selector(pictureTap:)
-                    forControlEvents:ASControlNodeEventTouchUpInside];
-              media.delegate = self;
-              [self addSubnode:media];
-              [self addSubnode:mediaButton];
-              ASOverlayLayoutSpec *overlay = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:media overlay:mediaButton];
-              [mediaNodesArray addObject:overlay];
-            }];
-            _mediaContainer = [ASStackLayoutSpec
-                               stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
-                               spacing:[DVBPostStyler elementInset]
-                               justifyContent:ASStackLayoutJustifyContentStart
-                               alignItems:ASStackLayoutAlignItemsStart
-                               children:[mediaNodesArray copy]];
+            _mediaContainer = [self mediaRowsWithThumbs:post.thumbs fulls:post.pictures width:width];
         }
 
         // Buttons
@@ -116,6 +88,63 @@ NS_ASSUME_NONNULL_BEGIN
 
     }
     return self;
+}
+
+- (ASStackLayoutSpec *)mediaRowsWithThumbs:(NSArray <NSString *> *)thumbs fulls:(NSArray <NSString *> *)fulls width:(CGFloat)width
+{
+  NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArray = [@[] mutableCopy];
+  NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArraySecond = [@[] mutableCopy];
+  weakify(self);
+  [thumbs enumerateObjectsUsingBlock:^(NSString * _Nonnull mediaUrl, NSUInteger idx, BOOL * _Nonnull stop) {
+    strongify(self);
+    if (!self) { return; }
+
+    BOOL isWebm = (fulls.count > idx) && [fulls[idx] containsString:@".webm"];
+    ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isWebm];
+    DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
+    [mediaButton addTarget:self
+                    action:@selector(pictureTap:)
+          forControlEvents:ASControlNodeEventTouchUpInside];
+    media.delegate = self;
+    [self addSubnode:media];
+    [self addSubnode:mediaButton];
+    ASOverlayLayoutSpec *overlay = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:media overlay:mediaButton];
+    CGFloat cellAndInsetWidth = [DVBPostStyler mediaSize] + [DVBPostStyler elementInset];
+    CGFloat compare = width - 2 * [DVBPostStyler innerInset];
+    if (idx * cellAndInsetWidth > compare) {
+      [mediaNodesArraySecond addObject:overlay];
+    } else {
+      [mediaNodesArray addObject:overlay];
+    }
+  }];
+
+  // Rows one below other
+  NSMutableArray <ASStackLayoutSpec *> *rows = [@[] mutableCopy];
+  if (mediaNodesArray.count > 0) {
+    // From left to right
+    [rows addObject:[ASStackLayoutSpec
+                    stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
+                    spacing:[DVBPostStyler elementInset]
+                    justifyContent:ASStackLayoutJustifyContentStart
+                    alignItems:ASStackLayoutAlignItemsStart
+                     children:[mediaNodesArray copy]]];
+  }
+  if (mediaNodesArraySecond.count > 0) {
+    // From left to right
+    [rows addObject:[ASStackLayoutSpec
+                     stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
+                     spacing:[DVBPostStyler elementInset]
+                     justifyContent:ASStackLayoutJustifyContentStart
+                     alignItems:ASStackLayoutAlignItemsStart
+                     children:[mediaNodesArraySecond copy]]];
+  }
+
+  return [ASStackLayoutSpec
+          stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical
+          spacing:[DVBPostStyler elementInset]
+          justifyContent:ASStackLayoutJustifyContentStart
+          alignItems:ASStackLayoutAlignItemsStart
+          children:[rows copy]];
 }
 
 - (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
