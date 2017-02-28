@@ -364,6 +364,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             strongify(self);
             if (!self) { return; }
             if (postsArrayBlock) {
+                
                 self.threadControllerTableViewManager.postsArray = postsArrayBlock;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];

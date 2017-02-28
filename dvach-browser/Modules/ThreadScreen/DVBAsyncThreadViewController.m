@@ -218,28 +218,38 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)reloadThread
 {
-    weakify(self);
-    [self getPostsWithBoard:_threadModel.boardCode
-                  andThread:_threadModel.threadNum
-              andCompletion:^(NSArray *posts)
-     {
-         strongify(self);
-         if (!self) { return; }
-         if (!posts) {
-             dispatch_async(dispatch_get_main_queue(), ^{
-               self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
-             });
-             return;
-         }
-         self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
+  weakify(self);
+  [self getPostsWithBoard:_threadModel.boardCode
+                andThread:_threadModel.threadNum
+            andCompletion:^(NSArray *posts)
+   {
+     strongify(self);
+     if (!self) { return; }
+     if (!posts) {
          dispatch_async(dispatch_get_main_queue(), ^{
-             [self.tableNode reloadData];
-             [self.refreshControl endRefreshing];
-             // [self.bottomRefreshControl endRefreshing];
-             [self checkNewPostsCount];
-             self.tableNode.view.backgroundView = nil;
+           self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
          });
-     }];
+         return;
+     }
+     NSMutableArray <NSNumber *> *newRows = [@[] mutableCopy];
+     for (NSInteger i = self.posts.count; i < [posts count]; i++) {
+       [newRows addObject:[[NSNumber alloc] initWithInteger:i]];
+     }
+     self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
+     dispatch_async(dispatch_get_main_queue(), ^{
+       [self addTableRows:[newRows copy]];
+       // [self.tableNode reloadData];
+       [self.refreshControl endRefreshing];
+       // [self.bottomRefreshControl endRefreshing];
+       [self checkNewPostsCount];
+       self.tableNode.view.backgroundView = nil;
+     });
+   }];
+}
+
+- (void)addTableRows:(NSArray <NSNumber *> *)rows
+{
+
 }
 
 /// Get data from 2ch server

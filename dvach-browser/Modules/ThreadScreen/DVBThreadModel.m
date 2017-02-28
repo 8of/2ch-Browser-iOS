@@ -92,7 +92,7 @@
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 strongify(self);
                 if (!self) { return; }
-                // NSLog(@"Work Dispatched");
+
                 // Do heavy or time consuming work
                 // Task 1: Read the data from sqlite
                 // Task 2: Process the data with a flag to stop the process if needed (only if this takes very long and may be cancelled often).
