@@ -1181,7 +1181,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/dvach-browser/Frameworks",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
@@ -1206,7 +1206,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/dvach-browser/Frameworks",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "dvach-browser/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;

@@ -6,7 +6,7 @@ inhibit_all_warnings!
 abstract_target 'BasePods' do
   # pods
 	pod 'AFNetworking', '2.6.3'
-	pod 'AsyncDisplayKit', '2.1'
+	pod 'AsyncDisplayKit', :git => 'https://github.com/facebook/AsyncDisplayKit.git', :tag => '2.2'
 	pod 'CCBottomRefreshControl', '0.5.1'
 	pod 'Crashlytics', '3.8.3'
 	pod 'Fabric', '1.6.11'
