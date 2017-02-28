@@ -96,7 +96,7 @@ NS_ASSUME_NONNULL_BEGIN
   ASButtonNode *node = [self button];
   node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
   UIImage *image = [UIImage imageNamed:@"AnswerToPost"];
-  [node setImage:image forState:ASControlStateNormal];
+  [node setImage:image forState:UIControlStateNormal];
   node.style.height = ASDimensionMake(22);
   return node;
 }
@@ -110,11 +110,11 @@ NS_ASSUME_NONNULL_BEGIN
   [node setTitle:title
         withFont:font
        withColor:DVACH_COLOR
-        forState:ASControlStateNormal];
+        forState:UIControlStateNormal];
   [node setTitle:title
         withFont:font
        withColor:DVACH_COLOR_HIGHLIGHTED
-        forState:ASControlStateHighlighted];
+        forState:UIControlStateNormal];
   node.style.height = ASDimensionMake(22);
   node.style.minWidth = ASDimensionMake(33);
   node.contentEdgeInsets = UIEdgeInsetsMake(0, [DVBPostStyler elementInset], 0, [DVBPostStyler elementInset]);

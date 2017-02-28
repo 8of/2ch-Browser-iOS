@@ -101,7 +101,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
   [_threadModel storedThreadPosition:^(NSIndexPath *indexPath) {
     strongify(self);
     if (!self) { return; }
-    [_tableNode scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    [self.tableNode scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
   }];
 }
 
@@ -160,9 +160,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             [self reloadThread];
             return;
         }
-        _posts = [self convertPostsToViewModel:posts forAnswer:NO];
+        self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [_tableNode reloadData];
+            [self.tableNode reloadData];
         });
         [self reloadThread];
     }];
@@ -231,11 +231,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
              });
              return;
          }
-         _posts = [self convertPostsToViewModel:posts forAnswer:NO];
+         self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
          dispatch_async(dispatch_get_main_queue(), ^{
-             [_tableNode reloadData];
-             [_refreshControl endRefreshing];
-             // [_bottomRefreshControl endRefreshing];
+             [self.tableNode reloadData];
+             [self.refreshControl endRefreshing];
+             // [self.bottomRefreshControl endRefreshing];
              [self checkNewPostsCount];
              self.tableNode.view.backgroundView = nil;
          });
@@ -245,10 +245,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Get data from 2ch server
 - (void)getPostsWithBoard:(NSString *)board andThread:(NSString *)threadNum andCompletion:(void (^)(NSArray *))completion
 {
-    weakify(self);
     [_threadModel reloadThreadWithCompletion:^(NSArray *completionsPosts) {
-        strongify(self);
-        if (!self) { return; }
         completion(completionsPosts);
     }];
 }

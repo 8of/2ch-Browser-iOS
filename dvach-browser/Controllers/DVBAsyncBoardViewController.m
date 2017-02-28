@@ -103,15 +103,15 @@
 /// First time loading thread list
 - (void)initialBoardLoad
 {
+    _alreadyLoadingNextPage = YES;
     weakify(self);
-  _alreadyLoadingNextPage = YES;
     [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
      {
          strongify(self);
          if (!self) { return; }
-         _threadsArray = [completionThreadsArray mutableCopy];
+         self.threadsArray = [completionThreadsArray mutableCopy];
          dispatch_async(dispatch_get_main_queue(), ^{
-             [_tableNode reloadData];
+             [self.tableNode reloadData];
              self.alreadyLoadingNextPage = NO;
              if (!completionThreadsArray || completionThreadsArray.count == 0) {
                self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
@@ -141,16 +141,16 @@
              strongify(self);
              if (!self) { return; }
              self.currentPage = 0;
-             _threadsArray = [completionThreadsArray mutableCopy];
+             self.threadsArray = [completionThreadsArray mutableCopy];
              dispatch_async(dispatch_get_main_queue(), ^{
-                 [_refreshControl endRefreshing];
-                 [_tableNode reloadData];
-                 if (_threadsArray.count > 0) {
+                 [self.refreshControl endRefreshing];
+                 [self.tableNode reloadData];
+                 if (self.threadsArray.count > 0) {
                    self.tableNode.view.backgroundView = nil;
                  }
                  [UIView animateWithDuration:duration
                                   animations:^{
-                     _tableNode.view.layer.opacity = 1;
+                     self.tableNode.view.layer.opacity = 1;
                  } completion:^(BOOL finished) {
                      self.alreadyLoadingNextPage = NO;
                  }];
@@ -170,23 +170,23 @@
          {
              strongify(self);
              if (!self) { return; }
-             NSInteger threadsCountWas = _threadsArray.count ? _threadsArray.count : 0;
-             _threadsArray = [completionThreadsArray mutableCopy];
-             NSInteger threadsCountNow = _threadsArray.count ? _threadsArray.count : 0;
+             NSInteger threadsCountWas = self.threadsArray.count ? self.threadsArray.count : 0;
+             self.threadsArray = [completionThreadsArray mutableCopy];
+             NSInteger threadsCountNow = self.threadsArray.count ? self.threadsArray.count : 0;
 
              NSMutableArray *mutableIndexPathes = [@[] mutableCopy];
 
              for (NSInteger i = threadsCountWas; i < threadsCountNow; i++) {
                  [mutableIndexPathes addObject:[NSIndexPath indexPathForRow:i inSection:0]];
              }
-             if (_threadsArray.count == 0) {
+             if (self.threadsArray.count == 0) {
                  // [self showMessageAboutError];
                  self.navigationItem.rightBarButtonItem.enabled = NO;
              } else {
                  self.currentPage++;
                  // Update only if we have something to show
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     [_tableNode insertRowsAtIndexPaths:mutableIndexPathes.copy withRowAnimation:UITableViewRowAnimationFade];
+                     [self.tableNode insertRowsAtIndexPaths:mutableIndexPathes.copy withRowAnimation:UITableViewRowAnimationFade];
                      self.alreadyLoadingNextPage = NO;
                      self.navigationItem.rightBarButtonItem.enabled = YES;
                      // self.tableView.backgroundView = nil;
