@@ -37,6 +37,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, strong) NSArray <DVBPostViewModel *> *posts;
 @property (nonatomic, strong, nullable) NSArray <DVBPostViewModel *> *allPosts;
 @property (nonatomic, assign) BOOL autoScrolled;
+@property (nonatomic, assign) BOOL alreadyLoading;
 
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
@@ -152,19 +153,22 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// Get data for thread from Db if any
 - (void)initialThreadLoad
 {
+  _alreadyLoading = YES;
     weakify(self);
     [_threadModel checkPostsInDbForThisThreadWithCompletion:^(NSArray *posts) { // array of DVBPost
         strongify(self);
         if (!self) { return; }
         if (!posts) {
+            _alreadyLoading = NO;
             [self reloadThread];
             return;
         }
         self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableNode reloadData];
+            _alreadyLoading = NO;
+            [self reloadThread];
         });
-        [self reloadThread];
     }];
 }
 
@@ -218,6 +222,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)reloadThread
 {
+  if (_alreadyLoading) {
+    return;
+  }
   weakify(self);
   [self getPostsWithBoard:_threadModel.boardCode
                 andThread:_threadModel.threadNum
@@ -227,19 +234,21 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
      if (!self) { return; }
      if (!posts) {
          dispatch_async(dispatch_get_main_queue(), ^{
+           _alreadyLoading = NO;
+           [self.refreshControl endRefreshing];
            self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
          });
          return;
      }
-     NSMutableArray <NSNumber *> *newRows = [@[] mutableCopy];
+     NSMutableArray <NSIndexPath *> *newRows = [@[] mutableCopy];
      for (NSInteger i = self.posts.count; i < [posts count]; i++) {
-       [newRows addObject:[[NSNumber alloc] initWithInteger:i]];
+       NSIndexPath *path = [NSIndexPath indexPathForRow:i inSection:0];
+       [newRows addObject:path];
      }
      self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
      dispatch_async(dispatch_get_main_queue(), ^{
        [self addTableRows:[newRows copy]];
        // [self.tableNode reloadData];
-       [self.refreshControl endRefreshing];
        // [self.bottomRefreshControl endRefreshing];
        [self checkNewPostsCount];
        self.tableNode.view.backgroundView = nil;
@@ -247,9 +256,19 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
    }];
 }
 
-- (void)addTableRows:(NSArray <NSNumber *> *)rows
+- (void)addTableRows:(NSArray <NSIndexPath *> *)paths
 {
-
+  [_tableNode performBatchAnimated:YES
+                           updates:^
+  {
+    [_tableNode insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationFade];
+  }
+                        completion:^(BOOL finished)
+  {
+    _alreadyLoading = NO;
+    [self.refreshControl endRefreshing];
+  }
+   ];
 }
 
 /// Get data from 2ch server
