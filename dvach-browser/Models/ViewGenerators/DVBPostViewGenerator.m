@@ -114,7 +114,7 @@ NS_ASSUME_NONNULL_BEGIN
   [node setTitle:title
         withFont:font
        withColor:DVACH_COLOR_HIGHLIGHTED
-        forState:UIControlStateNormal];
+        forState:UIControlStateHighlighted];
   node.style.height = ASDimensionMake(22);
   node.style.minWidth = ASDimensionMake(33);
   node.contentEdgeInsets = UIEdgeInsetsMake(0, [DVBPostStyler elementInset], 0, [DVBPostStyler elementInset]);
