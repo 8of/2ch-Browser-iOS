@@ -14,6 +14,7 @@
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCreatePostViewController.h"
+#import "DVBWebmViewController.h"
 
 @implementation DVBRouter
 
@@ -69,6 +70,15 @@
   }
 
   [vc presentViewController:navigationController
+                   animated:YES
+                 completion:nil];
+}
+
++ (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url
+{
+  DVBWebmViewController *webmVC = [[DVBWebmViewController alloc] initWithUrl:url];
+  UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:webmVC];
+  [vc presentViewController:nc
                    animated:YES
                  completion:nil];
 }

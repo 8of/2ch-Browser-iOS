@@ -8,9 +8,9 @@
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
-
 #import "DVBMediaOpener.h"
 #import "DVBBrowserViewControllerBuilder.h"
+#import "DVBRouter.h"
 
 @interface DVBMediaOpener ()
 
@@ -46,8 +46,10 @@
   }
   // if contains .webm
   if ([fullUrlString containsString:@".webm"]) {
-    NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
-    [self openVLCWithURL:fullUrl];
+    NSURL *url = [NSURL URLWithString:fullUrlString];
+    [self openInternalWebmWithURL:url];
+//    NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
+//    [self openVLCWithURL:fullUrl];
   }
   // if not
   else {
@@ -81,6 +83,13 @@
                                                            animated:YES
                                                          completion:nil];
     }
+}
+
+#pragma mark - Webm
+
+- (void)openInternalWebmWithURL:(NSURL *)url
+{
+  [DVBRouter openWebmFrom:_viewController url:url];
 }
 
 #pragma mark - VLC

@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)pushAnswersFrom:(UIViewController *)viewController postNum:(NSString *)postNum answers:(NSArray <DVBPostViewModel *> *)answers allPosts:(NSArray <DVBPostViewModel *> *)allPosts;
 + (void)openCreateThreadFrom:(UIViewController *)vc boardCode:(NSString *)boardCode;
 + (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(NSString *)threadNum;
++ (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url;
 
 @end
 

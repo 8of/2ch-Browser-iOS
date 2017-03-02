@@ -17,6 +17,7 @@ abstract_target 'BasePods' do
 	pod 'Mantle', '2.1.0'
 	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
 	pod 'OGVKit', '0.5pre'
+	pod 'PureLayout', '3.0.2'
 	pod 'Reachability', '3.2'
 	pod 'TUSafariActivity', '1.0.4'
 	pod 'YapDatabase', '2.9.2'
