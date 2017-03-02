@@ -19,7 +19,6 @@
 #import "DVBCaptchaHelper.h"
 
 #import "DVBCreatePostViewController.h"
-#import "DVBThreadViewController.h"
 #import "DVBDvachCaptchaViewController.h"
 
 #import "DVBContainerForPostElements.h"
@@ -128,31 +127,36 @@
 /// Button action to fire post sending method
 - (IBAction)makePostAction:(id)sender
 {
-    // Clear any prompt messages
-    self.navigationItem.prompt = nil;
+  // Clear any prompt messages
+  self.navigationItem.prompt = nil;
 
-    // Check usercode - send post if needed
-    BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
+  // Check usercode - send post if needed
+  BOOL isUsercodeNotEmpty = ![_usercode isEqualToString:@""];
 
-    if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
-        [self sendPostWithoutCaptcha:YES andAppResponseId:nil];
+  if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_FORCE_CAPTCHA]) {
+    [self showDvachCaptchaController];
+    return;
+  }
+
+  if (isUsercodeNotEmpty && ![_threadNum isEqualToString:@"0"]) {
+    [self sendPostWithoutCaptcha:YES andAppResponseId:nil];
+  } else {
+    if ([_threadNum isEqualToString:@"0"]) {
+      [self showDvachCaptchaController];
+      return;
     } else {
-        if ([_threadNum isEqualToString:@"0"]) {
-            [self showDvachCaptchaController];
-            return;
-        } else {
-            weakify(self);
-            [_networking tryApCaptchaWithCompletion:^(NSString * _Nullable appResponseId) {
-                strongify(self);
-                if (!self) { return; }
-                if (!appResponseId) { // Can't get APCaptcha, show regular captcha
-                    [self showDvachCaptchaController];
-                    return;
-                }
-                [self sendPostWithoutCaptcha:YES andAppResponseId:appResponseId];
-            }];
+      weakify(self);
+      [_networking tryApCaptchaWithCompletion:^(NSString * _Nullable appResponseId) {
+        strongify(self);
+        if (!self) { return; }
+        if (!appResponseId) { // Can't get APCaptcha, show regular captcha
+          [self showDvachCaptchaController];
+          return;
         }
+        [self sendPostWithoutCaptcha:YES andAppResponseId:appResponseId];
+      }];
     }
+  }
 }
 
 - (IBAction)pickPhotoAction:(id)sender
@@ -204,6 +208,9 @@
             @"2chaptcha_id": _captchaId,
             @"2chaptcha_value": _captchaCode
         };
+    } else {
+        // No right app response from server, and entered manual captcha yet
+        [self showDvachCaptchaController];
     }
 
     [_networking postMessageWithBoard:_boardCode andThreadnum:_threadNum andName:name andEmail:email andSubject:subject andComment:comment andUsercode:_usercode andImagesToUpload:imagesToUpload andCaptchaParameters:captchaParameters andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
@@ -338,29 +345,14 @@
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
         }
-        [self dismissViewControllerAnimated:YES completion:nil];
     } else  {
-        [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
-                                  sender:self];
+      id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
+      // Update thread in any case (was post successfull or not)
+      if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
+        [strongDelegate updateThreadAfterPosting];
+      }
     }
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
-    
-    /**
-     *  Xcode will complain if we access a weak property more than once here, since it could in theory be nilled between accesses
-     *  leading to unpredictable results. So we'll start by taking a local, strong reference to the delegate.
-     */
-    id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
-    
-    if (isSegueDismissToThread) {
-        // Update thread in any case (was post successfull or not)
-        if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
-            [strongDelegate updateThreadAfterPosting];
-        }
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /// Write comment text to singleton

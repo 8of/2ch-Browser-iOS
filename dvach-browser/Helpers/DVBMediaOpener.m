@@ -12,11 +12,9 @@
 #import "DVBMediaOpener.h"
 #import "DVBBrowserViewControllerBuilder.h"
 
-#import "VDLPlaybackViewController.h"
-
 @interface DVBMediaOpener ()
 
-@property (nonatomic, strong) UIViewController *viewController;
+@property (nonatomic, weak) UIViewController *viewController;
 
 @end
 
@@ -42,34 +40,21 @@
 
 - (void)openMediaWithUrlString:(NSString *)fullUrlString andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
 {
-    // Check if cell have real image / webm video or just placeholder
-    if (![fullUrlString isEqualToString:@""]) {
-        // if contains .webm
-        if ([fullUrlString rangeOfString:@".webm" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-
-            if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_INTERNAL_WEBM_PLAYER]) {
-                // Because there are links with VLC in DB already
-                NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"vlc" withString:@"https"]];
-                [self openWebMWithUrl:fullUrl];
-            } else {
-                NSURL *fullUrl = [NSURL URLWithString:fullUrlString];
-                BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:fullUrl];
-
-                if (canOpenInVLC) {
-                    [[UIApplication sharedApplication] openURL:fullUrl];
-                }
-                else {
-                    [self problemAboutVlcToPrompt];
-                }
-            }
-        }
-        // if not
-        else {
-            [self createAndPushGalleryWithUrlString:fullUrlString
-                                andThumbImagesArray:thumbImagesArray
-                                 andFullImagesArray:fullImagesArray];
-        }
-    }
+  if ([fullUrlString isEqualToString:@""]) {
+    // Empty link case
+    return;
+  }
+  // if contains .webm
+  if ([fullUrlString containsString:@".webm"]) {
+    NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
+    [self openVLCWithURL:fullUrl];
+  }
+  // if not
+  else {
+    [self createAndPushGalleryWithUrlString:fullUrlString
+                        andThumbImagesArray:thumbImagesArray
+                         andFullImagesArray:fullImagesArray];
+  }
 }
 
 - (void)createAndPushGalleryWithUrlString:(NSString *)urlString andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
@@ -98,15 +83,18 @@
     }
 }
 
-- (void)openWebMWithUrl:(NSURL *)url
+#pragma mark - VLC
+
+- (void)openVLCWithURL:(NSURL *)url
 {
-    VDLPlaybackViewController *playbackViewController = [[VDLPlaybackViewController alloc] initWithNibName:nil bundle:nil];
-    UINavigationController *navCon = [[UINavigationController alloc] initWithRootViewController:playbackViewController];
-    navCon.modalPresentationStyle = UIModalPresentationFullScreen;
-    [playbackViewController playMediaFromURL:url];
-    [_viewController presentViewController:navCon
-                                  animated:YES
-                                completion:nil];
+  BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:url];
+
+  if (canOpenInVLC) {
+    [[UIApplication sharedApplication] openURL:url];
+  }
+  else {
+    [self problemAboutVlcToPrompt];
+  }
 }
 
 /// NO VLC error prompt

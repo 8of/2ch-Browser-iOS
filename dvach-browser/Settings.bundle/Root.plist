@@ -18,11 +18,11 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>internalWebmPlayer</string>
+			<string>Enable captcha</string>
 			<key>Key</key>
-			<string>internalWebmPlayer</string>
+			<string>forceCaptcha</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>AutocapitalizationType</key>
@@ -41,16 +41,6 @@
 			<string>Passcode</string>
 			<key>Type</key>
 			<string>PSTextFieldSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Clear cache</string>
-			<key>Key</key>
-			<string>clearThreads</string>
-			<key>DefaultValue</key>
-			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -76,13 +66,13 @@
 		</dict>
 		<dict>
 			<key>Type</key>
-			<string>PSGroupSpecifier</string>
+			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Reload app</string>
+			<string>Clear cache</string>
 			<key>Key</key>
-			<string>descriptionText</string>
+			<string>clearThreads</string>
 			<key>DefaultValue</key>
-			<string></string>
+			<false/>
 		</dict>
 	</array>
 	<key>StringsTable</key>

@@ -23,7 +23,7 @@ static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
 + (NSString *)base
 {
     if (_base == nil) {
-        _base = [NSString stringWithFormat:@"https://%@/", [self domain]];
+        _base = [NSString stringWithFormat:@"https://%@", [self domain]];
     }
     return _base;
 }

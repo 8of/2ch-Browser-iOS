@@ -84,7 +84,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
 
     // Setup dynamic font sizes.
 
-    UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    UIFont *defaultFont = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
 
     _nameTextField.font = defaultFont;
     _subjectTextField.font = defaultFont;

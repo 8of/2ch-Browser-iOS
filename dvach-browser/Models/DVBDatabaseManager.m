@@ -46,10 +46,10 @@ static NSString * const DB_FILE = @"dvachDB.sqlite";
 
 - (void)clearAll
 {
-    YapDatabaseConnection *connection = [_database newConnection];
-    [connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * transaction) {
-        [transaction removeAllObjectsInCollection:DB_COLLECTION_THREADS];
-    }];
+  YapDatabaseConnection *connection = [_database newConnection];
+  [connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction * transaction) {
+    [transaction removeAllObjectsInAllCollections];
+  }];
 }
 
 @end

@@ -25,6 +25,13 @@
      };
 }
 
++ (NSValueTransformer *)subjectJSONTransformer
+{
+  return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
+    return [string stringByConvertingHTMLToPlainText];
+  }];
+}
+
 + (NSValueTransformer *)commentJSONTransformer
 {
     return [MTLValueTransformer transformerUsingForwardBlock:^id(NSString *string, BOOL *success, NSError *__autoreleasing *error) {
@@ -47,33 +54,17 @@
     }];
 }
 
-+ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
++ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(nullable NSString *)num andComment:(nullable NSString *)comment
 {
 
-    if ([title isEqualToString:@""]) {
-        return num;
-    }
+  if (!title || [title isEqualToString:@""]) {
+    return num;
+  }
 
-    if ([comment containsString:num]) {
-        return num;
-    }
-
-    return title;
-}
-
-+ (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment
-{
-    if (title.length > 2 && comment.length > 2) {
-        if ([[title substringToIndex:2] isEqualToString:[comment substringToIndex:2]]) {
-            return num;
-        }
-    }
-
-    if ([title isEqualToString:@""]) {
-        return num;
-    }
-
-    return title;
+  if (!comment || [comment containsString:num]) {
+    return num;
+  }
+  return title;
 }
 
 + (BOOL)isTitle:(NSString *)title madeFromComment:(NSString *)comment

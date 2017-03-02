@@ -15,6 +15,8 @@
 #import <Foundation/Foundation.h>
 #import <Mantle/Mantle.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface DVBThread : MTLModel <MTLJSONSerializing>
 
 /// UID of the open post of the thread.
@@ -31,7 +33,8 @@
 @property (nonatomic, strong) NSString *timeSinceFirstPost;
 
 + (BOOL)isTitle:(NSString *)title madeFromComment:(NSString *)comment;
-+ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment;
-+ (NSString *)threadTitleFromTitle:(NSString *)title andNum:(NSString *)num andComment:(NSString *)comment;
++ (NSString *)threadControllerTitleFromTitle:(NSString *)title andNum:(nullable NSString *)num andComment:(nullable NSString *)comment;
 
 @end
+
+NS_ASSUME_NONNULL_END

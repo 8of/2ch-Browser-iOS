@@ -6,13 +6,9 @@
 //  Copyright (c) 2014 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
 #import "DVBPost.h"
-
-@interface DVBPost ()
-
-@property (nonatomic, assign) NSInteger timestamp;
-
-@end
 
 @implementation DVBPost
 
@@ -22,7 +18,6 @@
              @"num" : @"num",
              @"subject" : @"subject",
              @"timestamp" : @"timestamp",
-             @"dateAgo" : @"timestamp",
              @"name" : @"name"
              };
 }
@@ -55,19 +50,6 @@
         }
         return subject;
     }];
-}
-
-+ (NSValueTransformer *)dateAgoJSONTransformer
-{
-    return [MTLValueTransformer transformerUsingForwardBlock:^id(NSNumber *timestamp, BOOL *success, NSError *__autoreleasing *error) {
-        NSString *dateAgo = [DateFormatter dateFromTimestamp:timestamp.integerValue];
-        return dateAgo;
-    }];
-}
-
-- (void)updateDateAgo
-{
-    _dateAgo = [DateFormatter dateFromTimestamp:_timestamp];
 }
 
 @end

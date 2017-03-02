@@ -13,8 +13,8 @@
 #import "UrlNinja.h"
 #import "DVBDefaultsManager.h"
 #import "DVBBoardsViewController.h"
-#import "DVBThreadViewController.h"
 #import "DVBRouter.h"
+#import "DVBThread.h"
 
 static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
@@ -155,15 +155,11 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
 {
-    DVBThreadViewController *threadViewControllerToOpen = [self.storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_THREAD_VIEW_CONTROLLER];
-    threadViewControllerToOpen.boardCode = urlNinja.boardId;
-    threadViewControllerToOpen.threadNum = urlNinja.threadId;
-    if (urlNinja.threadTitle) {
-        threadViewControllerToOpen.threadSubject = urlNinja.threadTitle;
-    }
-
-    [self.navigationController pushViewController:threadViewControllerToOpen
-                                         animated:YES];
+  [DVBRouter pushThreadFrom:self
+                      board:urlNinja.boardId
+                     thread:urlNinja.threadId
+                    subject:nil
+                    comment:nil];
 }
 
 #pragma mark - user Agreement
@@ -192,7 +188,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 #pragma mark - Actions
 
-- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender
+{
     // Cancel focus on Search field - or app can crash.
     [self.view endEditing:YES];
     UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];

@@ -6,6 +6,10 @@
 //  Copyright © 2016 8of. All rights reserved.
 //
 
+#import <AsyncDisplayKit/ASPINRemoteImageDownloader.h>
+#import <PINCache/PINCache.h>
+#import <SDWebImage/SDWebImageManager.h>
+
 #import "DVBDefaultsManager.h"
 
 @interface DVBDefaultsManager ()
@@ -48,40 +52,45 @@
 
 - (void)initApp
 {
-    [Fabric with:@[[Crashlytics class]]];
+  [Fabric with:@[[Crashlytics class]]];
 
-    _networking = [[DVBNetworking alloc] init];
-    NSString *userAgent = [_networking userAgent];
-    // Prevent Clauda shitting on my network queries
-    [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
-                                             forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+  _networking = [[DVBNetworking alloc] init];
+  NSString *userAgent = [_networking userAgent];
 
-    // User defaults
-    NSDictionary* defaults = @{
-                               USER_AGREEMENT_ACCEPTED : @NO,
-                               SETTING_ENABLE_DARK_THEME : @NO,
-                               SETTING_ENABLE_INTERNAL_WEBM_PLAYER : @YES,
-                               SETTING_CLEAR_THREADS : @NO,
-                               SETTING_BASE_DOMAIN : DVACH_DOMAIN,
-                               PASSCODE : @"",
-                               USERCODE : @"",
-                               DEFAULTS_REVIEW_STATUS : @NO,
-                               DEFAULTS_USERAGENT_KEY : userAgent
-                               };
+  // User defaults
+  NSDictionary* defaults = @{
+                             USER_AGREEMENT_ACCEPTED : @NO,
+                             SETTING_ENABLE_DARK_THEME : @NO,
+                             SETTING_CLEAR_THREADS : @NO,
+                             SETTING_FORCE_CAPTCHA : @NO,
+                             SETTING_BASE_DOMAIN : DVACH_DOMAIN,
+                             PASSCODE : @"",
+                             USERCODE : @"",
+                             DEFAULTS_REVIEW_STATUS : @NO,
+                             DEFAULTS_USERAGENT_KEY : userAgent
+                             };
 
-    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+  [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+  [[NSUserDefaults standardUserDefaults] synchronize];
 
-    // Turn off Shake to Undo because of tags on post screen
-    [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
+  // Turn off Shake to Undo because of tags on post screen
+  [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 
+  [self manageDownloadsUserAgent:userAgent];
+  [self managePasscode];
+  [self manageAFNetworking];
+  [self manageDb];
+  [self appearanceTudeUp];
+  [self observeDefaults:YES];
+}
 
-
-    [self managePasscode];
-    [self manageAFNetworking];
-    [self manageDb];
-    [self appearanceTudeUp];
-    [self observeDefaults:YES];
+- (void)manageDownloadsUserAgent:(NSString *)userAgent
+{
+  // Prevent Clauda from shitting on my network queries
+  [[SDWebImageManager sharedManager].imageDownloader setValue:userAgent
+                                           forHTTPHeaderField:NETWORK_HEADER_USERAGENT_KEY];
+  [ASPINRemoteImageDownloader setSharedImageManagerWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+  
 }
 
 - (void)observeDefaults:(BOOL)enable
@@ -188,15 +197,15 @@
 
 - (void)clearAllCaches
 {
-    [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    [[SDImageCache sharedImageCache] clearDisk];
+  [[NSURLCache sharedURLCache] removeAllCachedResponses];
+  [[SDImageCache sharedImageCache] clearDisk];
+  [[PINCache sharedCache] removeAllObjects];
 }
 
 /// Tuning appearance for entire app.
 - (void)appearanceTudeUp
 {
     [UIView appearance].tintColor = DVACH_COLOR;
-    [UIActivityIndicatorView appearance].color = DVACH_COLOR;
     [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
     
     UIView *colorView = [[UIView alloc] init];

@@ -15,10 +15,6 @@
 #import <Foundation/Foundation.h>
 #import <Mantle/Mantle.h>
 
-#import "DVBCommon.h"
-#import "DVBConstants.h"
-#import "DateFormatter.h"
-
 @interface DVBPost : MTLModel <MTLJSONSerializing>
 
 /// Number of the post
@@ -31,16 +27,12 @@
 @property (nonatomic, strong) NSArray *pathesArray;
 /// Array of pathes for thumbnail images attached to post
 @property (nonatomic, strong) NSArray *thumbPathesArray;
-/// Relative date to NOW date
-@property (nonatomic, strong, readonly) NSString *dateAgo;
 /// Name of the author of the post
 @property (nonatomic, strong, readonly) NSString *name;
 /// Replies to this post from other posts in the thread / need to be mutable, as we change it afer creating
 @property (nonatomic, strong) NSMutableArray *replies;
 /// Replies to other posts in this post, children of the same thread / need to be mutable, as we change it afer creating
 @property (nonatomic, strong) NSMutableArray *repliesTo;
-
-/// Update dateAgo parameter to relevant value
-- (void)updateDateAgo;
+@property (nonatomic, assign) NSInteger timestamp;
 
 @end
