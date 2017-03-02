@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1AD4F7164158B9327CF791EC /* Pods_BasePods_dvach_browserTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3440D7D943A9F826B25D24A6 /* Pods_BasePods_dvach_browserTests.framework */; };
 		840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */; };
 		8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8428B63919EDAC74007973A8 /* UIKit.framework */; };
 		842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842E84E119E729F800CB9740 /* Foundation.framework */; };
@@ -20,6 +21,7 @@
 		84CFC51919E1526E004D0BB8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51719E1526E004D0BB8 /* Main.storyboard */; };
 		84CFC51B19E1526E004D0BB8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84CFC51A19E1526E004D0BB8 /* Images.xcassets */; };
 		84E29DC91AE59FA10023EEB6 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84E29DC81AE59FA10023EEB6 /* Settings.bundle */; };
+		8EDB774422E7B249767C1C1D /* Pods_BasePods_dvach_browser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA6D360509028339F31549C7 /* Pods_BasePods_dvach_browser.framework */; };
 		940BD54E1E0554D200D6BAF8 /* DVBPostViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 940BD54D1E0554D200D6BAF8 /* DVBPostViewModel.m */; };
 		940BD5531E05649100D6BAF8 /* DVBPostViewGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 940BD5521E05649100D6BAF8 /* DVBPostViewGenerator.m */; };
 		940BD5561E0564B900D6BAF8 /* DVBBoardStyler.m in Sources */ = {isa = PBXBuildFile; fileRef = 940BD5551E0564B900D6BAF8 /* DVBBoardStyler.m */; };
@@ -68,7 +70,6 @@
 		94E8E06D1B20CF88008761C6 /* DVBUrlNinjaTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 94E8E06C1B20CF88008761C6 /* DVBUrlNinjaTest.m */; };
 		94F454F81BF3E368001B8091 /* UIImage+DVBOpaqueImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 94F454F71BF3E368001B8091 /* UIImage+DVBOpaqueImage.m */; };
 		94FC06A31C674E8D00813A68 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FC06A21C674E8D00813A68 /* libiconv.tbd */; };
-		95090021D5E865A763B18206 /* libPods-BasePods-dvach-browserTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */; };
 		A100A4521AAEF56F0027F917 /* DVBBoardModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A100A4511AAEF56F0027F917 /* DVBBoardModel.m */; };
 		A155FEEF1AB7355600BE31F4 /* DVBAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE41AB7355600BE31F4 /* DVBAgreementViewController.m */; };
 		A155FEF01AB7355600BE31F4 /* DVBBoardsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A155FEE61AB7355600BE31F4 /* DVBBoardsViewController.m */; };
@@ -94,7 +95,6 @@
 		A1FC04441E5A0FF3008C3577 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC04431E5A0FF3008C3577 /* DVBPostPreparation.m */; };
 		A1FC044D1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC044C1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m */; };
 		A1FC04501E5A10C2008C3577 /* DVBThreadUIGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC044F1E5A10C2008C3577 /* DVBThreadUIGenerator.m */; };
-		F62DE04DED0A2C69DE8B8DD7 /* libPods-BasePods-dvach-browser.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,8 +110,7 @@
 /* Begin PBXFileReference section */
 		16E05AB79E8C2A1134B2FF61 /* Pods-BasePods-dvach-browser.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browser.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser.debug.xcconfig"; sourceTree = "<group>"; };
 		24704D5E096DD80DBD0AD4EC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasePods-dvach-browserTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasePods-dvach-browser.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3440D7D943A9F826B25D24A6 /* Pods_BasePods_dvach_browserTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BasePods_dvach_browserTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		8428B63919EDAC74007973A8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		842E84E119E729F800CB9740 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -263,6 +262,7 @@
 		A1FC044C1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBBrowserViewControllerBuilder.m; path = Modules/ThreadScreen/DVBBrowserViewControllerBuilder.m; sourceTree = "<group>"; };
 		A1FC044E1E5A10C2008C3577 /* DVBThreadUIGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadUIGenerator.h; path = Modules/ThreadScreen/DVBThreadUIGenerator.h; sourceTree = "<group>"; };
 		A1FC044F1E5A10C2008C3577 /* DVBThreadUIGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadUIGenerator.m; path = Modules/ThreadScreen/DVBThreadUIGenerator.m; sourceTree = "<group>"; };
+		DA6D360509028339F31549C7 /* Pods_BasePods_dvach_browser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BasePods_dvach_browser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browserTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E2FB6DBFA4B0E60C9DC1E905 /* Pods-BasePods-dvach-browser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browser.release.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser.release.xcconfig"; sourceTree = "<group>"; };
@@ -280,7 +280,7 @@
 				8428B63A19EDAC74007973A8 /* UIKit.framework in Frameworks */,
 				842E84E219E729F800CB9740 /* Foundation.framework in Frameworks */,
 				84AA9A1319E5E5D2009C2811 /* SystemConfiguration.framework in Frameworks */,
-				F62DE04DED0A2C69DE8B8DD7 /* libPods-BasePods-dvach-browser.a in Frameworks */,
+				8EDB774422E7B249767C1C1D /* Pods_BasePods_dvach_browser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,7 +288,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95090021D5E865A763B18206 /* libPods-BasePods-dvach-browserTests.a in Frameworks */,
+				1AD4F7164158B9327CF791EC /* Pods_BasePods_dvach_browserTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,8 +643,8 @@
 				842E84E119E729F800CB9740 /* Foundation.framework */,
 				84AA9A1219E5E5D2009C2811 /* SystemConfiguration.framework */,
 				DB2041C9957E17E7EBCCE65F /* libPods.a */,
-				4D6433FA00AE253912AF3D1A /* libPods-BasePods-dvach-browser.a */,
-				24755AD6F61F51C8CB61BD7E /* libPods-BasePods-dvach-browserTests.a */,
+				DA6D360509028339F31549C7 /* Pods_BasePods_dvach_browser.framework */,
+				3440D7D943A9F826B25D24A6 /* Pods_BasePods_dvach_browserTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
