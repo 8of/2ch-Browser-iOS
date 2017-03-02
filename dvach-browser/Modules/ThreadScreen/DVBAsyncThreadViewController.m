@@ -125,12 +125,26 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)bottomRefreshStart:(BOOL)start
 {
+  if (![_tableNode.view.tableFooterView isKindOfClass:[UIActivityIndicatorView class]]) {
+    return;
+  }
+  UIActivityIndicatorView *activity = (UIActivityIndicatorView *)_tableNode.view.tableFooterView;
   if (start) {
     [self reloadThread];
+    [activity startAnimating];
   } else {
-
+    if ([_tableNode.view.tableFooterView isKindOfClass:[UIActivityIndicatorView class]]) {
+      UIActivityIndicatorView *activity = (UIActivityIndicatorView *)_tableNode.view.tableFooterView;
+      if (_posts.count > 8) {
+        [activity startAnimating];
+      } else {
+        [activity stopAnimating];
+      }
+    }
   }
 }
+
+
 
 - (void)createRightButton
 {
@@ -281,7 +295,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self.refreshControl endRefreshing];
     [self bottomRefreshStart:NO];
   }
-   ];
+  ];
 }
 
 /// Get data from 2ch server
