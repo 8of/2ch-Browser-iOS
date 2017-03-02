@@ -26,17 +26,10 @@ NS_ASSUME_NONNULL_BEGIN
   return node;
 }
 
-+ (ASTextNode *)titleNodeWithText:(NSString *)text
++ (ASTextNode *)titleNode
 {
   ASTextNode *node = [[ASTextNode alloc] init];
-  NSDictionary *textAttributes = @
-  {
-    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
-    NSForegroundColorAttributeName: [DVBPostStyler textColor],
-    NSBackgroundColorAttributeName: [DVBPostStyler postCellInsideBackgroundColor]
-  };
   node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
-  node.attributedText = [[NSAttributedString alloc] initWithString:text attributes:textAttributes];
   node.truncationMode = NSLineBreakByTruncatingTail;
   node.maximumNumberOfLines = 1;
   return node;

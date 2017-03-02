@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) NSInteger repliesCount;
 @property (nonatomic, strong, readonly) NSArray <NSString *> *thumbs;
 @property (nonatomic, strong, readonly) NSArray <NSString *> *pictures;
+@property (nonatomic, assign) NSInteger timestamp;
 
 - (instancetype)initWithPost:(DVBPost *)post andIndex:(NSInteger)index;
 /// To prevent multiple nesting

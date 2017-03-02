@@ -105,7 +105,6 @@
                     } else {
                         // update dates to relevant values
                         for (DVBPost *earlierPost in self.privatePostsArray) {
-                            [earlierPost updateDateAgo];
                             [postNumMutableArray addObject:earlierPost.num];
                             earlierPost.replies = [@[] mutableCopy];
                         }

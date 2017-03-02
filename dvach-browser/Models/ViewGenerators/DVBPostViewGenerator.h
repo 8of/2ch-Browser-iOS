@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface DVBPostViewGenerator : NSObject
 
 + (ASDisplayNode *)borderNode;
-+ (ASTextNode *)titleNodeWithText:(NSString *)text;
++ (ASTextNode *)titleNode;
 + (ASTextNode *)textNodeWithText:(NSAttributedString *)text;
 + (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url isWebm:(BOOL)isWebm;
 + (ASButtonNode *)answerButton;

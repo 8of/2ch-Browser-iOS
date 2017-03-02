@@ -178,11 +178,10 @@ static CGFloat const HORISONTAL_CONSTRAINT = 10.0f; // we have 3 of them
     DVBPost *post = _postsArray[indexPath.section];
 
     // Configure title
-    NSString *dateAgo = post.dateAgo;
     NSString *num = post.num;
     // Need to increase number by one because sections start count from 0 and post counts on 2ch commonly start with 1
     NSInteger postNumToShow = indexPath.section + 1;
-    NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • %@", (long)postNumToShow, num, dateAgo];
+    NSString *title = [[NSString alloc] initWithFormat:@"#%ld • %@ • ", (long)postNumToShow, num];
 
     // Configure post itself
     confCell.threadViewController = _threadViewController;

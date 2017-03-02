@@ -14,6 +14,7 @@
 #import "DVBPostStyler.h"
 #import "DVBMediaButtonNode.h"
 #import "UrlNinja.h"
+#import "DateFormatter.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak, nullable) id<DVBThreadDelegate> delegate;
 
 @property (nonatomic, assign) NSInteger index;
+@property (nonatomic, assign) NSInteger timestamp;
+@property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) ASTextNode *titleNode;
 @property (nonatomic, strong) ASTextNode *textNode;
 @property (nonatomic, strong, nullable) ASStackLayoutSpec *mediaContainer;
@@ -29,12 +32,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) ASButtonNode *answerToPostButton;
 @property (nonatomic, strong, nullable) ASButtonNode *answersButton;
 @property (nonatomic, strong) ASStackLayoutSpec *buttonsContainer;
+@property (nonatomic, strong, nullable) NSTimer *dageAgoTimer;
 
 @end
 
 @implementation DVBPostNode
 
 #pragma mark - Lifecycle
+
+- (void)dealloc
+{
+  [_dageAgoTimer invalidate];
+  _dageAgoTimer = nil;
+}
 
 - (instancetype)initWithPost:(DVBPostViewModel *)post andDelegate:(id<DVBThreadDelegate>)delegate width:(CGFloat)width
 {
@@ -43,17 +53,19 @@ NS_ASSUME_NONNULL_BEGIN
         self.opaque = YES;
         _delegate = delegate;
         _index = post.index;
+        _timestamp = post.timestamp;
         // Total border
         _borderNode = [DVBPostViewGenerator borderNode];
         [self addSubnode:_borderNode];
         // Post num, title, time
-        _titleNode = [DVBPostViewGenerator titleNodeWithText:post.title];
+        _title = post.title;
+        _titleNode = [DVBPostViewGenerator titleNode];
         [self addSubnode:_titleNode];
         // Post text
         if (![post.text.string isEqualToString:@""]) {
             _textNode = [DVBPostViewGenerator textNodeWithText:post.text];
             _textNode.delegate = self;
-          _textNode.userInteractionEnabled = YES;
+            _textNode.userInteractionEnabled = YES;
             [self addSubnode:_textNode];
         }
 
@@ -85,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
                            justifyContent:ASStackLayoutJustifyContentSpaceBetween
                            alignItems:ASStackLayoutAlignItemsStretch
                            children:buttonsChildren];
-
+        [self updateTitle];
     }
     return self;
 }
@@ -221,6 +233,43 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
   [_delegate shareWithUrl:[url absoluteString]];
+}
+
+
+
+- (void)didEnterVisibleState
+{
+  [super didEnterVisibleState];
+  _dageAgoTimer = [NSTimer scheduledTimerWithTimeInterval:1.
+                                                    target:self
+                                                  selector:@selector(updateTitle)
+                                                  userInfo:nil
+                                                   repeats:NO];
+}
+
+- (void)didExitVisibleState
+{
+  [super didExitVisibleState];
+  [_dageAgoTimer invalidate];
+  _dageAgoTimer = nil;
+}
+
+/// Recalc title, assign it and schedule timer
+- (void)updateTitle
+{
+  NSString *dateAgo = [DateFormatter dateFromTimestamp:_timestamp];
+  NSString *fullTitle = [NSString stringWithFormat:@"%@%@", _title, dateAgo];
+  NSDictionary *textAttributes = @
+  {
+    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
+    NSForegroundColorAttributeName: [DVBPostStyler textColor],
+    NSBackgroundColorAttributeName: [DVBPostStyler postCellInsideBackgroundColor]
+  };
+  BOOL isTitleSame = [_titleNode.attributedText.string isEqualToString:fullTitle];
+  if (isTitleSame) {
+    return;
+  }
+  _titleNode.attributedText = [[NSAttributedString alloc] initWithString:fullTitle attributes:textAttributes];
 }
 
 @end
