@@ -152,4 +152,13 @@
   return view;
 }
 
++ (UIActivityIndicatorView *)footerView
+{
+  UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+  activity.tintColor = [UIColor grayColor];
+  activity.frame = CGRectMake(0, 0, 0, 40);
+  [activity startAnimating];
+  return activity;
+}
+
 @end

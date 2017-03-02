@@ -206,7 +206,6 @@
 - (void)appearanceTudeUp
 {
     [UIView appearance].tintColor = DVACH_COLOR;
-    [UIActivityIndicatorView appearance].color = DVACH_COLOR;
     [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
     
     UIView *colorView = [[UIView alloc] init];

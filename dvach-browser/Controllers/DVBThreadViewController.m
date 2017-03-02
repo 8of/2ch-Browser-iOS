@@ -8,7 +8,7 @@
 
 #import <SDWebImage/SDWebImageManager.h>
 #import <TUSafariActivity/TUSafariActivity.h>
-#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
+// #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 #import <Reachability/Reachability.h>
 
 #import "DVBThreadViewController.h"
@@ -43,7 +43,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
-@property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
+// @property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 
 @end
 
@@ -70,8 +70,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     [super viewWillDisappear:animated];
     
-    _bottomRefreshControl = nil;
-    self.tableView.bottomRefreshControl = nil;
+    // _bottomRefreshControl = nil;
+    // self.tableView.bottomRefreshControl = nil;
     
 }
 
@@ -216,10 +216,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)makeBottomRefreshAvailable
 {
     if (!_answersToPost) {
-        _bottomRefreshControl = [UIRefreshControl new];
-        _bottomRefreshControl.triggerVerticalOffset = 80.;
-        [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
-        self.tableView.bottomRefreshControl = _bottomRefreshControl;
+//        _bottomRefreshControl = [UIRefreshControl new];
+//        _bottomRefreshControl.triggerVerticalOffset = 80.;
+//        [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
+//        self.tableView.bottomRefreshControl = _bottomRefreshControl;
     }
 }
 
@@ -331,7 +331,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     if (!_answersToPost && ![_threadModel isConnectionAvailable]) {
         [self.refreshControl endRefreshing];
-        [_bottomRefreshControl endRefreshing];
+        // [_bottomRefreshControl endRefreshing];
         return;
     }
     // Very stupid but necessary check.
@@ -341,9 +341,9 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             if (self.refreshControl) {
                 self.refreshControl.enabled = NO;
             }
-            if (_bottomRefreshControl) {
-                _bottomRefreshControl.enabled = NO;
-            }
+//            if (_bottomRefreshControl) {
+//                _bottomRefreshControl.enabled = NO;
+//            }
         } else {
             return;
         }
@@ -369,7 +369,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self.tableView reloadData];
                     [self.refreshControl endRefreshing];
-                    [self.bottomRefreshControl endRefreshing];
+                    // [self.bottomRefreshControl endRefreshing];
                     [self checkNewPostsCount];
                     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
                     self.tableView.backgroundView = nil;
@@ -379,7 +379,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
             }
 
             self.refreshControl.enabled = YES;
-            self.bottomRefreshControl.enabled = YES;
+            // self.bottomRefreshControl.enabled = YES;
         }];
     }
 }

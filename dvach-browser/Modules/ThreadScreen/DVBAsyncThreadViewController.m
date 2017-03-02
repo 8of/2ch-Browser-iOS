@@ -12,7 +12,6 @@
 #import "DVBThreadDelegate.h"
 #import "DVBThreadModel.h"
 #import "DVBCreatePostViewControllerDelegate.h"
-#import "DVBPostStyler.h"
 #import "DVBPostViewModel.h"
 #import "DVBPostNode.h"
 #import "DVBUrls.h"
@@ -33,7 +32,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 @property (nonatomic, strong) ASTableNode *tableNode;
 @property (nonatomic, strong, nullable) UIRefreshControl *refreshControl;
-// @property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
+@property (nonatomic, strong, nullable) UIRefreshControl *bottomRefreshControl;
 @property (nonatomic, strong) NSArray <DVBPostViewModel *> *posts;
 @property (nonatomic, strong, nullable) NSArray <DVBPostViewModel *> *allPosts;
 @property (nonatomic, assign) BOOL autoScrolled;
@@ -113,7 +112,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
   _tableNode.dataSource = self;
   if (!_allPosts) {
     [self addTopRefreshControl];
-    [self addBottomRefreshControl];
+    _tableNode.view.tableFooterView = [DVBThreadUIGenerator footerView];
   }
 }
 
@@ -124,13 +123,13 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                                                        action:@selector(reloadThread)];
 }
 
-- (void)addBottomRefreshControl
+- (void)bottomRefreshStart:(BOOL)start
 {
-//    _bottomRefreshControl = [UIRefreshControl new];
-//    _bottomRefreshControl.triggerVerticalOffset = 80.;
-//    [_bottomRefreshControl addTarget:self action:@selector(reloadThread) forControlEvents:UIControlEventValueChanged];
-//    _tableNode.view.bottomRefreshControl = _bottomRefreshControl;
-//    [_tableNode.view sendSubviewToBack:_bottomRefreshControl];
+  if (start) {
+    [self reloadThread];
+  } else {
+
+  }
 }
 
 - (void)createRightButton
@@ -190,7 +189,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (ASCellNodeBlock)tableNode:(ASTableNode *)tableNode nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPostViewModel *post = _posts[indexPath.row];
-
     return ^{
         return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:self.view.bounds.size.width];
     };
@@ -201,15 +199,30 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     return _posts.count;
 }
 
+- (BOOL)scrolledPastBottomThresholdInTableView:(UITableView *)tableView {
+  CGFloat kChrisTableViewAnimationThreshold = 40.0f;
+  return (tableView.contentOffset.y - kChrisTableViewAnimationThreshold >= (tableView.contentSize.height - tableView.frame.size.height));
+}
+
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+  // Store current scrolling position
   NSArray <NSIndexPath *> *visibleIndexes = [_tableNode indexPathsForVisibleRows];
   if (visibleIndexes.count == 0) { return; }
   [_threadModel storeThreadPosition:visibleIndexes.lastObject];
+
+  // Refresh posts
+  if (scrollView == _tableNode.view) {
+    if ([self scrolledPastBottomThresholdInTableView:_tableNode.view]) {
+      // Start the animation and network
+      [self bottomRefreshStart:YES];
+    }
+  }
 }
 
 - (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView
 {
+  // Store current scrolling position on top
   NSInteger count = [_tableNode numberOfRowsInSection:0];
   if (count == 0) {
     return;
@@ -236,6 +249,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
          dispatch_async(dispatch_get_main_queue(), ^{
            _alreadyLoading = NO;
            [self.refreshControl endRefreshing];
+           [self bottomRefreshStart:NO];
            self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
          });
          return;
@@ -248,8 +262,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
      self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
      dispatch_async(dispatch_get_main_queue(), ^{
        [self addTableRows:[newRows copy]];
-       // [self.tableNode reloadData];
-       // [self.bottomRefreshControl endRefreshing];
        [self checkNewPostsCount];
        self.tableNode.view.backgroundView = nil;
      });
@@ -267,6 +279,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
   {
     _alreadyLoading = NO;
     [self.refreshControl endRefreshing];
+    [self bottomRefreshStart:NO];
   }
    ];
 }
@@ -299,6 +312,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     NSNumber *postsCountNewValue = @(_posts.count);
 
     _previousPostsCount = postsCountNewValue;
+
+  if (additionalPostCount == 0) {
+    [self scrollToBottom];
+  }
 }
 
 #pragma mark - Prompt

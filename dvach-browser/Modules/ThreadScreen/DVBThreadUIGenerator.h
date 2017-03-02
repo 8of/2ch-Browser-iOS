@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)flagFromVC:(UIViewController *)vc handler:(void (^)(UIAlertAction *))handler;
 + (NSString *)titleWithSubject:(NSString *)subject andThreadNum:(NSString *)num;
 + (UIView *)errorView;
++ (UIActivityIndicatorView *)footerView;
 
 @end
 
