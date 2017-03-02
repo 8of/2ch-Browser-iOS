@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 #import <CoreImage/CoreImage.h>
-#import <UIImageView+AFNetworking.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"

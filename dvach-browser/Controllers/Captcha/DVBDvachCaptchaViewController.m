@@ -7,8 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-
-#import <UIImageView+AFNetworking.h>
+#import <AFNetworking/UIImageView+AFNetworking.h>
 
 #import "DVBConstants.h"
 #import "DVBCaptchaManager.h"
