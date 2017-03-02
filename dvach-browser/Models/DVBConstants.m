@@ -39,12 +39,6 @@ NSString *const SEGUE_TO_EULA = @"segueToEula";
 
 // Cells
 NSString *const BOARD_CELL_IDENTIFIER = @"boardEntryCell";
-NSString *const DVB_BOARDVIEWCONTROLLER_IDENTIFIER = @"DVBBoardViewController";
-NSString *const THREAD_CELL_IDENTIFIER = @"threadCell";
-NSString *const POST_CELL_IDENTIFIER = @"postCell";
-
-// Files
-NSString *const FILENAME_THUMB_IMAGE_PLACEHOLDER = @"Noimage.png";
 
 // Errors
 NSString *const ERROR_DOMAIN_APP = @"com.8of.dvach-browser.error";
@@ -54,12 +48,6 @@ NSInteger const ERROR_CODE_DDOS_CHECK = 1001;
 NSString *const ERROR_OPERATION_HEADER_KEY_REFRESH = @"refresh";
 NSString *const ERROR_OPERATION_REFRESH_VALUE_SEPARATOR = @"URL=/";
 NSString *const WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE = @".ч";
-
-// Sizes
-NSInteger const PREVIEW_IMAGE_SIZE = 64;
-NSInteger const PREVIEW_IMAGE_SIZE_IPAD = 100;
-NSInteger const PREVIEW_ROW_DEFAULT_HEIGHT = 84;
-NSInteger const PREVIEW_ROW_DEFAULT_HEIGHT_IPAD = 120;
 
 // Notifications
 NSString *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";
