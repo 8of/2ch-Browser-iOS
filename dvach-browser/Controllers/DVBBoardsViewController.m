@@ -13,7 +13,6 @@
 #import "UrlNinja.h"
 #import "DVBDefaultsManager.h"
 #import "DVBBoardsViewController.h"
-#import "DVBThreadViewController.h"
 #import "DVBRouter.h"
 #import "DVBThread.h"
 
@@ -189,7 +188,8 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 #pragma mark - Actions
 
-- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender
+{
     // Cancel focus on Search field - or app can crash.
     [self.view endEditing:YES];
     UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];

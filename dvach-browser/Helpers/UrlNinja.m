@@ -7,7 +7,6 @@
 //
 
 #import "UrlNinja.h"
-#import "DVBThreadViewController.h"
 
 @implementation UrlNinja
 

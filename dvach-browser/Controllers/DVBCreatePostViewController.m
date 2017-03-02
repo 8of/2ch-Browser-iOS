@@ -19,7 +19,6 @@
 #import "DVBCaptchaHelper.h"
 
 #import "DVBCreatePostViewController.h"
-#import "DVBThreadViewController.h"
 #import "DVBDvachCaptchaViewController.h"
 
 #import "DVBContainerForPostElements.h"
@@ -346,29 +345,14 @@
                 [strongDelegate openThredWithCreatedThread:_createdThreadNum];
             }
         }
-        [self dismissViewControllerAnimated:YES completion:nil];
     } else  {
-        [self performSegueWithIdentifier:SEGUE_DISMISS_TO_THREAD
-                                  sender:self];
+      id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
+      // Update thread in any case (was post successfull or not)
+      if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
+        [strongDelegate updateThreadAfterPosting];
+      }
     }
-}
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    BOOL isSegueDismissToThread = [[segue identifier] isEqualToString:SEGUE_DISMISS_TO_THREAD];
-    
-    /**
-     *  Xcode will complain if we access a weak property more than once here, since it could in theory be nilled between accesses
-     *  leading to unpredictable results. So we'll start by taking a local, strong reference to the delegate.
-     */
-    id<DVBCreatePostViewControllerDelegate> strongDelegate = self.createPostViewControllerDelegate;
-    
-    if (isSegueDismissToThread) {
-        // Update thread in any case (was post successfull or not)
-        if ([strongDelegate respondsToSelector:@selector(updateThreadAfterPosting)]) {
-            [strongDelegate updateThreadAfterPosting];
-        }
-    }
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 /// Write comment text to singleton
