@@ -6,6 +6,7 @@
 //  Copyright © 2016 8of. All rights reserved.
 //
 
+#import "DVBCommon.h"
 #import "DVBAsyncBoardViewController.h"
 #import "DVBThread.h"
 #import "DVBBoardModel.h"

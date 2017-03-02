@@ -8,6 +8,7 @@
 
 #import <Mantle/Mantle.h>
 
+#import "DVBCommon.h"
 #import "DVBBoardModel.h"
 #import "DVBNetworking.h"
 #import "DVBUrls.h"
