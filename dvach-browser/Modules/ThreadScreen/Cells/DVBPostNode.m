@@ -107,6 +107,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)didEnterVisibleState
 {
   [super didEnterVisibleState];
+  // Update post time in 1 sec
   _dageAgoTimer = [NSTimer scheduledTimerWithTimeInterval:1.
                                                    target:self
                                                  selector:@selector(updateTitle)
