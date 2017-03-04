@@ -87,10 +87,10 @@
 		A17A8B461E68BB9D002F6DE2 /* DVBWebmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A17A8B451E68BB9D002F6DE2 /* DVBWebmViewController.m */; };
 		A1807FB61E5C6B5F0072671B /* DVBMediaButtonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1807FB51E5C6B5F0072671B /* DVBMediaButtonNode.m */; };
 		A1807FB91E5C6B7E0072671B /* DVBPostNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1807FB81E5C6B7E0072671B /* DVBPostNode.m */; };
+		A1BDC0AB1E6B571700ACBB36 /* DVBThreadNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BDC0AA1E6B571700ACBB36 /* DVBThreadNode.m */; };
 		A1D289761E63160D000EEEB1 /* brokenHeader.jpg in Resources */ = {isa = PBXBuildFile; fileRef = A1D289751E63160D000EEEB1 /* brokenHeader.jpg */; };
 		A1D2897D1E631ED4000EEEB1 /* DVBNetworkImageFixerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1D2897C1E631ED4000EEEB1 /* DVBNetworkImageFixerTests.m */; };
 		A1F0EE8F1DDB179B00668886 /* DVBAsyncBoardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F0EE8E1DDB179B00668886 /* DVBAsyncBoardViewController.m */; };
-		A1F0EE921DDB1B2300668886 /* ThreadNode.m in Sources */ = {isa = PBXBuildFile; fileRef = A1F0EE911DDB1B2300668886 /* ThreadNode.m */; };
 		A1FC043E1E5A0F7A008C3577 /* DVBAsyncThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC043D1E5A0F7A008C3577 /* DVBAsyncThreadViewController.m */; };
 		A1FC04411E5A0FA7008C3577 /* DVBThreadModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC04401E5A0FA7008C3577 /* DVBThreadModel.m */; };
 		A1FC04441E5A0FF3008C3577 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC04431E5A0FF3008C3577 /* DVBPostPreparation.m */; };
@@ -249,12 +249,12 @@
 		A1807FB51E5C6B5F0072671B /* DVBMediaButtonNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBMediaButtonNode.m; path = Modules/ThreadScreen/Cells/DVBMediaButtonNode.m; sourceTree = "<group>"; };
 		A1807FB71E5C6B7E0072671B /* DVBPostNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBPostNode.h; path = Modules/ThreadScreen/Cells/DVBPostNode.h; sourceTree = "<group>"; };
 		A1807FB81E5C6B7E0072671B /* DVBPostNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBPostNode.m; path = Modules/ThreadScreen/Cells/DVBPostNode.m; sourceTree = "<group>"; };
+		A1BDC0A91E6B571700ACBB36 /* DVBThreadNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadNode.h; path = Modules/BoardScreen/View/DVBThreadNode.h; sourceTree = "<group>"; };
+		A1BDC0AA1E6B571700ACBB36 /* DVBThreadNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadNode.m; path = Modules/BoardScreen/View/DVBThreadNode.m; sourceTree = "<group>"; };
 		A1D289751E63160D000EEEB1 /* brokenHeader.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = brokenHeader.jpg; path = Support/brokenHeader.jpg; sourceTree = "<group>"; };
 		A1D2897C1E631ED4000EEEB1 /* DVBNetworkImageFixerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DVBNetworkImageFixerTests.m; sourceTree = "<group>"; };
 		A1F0EE8D1DDB179B00668886 /* DVBAsyncBoardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAsyncBoardViewController.h; path = Controllers/DVBAsyncBoardViewController.h; sourceTree = "<group>"; };
 		A1F0EE8E1DDB179B00668886 /* DVBAsyncBoardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAsyncBoardViewController.m; path = Controllers/DVBAsyncBoardViewController.m; sourceTree = "<group>"; };
-		A1F0EE901DDB1B2300668886 /* ThreadNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreadNode.h; path = Views/Cells/ThreadNode.h; sourceTree = "<group>"; };
-		A1F0EE911DDB1B2300668886 /* ThreadNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ThreadNode.m; path = Views/Cells/ThreadNode.m; sourceTree = "<group>"; };
 		A1FC043C1E5A0F7A008C3577 /* DVBAsyncThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBAsyncThreadViewController.h; path = Modules/ThreadScreen/DVBAsyncThreadViewController.h; sourceTree = "<group>"; };
 		A1FC043D1E5A0F7A008C3577 /* DVBAsyncThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBAsyncThreadViewController.m; path = Modules/ThreadScreen/DVBAsyncThreadViewController.m; sourceTree = "<group>"; };
 		A1FC043F1E5A0FA7008C3577 /* DVBThreadModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadModel.h; path = Modules/ThreadScreen/DVBThreadModel.h; sourceTree = "<group>"; };
@@ -567,8 +567,6 @@
 		94D565E51AF6668D004CE1B3 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				A1F0EE901DDB1B2300668886 /* ThreadNode.h */,
-				A1F0EE911DDB1B2300668886 /* ThreadNode.m */,
 				94BECE8E1B111C2A002C3132 /* DVBBoardTableViewCell.h */,
 				94BECE8F1B111C2A002C3132 /* DVBBoardTableViewCell.m */,
 			);
@@ -664,6 +662,8 @@
 		A1E118891E63F71B0075AB38 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				A1BDC0A91E6B571700ACBB36 /* DVBThreadNode.h */,
+				A1BDC0AA1E6B571700ACBB36 /* DVBThreadNode.m */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -950,6 +950,7 @@
 				A155FF091AB735DD00BE31F4 /* DVBValidation.m in Sources */,
 				94CF0CFC1DE08DB000AA3AC8 /* DVBCaptchaHelper.m in Sources */,
 				A1FC044D1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m in Sources */,
+				A1BDC0AB1E6B571700ACBB36 /* DVBThreadNode.m in Sources */,
 				A1807FB91E5C6B7E0072671B /* DVBPostNode.m in Sources */,
 				9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */,
 				9497D99D1D9EF368002B013A /* DVBUrls.m in Sources */,
@@ -1001,7 +1002,6 @@
 				A155FF081AB735DD00BE31F4 /* DVBNetworking.m in Sources */,
 				84CFC51019E1526E004D0BB8 /* main.m in Sources */,
 				940BD5561E0564B900D6BAF8 /* DVBBoardStyler.m in Sources */,
-				A1F0EE921DDB1B2300668886 /* ThreadNode.m in Sources */,
 				A155FF031AB735DD00BE31F4 /* DVBAlertViewGenerator.m in Sources */,
 				94BECE961B111C2A002C3132 /* DVBBoardTableViewCell.m in Sources */,
 			);

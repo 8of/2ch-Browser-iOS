@@ -14,7 +14,7 @@
 #import "DVBBoardStyler.h"
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBThreadUIGenerator.h"
-#import "ThreadNode.h"
+#import "DVBThreadNode.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -233,7 +233,7 @@
 
   DVBThread *thread = _boardModel.threadsArray[indexPath.row];
   return ^{
-      return [[ThreadNode alloc] initWithThread:thread];
+      return [[DVBThreadNode alloc] initWithThread:thread];
   };
 }
 

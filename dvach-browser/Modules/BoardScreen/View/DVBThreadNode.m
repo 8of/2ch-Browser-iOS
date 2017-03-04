@@ -1,5 +1,5 @@
 //
-//  ThreadNode.m
+//  DVBThreadNode.m
 //  dvach-browser
 //
 //  Created by Andy on 16/11/16.
@@ -7,11 +7,11 @@
 //
 
 #import "DVBConstants.h"
-#import "ThreadNode.h"
+#import "DVBThreadNode.h"
 #import "DVBThread.h"
 #import "DVBBoardStyler.h"
 
-@interface ThreadNode() <ASNetworkImageNodeDelegate>
+@interface DVBThreadNode() <ASNetworkImageNodeDelegate>
 
 @property (strong, nonatomic) DVBThread *thread;
 @property (strong, nonatomic) ASTextNode *postNode;
@@ -20,7 +20,7 @@
 
 @end
 
-@implementation ThreadNode
+@implementation DVBThreadNode
 
 #pragma mark - Lifecycle
 
@@ -40,7 +40,6 @@
 
         // Comment node
         _postNode = [[ASTextNode alloc] init];
-
         _postNode.attributedText = [self fromComment:thread.comment subject:thread.subject posts:thread.postsCount];
         _postNode.style.flexShrink = 1.0; //if name and username don't fit to cell width, allow username shrink
         _postNode.truncationMode = NSLineBreakByWordWrapping;
