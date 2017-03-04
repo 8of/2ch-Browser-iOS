@@ -102,6 +102,49 @@ NS_ASSUME_NONNULL_BEGIN
     return self;
 }
 
+#pragma mark - View circle
+
+- (void)didEnterVisibleState
+{
+  [super didEnterVisibleState];
+  _dageAgoTimer = [NSTimer scheduledTimerWithTimeInterval:1.
+                                                   target:self
+                                                 selector:@selector(updateTitle)
+                                                 userInfo:nil
+                                                  repeats:NO];
+}
+
+- (void)didExitVisibleState
+{
+  [super didExitVisibleState];
+  [_dageAgoTimer invalidate];
+  _dageAgoTimer = nil;
+}
+
+#pragma mark - Layout/sizing
+
+- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
+{
+    ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec horizontalStackLayoutSpec];
+    verticalStack.direction          = ASStackLayoutDirectionVertical;
+    verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
+    verticalStack.spacing = [DVBPostStyler elementInset];
+    verticalStack.children = [self mainStackChildren];
+    CGFloat topInset = 1.5 * [DVBPostStyler elementInset];
+    UIEdgeInsets insets = UIEdgeInsetsMake(topInset, [DVBPostStyler innerInset], topInset, [DVBPostStyler innerInset]);
+    return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
+                                                  child:verticalStack];
+}
+
+- (void)layout
+{
+    [super layout];
+    // Manually layout the divider.
+    _borderNode.frame = CGRectMake([DVBPostStyler elementInset], [DVBPostStyler elementInset]/2, self.calculatedSize.width - 2*[DVBPostStyler elementInset], self.calculatedSize.height - [DVBPostStyler elementInset]);
+}
+
+#pragma mark - Private
+
 - (ASStackLayoutSpec *)mediaRowsWithThumbs:(NSArray <NSString *> *)thumbs fulls:(NSArray <NSString *> *)fulls width:(CGFloat)width
 {
   NSMutableArray <ASOverlayLayoutSpec *> *mediaNodesArray = [@[] mutableCopy];
@@ -132,24 +175,8 @@ NS_ASSUME_NONNULL_BEGIN
 
   // Rows one below other
   NSMutableArray <ASStackLayoutSpec *> *rows = [@[] mutableCopy];
-  if (mediaNodesArray.count > 0) {
-    // From left to right
-    [rows addObject:[ASStackLayoutSpec
-                    stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
-                    spacing:[DVBPostStyler elementInset]
-                    justifyContent:ASStackLayoutJustifyContentStart
-                    alignItems:ASStackLayoutAlignItemsStart
-                     children:[mediaNodesArray copy]]];
-  }
-  if (mediaNodesArraySecond.count > 0) {
-    // From left to right
-    [rows addObject:[ASStackLayoutSpec
-                     stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
-                     spacing:[DVBPostStyler elementInset]
-                     justifyContent:ASStackLayoutJustifyContentStart
-                     alignItems:ASStackLayoutAlignItemsStart
-                     children:[mediaNodesArraySecond copy]]];
-  }
+  [self addOverlayLayoutFrom:[mediaNodesArray copy] to:rows];
+  [self addOverlayLayoutFrom:[mediaNodesArraySecond copy] to:rows];
 
   return [ASStackLayoutSpec
           stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical
@@ -158,28 +185,6 @@ NS_ASSUME_NONNULL_BEGIN
           alignItems:ASStackLayoutAlignItemsStart
           children:[rows copy]];
 }
-
-- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize
-{
-    ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec horizontalStackLayoutSpec];
-    verticalStack.direction          = ASStackLayoutDirectionVertical;
-    verticalStack.alignItems = ASStackLayoutAlignItemsStretch;
-    verticalStack.spacing = [DVBPostStyler elementInset];
-    verticalStack.children = [self mainStackChildren];
-    CGFloat topInset = 1.5 * [DVBPostStyler elementInset];
-    UIEdgeInsets insets = UIEdgeInsetsMake(topInset, [DVBPostStyler innerInset], topInset, [DVBPostStyler innerInset]);
-    return [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets
-                                                  child:verticalStack];
-}
-
-- (void)layout
-{
-    [super layout];
-    // Manually layout the divider.
-    _borderNode.frame = CGRectMake([DVBPostStyler elementInset], [DVBPostStyler elementInset]/2, self.calculatedSize.width - 2*[DVBPostStyler elementInset], self.calculatedSize.height - [DVBPostStyler elementInset]);
-}
-
-#pragma mark - Private
 
 - (NSArray<id<ASLayoutElement>> *)mainStackChildren
 {
@@ -192,6 +197,37 @@ NS_ASSUME_NONNULL_BEGIN
     }
     [vertStackChildren addObject:_buttonsContainer];
     return [vertStackChildren copy];
+}
+
+- (void)addOverlayLayoutFrom:(NSArray <ASOverlayLayoutSpec *> *)mediaNodesArray to:(NSMutableArray <ASStackLayoutSpec *> *)rows
+{
+  if (mediaNodesArray.count > 0) {
+    // From left to right
+    [rows addObject:[ASStackLayoutSpec
+                     stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal
+                     spacing:[DVBPostStyler elementInset]
+                     justifyContent:ASStackLayoutJustifyContentStart
+                     alignItems:ASStackLayoutAlignItemsStart
+                     children:mediaNodesArray]];
+  }
+}
+
+/// Recalc title, assign it and schedule timer
+- (void)updateTitle
+{
+  NSString *dateAgo = [DateFormatter dateFromTimestamp:_timestamp];
+  NSString *fullTitle = [NSString stringWithFormat:@"%@%@", _title, dateAgo];
+  NSDictionary *textAttributes = @
+  {
+    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
+  NSForegroundColorAttributeName: [DVBPostStyler textColor],
+  NSBackgroundColorAttributeName: [DVBPostStyler postCellInsideBackgroundColor]
+  };
+  BOOL isTitleSame = [_titleNode.attributedText.string isEqualToString:fullTitle];
+  if (isTitleSame) {
+    return;
+  }
+  _titleNode.attributedText = [[NSAttributedString alloc] initWithString:fullTitle attributes:textAttributes];
 }
 
 #pragma mark - Actions
@@ -233,43 +269,6 @@ NS_ASSUME_NONNULL_BEGIN
     return;
   }
   [_delegate shareWithUrl:[url absoluteString]];
-}
-
-
-
-- (void)didEnterVisibleState
-{
-  [super didEnterVisibleState];
-  _dageAgoTimer = [NSTimer scheduledTimerWithTimeInterval:1.
-                                                    target:self
-                                                  selector:@selector(updateTitle)
-                                                  userInfo:nil
-                                                   repeats:NO];
-}
-
-- (void)didExitVisibleState
-{
-  [super didExitVisibleState];
-  [_dageAgoTimer invalidate];
-  _dageAgoTimer = nil;
-}
-
-/// Recalc title, assign it and schedule timer
-- (void)updateTitle
-{
-  NSString *dateAgo = [DateFormatter dateFromTimestamp:_timestamp];
-  NSString *fullTitle = [NSString stringWithFormat:@"%@%@", _title, dateAgo];
-  NSDictionary *textAttributes = @
-  {
-    NSFontAttributeName : [UIFont preferredFontForTextStyle: UIFontTextStyleSubheadline],
-    NSForegroundColorAttributeName: [DVBPostStyler textColor],
-    NSBackgroundColorAttributeName: [DVBPostStyler postCellInsideBackgroundColor]
-  };
-  BOOL isTitleSame = [_titleNode.attributedText.string isEqualToString:fullTitle];
-  if (isTitleSame) {
-    return;
-  }
-  _titleNode.attributedText = [[NSAttributedString alloc] initWithString:fullTitle attributes:textAttributes];
 }
 
 @end
