@@ -40,9 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 /// After posting we trying to get our new post and parse it from the scratch
 - (void)getPostWithBoardCode:(NSString *)board andThread:(NSString *)thread andPostNum:(NSString *)postNum andCompletion:(void (^)(NSArray *))completion;
 
-/// Checking my server for review status
-- (void)getReviewStatus:(void (^)(BOOL))completion;
-
 /// Check if we can post without captcha
 - (void)canPostWithoutCaptcha:(void (^)(BOOL))completion;
 

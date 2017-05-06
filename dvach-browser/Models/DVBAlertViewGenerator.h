@@ -7,23 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import <UIKit/UIAlertController.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol DVBAlertViewGeneratorDelegate <NSObject>
 
-@optional
 - (void)addBoardWithCode:(NSString *)code;
-- (void)getUsercodeWithCode:(NSString *)passcode;
+
 @end
 
 @interface DVBAlertViewGenerator : NSObject
 
 @property (nonatomic, weak) id<DVBAlertViewGeneratorDelegate> alertViewGeneratorDelegate;
 
-- (UIAlertView *)alertViewWithTitle:(NSString *)title
-                        description:(NSString *)description
-                            buttons:(NSArray *)buttons;
-- (UIAlertView *)alertViewForBoardCode;
-- (UIAlertView *)alertViewForBadBoard;
++ (UIAlertController *)ageCheckAlert;
+
+- (UIAlertController *)boardCodeAlert;
 
 @end
+
+NS_ASSUME_NONNULL_END

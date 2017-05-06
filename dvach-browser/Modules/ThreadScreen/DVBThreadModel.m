@@ -155,9 +155,9 @@
                             NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
                             NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
 
-                            BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+                            BOOL ageCheckOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_AGE_CHECK_STATUS];
 
-                            if (files && isInReviewModeOk) {
+                            if (files && ageCheckOk) {
                                 for (NSDictionary *fileDictionary in files) {
                                     NSString *fullFileName = fileDictionary[@"path"];
 

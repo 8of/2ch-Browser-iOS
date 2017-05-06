@@ -17,7 +17,6 @@ static NSString *_baseWithoutSchemeForUrlNinjaHk = @"2ch.hk";
 static NSString *_reportThread;
 static NSString *_boardsList;
 static NSString *_getUsercode;
-static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
 
 /// https://2ch.hk/
 + (NSString *)base
@@ -77,12 +76,6 @@ static NSString *_checkReviewStatus = @"http://8of.org/2ch/status.json";
         _getUsercode = [NSString stringWithFormat:@"https://%@/makaba/makaba.fcgi", [self domain]];
     }
     return _getUsercode;
-}
-
-/// http://8of.org/2ch/status.json
-+ (NSString *)checkReviewStatus
-{
-    return _checkReviewStatus;
 }
 
 + (void)reset

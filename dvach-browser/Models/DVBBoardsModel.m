@@ -51,17 +51,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
     return sharedBoardsModel;
 }
 
-/**
- *  Not permitting to create multiple instances of DVBBoardsModel
- *
- *  @return always nil
- */
-- (instancetype)init {
-    @throw [NSException exceptionWithName:@"Singleton" reason:@"Use +[DVBBoardsModel sharedBoardsModel]" userInfo:nil];
-    
-    return nil;
-}
-
 - (instancetype)initPrivate {
     self = [super init];
     if (self) {
@@ -520,8 +509,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId
 {
-    BOOL reviewStatus = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
-    if (reviewStatus) {
+    BOOL ageCheckStatusOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_AGE_CHECK_STATUS];
+    if (ageCheckStatusOk) {
         return YES;
     }
 
@@ -609,21 +598,6 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 {
     [self addThreadWithUrl:notification.url
             andThreadTitle:notification.title];
-}
-
-#pragma mark - Review
-
-+ (void)manageReviewStatus
-{
-    DVBNetworking *networkHandler = [[DVBNetworking alloc] init];
-    BOOL isReviewOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
-    if (!isReviewOk) {
-        [networkHandler getReviewStatus:^(BOOL status) {
-            [[NSUserDefaults standardUserDefaults] setBool:status
-                                                    forKey:DEFAULTS_REVIEW_STATUS];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }];
-    }
 }
 
 @end

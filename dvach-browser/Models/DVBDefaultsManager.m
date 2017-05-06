@@ -66,7 +66,7 @@
                              SETTING_BASE_DOMAIN : DVACH_DOMAIN,
                              PASSCODE : @"",
                              USERCODE : @"",
-                             DEFAULTS_REVIEW_STATUS : @NO,
+                             DEFAULTS_AGE_CHECK_STATUS : @NO,
                              DEFAULTS_USERAGENT_KEY : userAgent
                              };
 

@@ -29,7 +29,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 - (instancetype)init
 {
     self = [super init];
-    
     if (self) {
         _networkReachability = [Reachability reachabilityForInternetConnection];
     }
@@ -393,47 +392,6 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
     else {
         completion(nil);
     }
-}
-
-#pragma mark - Check my server status for review
-
-- (void)getReviewStatus:(void (^)(BOOL))completion
-{
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"application/json",nil]];
-    [manager GET:[DVBUrls checkReviewStatus]
-      parameters:nil
-         success:^(AFHTTPRequestOperation *operation, NSDictionary *responseObject)
-     {
-         if (responseObject[@"status"]) {
-             BOOL status = NO;
-             if (responseObject[@"version"]) {
-                 NSNumber *minVersionToFilter = (NSNumber *)responseObject[@"version"];
-
-                 NSDictionary *infoDictionary = [[NSBundle mainBundle]infoDictionary];
-                 NSString *build = infoDictionary[(NSString*)kCFBundleVersionKey];
-                 NSNumber *currentAppVersion = [NSNumber numberWithInteger:build.integerValue];
-
-                 if (minVersionToFilter.integerValue <= currentAppVersion.integerValue) {
-                     NSNumber *isStatusOkNumber = (NSNumber *)responseObject[@"status"];
-                     status = [isStatusOkNumber boolValue] == YES;
-                     completion(status);
-                 } else {
-                     completion(YES);
-                 }
-             } else {
-                 completion(YES);
-             }
-         } else {
-             completion(YES);
-         }
-
-     }
-         failure:^(AFHTTPRequestOperation *operation, NSError *error)
-     {
-         NSLog(@"error: %@", error);
-         completion(YES);
-     }];
 }
 
 - (void)canPostWithoutCaptcha:(void (^)(BOOL))completion

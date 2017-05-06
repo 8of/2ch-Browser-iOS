@@ -75,9 +75,9 @@
                                                            error:&parseError];
                     if (!parseError) {
                         thread.postsCount = [[NSNumber alloc] initWithInteger:([threadPosts count] + thread.postsCount.integerValue)];
-                        BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+                        BOOL notInRestrictedMode = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_AGE_CHECK_STATUS];
 
-                        if (threadDict[@"files"] && isInReviewModeOk) {
+                        if (threadDict[@"files"] && notInRestrictedMode) {
                             NSArray *files = threadDict[@"files"];
                             if (files.count > 0) {
                                 NSString *tmpThumbnail = threadDict[@"files"][0][@"thumbnail"];

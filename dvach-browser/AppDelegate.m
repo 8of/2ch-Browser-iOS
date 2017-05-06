@@ -26,11 +26,6 @@
     return YES;
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    [DVBBoardsModel manageReviewStatus];
-}
-
 #pragma mark - Core Data stack
 
 @synthesize managedObjectContext = _managedObjectContext;

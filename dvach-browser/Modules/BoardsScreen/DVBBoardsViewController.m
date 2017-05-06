@@ -142,15 +142,14 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
     });
 }
 
-- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages
-{
-    // Cancel opening if app isn't allowed to open the board
-    if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
-        UIAlertView *alertView = [_alertViewGenerator alertViewForBadBoard];
-        [alertView show];
-        return;
-    }
-    [DVBRouter pushBoardFrom:self boardCode:boardId pages:pages];
+- (void)openWithBoardId:(NSString *)boardId pages:(NSInteger)pages {
+  // Cancel opening if app isn't allowed to open the board
+  if (![_boardsModel canOpenBoardWithBoardId:boardId]) {
+    UIAlertController *alert = [DVBAlertViewGenerator ageCheckAlert];
+    [self presentViewController:alert animated:YES completion:nil];
+    return;
+  }
+  [DVBRouter pushBoardFrom:self boardCode:boardId pages:pages];
 }
 
 - (void)openThreadWithUrlNinja:(UrlNinja *)urlNinja
@@ -188,17 +187,15 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 
 #pragma mark - Actions
 
-- (IBAction)showAlertWithBoardCodePrompt:(id)sender
-{
-    // Cancel focus on Search field - or app can crash.
-    [self.view endEditing:YES];
-    UIAlertView *boardCodeAlertView = [_alertViewGenerator alertViewForBoardCode];
-    [boardCodeAlertView show];
+- (IBAction)showAlertWithBoardCodePrompt:(id)sender {
+  // Cancel focus on Search field - or app can crash
+  [self.view endEditing:YES];
+  UIAlertController *boardCodeAlertController = [_alertViewGenerator boardCodeAlert];
+  [self presentViewController:boardCodeAlertController animated:YES completion:nil];
 }
 
-- (IBAction)openSettingsApp:(id)sender
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+- (IBAction)openSettingsApp:(id)sender {
+  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
 @end

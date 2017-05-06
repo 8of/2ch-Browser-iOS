@@ -11,82 +11,67 @@
 #import "DVBValidation.h"
 #import "DVBConstants.h"
 
-@interface DVBAlertViewGenerator () <UIAlertViewDelegate, UITextFieldDelegate>
-
-@end
-
 @implementation DVBAlertViewGenerator
 
-- (UIAlertView *)alertViewWithTitle:(NSString *)title description:(NSString *)description buttons:(NSArray *)buttons
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
-                                                            message:description
-                                                           delegate:_alertViewGeneratorDelegate
-                                                  cancelButtonTitle:NSLS(@"BUTTON_OK")
-                                                  otherButtonTitles:nil];
-
-    return alertView;
++ (UIAlertController *)ageCheckAlert {
+  NSString *title = NSLS(@"ALERT_AGE_CHECK_TITLE");
+  NSString *message = NSLS(@"ALERT_AGE_CHECK_MESSAGE");
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                           message:message
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_CANCEL")
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction * _Nonnull action) {}];
+  [alertController addAction:cancelAction];
+  UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLS(@"ALERT_AGE_CHECK_CONFIRM")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * _Nonnull action)
+                             {
+                               [[NSUserDefaults standardUserDefaults] setBool:YES
+                                                                       forKey:DEFAULTS_AGE_CHECK_STATUS];
+                               [[NSUserDefaults standardUserDefaults] synchronize];
+                             }];
+  [alertController addAction:okAction];
+  return alertController;
 }
 
-- (UIAlertView *)alertViewForBoardCode
-{
-    NSString *enterBoardShortcodeAlertTitle = NSLS(@"ALERT_BOARD_CODE_TITLE");
-    NSString *enterBoardShortcodeAlertMessage = NSLS(@"ALERT_BOARD_CODE_MESSAGE");
-    NSString *enterBoardShortcodeAlertCancelButtonText = NSLS(@"BUTTON_CANCEL");
-    
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:enterBoardShortcodeAlertTitle
-                                                        message:enterBoardShortcodeAlertMessage
-                                                       delegate:self
-                                              cancelButtonTitle:enterBoardShortcodeAlertCancelButtonText
-                                              otherButtonTitles:NSLS(@"BUTTON_OK"), nil];
-    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-    UITextField *boardTextField = [alertView textFieldAtIndex:0];
-
+- (UIAlertController *)boardCodeAlert {
+  NSString *title = NSLS(@"ALERT_BOARD_CODE_TITLE");
+  NSString *message = NSLS(@"ALERT_BOARD_CODE_MESSAGE");
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                           message:message
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+  [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-        boardTextField.keyboardAppearance = UIKeyboardAppearanceDark;
+      textField.keyboardAppearance = UIKeyboardAppearanceDark;
     }
-    
-    [boardTextField setKeyboardType:UIKeyboardTypeASCIICapable];
-    boardTextField.delegate = self;
-    alertView.tag = 1;
-
-    return alertView;
-}
-
-- (UIAlertView *)alertViewForBadBoard
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLS(@"ALERT_BAD_BOARD_TITLE")
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:NSLS(@"BUTTON_OK")
-                                              otherButtonTitles:nil];
-
-    return alertView;
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSInteger alertTag = alertView.tag;
-    id<DVBAlertViewGeneratorDelegate> strongDelegate = _alertViewGeneratorDelegate;
-    /**
-     *  Detecting OK button pressed or not.
-     */
-    if ((alertTag == 1) && (buttonIndex == 1)) {
-        UITextField *boardCode = [alertView textFieldAtIndex:0];
-        [boardCode resignFirstResponder];
-        boardCode= [alertView textFieldAtIndex:0];
-        NSString *code = boardCode.text;
-        DVBValidation *validation = [[DVBValidation alloc] init];
-        /**
-         *  checking shortcode for presence of not appropriate symbols
-         */
-        if ([validation checkBoardShortCodeWith:code]) {
-
-            if ([strongDelegate respondsToSelector:@selector(addBoardWithCode:)]) {
-                [strongDelegate addBoardWithCode:code];
-            }
-        }
+  }];
+  UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_CANCEL")
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction * _Nonnull action) {}];
+  [alertController addAction:cancelAction];
+  weakify(self);
+  UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_OK")
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * _Nonnull action)
+  {
+    UITextField *textField = alertController.textFields.firstObject;
+    if (!textField) {
+      return;
     }
+    NSString *code = textField.text;
+    [textField resignFirstResponder];
+    strongify(self);
+    DVBValidation *validation = [[DVBValidation alloc] init];
+    // checking shortcode for presence of not appropriate symbols
+    if ([validation checkBoardShortCodeWith:code]) {
+      if ([self.alertViewGeneratorDelegate respondsToSelector:@selector(addBoardWithCode:)]) {
+        [self.alertViewGeneratorDelegate addBoardWithCode:code];
+      }
+    }
+  }];
+  [alertController addAction:okAction];
+  return alertController;
 }
 
 @end

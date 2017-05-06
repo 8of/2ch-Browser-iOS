@@ -21,6 +21,6 @@
 + (CGFloat)innerInset;
 + (CGFloat)cornerRadius;
 
-+ (BOOL)isWaitingForReview;
++ (BOOL)ageCheckNotPassed;
 
 @end

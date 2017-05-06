@@ -33,7 +33,9 @@
 "ALERT_BOARD_CODE_MESSAGE" = "Введите код доски без слешей";
 "ALERT_SETTINGS_CHANGED_TITLE" = "Настройки изменены";
 "ALERT_SETTINGS_CHANGED_MESSAGE" = "Для правильной работы закройте приложение и запустите его заново.";
-"ALERT_BAD_BOARD_TITLE" = "Доска временно запрещена к просмотру";
+"ALERT_AGE_CHECK_TITLE" = "Необходимо подтверждение";
+"ALERT_AGE_CHECK_MESSAGE" = "Полный доступ открыт только для лиц старше 18 лет.";
+"ALERT_AGE_CHECK_CONFIRM" = "Мне 18+";
 "ALERT_CHANGE_FAVOURITE_TITLE" = "Изменить название в списке";
 
 "DATE_FORMATTER_DAYS" = "%ld д.";
