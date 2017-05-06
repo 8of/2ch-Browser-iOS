@@ -14,7 +14,7 @@
 #import "DVBBoardStyler.h"
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBThreadUIGenerator.h"
-#import "ThreadNode.h"
+#import "DVBThreadNode.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -38,11 +38,12 @@
 
 - (instancetype)initBoardCode:(NSString *)boardCode pages:(NSInteger)pages
 {
-    _tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
-    self = [super initWithNode:_tableNode];
+    ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
+    self = [super initWithNode:tableNode];
     if (self) {
         _boardCode = boardCode;
         _pages = pages;
+        _tableNode = tableNode;
 
         UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Compose"]
                                                                  style:UIBarButtonItemStylePlain
@@ -233,7 +234,7 @@
 
   DVBThread *thread = _boardModel.threadsArray[indexPath.row];
   return ^{
-      return [[ThreadNode alloc] initWithThread:thread];
+      return [[DVBThreadNode alloc] initWithThread:thread];
   };
 }
 

@@ -1,5 +1,5 @@
 //
-//  ThreadNode.h
+//  DVBThreadNode.h
 //  dvach-browser
 //
 //  Created by Andy on 16/11/16.
@@ -10,7 +10,7 @@
 
 @class DVBThread;
 
-@interface ThreadNode : ASCellNode
+@interface DVBThreadNode : ASCellNode
 
 - (instancetype)initWithThread:(DVBThread *)thread;
 

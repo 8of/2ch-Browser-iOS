@@ -6,7 +6,9 @@
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 
-#import "MWPhotoBrowser.h"
+#import <MWPhotoBrowser/MWPhotoBrowser.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface DVBBrowserViewControllerBuilder : MWPhotoBrowser
 
@@ -15,3 +17,5 @@
 - (void)prepareWithIndex:(NSUInteger)index andThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray;
 
 @end
+
+NS_ASSUME_NONNULL_END

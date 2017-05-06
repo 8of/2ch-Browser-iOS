@@ -60,7 +60,7 @@
         [connection readWithBlock:^(YapDatabaseReadTransaction *transaction) {
             strongify(self);
             if (!self) { return; }
-            NSArray *arrayOfPosts = [transaction objectForKey:self.threadNum inCollection:DB_COLLECTION_THREADS];
+            NSArray *arrayOfPosts = [transaction objectForKey:self.threadNum inCollection:DVBDatabaseManager.dbCollectionThreads];
             self.privatePostsArray = [arrayOfPosts mutableCopy];
             self.privateThumbImagesArray = [[self thumbImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
             self.privateFullImagesArray = [[self fullImagesArrayForPostsArray:arrayOfPosts] mutableCopy];
@@ -329,7 +329,7 @@
     [connection asyncReadWithBlock:^(YapDatabaseReadTransaction * _Nonnull transaction) {
       strongify(self);
       if (!self) { return; }
-      NSIndexPath * _Nullable visibleIndex = [transaction objectForKey:self.threadNum inCollection:DB_COLLECTION_THREAD_POSITIONS];
+      NSIndexPath * _Nullable visibleIndex = [transaction objectForKey:self.threadNum inCollection:DVBDatabaseManager.dbCollectionThreadPositions];
       if (!visibleIndex) { return; }
       dispatch_async(dispatch_get_main_queue(), ^{
         completion(visibleIndex);
@@ -346,7 +346,7 @@
     [connection asyncReadWriteWithBlock:^(YapDatabaseReadWriteTransaction * _Nonnull transaction) {
       strongify(self);
       if (!self) { return; }
-      [transaction setObject:indexPath forKey:self.threadNum inCollection:DB_COLLECTION_THREAD_POSITIONS];
+      [transaction setObject:indexPath forKey:self.threadNum inCollection:DVBDatabaseManager.dbCollectionThreadPositions];
     }];
   });
 }
@@ -359,7 +359,7 @@
     YapDatabaseConnection *connection = [_database newConnection];
     // Add an object
     [connection readWriteWithBlock:^(YapDatabaseReadWriteTransaction *transaction) {
-        [transaction setObject:posts forKey:threadNumb inCollection:DB_COLLECTION_THREADS];
+        [transaction setObject:posts forKey:threadNumb inCollection:DVBDatabaseManager.dbCollectionThreads];
         callback();
     }];
 }

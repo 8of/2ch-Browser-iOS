@@ -47,9 +47,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (instancetype)initWithBoardCode:(NSString *)boardCode andThreadNumber:(NSString *)threadNumber andThreadSubject:(NSString *)subject
 {
-    _tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
-    self = [super initWithNode:_tableNode];
+    ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
+    self = [super initWithNode:tableNode];
     if (self) {
+        _tableNode = tableNode;
         _threadModel = [[DVBThreadModel alloc] initWithBoardCode:boardCode andThreadNum:threadNumber];
         self.title = [DVBThreadUIGenerator titleWithSubject:subject
                                                andThreadNum:threadNumber];
@@ -63,9 +64,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (instancetype)initWithPostNum:(NSString *)postNum answers:(NSArray <DVBPostViewModel *> *)answers allPosts:(NSArray <DVBPostViewModel *> *)allPosts
 {
-    _tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
-    self = [super initWithNode:_tableNode];
+    ASTableNode *tableNode = [[ASTableNode alloc] initWithStyle:UITableViewStylePlain];
+    self = [super initWithNode:tableNode];
     if (self) {
+        _tableNode = tableNode;
         _posts = answers;
         _allPosts = allPosts;
         self.title = postNum;

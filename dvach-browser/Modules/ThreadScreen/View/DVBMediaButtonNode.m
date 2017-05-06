@@ -8,15 +8,19 @@
 
 #import "DVBMediaButtonNode.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @implementation DVBMediaButtonNode
 
 - (instancetype)initWithURL:(NSString *)url
 {
-    self = [super init];
-    if (self) {
-        _url = url;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    _url = url;
+  }
+  return self;
 }
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -9,11 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <YapDatabase/YapDatabase.h>
 
-static NSString * const DB_COLLECTION_THREADS = @"kDbCollectionThreads";
-static NSString * const DB_COLLECTION_THREAD_POSITIONS = @"kDbCollectionThreadPositions";
+NS_ASSUME_NONNULL_BEGIN
 
 @interface DVBDatabaseManager : NSObject
 
+@property (class, nonatomic, strong, readonly) NSString *dbCollectionThreads;
+@property (class, nonatomic, strong, readonly) NSString *dbCollectionThreadPositions;
 @property (nonatomic, strong) YapDatabase *database;
 
 + (id)sharedDatabase;
@@ -21,3 +22,4 @@ static NSString * const DB_COLLECTION_THREAD_POSITIONS = @"kDbCollectionThreadPo
 - (void)clearAll;
 
 @end
+NS_ASSUME_NONNULL_END

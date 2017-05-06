@@ -71,12 +71,6 @@
                      andThumbImagesArray:thumbImagesArray
                       andFullImagesArray:fullImagesArray];
 
-        galleryBrowser.view.backgroundColor = [UIColor whiteColor];
-
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
-            galleryBrowser.view.backgroundColor = [UIColor blackColor];
-        }
-
         _viewController.navigationController.definesPresentationContext = YES;
         [galleryBrowser setModalPresentationStyle:UIModalPresentationOverCurrentContext];
         [_viewController.navigationController presentViewController:galleryBrowser
