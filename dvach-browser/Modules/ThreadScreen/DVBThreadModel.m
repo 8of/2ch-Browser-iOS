@@ -8,6 +8,9 @@
 
 #import <Mantle/Mantle.h>
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBThreadModel.h"
 #import "DVBDatabaseManager.h"
 #import "DVBNetworking.h"
@@ -155,9 +158,9 @@
                             NSMutableArray *singlePostPathesArrayMutable = [@[] mutableCopy];
                             NSMutableArray *singlePostThumbPathesArrayMutable = [@[] mutableCopy];
 
-                            BOOL isInReviewModeOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+                            BOOL ageCheckOk = [[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_AGE_CHECK_STATUS];
 
-                            if (files && isInReviewModeOk) {
+                            if (files && ageCheckOk) {
                                 for (NSDictionary *fileDictionary in files) {
                                     NSString *fullFileName = fileDictionary[@"path"];
 
@@ -262,12 +265,6 @@
 - (void)dropPostsArray
 {
     _postsArray = nil;
-}
-
-/// Check connection
-- (BOOL)isConnectionAvailable
-{
-    return [_networking getNetworkStatus];
 }
 
 - (void)reportThread

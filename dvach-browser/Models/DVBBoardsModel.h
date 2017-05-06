@@ -32,6 +32,8 @@
 
 + (instancetype)sharedBoardsModel;
 
+- (instancetype)init NS_UNAVAILABLE;
+
 /// Add new board to user list of boards, directly to the Favourite section
 - (void)addBoardWithBoardId:(NSString *)boardId;
 
@@ -51,8 +53,5 @@
 
 /// Check if board ID is not forbidden for opening
 - (BOOL)canOpenBoardWithBoardId:(NSString *)boardId;
-
-/// Check review status if needed
-+ (void)manageReviewStatus;
 
 @end

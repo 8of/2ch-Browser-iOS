@@ -11,14 +11,13 @@ use_frameworks!
 abstract_target 'BasePods' do
   # pods
 	pod 'AFNetworking', '2.6.3'
-	pod 'AsyncDisplayKit', :git => 'https://github.com/facebook/AsyncDisplayKit.git', :tag => '2.2'
 	pod 'Crashlytics', '3.8.4'
 	pod 'Fabric', '1.6.11'
 	pod 'Mantle', '2.1.0'
 	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
 	pod 'OGVKit', '0.5pre'
 	pod 'PureLayout', '3.0.2'
-	pod 'Reachability', '3.2'
+	pod 'Texture', '2.3.1'
 	pod 'TUSafariActivity', '1.0.4'
 	pod 'YapDatabase', '2.9.2'
 

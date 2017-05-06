@@ -48,7 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (ASNetworkImageNode *)mediaNodeWithURL:(NSString *)url isWebm:(BOOL)isWebm
 {
   ASNetworkImageNode *node = [[ASNetworkImageNode alloc] init];
-  CGFloat mediaWidth = [DVBPostStyler isWaitingForReview] ? 0 : [DVBPostStyler mediaSize];
+  CGFloat mediaWidth = [DVBPostStyler ageCheckNotPassed] ? 0 : [DVBPostStyler mediaSize];
   node.backgroundColor = [DVBPostStyler postCellInsideBackgroundColor];
   node.style.width = ASDimensionMakeWithPoints(mediaWidth);
   node.style.height = ASDimensionMakeWithPoints([DVBPostStyler mediaSize]);

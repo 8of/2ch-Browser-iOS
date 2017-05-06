@@ -53,9 +53,9 @@
     return [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
 }
 
-+ (BOOL)isWaitingForReview
++ (BOOL)ageCheckNotPassed
 {
-    return ![[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_REVIEW_STATUS];
+    return ![[NSUserDefaults standardUserDefaults] boolForKey:DEFAULTS_AGE_CHECK_STATUS];
 }
 
 @end

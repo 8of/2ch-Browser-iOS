@@ -19,7 +19,6 @@
 @property (class, nonatomic, readonly, nonnull) NSString *reportThread;
 @property (class, nonatomic, readonly, nonnull) NSString *boardsList;
 @property (class, nonatomic, readonly, nonnull) NSString *getUsercode;
-@property (class, nonatomic, readonly, nonnull) NSString *checkReviewStatus;
 
 /// Recalculate all base urls
 + (void)reset;

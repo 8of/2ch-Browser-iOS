@@ -52,9 +52,9 @@
     return [DVBBoardStyler cornerRadius];
 }
 
-+ (BOOL)isWaitingForReview
++ (BOOL)ageCheckNotPassed
 {
-    return [DVBBoardStyler isWaitingForReview];
+    return [DVBBoardStyler ageCheckNotPassed];
 }
 
 @end

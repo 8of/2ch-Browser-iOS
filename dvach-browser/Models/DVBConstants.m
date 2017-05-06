@@ -25,7 +25,7 @@ NSString *const SETTING_FORCE_CAPTCHA = @"forceCaptcha";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
 NSString *const PASSCODE = @"passcode";
 NSString *const USERCODE = @"usercode";
-NSString *const DEFAULTS_REVIEW_STATUS = @"defaultReviewStatus";
+NSString *const DEFAULTS_AGE_CHECK_STATUS = @"defaultsAgeCheckStatus";
 NSString *const DEFAULTS_USERAGENT_KEY = @"UserAgent";
 
 // Storyboards

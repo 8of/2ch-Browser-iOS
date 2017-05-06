@@ -7,10 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DVBCommon.h"
-#import "DVBConstants.h"
-#import "DVBUrls.h"
-#import "DVBPost.h"
 
 @interface DVBThreadModel : NSObject
 
@@ -31,9 +27,6 @@
 
 /// Entirely reload post list in the thread
 - (void)reloadThreadWithCompletion:(void (^)(NSArray *))completion;
-
-/// Check connection
-- (BOOL)isConnectionAvailable;
 
 /// Report thread to admins
 - (void)reportThread;
