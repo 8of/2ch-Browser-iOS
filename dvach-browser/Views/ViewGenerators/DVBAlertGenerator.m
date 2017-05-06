@@ -1,5 +1,5 @@
 //
-//  DVBAlertViewGenerator.m
+//  DVBAlertGenerator.m
 //  dvach-browser
 //
 //  Created by Mega on 13/02/15.
@@ -7,11 +7,11 @@
 //
 
 #import "DVBCommon.h"
-#import "DVBAlertViewGenerator.h"
+#import "DVBAlertGenerator.h"
 #import "DVBValidation.h"
 #import "DVBConstants.h"
 
-@implementation DVBAlertViewGenerator
+@implementation DVBAlertGenerator
 
 + (UIAlertController *)ageCheckAlert {
   NSString *title = NSLS(@"ALERT_AGE_CHECK_TITLE");
@@ -65,8 +65,8 @@
     DVBValidation *validation = [[DVBValidation alloc] init];
     // checking shortcode for presence of not appropriate symbols
     if ([validation checkBoardShortCodeWith:code]) {
-      if ([self.alertViewGeneratorDelegate respondsToSelector:@selector(addBoardWithCode:)]) {
-        [self.alertViewGeneratorDelegate addBoardWithCode:code];
+      if ([self.alertGeneratorDelegate respondsToSelector:@selector(addBoardWithCode:)]) {
+        [self.alertGeneratorDelegate addBoardWithCode:code];
       }
     }
   }];

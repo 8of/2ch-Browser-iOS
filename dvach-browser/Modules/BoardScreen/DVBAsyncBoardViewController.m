@@ -15,7 +15,7 @@
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBThreadUIGenerator.h"
 #import "DVBThreadNode.h"
-#import "DVBAlertViewGenerator.h"
+#import "DVBAlertGenerator.h"
 
 @interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
 
@@ -85,7 +85,7 @@
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     if ([DVBBoardStyler ageCheckNotPassed]) {
-      UIAlertController *alert = [DVBAlertViewGenerator ageCheckAlert];
+      UIAlertController *alert = [DVBAlertGenerator ageCheckAlert];
       [self presentViewController:alert animated:YES completion:nil];
     }
   });

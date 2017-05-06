@@ -1,5 +1,5 @@
 //
-//  DVBAlertViewGenerator.h
+//  DVBAlertGenerator.h
 //  dvach-browser
 //
 //  Created by Mega on 13/02/15.
@@ -11,15 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol DVBAlertViewGeneratorDelegate <NSObject>
+@protocol DVBAlertGeneratorDelegate <NSObject>
 
 - (void)addBoardWithCode:(NSString *)code;
 
 @end
 
-@interface DVBAlertViewGenerator : NSObject
+@interface DVBAlertGenerator : NSObject
 
-@property (nonatomic, weak) id<DVBAlertViewGeneratorDelegate> alertViewGeneratorDelegate;
+@property (nonatomic, weak) id<DVBAlertGeneratorDelegate> alertGeneratorDelegate;
 
 + (UIAlertController *)ageCheckAlert;
 

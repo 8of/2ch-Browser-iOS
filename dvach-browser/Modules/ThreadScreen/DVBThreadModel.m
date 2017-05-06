@@ -8,6 +8,9 @@
 
 #import <Mantle/Mantle.h>
 
+#import "DVBCommon.h"
+#import "DVBConstants.h"
+#import "DVBUrls.h"
 #import "DVBThreadModel.h"
 #import "DVBDatabaseManager.h"
 #import "DVBNetworking.h"
@@ -262,12 +265,6 @@
 - (void)dropPostsArray
 {
     _postsArray = nil;
-}
-
-/// Check connection
-- (BOOL)isConnectionAvailable
-{
-    return [_networking getNetworkStatus];
 }
 
 - (void)reportThread
