@@ -19,7 +19,7 @@ abstract_target 'BasePods' do
 	pod 'PureLayout', '3.0.2'
 	pod 'Texture', '2.3.1'
 	pod 'TUSafariActivity', '1.0.4'
-	pod 'YapDatabase', '2.9.2'
+	pod 'YapDatabase', '3.0'
 
 	# targets
   target 'dvach-browser'
