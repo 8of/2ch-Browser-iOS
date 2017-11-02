@@ -11,8 +11,6 @@ use_frameworks!
 abstract_target 'BasePods' do
   # pods
 	pod 'AFNetworking', '2.6.3'
-	pod 'Crashlytics', '3.8.4'
-	pod 'Fabric', '1.6.11'
 	pod 'Mantle', '2.1.0'
 	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
 	pod 'OGVKit', '0.5pre'

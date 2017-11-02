@@ -52,7 +52,6 @@
 
 - (void)initApp
 {
-  [Fabric with:@[[Crashlytics class]]];
 
   _networking = [[DVBNetworking alloc] init];
   NSString *userAgent = [_networking userAgent];
