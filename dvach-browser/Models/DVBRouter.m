@@ -83,4 +83,15 @@
                  completion:nil];
 }
 
++ (void)openAVPlayerFrom:(UIViewController *)vc url:(NSURL *)url
+{
+  AVPlayerViewController *avPlayerVC = [AVPlayerViewController new];
+  AVPlayer *player = [[AVPlayer alloc] initWithURL:url];
+  player.muted = YES;
+  avPlayerVC.player = player;
+  [vc presentViewController:avPlayerVC animated:YES completion:^{
+    [player play];
+  }];
+}
+
 @end

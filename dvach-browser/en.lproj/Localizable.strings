@@ -44,7 +44,6 @@
 "DATE_FORMATTER_SECS" = "%ld s";
 "DATE_FORMATTER_NOW" = "Now";
 
-"PROMPT_INSTALL_VLC" = "Install VLC to play webm";
 "PROMPT_REPORT_SENT" = "Report sent";
 "PROMPT_NEW_MESSAGES" = "new";
 "PROMPT_THREAD_BOOKMARKED" = "Thread added to the main app screen";

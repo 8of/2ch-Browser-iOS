@@ -48,10 +48,12 @@
   if ([fullUrlString containsString:@".webm"]) {
     NSURL *url = [NSURL URLWithString:fullUrlString];
     [self openInternalWebmWithURL:url];
-//    NSURL *fullUrl = [NSURL URLWithString:[fullUrlString stringByReplacingOccurrencesOfString:@"https" withString:@"vlc"]];
-//    [self openVLCWithURL:fullUrl];
+  // if contains .mp4
+  } else if ([fullUrlString containsString:@".mp4"]) {
+    NSURL *url = [NSURL URLWithString:fullUrlString];
+    [self openAVPlayerWithURL:url];
   }
-  // if not
+  // if contains image
   else {
     [self createAndPushGalleryWithUrlString:fullUrlString
                         andThumbImagesArray:thumbImagesArray
@@ -86,28 +88,11 @@
   [DVBRouter openWebmFrom:_viewController url:url];
 }
 
-#pragma mark - VLC
+#pragma mark - MP4
 
-- (void)openVLCWithURL:(NSURL *)url
+- (void)openAVPlayerWithURL:(NSURL *)url
 {
-  BOOL canOpenInVLC = [[UIApplication sharedApplication] canOpenURL:url];
-
-  if (canOpenInVLC) {
-    [[UIApplication sharedApplication] openURL:url];
-  }
-  else {
-    [self problemAboutVlcToPrompt];
-  }
-}
-
-/// NO VLC error prompt
-- (void)problemAboutVlcToPrompt
-{
-    NSString *installVLCPrompt = NSLS(@"PROMPT_INSTALL_VLC");
-    _viewController.navigationItem.prompt = installVLCPrompt;
-    [self performSelector:@selector(clearPrompt)
-               withObject:nil
-               afterDelay:2.0];
+  [DVBRouter openAVPlayerFrom:_viewController url:url];
 }
 
 /// Clear prompt from any status / error messages.

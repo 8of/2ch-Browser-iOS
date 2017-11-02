@@ -155,8 +155,8 @@ NS_ASSUME_NONNULL_BEGIN
     strongify(self);
     if (!self) { return; }
 
-    BOOL isWebm = (fulls.count > idx) && [fulls[idx] containsString:@".webm"];
-    ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isWebm];
+    BOOL isVideo = (fulls.count > idx) && ([fulls[idx] containsString:@".webm"] || [fulls[idx] containsString:@".mp4"]);
+    ASNetworkImageNode *media = [DVBPostViewGenerator mediaNodeWithURL:mediaUrl isWebm:isVideo];
     DVBMediaButtonNode *mediaButton = [[DVBMediaButtonNode alloc] initWithURL:mediaUrl];
     [mediaButton addTarget:self
                     action:@selector(pictureTap:)

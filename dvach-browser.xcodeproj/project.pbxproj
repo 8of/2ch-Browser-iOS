@@ -31,6 +31,8 @@
 		9437FD251B90DFDF004FFB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9437FD271B90DFDF004FFB22 /* Localizable.strings */; };
 		94452CB31B94D54E001D521E /* DVBDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94452CB21B94D54E001D521E /* DVBDatabaseManager.m */; };
 		944AA0EF1DDC635100FE135A /* DVBRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 944AA0EE1DDC635100FE135A /* DVBRouter.m */; };
+		948239AE1FABC12E008AC562 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 948239AD1FABC12D008AC562 /* AVFoundation.framework */; };
+		948239B01FABC132008AC562 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 948239AF1FABC132008AC562 /* AVKit.framework */; };
 		948B34D31C6939C0003D3BB4 /* DVBCaptchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */; };
 		9497D99D1D9EF368002B013A /* DVBUrls.m in Sources */ = {isa = PBXBuildFile; fileRef = 9497D99C1D9EF368002B013A /* DVBUrls.m */; };
 		9497D9A01D9F0251002B013A /* DVBDefaultsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9497D99F1D9F0251002B013A /* DVBDefaultsManager.m */; };
@@ -152,6 +154,8 @@
 		94452CB21B94D54E001D521E /* DVBDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDatabaseManager.m; path = Models/DVBDatabaseManager.m; sourceTree = "<group>"; };
 		944AA0ED1DDC635100FE135A /* DVBRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBRouter.h; path = Models/DVBRouter.h; sourceTree = "<group>"; };
 		944AA0EE1DDC635100FE135A /* DVBRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBRouter.m; path = Models/DVBRouter.m; sourceTree = "<group>"; };
+		948239AD1FABC12D008AC562 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		948239AF1FABC132008AC562 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		948B34D11C6939C0003D3BB4 /* DVBCaptchaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCaptchaManager.h; path = Models/DVBCaptchaManager.h; sourceTree = "<group>"; };
 		948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBCaptchaManager.m; path = Models/DVBCaptchaManager.m; sourceTree = "<group>"; };
 		9497D99B1D9EF368002B013A /* DVBUrls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBUrls.h; path = Models/DVBUrls.h; sourceTree = "<group>"; };
@@ -274,6 +278,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				948239B01FABC132008AC562 /* AVKit.framework in Frameworks */,
+				948239AE1FABC12E008AC562 /* AVFoundation.framework in Frameworks */,
 				94FC06A31C674E8D00813A68 /* libiconv.tbd in Frameworks */,
 				9432BEF31AC821650015CA9F /* CoreData.framework in Frameworks */,
 				840BFBBB1AA1B08A007651D9 /* CoreGraphics.framework in Frameworks */,
@@ -580,6 +586,8 @@
 		A1ADDCC419E7B7C2009E47EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				948239AF1FABC132008AC562 /* AVKit.framework */,
+				948239AD1FABC12D008AC562 /* AVFoundation.framework */,
 				94FC06A21C674E8D00813A68 /* libiconv.tbd */,
 				9432BEF21AC821650015CA9F /* CoreData.framework */,
 				840BFBBA1AA1B08A007651D9 /* CoreGraphics.framework */,

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 @class DVBThread;
 @class DVBPostViewModel;
@@ -24,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)openCreateThreadFrom:(UIViewController *)vc boardCode:(NSString *)boardCode;
 + (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(NSString *)threadNum;
 + (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url;
++ (void)openAVPlayerFrom:(UIViewController *)vc url:(NSURL *)url;
 
 @end
 

@@ -44,7 +44,6 @@
 "DATE_FORMATTER_SECS" = "%ld сек.";
 "DATE_FORMATTER_NOW" = "Только что";
 
-"PROMPT_INSTALL_VLC" = "Для просмотра установите VLC";
 "PROMPT_REPORT_SENT" = "Жалоба отправлена";
 "PROMPT_NEW_MESSAGES" = "новых";
 "PROMPT_THREAD_BOOKMARKED" = "Тред добавлен на главный экран приложения";
