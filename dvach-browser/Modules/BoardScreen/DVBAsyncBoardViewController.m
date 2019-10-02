@@ -143,11 +143,11 @@
   double duration = 1.0;
   [UIView animateWithDuration:duration
                    animations:^{
-                     _tableNode.view.layer.opacity = 0;
+                     self.tableNode.view.layer.opacity = 0;
                    } completion:^(BOOL finished) {
-                     [_tableNode reloadData];
+                     [self.tableNode reloadData];
                      weakify(self);
-                     [_boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
+                     [self.boardModel reloadBoardWithCompletion:^(NSArray *completionThreadsArray)
                       {
                         strongify(self);
                         if (!self) { return; }

@@ -80,18 +80,18 @@
     {
         strongify(self);
         if (!self) { return; }
-        _captchaId = captchaId;
+        self.captchaId = captchaId;
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:captchaImageUrl]];
         weakify(self);
-        [_imageView setImageWithURLRequest:request
+        [self.imageView setImageWithURLRequest:request
                           placeholderImage:nil
                                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
                                        strongify(self);
                                        if (!self) { return; }
                                        if ([DVBDefaultsManager isDarkMode]) {
-                                           _imageView.image = [self inverseColor:image];
+                                           self.imageView.image = [self inverseColor:image];
                                        } else {
-                                           _imageView.image = image;
+                                           self.imageView.image = image;
                                        }
                                    }
                                    failure:nil];

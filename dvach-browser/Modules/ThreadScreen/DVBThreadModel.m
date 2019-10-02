@@ -73,7 +73,7 @@
                 self.lastPostNum = lastPost.num;
             }
 
-            _postsArray = arrayOfPosts;
+            self->_postsArray = arrayOfPosts;
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion([arrayOfPosts copy]);

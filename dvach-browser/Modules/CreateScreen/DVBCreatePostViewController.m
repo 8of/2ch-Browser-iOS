@@ -213,8 +213,19 @@
         [self showDvachCaptchaController];
     }
 
-    [_networking postMessageWithBoard:_boardCode andThreadnum:_threadNum andName:name andEmail:email andSubject:subject andComment:comment andUsercode:_usercode andImagesToUpload:imagesToUpload andCaptchaParameters:captchaParameters andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
+    weakify(self);
+    [_networking postMessageWithBoard:_boardCode
+                         andThreadnum:_threadNum
+                              andName:name
+                             andEmail:email
+                           andSubject:subject
+                           andComment:comment
+                          andUsercode:_usercode
+                    andImagesToUpload:imagesToUpload
+                 andCaptchaParameters:captchaParameters
+                        andCompletion:^(DVBMessagePostServerAnswer *messagePostServerAnswer)
     {
+        strongify(self);
         // Set Navigation prompt accordingly to server answer.
         NSString *serverStatusMessage = messagePostServerAnswer.statusMessage;
         self.navigationItem.prompt = serverStatusMessage;
@@ -226,12 +237,12 @@
             BOOL isThreadToRedirectToNotEmpty = ![threadToRedirectTo isEqualToString:@""];
 
             if (threadToRedirectTo && isThreadToRedirectToNotEmpty) {
-                _createdThreadNum = threadToRedirectTo;
+                self.createdThreadNum = threadToRedirectTo;
             }
 
             // Clear comment text and saved comment if post was successfull.
-            _containerForPostElementsView.commentTextView.text = @"";
-            _sharedComment.comment = @"";
+            self.containerForPostElementsView.commentTextView.text = @"";
+            self.sharedComment.comment = @"";
 
             // Dismiss View Controller if post was successfull.
             [self performSelector:@selector(goBackToThread)
@@ -239,7 +250,7 @@
                        afterDelay:1.0];
         } else {
             // Enable Post button back.
-            _sendPostButton.enabled = YES;
+            self.sendPostButton.enabled = YES;
         }
     }];
 }
@@ -269,15 +280,15 @@
         // Set image extention to prepare image the right way before uplaoding
         imageToLoad.imageExtention = imageExtention.lowercaseString;
 
-        UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:_addPictureButton.superview.subviews];
+        UIImageView *imageViewToShowIn = [self imageViewToShowUploadingImageWithArrayOfViews:self.addPictureButton.superview.subviews];
 
-        [_imagesToUpload addObject:imageToLoad];
+        [self.imagesToUpload addObject:imageToLoad];
 
-        UIView *plusContainerView = [self viewPlusContainerWithArrayOfViews:_addPictureButton.superview.subviews];
+        UIView *plusContainerView = [self viewPlusContainerWithArrayOfViews:self.addPictureButton.superview.subviews];
 
-        [_containerForPostElementsView changeUploadViewToDeleteView:plusContainerView andsetImage:imageToLoad forImageView:imageViewToShowIn];
+        [self.containerForPostElementsView changeUploadViewToDeleteView:plusContainerView andsetImage:imageToLoad forImageView:imageViewToShowIn];
 
-        _addPictureButton = nil;
+        self.addPictureButton = nil;
     }];
 }
 

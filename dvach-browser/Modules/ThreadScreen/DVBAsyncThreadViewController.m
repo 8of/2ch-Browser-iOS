@@ -175,14 +175,14 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
         strongify(self);
         if (!self) { return; }
         if (!posts) {
-            _alreadyLoading = NO;
+            self.alreadyLoading = NO;
             [self reloadThread];
             return;
         }
         self.posts = [self convertPostsToViewModel:posts forAnswer:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableNode reloadData];
-            _alreadyLoading = NO;
+            self.alreadyLoading = NO;
             [self reloadThread];
         });
     }];
@@ -264,7 +264,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
      if (!self) { return; }
      if (!posts) {
          dispatch_async(dispatch_get_main_queue(), ^{
-           _alreadyLoading = NO;
+           self.alreadyLoading = NO;
            [self.refreshControl endRefreshing];
            [self bottomRefreshStart:NO];
            self.tableNode.view.backgroundView = [DVBThreadUIGenerator errorView];
@@ -294,7 +294,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
   }
                         completion:^(BOOL finished)
   {
-    _alreadyLoading = NO;
+    self.alreadyLoading = NO;
     [self.refreshControl endRefreshing];
     [self bottomRefreshStart:NO];
   }

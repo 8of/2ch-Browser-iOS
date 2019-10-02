@@ -15,6 +15,7 @@
 #import "DVBNetworking.h"
 #import "DVBValidation.h"
 #import "DVBBoardsModel.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBBoardTableViewCell.h"
 
@@ -227,7 +228,9 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
 - (void)getBoardsWithCompletion:(void (^)(NSArray *))completion {
     DVBNetworking *networkHandler = [[DVBNetworking alloc] init];
+    weakify(self);
     [networkHandler getBoardsFromNetworkWithCompletion:^(NSDictionary *boardsDict) {
+        strongify(self);
         NSMutableArray *boardsFromNetworkMutableArray = [NSMutableArray array];
         for (id key in boardsDict) {
             NSArray *boardsInsideCategory = [[NSArray alloc] initWithArray:[boardsDict objectForKey:key]];
@@ -236,8 +239,8 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 NSString *name = singleBoardDictionary[@"name"];
                 NSNumber *pages = singleBoardDictionary[@"pages"];
                 
-                DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:_context];
-                [_context assignObject:board toPersistentStore:_memoryStore];
+                DVBBoard *board = [NSEntityDescription insertNewObjectForEntityForName:DVBBOARD_ENTITY_NAME inManagedObjectContext:self.context];
+                [self.context assignObject:board toPersistentStore:self.memoryStore];
                 board.boardId = boardId;
                 board.name = name;
                 board.pages = pages;
@@ -245,7 +248,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 [boardsFromNetworkMutableArray addObject:board];
                 
                 // Need to delete this temp created object or it will appear in table after realoading
-                [_context deleteObject:board];
+                [self.context deleteObject:board];
             }
         }
         NSArray *boardsFromNetworkArray = boardsFromNetworkMutableArray;
@@ -267,7 +270,9 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 
     if (isNeedToLoadBoardsFromNetwork) {
         NSMutableArray *arrayForInterating = [self.boardsArray mutableCopy];
+        weakify(self);
         [self getBoardsWithCompletion:^(NSArray *completion) {
+            strongify(self);
             NSUInteger indexOfCurrentBoard = 0;
             for (DVBBoard *board in arrayForInterating) {
                 NSString *name = board.name;
@@ -283,13 +288,13 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                         NSNumber *pages = boardFromNetwork.pages;
                         board.name = nameOfTheMatchedBoard;
                         board.pages = pages;
-                        [_boardsPrivate setObject:board atIndexedSubscript:indexOfCurrentBoard];
+                        [self.boardsPrivate setObject:board atIndexedSubscript:indexOfCurrentBoard];
                     }
                 }
                 indexOfCurrentBoard++;
             }
             [self saveChanges];
-            [_boardsModelDelegate updateTable];
+            [self.boardsModelDelegate updateTable];
         }];
     }
 }
@@ -304,7 +309,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
 {
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         header.textLabel.textColor = [UIColor whiteColor];
         header.contentView.backgroundColor = CELL_SEPARATOR_COLOR_BLACK;
     } else {
@@ -423,7 +428,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
                 if (!text || [text isEqualToString:@""]) {
                     return;
                 }
-                DVBBoard *board = _boardsPrivate[indexOfCurrentBoard];
+                DVBBoard *board = self.boardsPrivate[indexOfCurrentBoard];
                 board.name = text;
                 [self saveChanges];
                 [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
