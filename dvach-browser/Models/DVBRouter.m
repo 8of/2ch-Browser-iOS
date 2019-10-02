@@ -8,13 +8,13 @@
 
 #import "DVBConstants.h"
 #import "DVBRouter.h"
+#import "DVBAlertGenerator.h"
 
 #import "DVBThread.h"
 #import "DVBPostViewModel.h"
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCreatePostViewController.h"
-#import "DVBWebmViewController.h"
 
 @implementation DVBRouter
 
@@ -76,9 +76,7 @@
 
 + (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url
 {
-  DVBWebmViewController *webmVC = [[DVBWebmViewController alloc] initWithUrl:url];
-  UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:webmVC];
-  [vc presentViewController:nc
+  [vc presentViewController:[DVBAlertGenerator webmDeprecatedAlert]
                    animated:YES
                  completion:nil];
 }
