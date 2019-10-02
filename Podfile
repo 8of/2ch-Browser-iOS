@@ -13,7 +13,7 @@ abstract_target 'BasePods' do
 	pod 'AFNetworking', '2.6.3'
 	pod 'Mantle', '2.1.0'
 	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
-	pod 'OGVKit/WebM', '0.5.13’
+	pod 'OGVKit/WebM', '0.5.13'
 	pod 'PureLayout', '3.0.2'
 	pod 'Texture', '2.5.1'
 	pod 'TUSafariActivity', '1.0.4'

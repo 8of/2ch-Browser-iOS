@@ -735,7 +735,6 @@
 				84CFC50619E1526E004D0BB8 /* Sources */,
 				84CFC50719E1526E004D0BB8 /* Frameworks */,
 				84CFC50819E1526E004D0BB8 /* Resources */,
-				123962959E72D9D255ECCDA0 /* [CP] Copy Pods Resources */,
 				F20F39559485DF9E8E944ADB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -756,7 +755,6 @@
 				84CFC52019E1526E004D0BB8 /* Frameworks */,
 				84CFC52119E1526E004D0BB8 /* Resources */,
 				857360C0AD5C47878B5E8458 /* [CP] Embed Pods Frameworks */,
-				CDF147E692315511DF0E4EA2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -846,28 +844,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		123962959E72D9D255ECCDA0 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		857360C0AD5C47878B5E8458 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/DACircularProgress/DACircularProgress.framework",
@@ -914,7 +897,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		857FF7A2A696552F8C0A2607 /* [CP] Check Pods Manifest.lock */ = {
@@ -953,28 +936,13 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		CDF147E692315511DF0E4EA2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		F20F39559485DF9E8E944ADB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/CocoaLumberjack/CocoaLumberjack.framework",
 				"${BUILT_PRODUCTS_DIR}/DACircularProgress/DACircularProgress.framework",
@@ -1021,7 +989,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
