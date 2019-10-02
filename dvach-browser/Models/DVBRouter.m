@@ -12,6 +12,7 @@
 
 #import "DVBThread.h"
 #import "DVBPostViewModel.h"
+#import "DVBDefaultsManager.h"
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCreatePostViewController.h"
@@ -63,7 +64,7 @@
     createPostViewController.preferredContentSize = CGSizeMake(320, 480);
     navigationController.popoverPresentationController.delegate = (id<UIPopoverPresentationControllerDelegate>)vc;
     navigationController.popoverPresentationController.barButtonItem = vc.navigationItem.rightBarButtonItem;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
       // Fix ugly white popover arrow on Popover Controller when dark theme enabled
       navigationController.popoverPresentationController.backgroundColor = [UIColor blackColor];
     }

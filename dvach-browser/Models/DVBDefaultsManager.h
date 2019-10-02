@@ -20,6 +20,8 @@
 
 @interface DVBDefaultsManager : NSObject
 
+@property (nonatomic, class, readonly) BOOL isDarkMode;
+
 + (NSDictionary *)initialDefaultsMattersForAppReset;
 + (BOOL)needToResetWithStoredDefaults:(NSDictionary *)defaultsToCompare;
 - (void)initApp;

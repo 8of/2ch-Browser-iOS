@@ -96,7 +96,7 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
         [self goToFirstController];
     }
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.tableView.backgroundColor = [UIColor blackColor];
         [self.tableView setSeparatorColor:CELL_SEPARATOR_COLOR_BLACK];

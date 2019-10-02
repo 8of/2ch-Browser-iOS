@@ -10,6 +10,7 @@
 #import "DVBAlertGenerator.h"
 #import "DVBValidation.h"
 #import "DVBConstants.h"
+#import "DVBDefaultsManager.h"
 
 @implementation DVBAlertGenerator
 
@@ -54,7 +55,7 @@
                                                                            message:message
                                                                     preferredStyle:UIAlertControllerStyleAlert];
   [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
       textField.keyboardAppearance = UIKeyboardAppearanceDark;
     }
   }];

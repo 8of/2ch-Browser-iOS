@@ -16,6 +16,7 @@
 #import "DVBComment.h"
 #import "DVBMessagePostServerAnswer.h"
 #import "DVBCaptchaHelper.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBCreatePostViewController.h"
 #import "DVBDvachCaptchaViewController.h"
@@ -101,7 +102,7 @@
 
 - (void)darkThemeHandler
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         self.view.backgroundColor = CELL_BACKGROUND_COLOR;
         _createPostScrollView.backgroundColor = CELL_BACKGROUND_COLOR;

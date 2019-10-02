@@ -7,6 +7,7 @@
 //
 
 #import "DVBBoardTableViewCell.h"
+#import "DVBDefaultsManager.h"
 
 @interface DVBBoardTableViewCell ()
 
@@ -50,7 +51,7 @@
     [self setEditing:NO animated:NO];
     _title.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
     _subtitle.font = [UIFont preferredFontForTextStyle:UIFontTextStyleFootnote];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         _titleContainerView.backgroundColor = CELL_BACKGROUND_COLOR;
         _subtitleContainerView.backgroundColor = CELL_BACKGROUND_COLOR;
         self.backgroundColor = CELL_BACKGROUND_COLOR;

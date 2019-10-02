@@ -13,6 +13,7 @@
 #import "DVBThreadModel.h"
 #import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBPostViewModel.h"
+#import "DVBDefaultsManager.h"
 #import "DVBPostNode.h"
 #import "DVBUrls.h"
 
@@ -82,7 +83,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+  if ([DVBDefaultsManager isDarkMode]) {
     self.navigationController.toolbar.barStyle = UIBarStyleBlackTranslucent;
   } else {
     self.navigationController.toolbar.barStyle = UIBarStyleDefault;

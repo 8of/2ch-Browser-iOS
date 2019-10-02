@@ -9,6 +9,7 @@
 #import "DVBConstants.h"
 
 #import "DVBBrowserViewControllerBuilder.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBGalleryTransition.h"
 
@@ -116,7 +117,7 @@ static NSInteger const PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION = 5;
 
 - (UIStatusBarStyle)preferredStatusBarStyle
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         return UIStatusBarStyleLightContent;
     }
 

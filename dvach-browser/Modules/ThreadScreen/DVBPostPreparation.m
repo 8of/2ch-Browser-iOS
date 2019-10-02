@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 
 #import "DVBCommon.h"
+#import "DVBDefaultsManager.h"
 #import "DVBConstants.h"
 #import "DVBPostPreparation.h"
 #import "UrlNinja.h"
@@ -79,7 +80,7 @@
     [maComment addAttribute:NSParagraphStyleAttributeName value:commentStyle range:range];
 
     // dark theme
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         [maComment addAttribute:NSForegroundColorAttributeName value:CELL_TEXT_COLOR range:range];
     }
     
@@ -132,7 +133,7 @@
 
     // spoiler
     UIColor *spoilerColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         spoilerColor = CELL_TEXT_SPOILER_COLOR;
     }
     NSRegularExpression *spoiler = [[NSRegularExpression alloc]initWithPattern:@"<span class=\"spoiler\">(.*?)</span>" options:0 error:nil];

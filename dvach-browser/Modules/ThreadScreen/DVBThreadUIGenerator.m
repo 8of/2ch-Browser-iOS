@@ -11,6 +11,7 @@
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBThreadUIGenerator.h"
+#import "DVBDefaultsManager.h"
 #import "DVBPostStyler.h"
 #import "ARChromeActivity.h"
 #import "DVBLoadingStatusView.h"
@@ -147,7 +148,9 @@
 
 + (UIView *)errorView
 {
-  DVBLoadingStatusViewColor color = [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME] ?  DVBLoadingStatusViewColorDark : DVBLoadingStatusViewColorLight;
+  DVBLoadingStatusViewColor color = [DVBDefaultsManager isDarkMode]
+    ?  DVBLoadingStatusViewColorDark
+    : DVBLoadingStatusViewColorLight;
   DVBLoadingStatusView *view = [[DVBLoadingStatusView alloc] initWithMessage:NSLS(@"STATUS_LOADING_ERROR") andStyle:DVBLoadingStatusViewStyleError andColor:color];
   return view;
 }

@@ -10,6 +10,7 @@
 
 #import "DVBCommon.h"
 #import "DVBConstants.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBContainerForPostElements.h"
 #import "DVBCreatePostScrollView.h"
@@ -61,7 +62,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
     }];
 
     // Dark theme
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         self.backgroundColor = CELL_BACKGROUND_COLOR;
         _commentTextView.backgroundColor = CELL_BACKGROUND_COLOR;
 
@@ -119,7 +120,7 @@ static CGFloat const IMAGE_CHANGE_ANIMATE_TIME = 0.3f;
         textView.textColor = [UIColor blackColor];
 
         // Dark theme
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+        if ([DVBDefaultsManager isDarkMode]) {
             textView.textColor = [UIColor whiteColor];
         }
     }

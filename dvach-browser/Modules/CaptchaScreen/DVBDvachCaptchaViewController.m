@@ -11,6 +11,7 @@
 
 #import "DVBConstants.h"
 #import "DVBCaptchaManager.h"
+#import "DVBDefaultsManager.h"
 
 #import "DVBDvachCaptchaViewController.h"
 
@@ -34,7 +35,7 @@
     _captchaManager = [[DVBCaptchaManager alloc] init];
     [_reloadButton setTitle:@"" forState:UIControlStateNormal];
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+    if ([DVBDefaultsManager isDarkMode]) {
         self.view.backgroundColor = CELL_BACKGROUND_COLOR;
         _textField.backgroundColor = CELL_BACKGROUND_COLOR;
         _textField.textColor = [UIColor whiteColor];
@@ -87,7 +88,7 @@
                                    success:^(NSURLRequest * _Nonnull request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image) {
                                        strongify(self);
                                        if (!self) { return; }
-                                       if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
+                                       if ([DVBDefaultsManager isDarkMode]) {
                                            _imageView.image = [self inverseColor:image];
                                        } else {
                                            _imageView.image = image;

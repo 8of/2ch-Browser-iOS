@@ -9,6 +9,7 @@
 #import "DVBCommon.h"
 #import "DVBConstants.h"
 #import "DVBBoardStyler.h"
+#import "DVBDefaultsManager.h"
 
 @implementation DVBBoardStyler
 
@@ -50,7 +51,7 @@
 
 + (BOOL)isDarkTheme
 {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME];
+    return [DVBDefaultsManager isDarkMode];
 }
 
 + (BOOL)ageCheckNotPassed
