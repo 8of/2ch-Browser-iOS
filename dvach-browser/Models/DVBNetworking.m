@@ -102,7 +102,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
                            @"usercode":passcode
                            };
 
-  [manager POST:requestAddress parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject)
+  [manager GET:requestAddress parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject)
    {
      NSString *usercode = [self getUsercodeFromCookies];
      completion(usercode);
@@ -120,7 +120,7 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
 - (NSString *)getUsercodeFromCookies {
   NSArray *cookiesArray = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies];
   for (NSHTTPCookie *cookie in cookiesArray) {
-    BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"usercode_nocaptcha"];
+    BOOL isThisUsercodeCookie = [cookie.name isEqualToString:@"passcode_auth"];
     if (isThisUsercodeCookie) {
       NSString *usercode = cookie.value;
       NSLog(@"usercode success");
