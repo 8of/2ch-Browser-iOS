@@ -96,6 +96,10 @@
 		A1FC04441E5A0FF3008C3577 /* DVBPostPreparation.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC04431E5A0FF3008C3577 /* DVBPostPreparation.m */; };
 		A1FC044D1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC044C1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m */; };
 		A1FC04501E5A10C2008C3577 /* DVBThreadUIGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = A1FC044F1E5A10C2008C3577 /* DVBThreadUIGenerator.m */; };
+		DAB7210B23E821DE00B13218 /* VLCPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7210A23E821DE00B13218 /* VLCPlayerViewController.swift */; };
+		DAB7210D23E8223900B13218 /* VLCPlayerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7210C23E8223900B13218 /* VLCPlayerInteractor.swift */; };
+		DAB7210F23E8224300B13218 /* VLCPlayerScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7210E23E8224300B13218 /* VLCPlayerScreenBuilder.swift */; };
+		DAB7211123E8224C00B13218 /* VLCPlayerViewIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7211023E8224C00B13218 /* VLCPlayerViewIO.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -264,6 +268,11 @@
 		A1FC044E1E5A10C2008C3577 /* DVBThreadUIGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBThreadUIGenerator.h; path = Modules/ThreadScreen/DVBThreadUIGenerator.h; sourceTree = "<group>"; };
 		A1FC044F1E5A10C2008C3577 /* DVBThreadUIGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBThreadUIGenerator.m; path = Modules/ThreadScreen/DVBThreadUIGenerator.m; sourceTree = "<group>"; };
 		DA6D360509028339F31549C7 /* Pods_BasePods_dvach_browser.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BasePods_dvach_browser.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DAB7210523E8212E00B13218 /* dvach-browser-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dvach-browser-Bridging-Header.h"; sourceTree = "<group>"; };
+		DAB7210A23E821DE00B13218 /* VLCPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerViewController.swift; sourceTree = "<group>"; };
+		DAB7210C23E8223900B13218 /* VLCPlayerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerInteractor.swift; sourceTree = "<group>"; };
+		DAB7210E23E8224300B13218 /* VLCPlayerScreenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerScreenBuilder.swift; sourceTree = "<group>"; };
+		DAB7211023E8224C00B13218 /* VLCPlayerViewIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerViewIO.swift; sourceTree = "<group>"; };
 		DB2041C9957E17E7EBCCE65F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browserTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browserTests/Pods-BasePods-dvach-browserTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E2FB6DBFA4B0E60C9DC1E905 /* Pods-BasePods-dvach-browser.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasePods-dvach-browser.release.xcconfig"; path = "Pods/Target Support Files/Pods-BasePods-dvach-browser/Pods-BasePods-dvach-browser.release.xcconfig"; sourceTree = "<group>"; };
@@ -538,6 +547,7 @@
 		A1155D1C1A26486400810321 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				DAB7210423E820D900B13218 /* VLCplayerController */,
 				A151D3591EBE5B1C0096E8B6 /* ViewGenerators */,
 				94A17DC71B335CD90009A002 /* Transitions */,
 				949B76281AF766EF00DDA65F /* Activities */,
@@ -711,6 +721,18 @@
 			name = CreateScreen;
 			sourceTree = "<group>";
 		};
+		DAB7210423E820D900B13218 /* VLCplayerController */ = {
+			isa = PBXGroup;
+			children = (
+				DAB7210523E8212E00B13218 /* dvach-browser-Bridging-Header.h */,
+				DAB7210A23E821DE00B13218 /* VLCPlayerViewController.swift */,
+				DAB7210C23E8223900B13218 /* VLCPlayerInteractor.swift */,
+				DAB7210E23E8224300B13218 /* VLCPlayerScreenBuilder.swift */,
+				DAB7211023E8224C00B13218 /* VLCPlayerViewIO.swift */,
+			);
+			name = VLCplayerController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -766,6 +788,7 @@
 					84CFC50919E1526E004D0BB8 = {
 						CreatedOnToolsVersion = 6.0.1;
 						DevelopmentTeam = Q9324QX3V7;
+						LastSwiftMigration = 1130;
 					};
 					84CFC52219E1526E004D0BB8 = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -967,21 +990,25 @@
 				94CF0CFC1DE08DB000AA3AC8 /* DVBCaptchaHelper.m in Sources */,
 				A1BDC0C01E6B649600ACBB36 /* DVBCreatePostViewController.m in Sources */,
 				A1BDC0D41E6B656600ACBB36 /* DVBMarkupButton.m in Sources */,
+				DAB7210D23E8223900B13218 /* VLCPlayerInteractor.swift in Sources */,
 				A1FC044D1E5A1064008C3577 /* DVBBrowserViewControllerBuilder.m in Sources */,
 				A1BDC0AB1E6B571700ACBB36 /* DVBThreadNode.m in Sources */,
 				9415B1421AF2BC7700C7EB7B /* UIImage+DVBImageExtention.m in Sources */,
 				9497D99D1D9EF368002B013A /* DVBUrls.m in Sources */,
 				A155FF181AB7362A00BE31F4 /* DVBThread.m in Sources */,
 				9432BEF61AC821B40015CA9F /* dvach-browser.xcdatamodeld in Sources */,
+				DAB7210B23E821DE00B13218 /* VLCPlayerViewController.swift in Sources */,
 				940BD54E1E0554D200D6BAF8 /* DVBPostViewModel.m in Sources */,
 				8497BF341AD3F98F001616C2 /* GTMNSString+HTML.m in Sources */,
 				A155FF051AB735DD00BE31F4 /* DVBBoardsModel.m in Sources */,
 				A1FC04411E5A0FA7008C3577 /* DVBThreadModel.m in Sources */,
 				94F454F81BF3E368001B8091 /* UIImage+DVBOpaqueImage.m in Sources */,
 				A1BDC0B31E6B639E00ACBB36 /* DVBMediaButtonNode.m in Sources */,
+				DAB7211123E8224C00B13218 /* VLCPlayerViewIO.swift in Sources */,
 				A151D35E1EBE5B1C0096E8B6 /* DVBAlertGenerator.m in Sources */,
 				A155FF071AB735DD00BE31F4 /* DVBConstants.m in Sources */,
 				A151D35F1EBE5B1C0096E8B6 /* DVBPostViewGenerator.m in Sources */,
+				DAB7210F23E8224300B13218 /* VLCPlayerScreenBuilder.swift in Sources */,
 				A1BDC0CD1E6B650400ACBB36 /* DVBCreatePostScrollView.m in Sources */,
 				94A17DCA1B335CE50009A002 /* DVBGalleryTransition.m in Sources */,
 				A1BDC0B41E6B639E00ACBB36 /* DVBPostNode.m in Sources */,
@@ -1175,17 +1202,21 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q9324QX3V7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "$(SRCROOT)/dvach-browser/Support/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.8of.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "dvach-browser/dvach-browser-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1197,16 +1228,20 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q9324QX3V7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = "$(inherited)";
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "$(SRCROOT)/dvach-browser/Support/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.8of.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "dvach-browser/dvach-browser-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1214,6 +1249,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E1D12AA839B911E09F2CB2B6 /* Pods-BasePods-dvach-browserTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -1235,6 +1271,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F1530ABC30D521863753555A /* Pods-BasePods-dvach-browserTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
