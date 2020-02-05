@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '8.2'
+platform :ios, '9.0'
 
 inhibit_all_warnings!
 use_frameworks!
@@ -14,6 +14,7 @@ abstract_target 'BasePods' do
 	pod 'Texture', '2.5.1'
 	pod 'TUSafariActivity', '1.0.4'
 	pod 'YapDatabase', '3.0.2'
+	pod 'MobileVLCKit', '~>3.3.0'
 
 	# targets
   target 'dvach-browser'

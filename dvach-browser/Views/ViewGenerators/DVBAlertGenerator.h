@@ -22,7 +22,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<DVBAlertGeneratorDelegate> alertGeneratorDelegate;
 
 + (UIAlertController *)ageCheckAlert;
-+ (UIAlertController *)webmDeprecatedAlert;
 - (UIAlertController *)boardCodeAlert;
 
 @end

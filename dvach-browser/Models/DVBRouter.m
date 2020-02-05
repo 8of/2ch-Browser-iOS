@@ -8,7 +8,6 @@
 
 #import "DVBConstants.h"
 #import "DVBRouter.h"
-#import "DVBAlertGenerator.h"
 
 #import "DVBThread.h"
 #import "DVBPostViewModel.h"
@@ -16,6 +15,7 @@
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCreatePostViewController.h"
+#import "dvach_browser-Swift.h"
 
 @implementation DVBRouter
 
@@ -77,9 +77,9 @@
 
 + (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url
 {
-  [vc presentViewController:[DVBAlertGenerator webmDeprecatedAlert]
-                   animated:YES
-                 completion:nil];
+    UIViewController * vlcVC = [VLCPlayerScreenBuilder buildWith:url];
+
+    [vc presentViewController:vlcVC animated:true completion:nil];
 }
 
 + (void)openAVPlayerFrom:(UIViewController *)vc url:(NSURL *)url
