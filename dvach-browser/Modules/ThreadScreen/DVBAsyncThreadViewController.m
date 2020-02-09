@@ -2,7 +2,7 @@
 //  DVBAsyncThreadViewController.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 18/12/16.
+//  Created by Andy on 18/12/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

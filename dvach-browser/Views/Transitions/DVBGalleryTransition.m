@@ -2,7 +2,7 @@
 //  DVBGalleryTransition.m
 //  VCtransition
 //
-//  Created by Andrey Konstantinov on 09/07/14.
+//  Created by Andy on 09/07/14.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  DVBCaptchaHelper.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 19/11/16.
+//  Created by Andy on 19/11/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

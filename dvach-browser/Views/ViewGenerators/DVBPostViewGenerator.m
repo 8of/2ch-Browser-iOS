@@ -2,7 +2,7 @@
 //  DVBPostViewGenerator.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 17/12/16.
+//  Created by Andy on 17/12/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

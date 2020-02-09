@@ -2,7 +2,7 @@
 //  DVBUrlNinjaTest.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 04/06/15.
+//  Created by Andy on 04/06/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 

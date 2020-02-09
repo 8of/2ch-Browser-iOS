@@ -2,7 +2,7 @@
 //  DVBContainerForPostElements.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 26/04/15.
+//  Created by Andy on 26/04/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 #import <CoreImage/CoreImage.h>

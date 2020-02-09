@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="wI0-Z4-0OB">
-    <device id="retina4_0" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="wI0-Z4-0OB">
+    <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -45,17 +41,17 @@
                         </searchBar>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="boardEntryCell" id="HNc-61-slu" customClass="DVBBoardTableViewCell">
-                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HNc-61-slu" id="9Zm-Cq-lXa">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="293" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rn4-By-Zxq" userLabel="TitleView">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="21.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="293" height="22"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLZ-GI-F81">
-                                                    <rect key="frame" x="15" y="0.5" width="272" height="21"/>
+                                                    <rect key="frame" x="15" y="1" width="278" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -69,10 +65,10 @@
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tZZ-MF-9OI" userLabel="Subtitle View">
-                                            <rect key="frame" x="0.0" y="21.5" width="287" height="21.5"/>
+                                            <rect key="frame" x="0.0" y="22" width="293" height="22"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuO-9F-NvY">
-                                                    <rect key="frame" x="15" y="0.0" width="272" height="18"/>
+                                                    <rect key="frame" x="15" y="0.0" width="278" height="18"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -150,7 +146,7 @@
             <objects>
                 <navigationController id="cAV-CW-ZuA" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="p8v-x3-4N5">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -170,11 +166,11 @@
                         <viewControllerLayoutGuide type="bottom" id="r8q-Gj-bOK"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Utx-OW-Ovo">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a02-0T-2Xt">
-                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <rect key="frame" x="0.0" y="56" width="320" height="492"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <attributedString key="attributedText">
                                     <fragment>
@@ -187,10 +183,9 @@
 2. Мы уважаем ваше право на конфиденциальность. Приложение не собирает и не хранит персональные данные пользователей и не ведет анонимной статистики.
 3. Мы не несем ответственности за любой ущерб, нанесенный вам приложением.
 4. Мы имеем право вносить изменения в настоящее соглашение без уведомления пользователя.
-5. Мы действуем под юрисдикцией России.
-
-Об ошибках сообщайте на andy@8of.org. Не забудьте указать модель устройства и версию iOS.</mutableString>
+5. Мы действуем под юрисдикцией России.</mutableString>
                                         <attributes>
+                                            <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <font key="NSFont" size="14" name="HelveticaNeue"/>
                                             <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
@@ -254,13 +249,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ekp-o7-QBh" customClass="DVBCreatePostScrollView">
-                                <rect key="frame" x="0.0" y="64" width="320" height="301"/>
+                                <rect key="frame" x="0.0" y="44" width="320" height="321"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RLY-YJ-MBR" userLabel="Container For Post Elements" customClass="DVBContainerForPostElements">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="366.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mfq-Cv-IWZ" userLabel="Markup Container">
-                                                <rect key="frame" x="30" y="130" width="261" height="30"/>
+                                                <rect key="frame" x="29.5" y="130" width="261" height="30"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oaU-q9-XAI" customClass="DVBMarkupButton">
                                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -364,7 +359,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sby-Ye-Jpl" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
-                                                        <rect key="frame" x="20" y="20" width="22" height="22"/>
+                                                        <rect key="frame" x="19.5" y="19.5" width="22" height="22"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="4QQ-eS-dGg" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
@@ -407,7 +402,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61.5"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dXc-Bd-DQN" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
-                                                        <rect key="frame" x="19.5" y="20" width="22" height="22"/>
+                                                        <rect key="frame" x="19.5" y="19.5" width="22" height="22"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="nbz-cE-tFY" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
@@ -449,7 +444,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="61.5" height="61.5"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VVK-jY-Wue" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
-                                                        <rect key="frame" x="19" y="20" width="22" height="22"/>
+                                                        <rect key="frame" x="19.5" y="19.5" width="22" height="22"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="6OX-mh-Sjj" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
@@ -491,7 +486,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="61" height="61.5"/>
                                                     </imageView>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q4K-gM-aAF" userLabel="Add photo button container" customClass="DVBAddPhotoIconImageViewContainer">
-                                                        <rect key="frame" x="19" y="20" width="22" height="22"/>
+                                                        <rect key="frame" x="19.5" y="19.5" width="22" height="22"/>
                                                         <subviews>
                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddImage" translatesAutoresizingMaskIntoConstraints="NO" id="mxh-fE-7VH" customClass="DVBAddPhotoIconImageView">
                                                                 <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>

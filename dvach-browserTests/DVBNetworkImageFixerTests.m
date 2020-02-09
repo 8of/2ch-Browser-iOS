@@ -2,7 +2,7 @@
 //  DVBNetworkImageFixerTests.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 26/02/2017.
+//  Created by Andy on 26/02/2017.
 //  Copyright © 2017 8of. All rights reserved.
 //
 

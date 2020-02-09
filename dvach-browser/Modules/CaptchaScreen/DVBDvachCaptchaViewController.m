@@ -2,7 +2,7 @@
 //  DVBDvachCaptchaViewController.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 08/02/16.
+//  Created by Andy on 08/02/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

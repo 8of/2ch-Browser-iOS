@@ -2,7 +2,7 @@
 //  DVBRouter.h
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 16/11/16.
+//  Created by Andy on 16/11/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

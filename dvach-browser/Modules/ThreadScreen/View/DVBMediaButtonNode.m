@@ -2,7 +2,7 @@
 //  DVBMediaButtonNode.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 21/02/17.
+//  Created by Andy on 21/02/17.
 //  Copyright © 2017 8of. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  DVBDefaultsManager.h
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 30/09/16.
+//  Created by Andy on 30/09/16.
 //  Copyright © 2016 8of. All rights reserved.
 //
 

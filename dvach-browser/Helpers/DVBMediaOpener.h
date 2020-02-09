@@ -2,7 +2,7 @@
 //  DVBMediaOpener.h
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 13/05/15.
+//  Created by Andy on 13/05/15.
 //  Copyright (c) 2015 8of. All rights reserved.
 //
 

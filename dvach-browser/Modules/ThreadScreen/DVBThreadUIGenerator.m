@@ -2,7 +2,7 @@
 //  DVBThreadUIGenerator.m
 //  dvach-browser
 //
-//  Created by Andrey Konstantinov on 19/02/2017.
+//  Created by Andy on 19/02/2017.
 //  Copyright © 2017 8of. All rights reserved.
 //
 
