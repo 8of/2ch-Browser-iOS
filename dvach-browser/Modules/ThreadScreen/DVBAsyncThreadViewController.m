@@ -207,6 +207,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 {
     DVBPostViewModel *post = _posts[indexPath.row];
     return ^{
+        // TODO: Called not from main thread, rethink using view.bounds
         return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:self.view.bounds.size.width];
     };
 }
