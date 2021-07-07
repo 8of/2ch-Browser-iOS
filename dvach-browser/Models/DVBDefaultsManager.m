@@ -89,7 +89,7 @@
   [self managePasscode];
   [self manageAFNetworking];
   [self manageDb];
-  [self appearanceTudeUp];
+  [self appearanceTuneUp];
   [self observeDefaults:YES];
 }
 
@@ -212,7 +212,7 @@
 }
 
 /// Tuning appearance for entire app.
-- (void)appearanceTudeUp
+- (void)appearanceTuneUp
 {
     [UIView appearance].tintColor = DVACH_COLOR;
     [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
@@ -230,7 +230,7 @@
 {
     [DVBUrls reset];
     [self clearDB];
-    [self appearanceTudeUp];
+    [self appearanceTuneUp];
 }
 
 @end

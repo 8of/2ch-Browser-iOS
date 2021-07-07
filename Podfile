@@ -9,8 +9,8 @@ abstract_target 'BasePods' do
   # pods
 	pod 'AFNetworking', '2.7.0'
 	pod 'Mantle', '2.1.6'
+	pod 'MobileVLCKit', '3.3.0'
 	pod 'MWPhotoBrowser', :git => 'https://github.com/8ofproject/MWPhotoBrowser.git'
-	pod 'PureLayout', '3.1.8'
 	pod 'Texture', '2.8.1'
 	pod 'TUSafariActivity', '1.0.4'
 	pod 'YapDatabase', '3.1.4'

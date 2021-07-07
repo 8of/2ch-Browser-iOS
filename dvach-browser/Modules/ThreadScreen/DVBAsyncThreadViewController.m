@@ -39,6 +39,8 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 @property (nonatomic, assign) BOOL autoScrolled;
 @property (nonatomic, assign) BOOL alreadyLoading;
 
+@property (nonatomic, assign) CGFloat viewWidth;
+
 /// New posts count added with last thread update
 @property (nonatomic, strong) NSNumber *previousPostsCount;
 
@@ -53,6 +55,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (self) {
         _tableNode = tableNode;
         _threadModel = [[DVBThreadModel alloc] initWithBoardCode:boardCode andThreadNum:threadNumber];
+        _viewWidth = UIScreen.mainScreen.bounds.size.width;
         self.title = [DVBThreadUIGenerator titleWithSubject:subject
                                                andThreadNum:threadNumber];
         [self createRightButton];
@@ -106,6 +109,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     if (!self) { return; }
     [self.tableNode scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:NO];
   }];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];;
+    self.viewWidth = self.view.bounds.size.width;
 }
 
 - (void)setupTableNode
@@ -206,9 +214,11 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (ASCellNodeBlock)tableNode:(ASTableNode *)tableNode nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DVBPostViewModel *post = _posts[indexPath.row];
+    weakify(self);
     return ^{
-        // TODO: Called not from main thread, rethink using view.bounds
-        return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:self.view.bounds.size.width];
+        strongify(self);
+        if (!self) { return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:0]; }
+        return [[DVBPostNode alloc] initWithPost:post andDelegate:self width:self.viewWidth];
     };
 }
 

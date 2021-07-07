@@ -36,18 +36,6 @@
   return alertController;
 }
 
-+ (UIAlertController *)webmDeprecatedAlert {
-    UIAlertController *alertController = [UIAlertController
-                                          alertControllerWithTitle:NSLS(@"DEPRECATED")
-                                          message:NSLS(@"DEPRECATED")
-                                          preferredStyle:UIAlertControllerStyleAlert];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLS(@"BUTTON_CANCEL")
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:^(UIAlertAction * _Nonnull action) {}];
-    [alertController addAction:cancelAction];
-    return alertController;
-}
-
 - (UIAlertController *)boardCodeAlert {
   NSString *title = NSLS(@"ALERT_BOARD_CODE_TITLE");
   NSString *message = NSLS(@"ALERT_BOARD_CODE_MESSAGE");

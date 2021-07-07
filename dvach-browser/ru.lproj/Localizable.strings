@@ -6,8 +6,6 @@
   Copyright (c) 2015 8of. All rights reserved.
 */
 
-"DEPRECATED" = "Выпилино";
-
 "BUTTON_OK" = "ОК";
 "BUTTON_CANCEL" = "Отмена";
 "BUTTON_REPORT" = "Пожаловаться";

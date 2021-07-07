@@ -8,7 +8,6 @@
 
 #import "DVBConstants.h"
 #import "DVBRouter.h"
-#import "DVBAlertGenerator.h"
 
 #import "DVBThread.h"
 #import "DVBPostViewModel.h"
@@ -16,6 +15,7 @@
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
 #import "DVBCreatePostViewController.h"
+#import "DVBWebmViewController.h"
 
 @implementation DVBRouter
 
@@ -77,9 +77,20 @@
 
 + (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url
 {
-  [vc presentViewController:[DVBAlertGenerator webmDeprecatedAlert]
-                   animated:YES
-                 completion:nil];
+    DVBWebmViewController *webmViewController = [[DVBWebmViewController alloc] initURL:url];
+
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:webmViewController];
+
+    if (IS_IPAD) {
+      if ([DVBDefaultsManager isDarkMode]) {
+        // Fix ugly white popover arrow on Popover Controller when dark theme enabled
+        navigationController.popoverPresentationController.backgroundColor = [UIColor blackColor];
+      }
+    }
+
+    [vc presentViewController:navigationController
+                     animated:YES
+                   completion:nil];
 }
 
 + (void)openAVPlayerFrom:(UIViewController *)vc url:(NSURL *)url

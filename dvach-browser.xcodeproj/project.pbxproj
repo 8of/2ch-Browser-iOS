@@ -31,6 +31,7 @@
 		9437FD251B90DFDF004FFB22 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9437FD271B90DFDF004FFB22 /* Localizable.strings */; };
 		94452CB31B94D54E001D521E /* DVBDatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 94452CB21B94D54E001D521E /* DVBDatabaseManager.m */; };
 		944AA0EF1DDC635100FE135A /* DVBRouter.m in Sources */ = {isa = PBXBuildFile; fileRef = 944AA0EE1DDC635100FE135A /* DVBRouter.m */; };
+		946EB78D269633D600F88A1C /* DVBWebmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 946EB78C269633D600F88A1C /* DVBWebmViewController.m */; };
 		948239AE1FABC12E008AC562 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 948239AD1FABC12D008AC562 /* AVFoundation.framework */; };
 		948239B01FABC132008AC562 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 948239AF1FABC132008AC562 /* AVKit.framework */; };
 		948B34D31C6939C0003D3BB4 /* DVBCaptchaManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 948B34D21C6939C0003D3BB4 /* DVBCaptchaManager.m */; };
@@ -153,6 +154,8 @@
 		94452CB21B94D54E001D521E /* DVBDatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBDatabaseManager.m; path = Models/DVBDatabaseManager.m; sourceTree = "<group>"; };
 		944AA0ED1DDC635100FE135A /* DVBRouter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBRouter.h; path = Models/DVBRouter.h; sourceTree = "<group>"; };
 		944AA0EE1DDC635100FE135A /* DVBRouter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DVBRouter.m; path = Models/DVBRouter.m; sourceTree = "<group>"; };
+		946EB78B269633D600F88A1C /* DVBWebmViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVBWebmViewController.h; sourceTree = "<group>"; };
+		946EB78C269633D600F88A1C /* DVBWebmViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DVBWebmViewController.m; sourceTree = "<group>"; };
 		948239AD1FABC12D008AC562 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		948239AF1FABC132008AC562 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		948B34D11C6939C0003D3BB4 /* DVBCaptchaManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DVBCaptchaManager.h; path = Models/DVBCaptchaManager.h; sourceTree = "<group>"; };
@@ -478,6 +481,16 @@
 			name = Protocols;
 			sourceTree = "<group>";
 		};
+		946EB78A2696338300F88A1C /* WebmScreen */ = {
+			isa = PBXGroup;
+			children = (
+				946EB78B269633D600F88A1C /* DVBWebmViewController.h */,
+				946EB78C269633D600F88A1C /* DVBWebmViewController.m */,
+			);
+			name = WebmScreen;
+			path = Modules/WebmScreen;
+			sourceTree = "<group>";
+		};
 		949B76281AF766EF00DDA65F /* Activities */ = {
 			isa = PBXGroup;
 			children = (
@@ -664,11 +677,12 @@
 			isa = PBXGroup;
 			children = (
 				A1BDC0E71E6B664900ACBB36 /* AgreementScreen */,
+				A1FC04391E5A0F45008C3577 /* BoardScreen */,
 				A1BDC0DC1E6B65CD00ACBB36 /* BoardsScreen */,
 				A1BDC0B81E6B640B00ACBB36 /* CaptchaScreen */,
 				A1FC043B1E5A0F4F008C3577 /* CreateScreen */,
 				A1FC043A1E5A0F4A008C3577 /* ThreadScreen */,
-				A1FC04391E5A0F45008C3577 /* BoardScreen */,
+				946EB78A2696338300F88A1C /* WebmScreen */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -847,7 +861,6 @@
 				"${BUILT_PRODUCTS_DIR}/PINCache/PINCache.framework",
 				"${BUILT_PRODUCTS_DIR}/PINOperation/PINOperation.framework",
 				"${BUILT_PRODUCTS_DIR}/PINRemoteImage/PINRemoteImage.framework",
-				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/TUSafariActivity/TUSafariActivity.framework",
 				"${BUILT_PRODUCTS_DIR}/Texture/AsyncDisplayKit.framework",
@@ -864,7 +877,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINCache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINOperation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINRemoteImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TUSafariActivity.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AsyncDisplayKit.framework",
@@ -927,7 +939,6 @@
 				"${BUILT_PRODUCTS_DIR}/PINCache/PINCache.framework",
 				"${BUILT_PRODUCTS_DIR}/PINOperation/PINOperation.framework",
 				"${BUILT_PRODUCTS_DIR}/PINRemoteImage/PINRemoteImage.framework",
-				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/TUSafariActivity/TUSafariActivity.framework",
 				"${BUILT_PRODUCTS_DIR}/Texture/AsyncDisplayKit.framework",
@@ -944,7 +955,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINCache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINOperation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINRemoteImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TUSafariActivity.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AsyncDisplayKit.framework",
@@ -1000,6 +1010,7 @@
 				94A2564F1AB60C2600A31230 /* DVBMessagePostServerAnswer.m in Sources */,
 				A1FC043E1E5A0F7A008C3577 /* DVBAsyncThreadViewController.m in Sources */,
 				A155FF161AB7362A00BE31F4 /* DVBPost.m in Sources */,
+				946EB78D269633D600F88A1C /* DVBWebmViewController.m in Sources */,
 				84CFC51319E1526E004D0BB8 /* AppDelegate.m in Sources */,
 				A1BDC0CA1E6B650400ACBB36 /* DVBAddPhotoIconImageView.m in Sources */,
 				A155FF151AB7362A00BE31F4 /* DVBBoard.m in Sources */,

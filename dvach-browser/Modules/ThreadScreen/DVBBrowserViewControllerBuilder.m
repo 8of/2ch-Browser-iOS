@@ -37,9 +37,6 @@ static NSInteger const PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION = 5;
 
     _thumbImagesArray = thumbImagesArray;
     _fullImagesArray = fullImagesArray;
-
-    [self removeAllWebmLinksFromThumbImagesArray:_thumbImagesArray
-                              andFullImagesArray:_fullImagesArray];
     
     self.delegate = self;
     
@@ -86,33 +83,6 @@ static NSInteger const PROPORTION_TO_OVERPASS_TO_FINISH_TRANSITION = 5;
     }
     
     return nil;
-}
-
-- (void)removeAllWebmLinksFromThumbImagesArray:(NSArray *)thumbImagesArray andFullImagesArray:(NSArray *)fullImagesArray
-{
-    NSMutableArray *thumbImagesMutableArray = [thumbImagesArray mutableCopy];
-    NSMutableArray *fullImagesMutableArray = [fullImagesArray mutableCopy];
-
-    // start reverse loop because we need to delete objects more simplessly withour 'wrong indexes' erros
-    NSUInteger currentItemWhenCheckForWebm = fullImagesArray.count - 1;
-
-    for (NSString *photoPath in [fullImagesArray reverseObjectEnumerator]) {
-        BOOL isWebmLink = ([photoPath rangeOfString:@"webm"].location != NSNotFound);
-
-        if (isWebmLink) {
-            [thumbImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
-            [fullImagesMutableArray removeObjectAtIndex:currentItemWhenCheckForWebm];
-
-            // decrease index of current photo to show first - because othervise we can show user the wrong one (if we delete photos with index between 0 and current index
-            if (currentItemWhenCheckForWebm < _index) {
-                _index--;
-            }
-        }
-        currentItemWhenCheckForWebm--;
-    }
-
-    _thumbImagesArray = thumbImagesMutableArray;
-    _fullImagesArray = fullImagesMutableArray;
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle
