@@ -2,7 +2,7 @@
 //  DVBWebmViewController.m
 //  dvach-browser
 //
-//  Created by Andrei Konstantinov on 07.07.2021.
+//  Created by Andy on 07.07.2021.
 //  Copyright © 2021 8of. All rights reserved.
 //
 
