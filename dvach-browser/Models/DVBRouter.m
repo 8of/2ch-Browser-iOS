@@ -14,7 +14,6 @@
 #import "DVBDefaultsManager.h"
 #import "DVBAsyncBoardViewController.h"
 #import "DVBAsyncThreadViewController.h"
-#import "DVBCreatePostViewController.h"
 #import "DVBWebmViewController.h"
 
 @implementation DVBRouter
@@ -46,22 +45,21 @@
 
 + (void)openCreateThreadFrom:(UIViewController *)vc boardCode:(NSString *)boardCode
 {
-    [self showComposeFrom:vc boardCode:boardCode threadNum:@"0"];
+    [self showComposeFrom:vc boardCode:boardCode threadNum:nil];
 }
 
-+ (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(NSString *)threadNum
++ (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(nullable NSString *)threadNum
 {
-  UIStoryboard *storyboard = [UIStoryboard storyboardWithName:STORYBOARD_NAME_MAIN
-                                                       bundle:nil];
-  DVBCreatePostViewController *createPostViewController = (DVBCreatePostViewController *)[storyboard instantiateViewControllerWithIdentifier:STORYBOARD_ID_CREATE_POST_VIEW_CONTROLLER];
-  createPostViewController.createPostViewControllerDelegate = (id<DVBCreatePostViewControllerDelegate>)vc;
-  createPostViewController.threadNum = threadNum;
-  createPostViewController.boardCode = boardCode;
-  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:createPostViewController];
+    NSString *fullURL = threadNum
+      ? [NSString stringWithFormat:@"%@%@/%@/res/%@.html", HTTPS_SCHEME, DVACH_DOMAIN, boardCode, threadNum]
+      : [NSString stringWithFormat:@"%@%@/%@", HTTPS_SCHEME, DVACH_DOMAIN, boardCode];
+  SFSafariViewController *safariViewController = [[SFSafariViewController alloc] initWithURL:[[NSURL alloc] initWithString:fullURL]];
+  UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:safariViewController];
+  navigationController.navigationBarHidden = YES;
 
   if (IS_IPAD) {
     navigationController.modalPresentationStyle = UIModalPresentationPopover;
-    createPostViewController.preferredContentSize = CGSizeMake(320, 480);
+    safariViewController.preferredContentSize = CGSizeMake(320, 480);
     navigationController.popoverPresentationController.delegate = (id<UIPopoverPresentationControllerDelegate>)vc;
     navigationController.popoverPresentationController.barButtonItem = vc.navigationItem.rightBarButtonItem;
     if ([DVBDefaultsManager isDarkMode]) {

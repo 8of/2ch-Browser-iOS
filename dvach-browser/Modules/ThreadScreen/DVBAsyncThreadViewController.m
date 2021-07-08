@@ -11,7 +11,6 @@
 #import "DVBConstants.h"
 #import "DVBThreadDelegate.h"
 #import "DVBThreadModel.h"
-#import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBPostViewModel.h"
 #import "DVBDefaultsManager.h"
 #import "DVBPostNode.h"
@@ -27,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
-@interface DVBAsyncThreadViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate, DVBThreadDelegate>
+@interface DVBAsyncThreadViewController () <ASTableDataSource, ASTableDelegate, DVBThreadDelegate>
 
 @property (nonatomic, strong, nullable) DVBThreadModel *threadModel;
 
@@ -160,8 +159,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 - (void)createRightButton
 {
     UIBarButtonItem *composeItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(composeAction)];
-    // Posting doesn't work because of old broken captcha
-    composeItem.enabled = NO;
     self.navigationItem.rightBarButtonItem = composeItem;
 }
 
@@ -504,13 +501,6 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
                      thread:urlNinja.threadId
                     subject:nil
                     comment:nil];
-}
-
-#pragma mark - DVBCreatePostViewControllerDelegate
-
--(void)updateThreadAfterPosting
-{
-  [self reloadThread];
 }
 
 #pragma mark - Helpers for posting from another copy of the controller

@@ -16,7 +16,6 @@
 #import "DVBUrls.h"
 #import "DVBNetworking.h"
 #import "DVBDatabaseManager.h"
-#import "DVBPostPhotoContainerView.h"
 
 @interface DVBDefaultsManager : NSObject
 

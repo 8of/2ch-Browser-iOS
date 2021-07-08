@@ -18,7 +18,6 @@
 @property (class, nonatomic, readonly, nonnull) NSString *baseWithoutSchemeForUrlNinjaHk;
 @property (class, nonatomic, readonly, nonnull) NSString *reportThread;
 @property (class, nonatomic, readonly, nonnull) NSString *boardsList;
-@property (class, nonatomic, readonly, nonnull) NSString *getUsercode;
 
 /// Recalculate all base urls
 + (void)reset;

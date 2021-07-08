@@ -192,7 +192,9 @@ static NSInteger const MAXIMUM_SCROLL_UNTIL_SCROLL_TO_TOP_ON_APPEAR = 190.0f;
 }
 
 - (IBAction)openSettingsApp:(id)sender {
-  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
+                                     options:@{}
+                           completionHandler:nil];
 }
 
 @end

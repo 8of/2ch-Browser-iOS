@@ -12,12 +12,11 @@
 #import "DVBBoardModel.h"
 #import "DVBRouter.h"
 #import "DVBBoardStyler.h"
-#import "DVBCreatePostViewControllerDelegate.h"
 #import "DVBThreadUIGenerator.h"
 #import "DVBThreadNode.h"
 #import "DVBAlertGenerator.h"
 
-@interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate, DVBCreatePostViewControllerDelegate>
+@interface DVBAsyncBoardViewController () <ASTableDataSource, ASTableDelegate>
 
 @property (nonatomic, strong) ASTableNode *tableNode;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -49,8 +48,6 @@
                                                              style:UIBarButtonItemStylePlain
                                                             target:self
                                                             action:@selector(openNewThread)];
-    // Posting doesn't work because of old broken captcha
-    item.enabled = NO;
     self.navigationItem.rightBarButtonItem = item;
 
     [self setupTableNode];
@@ -213,17 +210,6 @@
 
 - (void)openNewThread {
   [DVBRouter openCreateThreadFrom:self boardCode:_boardCode];
-}
-
-#pragma mark - DVBCreatePostViewControllerDelegate
-
-- (void)openThredWithCreatedThread:(NSString *)threadNum {
-  DVBThread *thread = [[DVBThread alloc] init];
-  thread.num = threadNum;
-  [DVBRouter pushThreadFrom:self board:_boardCode
-                     thread:threadNum
-                    subject:nil
-                    comment:nil];
 }
 
 #pragma mark - ASTableDataSource & ASTableDelegate

@@ -75,7 +75,7 @@ static NSString *const BOARD_CATEGORIES_PLIST_FILENAME = @"BoardCategories";
         }
         
         // Create the managed object context
-        _context = [[NSManagedObjectContext alloc] init];
+        _context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         _context.persistentStoreCoordinator = _persistentStoreCoordinator;
         _boardCategoriesArray = [self loadBoardCategoriesFromPlist];
         [self loadAllboards];

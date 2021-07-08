@@ -10,7 +10,6 @@
 "BUTTON_CANCEL" = "Отмена";
 "BUTTON_REPORT" = "Пожаловаться";
 "BUTTON_CLOSE" = "Закрыть";
-"BUTTON_SEND" = "Отправить";
 "BUTTON_ACCEPT" = "Принять";
 "BUTTON_PLAY" = "Пуск";
 "BUTTON_PAUSE" = "Пауза";
@@ -61,8 +60,5 @@
 "POST_STATUS_SUCCESS" = "Успешно";
 
 "TITLE_BOARDS" = "Доски";
-"TITLE_NEW_THREAD" = "Новый тред";
-"TITLE_NEW_POST" = "Создать пост";
 "TITLE_ANSWERS_TO" = "Ответы к";
 "TITLE_AGREEMENT" = "Соглашение";
-"TITLE_DDOS_CHECK" = "Прохождение проверки";

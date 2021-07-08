@@ -21,10 +21,7 @@ NSString *const NETWORK_HEADER_USERAGENT_KEY = @"User-Agent";
 NSString *const SETTING_ENABLE_DARK_THEME = @"enableDarkTheme";
 NSString *const SETTING_CLEAR_THREADS = @"clearThreads";
 NSString *const SETTING_BASE_DOMAIN = @"domain";
-NSString *const SETTING_FORCE_CAPTCHA = @"forceCaptcha";
 NSString *const USER_AGREEMENT_ACCEPTED = @"userAgreementAccepted";
-NSString *const PASSCODE = @"passcode";
-NSString *const USERCODE = @"usercode";
 NSString *const DEFAULTS_AGE_CHECK_STATUS = @"defaultsAgeCheckStatus";
 NSString *const DEFAULTS_USERAGENT_KEY = @"UserAgent";
 
@@ -51,7 +48,3 @@ NSString *const WEBVIEW_PART_OF_THE_PAGE_TO_CHECK_MAIN_PAGE = @".ч";
 
 // Notifications
 NSString *const NOTIFICATION_NAME_BOOKMARK_THREAD = @"kNotificationBookmarkThread";
-
-// Keys
-NSString *const AP_CAPTCHA_PUBLIC_KEY = @"BiIWoUVlqn5AquNm1NY832D4Ljj0IOzR";
-NSString *const AP_CAPTCHA_PRIVATE_KEY = @"";

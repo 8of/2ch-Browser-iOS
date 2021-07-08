@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
+#import <SafariServices/SafariServices.h>
 
 @class DVBThread;
 @class DVBPostViewModel;
@@ -24,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Answers only
 + (void)pushAnswersFrom:(UIViewController *)viewController postNum:(NSString *)postNum answers:(NSArray <DVBPostViewModel *> *)answers allPosts:(NSArray <DVBPostViewModel *> *)allPosts;
 + (void)openCreateThreadFrom:(UIViewController *)vc boardCode:(NSString *)boardCode;
-+ (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(NSString *)threadNum;
++ (void)showComposeFrom:(UIViewController *)vc boardCode:(NSString *)boardCode threadNum:(nullable NSString *)threadNum;
 + (void)openWebmFrom:(UIViewController *)vc url:(NSURL *)url;
 + (void)openAVPlayerFrom:(UIViewController *)vc url:(NSURL *)url;
 

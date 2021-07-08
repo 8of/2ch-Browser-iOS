@@ -10,7 +10,6 @@
 "BUTTON_CANCEL" = "Cancel";
 "BUTTON_REPORT" = "Report";
 "BUTTON_CLOSE" = "Close";
-"BUTTON_SEND" = "Send";
 "BUTTON_ACCEPT" = "Accept";
 "BUTTON_PLAY" = "Play";
 "BUTTON_PAUSE" = "Pause";
@@ -61,8 +60,5 @@
 "POST_STATUS_SUCCESS" = "Success";
 
 "TITLE_BOARDS" = "Boards";
-"TITLE_NEW_THREAD" = "New thread";
-"TITLE_NEW_POST" = "New post";
 "TITLE_ANSWERS_TO" = "Answers to";
 "TITLE_AGREEMENT" = "Agreement";
-"TITLE_DDOS_CHECK" = "DDoS checking";

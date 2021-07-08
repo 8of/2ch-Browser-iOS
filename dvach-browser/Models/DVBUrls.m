@@ -16,7 +16,6 @@ static NSString *_baseWithoutSchemeForUrlNinja;
 static NSString *_baseWithoutSchemeForUrlNinjaHk = @"2ch.hk";
 static NSString *_reportThread;
 static NSString *_boardsList;
-static NSString *_getUsercode;
 
 /// https://2ch.hk/
 + (NSString *)base
@@ -69,15 +68,6 @@ static NSString *_getUsercode;
     return _boardsList;
 }
 
-/// https://2ch.hk/makaba/makaba.fcgi
-+ (NSString *)getUsercode
-{
-    if (_getUsercode == nil) {
-        _getUsercode = [NSString stringWithFormat:@"https://%@/makaba/makaba.fcgi", [self domain]];
-    }
-    return _getUsercode;
-}
-
 + (void)reset
 {
     _base = nil;
@@ -85,7 +75,6 @@ static NSString *_getUsercode;
     _baseWithoutSchemeForUrlNinja = nil;
     _reportThread = nil;
     _boardsList = nil;
-    _getUsercode = nil;
 }
 
 // Private

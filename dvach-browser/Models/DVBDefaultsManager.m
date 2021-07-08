@@ -71,10 +71,7 @@
                              USER_AGREEMENT_ACCEPTED : @NO,
                              SETTING_ENABLE_DARK_THEME : @NO,
                              SETTING_CLEAR_THREADS : @NO,
-                             SETTING_FORCE_CAPTCHA : @NO,
                              SETTING_BASE_DOMAIN : DVACH_DOMAIN,
-                             PASSCODE : @"",
-                             USERCODE : @"",
                              DEFAULTS_AGE_CHECK_STATUS : @NO,
                              DEFAULTS_USERAGENT_KEY : userAgent
                              };
@@ -86,7 +83,6 @@
   [UIApplication sharedApplication].applicationSupportsShakeToEdit = NO;
 
   [self manageDownloadsUserAgent:userAgent];
-  [self managePasscode];
   [self manageAFNetworking];
   [self manageDb];
   [self appearanceTuneUp];
@@ -118,63 +114,11 @@
     }
 }
 
-- (void)managePasscode
-{
-    NSString *passcode = [[NSUserDefaults standardUserDefaults] objectForKey:PASSCODE];
-    NSString *usercode = [[NSUserDefaults standardUserDefaults] objectForKey:USERCODE];
-
-    BOOL isPassCodeNotEmpty = ![passcode isEqualToString:@""];
-    BOOL isUserCodeEmpty = [usercode isEqualToString:@""];
-
-    if (isPassCodeNotEmpty && isUserCodeEmpty) {
-        [_networking getUserCodeWithPasscode:passcode
-                               andCompletion:^(NSString *completion)
-         {
-             if (completion) {
-                 [[NSUserDefaults standardUserDefaults] setObject:completion forKey:USERCODE];
-                 [[NSUserDefaults standardUserDefaults] synchronize];
-
-                 NSString *usercode = completion;
-                 [self setUserCodeCookieWithUsercode:usercode];
-             }
-         }];
-    } else if (!isPassCodeNotEmpty) {
-        [self deleteUsercodeOldData];
-    } else if (!isUserCodeEmpty) {
-        [self setUserCodeCookieWithUsercode:usercode];
-    }
-}
-
-
-
 /// Execute all AFNetworking methods that need to be executed one time for entire app.
 - (void)manageAFNetworking
 {
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
-}
-
-/// Create cookies for later posting with super csecret usercode
-- (void)setUserCodeCookieWithUsercode:(NSString *)usercode
-{
-    NSDictionary *usercodeCookieDictionary = @{
-                                               @"name" : @"usercode_nocaptcha",
-                                               @"value" : usercode
-                                               };
-    NSHTTPCookie *usercodeCookie = [[NSHTTPCookie alloc] initWithProperties:usercodeCookieDictionary];
-    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:usercodeCookie];
-}
-
-- (void)deleteUsercodeOldData
-{
-    [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERCODE];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    for (NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
-        if ([cookie.name isEqualToString:@"usercode_nocaptcha"]) {
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-            break;
-        }
-    }
 }
 
 - (void)manageDb
@@ -215,7 +159,6 @@
 - (void)appearanceTuneUp
 {
     [UIView appearance].tintColor = DVACH_COLOR;
-    [UIButton appearanceWhenContainedIn:[DVBPostPhotoContainerView class], nil].tintColor = [UIColor whiteColor];
     
     UIView *colorView = [[UIView alloc] init];
     if ([[NSUserDefaults standardUserDefaults] boolForKey:SETTING_ENABLE_DARK_THEME]) {
