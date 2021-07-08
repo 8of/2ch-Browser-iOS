@@ -159,7 +159,10 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
 
 - (void)createRightButton
 {
-    self.navigationItem.rightBarButtonItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(composeAction)];
+    UIBarButtonItem *composeItem = [DVBThreadUIGenerator composeItemTarget:self action:@selector(composeAction)];
+    // Posting doesn't work because of old broken captcha
+    composeItem.enabled = NO;
+    self.navigationItem.rightBarButtonItem = composeItem;
 }
 
 - (void)fillToolbar

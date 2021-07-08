@@ -49,6 +49,8 @@
                                                              style:UIBarButtonItemStylePlain
                                                             target:self
                                                             action:@selector(openNewThread)];
+    // Posting doesn't work because of old broken captcha
+    item.enabled = NO;
     self.navigationItem.rightBarButtonItem = item;
 
     [self setupTableNode];
