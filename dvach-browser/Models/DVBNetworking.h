@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// Check if we can post without captcha
 - (void)canPostWithoutCaptcha:(void (^)(BOOL))completion;
 
-- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion;
+- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion;
 
 - (NSString * _Nullable)userAgent;
 

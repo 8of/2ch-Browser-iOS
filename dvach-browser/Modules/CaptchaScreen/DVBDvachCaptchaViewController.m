@@ -76,10 +76,16 @@
     _textField.text = @"";
     weakify(self);
     [_captchaManager getCaptchaImageUrl:_threadNum
-                          andCompletion:^(NSString *captchaImageUrl, NSString *captchaId)
+                          andCompletion:^(NSString *captchaImageUrl, NSString *captchaId, NSError *error)
     {
         strongify(self);
         if (!self) { return; }
+
+        if (error) {
+            [self.submitButton setTitle:NSLS(@"ERROR") forState:UIControlStateNormal];
+            return;
+        }
+
         self.captchaId = captchaId;
         NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:captchaImageUrl]];
         weakify(self);

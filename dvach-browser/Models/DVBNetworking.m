@@ -362,30 +362,30 @@ static NSString * const NO_CAPTCHA_ANSWER_CODE = @"disabled";
    }];
 }
 
-- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable))completion {
-  NSString *address = [[NSString alloc] initWithFormat:@"%@/%@", [DVBUrls base], @"api/captcha/2chaptcha/id"];
-  if (threadNum != nil) {
-    address = [NSString stringWithFormat:@"%@?thread=%@", address, threadNum];
-  }
-  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+- (void)getCaptchaImageUrl:(NSString * _Nullable)threadNum andCompletion:(void (^)(NSString * _Nullable, NSString * _Nullable, NSError * _Nullable))completion {
+    NSString *address = [[NSString alloc] initWithFormat:@"%@/%@%@", [DVBUrls base], @"api/captcha/2chcaptcha/id?board=au&thread=", threadNum];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
 
-  [manager GET:address
-    parameters:nil
-       success:^(AFHTTPRequestOperation *operation, id responseObject)
-   {
-     if (responseObject[@"id"] != nil) {
-       NSString *captchaId = responseObject[@"id"];
+    [manager GET:address
+      parameters:nil
+         success:^(AFHTTPRequestOperation *operation, id responseObject)
+    {
+        BOOL isCaptchaIDHere = [responseObject[@"id"] isKindOfClass:[NSString class]] && responseObject[@"id"] != nil;
+        if (isCaptchaIDHere) {
+        NSString *captchaId = responseObject[@"id"];
+        NSString *captchaImageAddress = [[NSString alloc]
+                                         initWithFormat:@"%@/%@%@", [DVBUrls base], @"api/captcha/2chcaptcha/show?id=", captchaId
+                                         ];
+            completion(captchaImageAddress, captchaId, nil);
+        } else {
+            completion(nil, nil, nil);
+        }
+    }
 
-       NSString *captchaImageAddress = [[NSString alloc] initWithFormat:@"%@/%@%@", [DVBUrls base], @"api/captcha/2chaptcha/image/", captchaId];
-       completion(captchaImageAddress, captchaId);
-     } else {
-       completion(nil, nil);
-     }
-   }
-       failure:^(AFHTTPRequestOperation *operation, NSError *error)
-   {
-     completion(nil, nil);
-   }];
+         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+    {
+        completion(nil, nil, error);
+    }];
 }
 
 - (NSString * _Nullable)userAgent {

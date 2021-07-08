@@ -29,17 +29,16 @@
     return self;
 }
 
-- (void)getCaptchaImageUrl:(NSString *)threadNum andCompletion:(void (^)(NSString *, NSString *))completion
+- (void)getCaptchaImageUrl:(NSString *)threadNum andCompletion:(void (^)(NSString *, NSString *, NSError *))completion
 {
     [_networkManager getCaptchaImageUrl:threadNum
-                          andCompletion:^( NSString * _Nullable fullUrl, NSString * _Nullable captchaId)
+                          andCompletion:^( NSString * _Nullable fullUrl, NSString * _Nullable captchaId, NSError * _Nullable error)
     {
         if (fullUrl) {
-            completion(fullUrl, captchaId);
+            completion(fullUrl, captchaId, nil);
         } else {
-            completion(nil, nil);
+            completion(nil, nil, error);
         }
-
     }];
 }
 
