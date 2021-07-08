@@ -371,7 +371,7 @@ static CGFloat const MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING = 500.0f;
     [self showPromptWithMessage:[NSString stringWithFormat:@"%@ %@", @(newMessagesCount.integerValue), NSLS(@"PROMPT_NEW_MESSAGES")]];
 
     // Check if difference is not too big (scroll isn't needed if user saw only half of the thread)
-    CGFloat offsetDifference = self.tableNode.view.contentSize.height - self.tableNode.view.contentOffset.y - self.tableNode.view.bounds.size.height;
+    CGFloat offsetDifference = self.tableNode.view.contentSize.height - self.tableNode.contentOffset.y - self.tableNode.view.bounds.size.height;
 
     if (offsetDifference < MAX_OFFSET_DIFFERENCE_TO_SCROLL_AFTER_POSTING &&
         _posts.count > 10) // Prevent scrolling when posts count isn't high enough

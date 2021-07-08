@@ -20,10 +20,10 @@
 
 + (void)styleTableNode:(ASTableNode *)tableNode
 {
-    [UIApplication sharedApplication].keyWindow.backgroundColor = [DVBPostStyler postCellBackgroundColor];
+    UIApplication.sharedApplication.keyWindow.backgroundColor = [DVBPostStyler postCellBackgroundColor];
     
     tableNode.view.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableNode.view.contentInset = UIEdgeInsetsMake([DVBPostStyler elementInset]/2, 0, [DVBPostStyler elementInset]/2, 0);
+    tableNode.contentInset = UIEdgeInsetsMake([DVBPostStyler elementInset]/2, 0, [DVBPostStyler elementInset]/2, 0);
     tableNode.allowsSelection = NO;
     tableNode.backgroundColor = [DVBPostStyler postCellBackgroundColor];
     tableNode.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
